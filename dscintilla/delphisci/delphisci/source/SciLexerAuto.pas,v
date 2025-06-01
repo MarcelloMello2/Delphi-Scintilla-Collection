@@ -1,0 +1,719 @@
+head	1.6;
+access;
+symbols
+	test:1.1.1.1 hdalis:1.1.1;
+locks; strict;
+comment	@ * @;
+
+
+1.6
+date	2004.12.03.17.18.58;	author hdalis;	state Exp;
+branches;
+next	1.5;
+
+1.5
+date	2004.11.21.04.20.21;	author hdalis;	state Exp;
+branches;
+next	1.4;
+
+1.4
+date	2004.11.13.04.29.50;	author hdalis;	state Exp;
+branches;
+next	1.3;
+
+1.3
+date	2004.11.08.00.00.41;	author hdalis;	state Exp;
+branches;
+next	1.2;
+
+1.2
+date	2004.10.16.10.17.25;	author hdalis;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2004.10.01.21.01.20;	author hdalis;	state Exp;
+branches
+	1.1.1.1;
+next	;
+
+1.1.1.1
+date	2004.10.01.21.01.20;	author hdalis;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.6
+log
+@Delphi Scintilla Interface Components 0.15
+@
+text
+@//CE_Desc_Include(helpdescriptions.txt)
+{
+	Delphi Scintilla Interface Components
+	Copyright (C) 2004, Jan Martin Pettersen (hdalis)
+
+	This library is free software; you can redistribute it and/or
+	modify it under the terms of the GNU Lesser General Public
+	License as published by the Free Software Foundation; either
+	version 2.1 of the License, or (at your option) any later
+	version.
+
+	This library is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+	Lesser General Public License for more details.
+
+	You should have received a copy of the GNU Lesser General Public
+	License along with this library; if not, write to the Free
+	Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+	02111-1307 USA
+}
+{
+  Author : hdalis
+	Created: 30/09/2004, 01:14:14
+			$Id: SciLexerAuto.pas,v 1.4 2004/11/13 04:29:50 hdalis Exp $
+  History: 30/09/2004 Initial Release
+           13/10/2004 Added help using ClassExplorer 6.0, Use the helpgenerator to
+                      generate the help.
+           09/11/2004 Moved the CharPos function to SciLexer.Pas. Was needed more places now.
+					 18/11/2004 This file has been split into SciCallTips.Pas and SciAutoComplete.Pas
+}
+
+unit SciLexerAuto;
+interface
+{
+NO LONGER USED!!
+}
+implementation
+end.@
+
+
+1.5
+log
+@Delphi Scintilla Interface Components 0.14
+@
+text
+@@
+
+
+1.4
+log
+@Updated to v0.13
+@
+text
+@d25 1
+a26 1
+			$Id: $
+d30 1
+d35 3
+a37 68
+
+uses Classes, Windows,Messages, SysUtils,SciLexer,SciLexerMod;
+
+{$Include commondefs.inc}
+
+type
+
+TAutoCompleteOpts = class(TPersistent)
+	private
+		fScintilla : TScintilla;
+		FStartChars : String;
+		FStrings : TStrings;
+		FNumStartChars : integer;
+		FStopChars : String;
+		FDisableAutoComplete : Boolean;
+		FAutoCompleteWord : Boolean;
+		FAutoCompleteWordOnlyOne : Boolean;
+		procedure setStrings(Value : TStrings);
+		procedure SetAutoCompleteStopChars(const Value : String);
+		procedure setOpt(const Index : integer;const Value : LongBool);
+		function  getOpt(Index : integer) : LongBool;
+
+	public
+		constructor Create(Scintilla : TScintilla);
+		procedure   Assign(Source: TPersistent); override;
+		destructor  Destroy; override;
+	published
+
+	  property DisableAutoComplete : boolean read FDisableAutoComplete write FDisableAutoComplete;
+		property NumStartChars : integer read FNumStartChars write FNumStartChars;
+		property StartChars : String read FStartChars write FStartChars;
+		property StopChars  : String read FStopChars write SetAutoCompleteStopChars;
+		property AStrings 		: TStrings read FStrings write setStrings;
+		property IgnoreCase : LongBool index 0 read getOpt Write setOpt;
+		property ChooseSingle : LongBool index 1 read getOpt Write setOpt;
+		property AutoHide : LongBool index 2 read getOpt Write setOpt;
+		property DropRestOfWord : LongBool index 3 read getOpt Write setOpt;
+		property CancelAtStart : LongBool index 4 read getOpt Write setOpt;
+		property CompleteWord : boolean read FAutoCompleteWord write FAutoCompleteWord;
+		property CompleteWordOnlyOne : boolean read FAutoCompleteWordOnlyOne write FAutoCompleteWordOnlyOne;
+	end;
+
+
+	TScintillaAuto = class(TScintilla)
+		private
+			fAutoOpts  : TAutoCompleteOpts;
+			FAutoStrings : String;
+			autoCCausedByOnlyOne : boolean;
+			braceCount : Integer;
+      FCalltipStartChars : String;
+      FCalltipEndChars : String;
+
+			function  StartAutoCompleteWord(const onlyOneWord : boolean) : Boolean;
+			procedure StartAutoComplete;
+		protected
+			function StartCallTip : Boolean;virtual; //Returns False, override to get it to do anything useful.
+			procedure ContinueCallTip;virtual;       //Returns False, override to get it to do anything useful.
+			procedure CharAddedAutoComplete(const ch : integer); override;
+			procedure CreateWnd; override;
+      property  CallTipStartChars : String read FCalltipStartChars write FCalltipStartChars;
+      property  CallTipEndChars : String read FCalltipEndChars write FCalltipEndChars;
+		public
+			constructor Create(AOwner: TComponent); override;
+      procedure   CopyFrom(Source: TScintillaBase);override;
+		published
+			property AutoCompleteOpts : TAutoCompleteOpts read fAutoOpts write fAutoOpts;
+	end;
+
+d39 1
+a39 350
+
+uses math,SciSupport,StrUtils;
+
+function HasPrefix(const s : AnsiString;const prefix : AnsiString;const ignorecase : Boolean) : Boolean;
+begin
+	if ignorecase then
+	result:=AnsiStartsStr(prefix,s) else
+	result:=AnsiStartsText(prefix,s);
+end;
+
+procedure FillMatching(const startwith : String;var deststr : String;fromlist : TStrings;const ignorecase : Boolean);
+var
+cnt : integer;
+i : integer;
+numadded : integer;
+tmp : String;
+begin
+	deststr:='';
+	numadded:=0;
+	cnt:=fromlist.Count;
+	for i:=0 to (cnt-1) do
+	begin
+		tmp:=fromlist.Strings[i];
+		if HasPrefix(tmp,startwith,ignorecase)=true then
+		begin
+			if numadded>0 then deststr:=deststr+' ';
+			deststr :=deststr+tmp;
+			numadded:=numadded+1;
+		end;
+	end;
+end;
+
+
+// TAutoCompleteOpts
+constructor TAutoCompleteOpts.Create(Scintilla: TScintilla);
+begin
+	fScintilla := Scintilla;
+	FStartChars :='';
+	FStopChars :='';
+	FAutoCompleteWord:=true;
+	FAutoCompleteWordOnlyOne:=true;
+	FNumStartChars:=1;
+	FDisableAutoComplete:=false;
+	FStrings :=TStringList.Create;
+	TStringList(FStrings).Sorted:=true;
+	TStringList(FStrings).Duplicates :=dupIgnore;
+end;
+
+procedure TAutoCompleteOpts.setOpt(const Index : Integer;const Value : LongBool);
+begin
+	case Index of
+	0: fScintilla.AutoCSetIgnoreCase(Value);
+	1: fScintilla.AutoCSetChooseSingle(Value);
+	2: fScintilla.AutoCSetAutoHide(Value);
+	3: fScintilla.AutoCSetDropRestOfWord(Value);
+	4: fScintilla.AutoCSetCancelAtStart(Value);
+	end;
+end;
+function TAutoCompleteOpts.getOpt(Index : Integer) : LongBool;
+begin
+	case Index of
+	0: Result :=fScintilla.AutoCGetIgnoreCase;
+	1: Result :=fScintilla.AutoCGetChooseSingle;
+	2: Result :=fScintilla.AutoCGetAutoHide;
+	3: Result :=fScintilla.AutoCGetDropRestOfWord;
+	4: Result :=fScintilla.AutoCGetCancelAtStart;
+        else Result :=False;
+	end;
+end;
+
+procedure TAutoCompleteOpts.setStrings(Value : TStrings);
+begin
+		FStrings.Assign(Value);
+		TStringList(FStrings).Sort;
+end;
+
+procedure TAutoCompleteOpts.Assign(Source: TPersistent);
+begin
+	if Source is TAutoCompleteOpts then begin
+		StartChars := TAutoCompleteOpts(Source).StartChars;
+		AStrings := TAutoCompleteOpts(Source).AStrings;
+		IgnoreCase:= TAutoCompleteOpts(Source).IgnoreCase;
+		ChooseSingle:=TAutoCompleteOpts(Source).ChooseSingle;
+		AutoHide:=TAutoCompleteOpts(Source).AutoHide;
+		DropRestOfWord:=TAutoCompleteOpts(Source).DropRestOfWord;
+		CancelAtStart:=TAutoCompleteOpts(Source).CancelAtStart;
+		StopChars:= TAutoCompleteOpts(Source).StopChars;
+		NumStartChars:= TAutoCompleteOpts(Source).NumStartChars;
+		CompleteWord:=TAutoCompleteOpts(Source).CompleteWord;
+		CompleteWordOnlyOne:=TAutoCompleteOpts(Source).CompleteWordOnlyOne;
+		FDisableAutoComplete:=TAutoCompleteOpts(Source).DisableAutoComplete;
+	end else
+		inherited;
+end;
+
+procedure TAutoCompleteOpts.SetAutoCompleteStopChars(const Value : String);
+begin
+	FStopChars :=Value;
+	fScintilla.AutoCStops(PChar(Value));
+end;
+
+destructor TAutoCompleteOpts.Destroy;
+begin
+	inherited;
+	FStrings.Free;
+end;
+
+
+// TScintillaAuto
+constructor TScintillaAuto.Create(AOwner: TComponent);
+begin
+	inherited;
+	fAutoOpts :=TAutoCompleteOpts.Create(Self);
+  FCalltipStartChars:='(';
+  FCalltipEndChars:=')';
+	braceCount:=0;
+end;
+
+
+procedure TScintillaAuto.CreateWnd;
+begin
+	inherited;
+	AutoCSetCancelAtStart(false);
+end;
+procedure TScintillaAuto.CopyFrom(Source: TScintillaBase);
+begin
+  inherited;
+  if Source is TScintillaAuto then
+  begin
+    AutoCompleteOpts.Assign(TScintillaAuto(Source).AutoCompleteOpts);
+    FCalltipStartChars :=TScintillaAuto(Source).CallTipStartChars;
+    FCalltipEndChars :=TScintillaAuto(Source).CallTipEndChars;
+  end;
+end;
+
+function TScintillaAuto.StartCallTip : Boolean;
+begin
+  Result:=False;
+end;
+
+procedure TScintillaAuto.ContinueCallTip;
+begin
+end;
+
+procedure TScintillaAuto.StartAutoComplete;
+var
+line : String;
+linenum : longint;
+current : longint;
+startword : longint;
+startswith : String;
+typedlen : integer;
+//WordChars : String;
+begin
+	linenum :=GetCurrentLineNumber;
+	line :=GetLineS(linenum);
+	current :=GetCaretInLine;
+	startword :=current;
+	while ((startword>0) and (CharPos(WordChars,AnsiChar(line[startword-1]),1)<>0) or (CharPos(AutoCompleteOpts.StartChars,AnsiChar(line[startword-1]),1)<>0))
+		do startword:=startword-1;
+	typedlen :=current-startword+1;
+	if typedlen>AutoCompleteOpts.NumStartChars then
+  begin
+    startswith:=MidStr(line,startword,typedlen);
+    FillMatching(startswith,FAutoStrings,AutoCompleteOpts.AStrings,AutoCompleteOpts.IgnoreCase);
+    AutoCShow(typedlen,PChar(FAutoStrings));
+  end;
+end;
+
+function TScintillaAuto.StartAutoCompleteWord(const onlyOneWord : boolean) : Boolean;
+var
+	line : String;
+	current : longint;
+	startword : longint;
+	allnumber : boolean;
+	root : String;
+	doclen : longint;
+	ft : TTextToFind;
+	flags : longint;
+	posCurrentWord : longint;
+	minWordLength : longint;
+	nwords : longint;
+	wordsNear : String;
+	posFind : integer;
+	wordMaxSize : longint;
+	wordstart : array[0..80] of char;
+	wordend : PChar;
+	wordlen : longint;
+	len : longint;
+begin
+	line :=GetLineS;
+	wordMaxSize:=80;
+	minWordLength:=0;
+	nwords:=0;
+
+	current:=GetCaretInLine;
+	startword:=current;
+	allnumber :=true;
+	doclen:=GetLength;
+	while ((startword>0) and (CharPos(WordChars,AnsiChar(line[startword-1]),1)<>0)) do
+	begin
+		startword:=startword-1;
+		if Boolean(line[startword] < '0') or Boolean(line[startword] > '9') then allNumber := false;
+	end;
+	if Boolean(startword=current) or Boolean(allnumber=true) then
+	begin
+		result :=true;
+		Exit;
+	end;
+	root:=MidStr(line,startword,current-startword+1);
+	ft.lpstrText:=PChar(root);
+	ft.chrg.cpMin :=0;
+	ft.chrgText.cpMin :=0;
+	ft.chrgText.cpMax :=0;
+	flags:=SCFIND_WORDSTART;
+	if not AutoCompleteOpts.IgnoreCase then
+		flags :=flags or SCFIND_MATCHCASE;
+	posCurrentWord :=GetCurrentPos-Length(root);
+	wordsNear:='';
+	while true do
+	begin
+		ft.chrg.cpMax := doclen;
+		posFind:=FindTextX(flags,@@ft);
+		if (posFind=-1) or (posFind>=doclen) then
+		begin
+			Break;
+		end;
+		if posFind=posCurrentWord then
+		begin
+			ft.chrg.cpMin := posFind + Length(root);
+			Continue;
+		end;
+		GetRange(posFind, Min(posFind + wordMaxSize - 3, doclen), wordstart);
+		wordend:=Pointer(wordstart + Length(root));
+		//while (CharPos(WordChars,AnsiChar(wordend^))>0) do Inc(wordend);
+    while (iswordcharforsel(LongInt(wordend^))) do Inc(wordend);
+		wordend^:=#0;
+		wordlen :=(wordend-@@wordstart);
+		if wordlen>Length(root) then
+		begin
+			//if (Pos(wordstart+' ',wordsNear)=0) and (AnsiEndsStr(wordstart,wordsNear)=False) then // Some kind of other test than Pos is needed to not match a partial word of another.
+      if (Pos(wordstart,wordsNear)=0) then
+			begin
+				if(nwords>0) then
+					  wordsNear:=wordsNear+' '+String(wordstart)
+				else
+				wordsNear:=String(wordstart);
+
+				if minWordLength<wordlen then minWordLength:=wordlen;
+				nwords:=nwords+1;
+				if (onlyOneWord=true) and Boolean(nwords>1) then
+				begin
+					result :=true;
+					Exit;
+				end;
+			end;
+		end;
+		ft.chrg.cpMin := posFind + wordlen;
+	end;
+	len:=Length(wordsNear);
+	if (len>=AutoCompleteOpts.NumStartChars) and ((not onlyOneWord) or (minWordLength>Length(root))) then
+	begin
+		AutoCShow(Length(root),PChar(wordsNear));
+	end else AutoCCancel;
+	result :=true;
+end;
+
+
+procedure TScintillaAuto.CharAddedAutoComplete(const ch : integer);
+var
+	crange : TCharacterRange;
+	selStart : integer;
+	selEnd : integer;
+	style : integer;
+begin
+	crange:=GetSelectionRng();
+	selStart:=crange.cpMin;
+	selEnd:=crange.cpMax;
+	if (selEnd=selStart) and (selStart>0) then
+	begin
+    style:=GetStyleAt(selStart-1);
+		if style<>1 then
+		begin
+			if CallTipActive then
+			begin
+				if CharPos(FCalltipEndChars,AnsiChar(ch),1)<>0 then
+				begin
+					dec(braceCount);
+					if braceCount<1 then CallTipCancel
+						else
+							StartCallTip;
+				end else if CharPos(FCalltipStartChars,AnsiChar(ch),1)<>0 then
+				begin
+					Inc(braceCount);
+					StartCallTip;
+				end else
+					ContinueCallTip;
+
+			end else
+			if AutoCompleteOpts.DisableAutoComplete=false then
+			begin
+				if AutoCActive then
+				begin
+					if CharPos(FCalltipStartChars,AnsiChar(ch),1)<>0 then
+					begin
+						Inc(braceCount);
+						StartCallTip;
+					end else if CharPos(FCalltipEndChars,AnsiChar(ch),1)<>0 then
+					begin
+						dec(braceCount);
+					end else
+					if (CharPos(WordChars,AnsiChar(ch),1)=0) then
+					begin
+						AutoCCancel;
+						if (CharPos(AutoCompleteOpts.StartChars,AnsiChar(ch),1)<>0) or ((AutoCompleteOpts.CompleteWord=False)) then
+						begin
+							StartAutoComplete;
+						end;
+					end
+						else
+							if (autoCCausedByOnlyOne) then StartAutoCompleteWord(AutoCompleteOpts.CompleteWordOnlyOne);
+				end else
+				begin
+					if CharPos(FCalltipStartChars,AnsiChar(ch),1)<>0 then
+					begin
+						braceCount:=1;
+						StartCallTip;
+					end else
+					begin
+						autoCCausedByOnlyOne := false;
+						if (CharPos(AutoCompleteOpts.StartChars,AnsiChar(ch),1)<>0) or ((AutoCompleteOpts.CompleteWord=False) and (CharPos(WordChars,AnsiChar(ch),1)<>0)) then
+						begin
+							StartAutoComplete;
+						end else
+						if (AutoCompleteOpts.CompleteWord=true) and ((CharPos(WordChars,AnsiChar(ch),1)<>0)) then
+						begin
+							StartAutoCompleteWord(AutoCompleteOpts.CompleteWordOnlyOne);
+							autoCCausedByOnlyOne := AutoCActive;
+						end else if (AutoCompleteOpts.CompleteWord=False) and ((CharPos(WordChars,AnsiChar(ch),1)<>0)) then
+            begin
+              StartAutoComplete;
+            end;
+					end;
+				end;
+			end;
+		end;
+	end;
+end;
+
+end.
+@
+
+
+1.3
+log
+@Delphi Scintilla Interface Components v0.,12
+@
+text
+@a2 8
+  Author : hdalis
+	Created: 30/09/2004, 01:14:14
+  History: 30/09/2004 Initial Release
+			$Id: $
+           13/10/2004 Added help using ClassExplorer 6.0, Use the helpgenerator to
+                      generate the help.
+}
+{
+d22 9
+a105 21
+function CharPos(const S: AnsiString; const C: AnsiChar; const Index: Integer=1): Integer;
+var
+  P: PAnsiChar;
+begin
+  Result := 0;
+  if (Index > 0) and (Index <= Length(S)) then
+  begin
+		P := PAnsiChar(S);
+    Inc(P, Index - 1);
+    while P^ <> #0 do
+    begin
+      Inc(Result);
+      if UpCase(P^) = UpCase(C) then
+        Break;
+      Inc(P);
+    end;
+    if P^ = #0 then
+      Result := 0;
+  end;
+end;
+
+@
+
+
+1.2
+log
+@Some bugfixes, and other changes
+@
+text
+@d4 3
+a6 1
+  History: 29/09/2004 Initial Release
+d82 2
+a83 8
+{$Ifdef USECCALLTIPS}
+			startCallTipWord : integer;
+			currentCallTip : integer;
+			maxCallTips : integer;
+			currentCallTipWord : String;
+			lastPosCallTip : integer;
+			FCalltipIgnoreCase : Boolean;
+{$Endif}
+d85 1
+a85 1
+			function StartAutoCompleteWord(const onlyOneWord : boolean) : Boolean;
+d88 2
+a89 2
+			procedure StartCallTip;virtual;
+			procedure ContinueCallTip;virtual;
+d92 2
+d96 1
+a123 1
+
+d155 1
+a234 1
+
+d236 2
+a238 9
+{$Ifdef USECCALLTIPS}
+	startCalltipWord := 0;
+	currentCallTip := 0;
+	maxCallTips := 1;
+	currentCallTipWord := '';
+	lastPosCallTip := 0;
+	FCalltipIgnoreCase:=false;
+{$Endif}
+
+d247 10
+d258 1
+a258 1
+procedure TScintillaAuto.StartCallTip;
+d260 1
+d275 1
+a275 1
+WordChars : String;
+d281 1
+a281 1
+	while ((startword>0) and (Boolean(CharPos(WordChars,AnsiChar(line[startword-1]),1)) or Boolean(CharPos(AutoCompleteOpts.StartChars,AnsiChar(line[startword-1]),1))))
+d283 7
+a289 7
+	typedlen :=current-startword;
+	if typedlen>=AutoCompleteOpts.NumStartChars then
+	begin
+	startswith:=MidStr(line,startword,typedlen);
+	FillMatching(startswith,FAutoStrings,AutoCompleteOpts.AStrings,AutoCompleteOpts.IgnoreCase);
+	AutoCShow(typedlen+1,PChar(FAutoStrings));
+	end;
+d322 1
+a322 1
+	while ((startword>0) and Boolean(CharPos(WordChars,AnsiChar(line[startword-1]),1))) do
+a345 1
+
+d357 2
+a358 1
+		while (iswordcharforsel(Longint(wordend^))) do Inc(wordend);
+a360 1
+
+d363 2
+a364 1
+			if Pos(wordstart,wordsNear)=0 then
+d367 1
+a367 1
+					wordsNear:=wordsNear+' '+String(wordstart)
+a400 1
+  style:=2;
+d403 1
+d408 1
+a408 1
+				if AnsiChar(ch)=')' then
+d414 1
+a414 1
+				end else if AnsiChar(ch)='(' then
+d426 1
+a426 1
+					if AnsiChar(ch)='(' then
+d430 1
+a430 1
+					end else if AnsiChar(ch)=')' then
+d432 1
+a432 1
+						dec(braceCount)
+d434 1
+a434 1
+					if not Boolean(CharPos(WordChars,AnsiChar(ch),1)) then
+d437 1
+a437 1
+						if Boolean(CharPos(AutoCompleteOpts.StartChars,AnsiChar(ch),1)) then
+d446 1
+a446 1
+					if AnsiChar(ch)='(' then
+d453 1
+a453 1
+						if Boolean(CharPos(AutoCompleteOpts.StartChars,AnsiChar(ch),1)) then
+d457 1
+a457 1
+						if (AutoCompleteOpts.CompleteWord=true) and (Boolean(CharPos(WordChars,AnsiChar(ch),1))) then
+d461 4
+a464 1
+						end;
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d1 1
+d4 3
+a6 1
+  History: 29/09/2004 Initial Release 
+d8 21
+d37 1
+d58 1
+d73 1
+a96 1
+
+@
+
+
+1.1.1.1
+log
+@no message
+@
+text
+@@

@@ -1,0 +1,431 @@
+head	1.7;
+access;
+symbols
+	test:1.1.1.1 hdalis:1.1.1;
+locks; strict;
+comment	@ * @;
+
+
+1.7
+date	2004.12.03.17.19.00;	author hdalis;	state Exp;
+branches;
+next	1.6;
+
+1.6
+date	2004.11.21.04.20.21;	author hdalis;	state Exp;
+branches;
+next	1.5;
+
+1.5
+date	2004.11.13.04.29.51;	author hdalis;	state Exp;
+branches;
+next	1.4;
+
+1.4
+date	2004.11.08.00.00.42;	author hdalis;	state Exp;
+branches;
+next	1.3;
+
+1.3
+date	2004.10.18.10.24.49;	author hdalis;	state Exp;
+branches;
+next	1.2;
+
+1.2
+date	2004.10.16.10.17.25;	author hdalis;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2004.10.01.20.59.01;	author hdalis;	state Exp;
+branches
+	1.1.1.1;
+next	;
+
+1.1.1.1
+date	2004.10.01.20.59.01;	author hdalis;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.7
+log
+@Delphi Scintilla Interface Components 0.15
+@
+text
+@{
+	Delphi Scintilla Interface Components
+	Copyright (C) 2004, Jan Martin Pettersen (hdalis)
+
+	This library is free software; you can redistribute it and/or
+	modify it under the terms of the GNU Lesser General Public
+	License as published by the Free Software Foundation; either
+	version 2.1 of the License, or (at your option) any later
+	version.
+
+	This library is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+	Lesser General Public License for more details.
+
+	You should have received a copy of the GNU Lesser General Public
+	License along with this library; if not, write to the Free
+	Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+	02111-1307 USA
+}
+{
+  Author: hdalis (hdalis@@users.sourceforge.net)
+  $Id: scilangfiller.pas,v 1.5 2004/11/13 04:29:51 hdalis Exp $
+  Purpose: Functions for filling default languages or a null language in the designer.
+  History: 29/09/2004 Initial Release
+           17/10/2004 Added property editor for the Lexer property of
+                      TSciLangItem
+           30/10/2004 Added TSciLangSettings record, and the AddIt function has
+                      a new parameter of this type to define the commenting style and other things
+                      for the languages.
+					 19/11/2004 Now you can select exactly what languages to add.
+}
+
+
+unit Scilangfiller;
+interface
+uses  SciSupport,ScintillaLanguageManager;
+{$Include commondefs.inc}
+
+procedure FillLanguages(langlist : TSciLangList;const usejustnull : Boolean=false;const stylesonly : Boolean=false);
+implementation
+uses SysUtils, Classes,Graphics, SciWhatToFillUnit,Controls;
+
+type
+TSciLangSettings = Record
+{$IFNDEF NOCOMMENTING}
+  CommentStart,CommentMiddle,CommentEnd,CommentOneliner : String;
+  CommentAtLineStart : Boolean;
+{$ENDIF}
+end;
+
+
+{$Include ScintillaLanguageStyles.inc}
+
+procedure FillLanguages(langlist : TSciLangList;const usejustnull : Boolean;const stylesonly : Boolean);
+var
+frm : TTSciWhatToFillForm;
+
+procedure AddIt(const langname : String;KeywordRecs : array of TSciLangKeywords;xStyles : array of TSciLangStyle;xLangSettings : TSciLangSettings;
+const Lexer : String='');
+	var
+		i : integer;
+		itm : TSciLangItem;
+	begin
+    itm:=langlist.Find(langname);
+    if (itm<>nil) and (itm.Lexer='null') then
+    begin
+      if Lexer='' then itm.Lexer:=langname
+      else itm.Lexer:=Lexer;
+    end;
+    if itm=nil then
+    begin
+		  itm :=TSciLangItem(langlist.Add);
+      //tmprem itm.LanguageStr:=langname;
+      itm.Name:=langname;
+      if Lexer='' then itm.Lexer:=langname
+      else
+        itm.Lexer:=Lexer;
+    end;
+    {$IFNDEF NOCOMMENTING}
+    itm.CommentStart:=xLangSettings.CommentStart;
+    itm.CommentMiddle:=xLangSettings.CommentMiddle;
+    itm.CommentEnd:=xLangSettings.CommentEnd;
+    itm.CommentOneliner:=xLangSettings.CommentOneliner;
+    itm.CommentAtLineStart:=xLangSettings.CommentAtLineStart;
+    {$ENDIF}
+		try
+			if stylesonly=false then itm.KeyWords.BeginUpdate;
+			itm.Styles.BeginUpdate;
+			for i:=Low(DefaultStyles) to High(DefaultStyles) do
+        TSciStyle(itm.Styles.Add).AssignRec(DefaultStyles[i]);
+			if stylesonly=false then
+			begin
+			for i := Low(KeywordRecs) to High(KeywordRecs) do
+				TSciKeyWords(itm.Keywords.Add).AssignRec(KeywordRecs[i]);
+			end;
+			for i := Low(xStyles) to High(xStyles) do
+				TSciStyle(itm.Styles.Add).AssignRec(xStyles[i]);
+		finally
+			itm.Styles.EndUpdate;
+			if stylesonly=false then
+			  itm.KeyWords.EndUpdate;
+		end;
+	end;
+
+begin
+	try
+		langlist.BeginUpdate;
+if usejustnull=True then	langlist.Clear;
+		AddIt('null',[],[],cpplanguagesettings);
+		if (usejustnull=False) then
+			begin
+      frm:=TTSciWhatToFillForm.Create(nil);
+      if frm.ShowModal=mrOk then
+      begin
+			if frm.c0.Checked=True then AddIt('C++/C',CPPKeywords,CPPStyles,cpplanguagesettings,'cpp');
+			if frm.c1.Checked=True then AddIt('Java',JavaKeywords,CPPStyles,cpplanguagesettings,'cpp');
+			if frm.c2.Checked=True then AddIt('JavaScript',JavaScriptKeywords,CPPStyles,cpplanguagesettings,'cpp');
+			if frm.c3.Checked=True then AddIt('Resource',ResourceKeywords,CPPStyles,cpplanguagesettings,'cpp');
+			if frm.c4.Checked=True then AddIt('IDL',IDLKeywords,CPPStyles,cpplanguagesettings,'cpp');
+			if frm.c5.Checked=True then AddIt('cppnocase',[],CPPStyles,cpplanguagesettings);
+			if frm.c6.Checked=True then AddIt('Pascal',PascalKeywords,PascalStyles,pascallanguagesettings,'pascal');
+			if frm.c7.Checked=True then AddIt('VB',VBKeywords,VBStyles,vblanguagesettings,'vb');
+			if frm.c8.Checked=True then AddIt('VBScript',VBKeywords,VBStyles,vblanguagesettings,'vbscript');
+			if frm.c9.Checked=True then AddIt('Python',PythonKeywords,PythonStyles,pythonlanguagesettings,'python');
+			if frm.c10.Checked=True then AddIt('Ruby',RubyKeywords,PythonStyles,pythonlanguagesettings,'ruby');
+			if frm.c11.Checked=True then AddIt('CSS',CSSKeywords,CSSStyles,csslanguagesettings,'css');
+			if frm.c12.Checked=True then AddIt('PERL',PerlKeywords,PerlStyles,pythonlanguagesettings,'perl');
+			if frm.c13.Checked=True then AddIt('HTML',HTMLKeywords,HTMLStyles,htmllanguagesettings,'hypertext');
+			if frm.c14.Checked=True then AddIt('XML',[],XMLStyles,htmllanguagesettings,'xml');
+			if frm.c15.Checked=True then AddIt('SQL',SQLKeywords,SQLStyles,pythonlanguagesettings,'sql');
+			if frm.c16.Checked=True then AddIt('PowerBasic',[],VBStyles,vblanguagesettings,'powerbasic');
+			if frm.c17.Checked=True then AddIt('TCL/TK',TCLKeywords,TCLStyles,tcllanguagesettings,'tcl');
+			if frm.c18.Checked=True then AddIt('Batch',BatKeywords,BatStyles,batlanguagesettings,'batch');
+			if frm.c19.Checked=True then AddIt('Properties',[],PropsStyles,pythonlanguagesettings,'props');
+			if frm.c20.Checked=True then AddIt('Makefile',[],MakeStyles,pythonlanguagesettings,'makefile');
+			if frm.c21.Checked=True then AddIt('Diff',[],DiffStyles,pythonlanguagesettings,'diff');
+			if frm.c22.Checked=True then AddIt('Apache Config',ConfKeywords,ConfStyles,pythonlanguagesettings,'conf');
+			if frm.c23.Checked=True then AddIt('LUA',LuaKeywords,LuaStyles,lualanguagesettings,'lua');
+			if frm.c24.Checked=True then AddIt('WML',WMLKeywords,XMLStyles,htmllanguagesettings,'xml');
+			if frm.c25.Checked=True then AddIt('ADA',AdaKeywords,AdaStyles,adalanguagesettings,'ada');
+			if frm.c26.Checked=True then AddIt('nnCronTab',NncrontabKeywords,NncrontabStyles,nncrontablanguagesettings,'nncrontab');
+			if frm.c27.Checked=True then AddIt('C#',CSKeywords,CPPStyles,cpplanguagesettings,'cpp');
+			if frm.c28.Checked=True then AddIt('Lisp',LispKeywords,LispStyles,lisplanguagesettings,'lisp');
+			if frm.c29.Checked=True then AddIt('Scheme',SchemeKeywords,LispStyles,lisplanguagesettings,'lisp');
+			if frm.c30.Checked=True then AddIt('ErrorList',[],[],cpplanguagesettings,'errorlist');
+      if frm.c31.Checked=True then AddIt('MMixal',MMixalKeywords,MMixalStyles,cpplanguagesettings,'mmixal');
+      if frm.c32.Checked=True then AddIt('LaTeX',[],LatexStyles,cpplanguagesettings,'latex');
+      if frm.c33.Checked=True then AddIt('AutoIt 3',AutoItKeywords,AutoItStyles,autoitlanguagesettings,'au3');
+      if frm.c34.Checked=True then AddIt('VHDL',VHDLKeywords,VHDLStyles,vhdllanguagesettings,'vhdl');
+      if frm.c35.Checked=True then AddIt('ASN1',ASN1Keywords,ASN1Styles,cpplanguagesettings,'asn1');
+      if frm.c36.Checked=True then AddIt('VXML',VXMLKeywords,XMLStyles,htmllanguagesettings,'xml');
+      if frm<>nil then frm.Free;
+      end;
+			//AddIt('batch',[],[]);
+		end;
+  finally
+		langlist.EndUpdate;
+  end;
+end;
+
+end.
+@
+
+
+1.6
+log
+@Delphi Scintilla Interface Components 0.14
+@
+text
+@d109 1
+a109 1
+		langlist.Clear;
+d150 3
+a152 2
+      if frm.c34.Checked=True then AddIt('vhdl',VHDLKeywords,VHDLStyles,vhdllanguagesettings,'vhdl');
+      if frm.c35.Checked=True then AddIt('asn1',ASN1Keywords,ASN1Styles,cpplanguagesettings,'asn1');
+@
+
+
+1.5
+log
+@Updated to v0.13
+@
+text
+@a1 11
+  Author: hdalis (hdalis@@users.sourceforge.net)
+  $Id: $
+  Purpose: Functions for filling default languages or a null language in the designer.
+  History: 29/09/2004 Initial Release
+           17/10/2004 Added property editor for the Lexer property of
+                      TSciLangItem
+           30/10/2004 Added TSciLangSettings record, and the AddIt function has
+                      a new parameter of this type to define the commenting style and other things
+                      for the languages.
+}
+{
+d21 12
+d37 1
+a37 1
+uses  SciSupport,ScintillaSynLexers;
+d42 1
+a42 1
+uses SysUtils, Classes,Graphics;
+d56 3
+d111 1
+a111 1
+		if usejustnull=false then
+d113 41
+a153 36
+			AddIt('C++/C',CPPKeywords,CPPStyles,cpplanguagesettings,'cpp');
+			AddIt('Java',JavaKeywords,CPPStyles,cpplanguagesettings,'cpp');
+			AddIt('JavaScript',JavaScriptKeywords,CPPStyles,cpplanguagesettings,'cpp');
+			AddIt('Resource',ResourceKeywords,CPPStyles,cpplanguagesettings,'cpp');
+			AddIt('IDL',IDLKeywords,CPPStyles,cpplanguagesettings,'cpp');
+			AddIt('cppnocase',[],CPPStyles,cpplanguagesettings);
+			AddIt('Pascal',PascalKeywords,PascalStyles,pascallanguagesettings,'pascal');
+			AddIt('VB',VBKeywords,VBStyles,vblanguagesettings,'vb');
+			AddIt('VBScript',VBKeywords,VBStyles,vblanguagesettings,'vbscript');
+			AddIt('Python',PythonKeywords,PythonStyles,pythonlanguagesettings,'python');
+			AddIt('Ruby',RubyKeywords,PythonStyles,pythonlanguagesettings,'ruby');
+			AddIt('CSS',CSSKeywords,CSSStyles,csslanguagesettings,'css');
+			AddIt('PERL',PerlKeywords,PerlStyles,pythonlanguagesettings,'perl');
+			AddIt('HTML',HTMLKeywords,HTMLStyles,htmllanguagesettings,'hypertext');
+			AddIt('XML',[],XMLStyles,htmllanguagesettings,'xml');
+			AddIt('SQL',SQLKeywords,SQLStyles,pythonlanguagesettings,'sql');
+			AddIt('PowerBasic',[],VBStyles,vblanguagesettings,'powerbasic');
+			AddIt('TCK/TK',TCLKeywords,TCLStyles,tcllanguagesettings,'tcl');
+			AddIt('Batch',BatKeywords,BatStyles,batlanguagesettings,'batch');
+			AddIt('Properties',[],PropsStyles,pythonlanguagesettings,'props');
+			AddIt('Makefile',[],MakeStyles,pythonlanguagesettings,'makefile');
+			AddIt('Diff',[],DiffStyles,pythonlanguagesettings,'diff');
+			AddIt('Apache Config',ConfKeywords,ConfStyles,pythonlanguagesettings,'conf');
+			AddIt('LUA',LuaKeywords,LuaStyles,lualanguagesettings,'lua');
+			AddIt('WML',WMLKeywords,XMLStyles,htmllanguagesettings,'xml');
+			AddIt('ADA',AdaKeywords,AdaStyles,adalanguagesettings,'ada');
+			AddIt('nnCronTab',NncrontabKeywords,NncrontabStyles,nncrontablanguagesettings,'nncrontab');
+			AddIt('C#',CSKeywords,CPPStyles,cpplanguagesettings,'cpp');
+			AddIt('Lisp',LispKeywords,LispStyles,lisplanguagesettings,'lisp');
+			AddIt('Scheme',SchemeKeywords,LispStyles,lisplanguagesettings,'lisp');
+			AddIt('ErrorList',[],[],cpplanguagesettings,'errorlist');
+      AddIt('MMixal',MMixalKeywords,MMixalStyles,cpplanguagesettings,'mmixal');
+      AddIt('LaTeX',[],LatexStyles,cpplanguagesettings,'latex');
+      AddIt('AutoIt 3',AutoItKeywords,AutoItStyles,autoitlanguagesettings,'au3');
+      AddIt('vhdl',VHDLKeywords,VHDLStyles,vhdllanguagesettings,'vhdl');
+      AddIt('asn1',ASN1Keywords,ASN1Styles,cpplanguagesettings,'asn1');
+@
+
+
+1.4
+log
+@Delphi Scintilla Interface Components v0.,12
+@
+text
+@@
+
+
+1.3
+log
+@no message
+@
+text
+@d8 3
+d43 7
+d55 2
+a56 1
+procedure AddIt(const langname : String;KeywordRecs : array of TSciLangKeywords;xStyles : array of TSciLangStyle;const Lexer : String='');
+a59 1
+    x,cnt : Integer;
+d61 2
+a62 3
+    itm:=nil;
+    cnt:=langlist.Count;
+    for x:=0 to (cnt-1) do
+d64 2
+a65 10
+      if TSciLangItem(langlist.Items[x]).LanguageStr=langname then
+      begin
+        itm:=TSciLangItem(langlist.Items[x]);
+        if itm.Lexer='null' then
+        begin
+          if (Lexer='') then itm.Lexer:=langname
+          else
+            itm.Lexer:=Lexer;
+        end;
+      end;
+d70 2
+a71 1
+      itm.LanguageStr:=langname;
+d76 7
+d86 2
+a87 1
+			for i:=Low(DefaultStyles) to High(DefaultStyles) do TSciStyle(itm.Styles.Add).AssignRec(DefaultStyles[i]);
+d98 1
+a98 1
+			itm.KeyWords.EndUpdate;
+d106 1
+a106 1
+		AddIt('null',[],[],'Text');
+d109 36
+a144 31
+			AddIt('cpp',CPPKeywords,CPPStyles);
+			AddIt('java',JavaKeywords,CPPStyles,'cpp');
+			AddIt('javascript',JavaScriptKeywords,CPPStyles,'cpp');
+			AddIt('resource',ResourceKeywords,CPPStyles,'cpp');
+			AddIt('idl',IDLKeywords,CPPStyles,'cpp');
+			AddIt('cppnocase',[],CPPStyles);
+			AddIt('pascal',PascalKeywords,PascalStyles);
+			AddIt('vb',VBKeywords,VBStyles);
+			AddIt('vbscript',VBKeywords,VBStyles);
+			AddIt('python',PythonKeywords,PythonStyles);
+			AddIt('ruby',RubyKeywords,PythonStyles);
+			AddIt('css',CSSKeywords,CSSStyles);
+			AddIt('perl',PerlKeywords,PerlStyles);
+			AddIt('hypertext',HTMLKeywords,HTMLStyles);
+			AddIt('xml',[],XMLStyles);
+			AddIt('sql',SQLKeywords,SQLStyles);
+			AddIt('powerbasic',[],VBStyles);
+			AddIt('tcl',TCLKeywords,TCLStyles);
+			AddIt('batch',BatKeywords,BatStyles);
+			AddIt('props',[],PropsStyles);
+			AddIt('makefile',[],MakeStyles);
+			AddIt('diff',[],DiffStyles);
+			AddIt('conf',ConfKeywords,ConfStyles);
+			AddIt('lua',LuaKeywords,LuaStyles);
+			AddIt('wml',WMLKeywords,XMLStyles,'xml');
+			AddIt('ada',AdaKeywords,AdaStyles);
+			AddIt('nncrontab',NncrontabKeywords,NncrontabStyles);
+			AddIt('cs',CSKeywords,CPPStyles,'cpp');
+			AddIt('lisp',LispKeywords,LispStyles);
+			AddIt('scheme',SchemeKeywords,LispStyles,'lisp');
+			AddIt('errorlist',[],[]);
+@
+
+
+1.2
+log
+@Some bugfixes, and other changes
+@
+text
+@d1 8
+a8 2
+//Functions for filling default languages or a null language in the designer.
+
+d96 1
+a96 1
+		AddIt('null',[],[]);
+d130 1
+a130 1
+			AddIt('batch',[],[]);
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d1 2
+d4 18
+a21 1
+	Functions for filling default languages or a null language in the designer.
+d23 2
+@
+
+
+1.1.1.1
+log
+@no message
+@
+text
+@@

@@ -1,0 +1,406 @@
+head	1.2;
+access;
+symbols
+	test:1.1.1.1 hdalis:1.1.1;
+locks; strict;
+comment	@// @;
+
+
+1.2
+date	2004.10.03.20.46.24;	author hdalis;	state dead;
+branches;
+next	1.1;
+
+1.1
+date	2004.10.01.21.01.32;	author hdalis;	state Exp;
+branches
+	1.1.1.1;
+next	;
+
+1.1.1.1
+date	2004.10.01.21.01.32;	author hdalis;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@no message
+@
+text
+@// Borland C++ Builder
+// Copyright (c) 1995, 2002 by Borland Software Corporation
+// All rights reserved
+
+// (DO NOT EDIT: machine generated header) 'SciLexerMod.pas' rev: 6.00
+
+#ifndef SciLexerModHPP
+#define SciLexerModHPP
+
+#pragma delphiheader begin
+#pragma option push -w-
+#pragma option push -Vx
+#include <StrUtils.hpp>	// Pascal unit
+#include <SciKeyBindings.hpp>	// Pascal unit
+#include <ScintillaSynLexers.hpp>	// Pascal unit
+#include <SciLexer.hpp>	// Pascal unit
+#include <Graphics.hpp>	// Pascal unit
+#include <SysUtils.hpp>	// Pascal unit
+#include <Messages.hpp>	// Pascal unit
+#include <Controls.hpp>	// Pascal unit
+#include <Windows.hpp>	// Pascal unit
+#include <Classes.hpp>	// Pascal unit
+#include <SysInit.hpp>	// Pascal unit
+#include <System.hpp>	// Pascal unit
+
+//-- user supplied -----------------------------------------------------------
+
+namespace Scilexermod
+{
+//-- type declarations -------------------------------------------------------
+#pragma option push -b-
+enum sciWordWrapVisualFlag { sciWWEnd, sciWWStart };
+#pragma option pop
+
+typedef Set<sciWordWrapVisualFlag, sciWWEnd, sciWWStart>  sciWordWrapVisualFlags;
+
+#pragma option push -b-
+enum sciWordWrapVisualFlagLocation { sciEndByText, sciStartByText };
+#pragma option pop
+
+typedef Set<sciWordWrapVisualFlagLocation, sciEndByText, sciStartByText>  sciWordWrapVisualFlagLocations;
+
+#pragma option push -b-
+enum sciCacheType { sciCacheNone, sciCacheCaret, sciCachePage, sciCacheDocument };
+#pragma option pop
+
+#pragma option push -b-
+enum sciMarkerType { sciMarkCircle, sciMarkBox, sciMarkPlusMinus, sciMarkArrows };
+#pragma option pop
+
+#pragma option push -b-
+enum sciEdgeType { sciEdgeNone, sciEdgeLine, sciEdgeBackground };
+#pragma option pop
+
+#pragma option push -b-
+enum TIndentationOption { KeepIndent, TabIndents, BackSpaceUnIndents, IndentationGuides };
+#pragma option pop
+
+typedef Set<TIndentationOption, KeepIndent, IndentationGuides>  TIndentationOptions;
+
+#pragma option push -b-
+enum TEOLStyle { eolCRLF, eolCR, eolLF };
+#pragma option pop
+
+#pragma option push -b-
+enum TMarginType { Gut_Symbol, Gut_LineNumber };
+#pragma option pop
+
+class DELPHICLASS TMargin;
+class DELPHICLASS TScintilla;
+class DELPHICLASS TCaret;
+class PASCALIMPLEMENTATION TCaret : public Classes::TPersistent 
+{
+	typedef Classes::TPersistent inherited;
+	
+private:
+	TScintilla* fScintilla;
+	Graphics::TColor __fastcall GetCaretFore(void);
+	void __fastcall SetCaretFore(const Graphics::TColor Value);
+	Graphics::TColor __fastcall GetCaretLineBack(void);
+	void __fastcall SetCaretLineBack(const Graphics::TColor Value);
+	BOOL __fastcall GetCaretLineVisible(void);
+	void __fastcall SetCaretLineVisible(const BOOL Value);
+	int __fastcall GetCaretWidth(void);
+	void __fastcall SetCaretWidth(const int Value);
+	void __fastcall SetCaretPeriod(const int Value);
+	int __fastcall GetCaretPeriod(void);
+	
+public:
+	__fastcall TCaret(TScintilla* Scintilla);
+	virtual void __fastcall Assign(Classes::TPersistent* Source);
+	
+__published:
+	__property Graphics::TColor ForeColor = {read=GetCaretFore, write=SetCaretFore, nodefault};
+	__property Graphics::TColor LineBackColor = {read=GetCaretLineBack, write=SetCaretLineBack, nodefault};
+	__property BOOL LineVisible = {read=GetCaretLineVisible, write=SetCaretLineVisible, nodefault};
+	__property int Width = {read=GetCaretWidth, write=SetCaretWidth, nodefault};
+	__property int Period = {read=GetCaretPeriod, write=SetCaretPeriod, nodefault};
+public:
+	#pragma option push -w-inl
+	/* TPersistent.Destroy */ inline __fastcall virtual ~TCaret(void) { }
+	#pragma option pop
+	
+};
+
+
+class DELPHICLASS TSciColors;
+class PASCALIMPLEMENTATION TSciColors : public Classes::TPersistent 
+{
+	typedef Classes::TPersistent inherited;
+	
+private:
+	TScintilla* fScintilla;
+	Graphics::TColor FForeSelColor;
+	Graphics::TColor FBackSelColor;
+	Graphics::TColor FBookMarkBackColor;
+	Graphics::TColor FBookMarkForeColor;
+	Graphics::TColor FMarkerFore;
+	Graphics::TColor FMarkerBack;
+	Graphics::TColor FFoldHiColor;
+	Graphics::TColor FFoldLoColor;
+	void __fastcall SetForeSel(const Graphics::TColor Value);
+	void __fastcall SetBackSel(const Graphics::TColor Value);
+	void __fastcall SetMarkerFore(const Graphics::TColor Value);
+	void __fastcall SetMarkerBack(const Graphics::TColor Value);
+	void __fastcall SetFoldHi(const Graphics::TColor Value);
+	void __fastcall SetFoldLo(const Graphics::TColor Value);
+	void __fastcall SetBookMarkFore(const Graphics::TColor Value);
+	void __fastcall SetBookMarkBack(const Graphics::TColor Value);
+	
+public:
+	__fastcall TSciColors(TScintilla* Scintilla);
+	virtual void __fastcall Assign(Classes::TPersistent* Source);
+	
+__published:
+	__property Graphics::TColor SelFore = {read=FForeSelColor, write=SetForeSel, nodefault};
+	__property Graphics::TColor SelBack = {read=FBackSelColor, write=SetBackSel, nodefault};
+	__property Graphics::TColor MarkerFore = {read=FMarkerFore, write=SetMarkerFore, nodefault};
+	__property Graphics::TColor MarkerBack = {read=FMarkerBack, write=SetMarkerBack, nodefault};
+	__property Graphics::TColor FoldHi = {read=FFoldHiColor, write=SetFoldHi, nodefault};
+	__property Graphics::TColor FoldLo = {read=FFoldLoColor, write=SetFoldLo, nodefault};
+	__property Graphics::TColor BookMarkBack = {read=FBookMarkBackColor, write=SetBookMarkBack, nodefault};
+	__property Graphics::TColor BookMarkFore = {read=FBookMarkForeColor, write=SetBookMarkFore, nodefault};
+public:
+	#pragma option push -w-inl
+	/* TPersistent.Destroy */ inline __fastcall virtual ~TSciColors(void) { }
+	#pragma option pop
+	
+};
+
+
+class DELPHICLASS TDivOptions;
+class PASCALIMPLEMENTATION TDivOptions : public Classes::TPersistent 
+{
+	typedef Classes::TPersistent inherited;
+	
+private:
+	TScintilla* fScintilla;
+	bool __fastcall GetBool(const int Index);
+	void __fastcall SetBool(const int Index, const bool Value);
+	
+public:
+	__fastcall TDivOptions(TScintilla* Scintilla);
+	virtual void __fastcall Assign(Classes::TPersistent* Source);
+	
+__published:
+	__property bool ViewWSpace = {read=GetBool, write=SetBool, index=0, nodefault};
+	__property bool UsePalette = {read=GetBool, write=SetBool, index=1, nodefault};
+	__property bool OverType = {read=GetBool, write=SetBool, index=2, nodefault};
+	__property bool ViewEOL = {read=GetBool, write=SetBool, index=3, nodefault};
+	__property bool EndAtLastLine = {read=GetBool, write=SetBool, index=4, nodefault};
+	__property bool ScrollBarH = {read=GetBool, write=SetBool, index=5, nodefault};
+	__property bool ScrollBarV = {read=GetBool, write=SetBool, index=6, nodefault};
+public:
+	#pragma option push -w-inl
+	/* TPersistent.Destroy */ inline __fastcall virtual ~TDivOptions(void) { }
+	#pragma option pop
+	
+};
+
+
+class PASCALIMPLEMENTATION TScintilla : public Scilexer::TScintillaBase 
+{
+	typedef Scilexer::TScintillaBase inherited;
+	
+private:
+	TMargin* fMargin0;
+	TMargin* fMargin1;
+	TMargin* fMargin2;
+	Classes::TStrings* FLines;
+	bool fKeepIndent;
+	bool fCodeFolding;
+	bool FBraceHilite;
+	Scintillasynlexers::TSciSynLexer* fHighlighter;
+	TCaret* fCaret;
+	TSciColors* fColors;
+	TDivOptions* fDivOptions;
+	sciMarkerType FMarkerType;
+	Scikeybindings::TSciKeyCommandCollection* fKeyCommands;
+	BOOL FHideSel;
+	void __fastcall SetKeyCommands(const Scikeybindings::TSciKeyCommandCollection* Value);
+	void __fastcall SetLines(const Classes::TStrings* Value);
+	void __fastcall SetMargins(const int Index, const TMargin* Value);
+	TEOLStyle __fastcall GetEOLStyle(void);
+	void __fastcall SetEOLStyle(const TEOLStyle Value);
+	void __fastcall SetMarkerType(const sciMarkerType Value);
+	void __fastcall SetMarkers(const sciMarkerType Value);
+	TIndentationOptions __fastcall GetIndentation(void);
+	void __fastcall SetIndentation(const TIndentationOptions Value);
+	sciWordWrapVisualFlags __fastcall GetWordWrapVisual(void);
+	void __fastcall SetWordWrapVisual(const sciWordWrapVisualFlags flags);
+	sciWordWrapVisualFlagLocations __fastcall GetWordWrapVisualLoc(void);
+	void __fastcall SetWordWrapVisualLoc(const sciWordWrapVisualFlagLocations flags);
+	void __fastcall SetLCache(const sciCacheType value);
+	sciCacheType __fastcall GetLCache(void);
+	void __fastcall SetHighlighter(const Scintillasynlexers::TSciSynLexer* Value);
+	void __fastcall SetHideSel(const BOOL value);
+	void __fastcall inSetEdgeMode(const sciEdgeType value);
+	sciEdgeType __fastcall inGetEdgeMode(void);
+	
+protected:
+	virtual void __fastcall SetCodeFolding(const bool Value);
+	void __fastcall MaintainIndentation(int ch);
+	void __fastcall Expand(int &line, bool doExpand, bool force = false, int visLevels = 0x0, int level = 0xffffffff);
+	virtual void __fastcall ProcessBraces(void);
+	virtual void __fastcall doSciCharAdded(const int ch);
+	virtual void __fastcall CharAddedAutoComplete(const int ch);
+	virtual void __fastcall doSciUserListSelection(const int listType, char * text);
+	virtual void __fastcall doSciUpdateUI(void);
+	virtual void __fastcall doSciMarginClick(const int modifiers, const int position, const int margin);
+	virtual void __fastcall doSciModified(const int position, const int modificationType, char * text, const int length, const int linesAdded, const int line, const int foldLevelNow, const int foldLevelPrev);
+	HIDESBASE MESSAGE void __fastcall CMFontChanged(Messages::TMessage &Message);
+	HIDESBASE MESSAGE void __fastcall CMColorChanged(Messages::TMessage &Message);
+	virtual void __fastcall Loaded(void);
+	
+public:
+	__fastcall virtual TScintilla(Classes::TComponent* AOwner);
+	__fastcall virtual ~TScintilla(void);
+	virtual void __fastcall CopyFrom(Classes::TPersistent* Source);
+	void __fastcall SaveSettingsToStream(Classes::TStream* Stream);
+	void __fastcall LoadSettingsFromStream(Classes::TStream* Stream);
+	void __fastcall DefineMarker(int MarkNum, int Marker, Graphics::TColor ForeColor = (Graphics::TColor)(0x20000000), Graphics::TColor BackColor = (Graphics::TColor)(0x20000000));
+	void __fastcall BookmarkAdd(int lineno);
+	void __fastcall BookmarkDelete(int lineno);
+	void __fastcall BookmarkToggle(int lineno);
+	bool __fastcall BookmarkPresent(int lineno);
+	bool __fastcall BookmarkNext(bool forwardScan);
+	void __fastcall FoldAll(void);
+	void __fastcall FindMatchingBracePosition(int &braceAtCaret, int &braceOpposite, bool &IsInside, bool sloppy = true);
+	void __fastcall GoMatchingBrace(bool Select, bool Sloppy);
+	__property Classes::TStrings* Lines = {read=FLines, write=SetLines};
+	
+__published:
+	__property OnStyleNeeded ;
+	__property OnCharAdded ;
+	__property OnSavePointReached ;
+	__property OnSavePointLeft ;
+	__property OnModifyAttemptRO ;
+	__property OnKey ;
+	__property OnDoubleClick ;
+	__property OnUpdateUI ;
+	__property OnModified ;
+	__property OnMacroRecord ;
+	__property OnMarginClick ;
+	__property OnNeedShown ;
+	__property OnPainted ;
+	__property OnUserListSelection ;
+	__property OnDwellStart ;
+	__property OnDwellEnd ;
+	__property OnZoom ;
+	__property OnHotSpotClick ;
+	__property OnHotSpotDoubleClick ;
+	__property OnCallTipClick ;
+	__property OnMsgSent ;
+	__property OnKeyUp ;
+	__property OnKeyDown ;
+	__property OnKeyPress ;
+	__property OnEnter ;
+	__property OnExit ;
+	__property bool BraceHilite = {read=FBraceHilite, write=FBraceHilite, nodefault};
+	__property bool CodeFolding = {read=fCodeFolding, write=SetCodeFolding, default=0};
+	__property TEOLStyle EOLStyle = {read=GetEOLStyle, write=SetEOLStyle, nodefault};
+	__property TIndentationOptions Indentation = {read=GetIndentation, write=SetIndentation, nodefault};
+	__property int IndentWidth = {read=GetIndent, write=SetIndent, nodefault};
+	__property TMargin* Gutter0 = {read=fMargin0, write=SetMargins, index=0};
+	__property TMargin* Gutter1 = {read=fMargin1, write=SetMargins, index=1};
+	__property TMargin* Gutter2 = {read=fMargin2, write=SetMargins, index=2};
+	__property Scikeybindings::TSciKeyCommandCollection* KeyCommands = {read=fKeyCommands, write=SetKeyCommands};
+	__property int MarginLeft = {read=GetMarginLeft, write=SetMarginLeft, nodefault};
+	__property int MarginRight = {read=GetMarginRight, write=SetMarginRight, nodefault};
+	__property int TabWidth = {read=GetTabWidth, write=SetTabWidth, default=8};
+	__property ReadOnly  = {default=0};
+	__property BOOL UseTabs = {read=GetUseTabs, write=SetUseTabs, default=-1};
+	__property UseUnicode  = {default=0};
+	__property TCaret* Caret = {read=fCaret, write=fCaret};
+	__property TDivOptions* DivOptions = {read=fDivOptions, write=fDivOptions};
+	__property TSciColors* Colors = {read=fColors, write=fColors};
+	__property int MouseDwellTime = {read=GetMouseDwellTime, write=SetMouseDwellTime, nodefault};
+	__property ClearUndoAfterSave  = {default=0};
+	__property sciMarkerType MarkerType = {read=FMarkerType, write=SetMarkerType, default=1};
+	__property sciWordWrapVisualFlags WordWrapVisualFlags = {read=GetWordWrapVisual, write=SetWordWrapVisual, nodefault};
+	__property sciWordWrapVisualFlagLocations WordWrapVisualFlagsLocation = {read=GetWordWrapVisualLoc, write=SetWordWrapVisualLoc, nodefault};
+	__property sciCacheType LayoutCache = {read=GetLCache, write=SetLCache, nodefault};
+	__property Scintillasynlexers::TSciSynLexer* Highlighter = {read=fHighlighter, write=SetHighlighter};
+	__property BOOL HideSelect = {read=FHideSel, write=SetHideSel, nodefault};
+	__property WordWrap  = {default=0};
+	__property sciEdgeType EdgeMode = {read=inGetEdgeMode, write=inSetEdgeMode, default=0};
+	__property int EdgeColumn = {read=GetEdgeColumn, write=SetEdgeColumn, default=0};
+	__property Graphics::TColor EdgeColor = {read=GetEdgeColour, write=SetEdgeColour, default=536870912};
+	__property WordChars ;
+public:
+	#pragma option push -w-inl
+	/* TWinControl.CreateParented */ inline __fastcall TScintilla(HWND ParentWindow) : Scilexer::TScintillaBase(ParentWindow) { }
+	#pragma option pop
+	
+};
+
+
+class PASCALIMPLEMENTATION TMargin : public Classes::TPersistent 
+{
+	typedef Classes::TPersistent inherited;
+	
+private:
+	TScintilla* fScintilla;
+	int fNumber;
+	int __fastcall GetWidth(void);
+	void __fastcall SetWidth(const int Value);
+	TMarginType __fastcall GetMarginType(void);
+	void __fastcall SetMarginType(const TMarginType Value);
+	
+public:
+	__fastcall TMargin(TScintilla* Scintilla, int Number);
+	virtual void __fastcall Assign(Classes::TPersistent* Source);
+	
+__published:
+	__property int Width = {read=GetWidth, write=SetWidth, nodefault};
+	__property TMarginType MarginType = {read=GetMarginType, write=SetMarginType, nodefault};
+public:
+	#pragma option push -w-inl
+	/* TPersistent.Destroy */ inline __fastcall virtual ~TMargin(void) { }
+	#pragma option pop
+	
+};
+
+
+//-- var, const, procedure ---------------------------------------------------
+
+}	/* namespace Scilexermod */
+using namespace Scilexermod;
+#pragma option pop	// -w-
+#pragma option pop	// -Vx
+
+#pragma delphiheader end.
+//-- end unit ----------------------------------------------------------------
+#endif	// SciLexerMod
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@@
+
+
+1.1.1.1
+log
+@no message
+@
+text
+@@

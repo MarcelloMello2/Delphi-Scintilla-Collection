@@ -1,0 +1,346 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@ * @;
+
+
+1.1
+date	2004.12.03.17.19.00;	author hdalis;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Delphi Scintilla Interface Components 0.15
+@
+text
+@//CE_Desc_Include(helpdescriptions.txt)
+{
+	Delphi Scintilla Interface Components
+	Copyright (C) 2004, Jan Martin Pettersen (hdalis)
+
+	This library is free software; you can redistribute it and/or
+	modify it under the terms of the GNU Lesser General Public
+	License as published by the Free Software Foundation; either
+	version 2.1 of the License, or (at your option) any later
+	version.
+
+	This library is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+	Lesser General Public License for more details.
+
+	You should have received a copy of the GNU Lesser General Public
+	License along with this library; if not, write to the Free
+	Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+	02111-1307 USA
+}
+{
+	Author : hdalis (Jan Martin Pettersen)
+	Created: 02/12/2004
+			$Id:  $
+	Purpose: Assorted functions used by the components
+
+	History: 02/12/2004 First release
+}
+unit sciUtils;
+interface
+uses Graphics,Classes;
+//Convert a string to the corresponding TColor, and if s='' then returns defcolor.
+function ColourFromString(const s : String;const defcolor : TColor) : TColor;
+//Converts a TColor to a string readable by ColourFromString.
+function ColourToString(const clr : TColor) : String;
+function StringToBool(const s : String) : Boolean;
+function BoolToString(const value : Boolean) : String;
+
+// Compares s1 to s2, if ignorecase is true then the comparing is caseless.
+// If maxlen<>-1 then only maxlen chars are compared.
+function CompStr(const s1,s2 : String;ignorecase : Boolean=True;maxlen : Integer=-1) : Integer;
+
+//Extracts a value from a property in the format valuename:value
+function ValueExtract(const s:String;valuename : String) : String;
+
+function StrToken(var S: AnsiString; const Separator: AnsiChar): AnsiString;
+function StrReplaceChar(const S: AnsiString; const Source, Replace: Char): AnsiString;
+function ValueFromIndex(lst : TStrings;index : Integer) : String;
+
+{$Ifdef COMPILER5}
+  procedure SplitStrings(const src : String;lst : TStrings);
+  function MergeStrings(lst : TStrings) : String;
+{$Endif}
+
+implementation
+uses sysutils;
+{$Ifdef NOBUILTINCLR}
+	Type
+		{ Auxiliary structure to support TColor manipulation }
+		TColorRec = packed record
+			case Integer of
+				0: (Value: Longint);
+				1: (Red, Green, Blue: Byte);
+				2: (R, G, B, Flag: Byte);
+				3: (Index: Word); // GetSysColor, PaletteIndex
+		end;
+
+	//Extracts a integer from a hex digit
+	function IntFromHexDigit(const ch : Char) : Integer;
+	begin
+		if ((ch>='0') and (ch<='9')) then
+		begin
+			Result :=Integer(ch)-Integer('0');
+		end else if ((ch >= 'A') and (ch <= 'F')) then
+		begin
+			Result :=Integer(ch)-Integer('A')+10;
+		end else if ((ch >= 'a') and (ch <= 'f')) then
+		begin
+			Result :=Integer(ch)-Integer('a')+10;
+		end	else
+		begin
+			Result:=0;
+		end;
+	end;
+
+	//Extracts a integer from a hex byte
+	function IntFromHexByte(const hexByte : PChar) : Integer;
+	begin
+		Result:=IntFromHexDigit(hexByte[0]) * 16 + IntFromHexDigit(hexByte[1]);
+	end;
+
+	//Sets a TColor from RGB.
+	function internSetRGBValue(const Red, Green, Blue: Byte): TColor;
+	begin
+		TColorRec(Result).Red := Red;
+		TColorRec(Result).Green := Green;
+		TColorRec(Result).Blue := Blue;
+		TColorRec(Result).Flag := 0;
+	end;
+{$Else}
+{$Endif}
+
+
+//  B           G             R
+//  FF         EE             DD
+//  DD         EE             FF
+{This function exists in the TStrings class in Delphi7 but not in CBuilder6
+ therefore a wrapper/substitute for it.
+}
+function ValueFromIndex(lst : TStrings;index : Integer) : String;
+{$Ifndef VER150}
+var
+name : String;
+value : String;
+begin
+	name:=lst.Names[index];
+	value:=lst.Values[name];
+	Result:=value;
+{$Else}
+begin
+  Result:=lst.ValueFromIndex[index];
+{$Endif}
+end;
+
+//Convert a string to the corresponding TColor, and if s='' then returns defcolor.
+function ColourFromString(const s : String;const defcolor : TColor) : TColor;
+var
+{$Ifdef NOBUILTINCLR}
+	r: Integer;
+	g: Integer;
+	b: Integer;
+{$Else}
+	tmp : array [0..10] of Char ;
+{$Endif}
+begin
+	if (Length(s)>0) then
+	begin
+{$Ifdef NOBUILTINCLR}
+		//tmp:=PChar(s);
+		r := IntFromHexByte(PChar(s) + 1);
+		g := IntFromHexByte(PChar(s) + 3);
+		b := IntFromHexByte(PChar(s) + 5);
+		Result := internSetRGBValue(r,g,b);
+{$Else}
+
+    if s[1]='#' then  //Rotate htmlcolorcode to resemble delphi colorcodes
+    begin
+      tmp[0]:='$';
+      tmp[1]:='0';
+      tmp[2]:='0';
+      tmp[3]:=s[6];
+      tmp[4]:=s[7];
+      tmp[5]:=s[4];
+      tmp[6]:=s[5];
+      tmp[7]:=s[2];
+      tmp[8]:=s[3];
+      tmp[9]:=#0;
+		  Result:=StringToColor(tmp);
+      Exit;
+    end;
+		Result:=StringToColor(s);
+{$Endif}
+	end else
+	begin
+		Result:=defcolor;
+	end;
+end;
+
+//Converts a TColor to a string readable by ColourFromString.
+function ColourToString(const clr :TColor) : String;
+{$Ifndef NOBUILTINCLR}
+var
+	tmp : String;
+	tmp2 : array [0..10] of Char;
+{$Endif}
+begin
+{$Ifdef NOBUILTINCLR}
+	Result:=Format('#%2.2x%2.2x%2.2x',[TColorRec(clr).Red,TColorRec(clr).Green,TColorRec(clr).Blue]);
+{$Else}
+	tmp:=ColorToString(clr);
+	if (tmp[1]='$') then  //Rotate string to resemble html colorcodes
+	begin
+		Delete(tmp,1,3);
+		tmp2[0]:='#';
+		tmp2[1]:=tmp[5];
+		tmp2[2]:=tmp[6];
+		tmp2[3]:=tmp[3];
+		tmp2[4]:=tmp[4];
+		tmp2[5]:=tmp[1];
+		tmp2[6]:=tmp[2];
+		tmp2[7]:=#0;
+		Result:=tmp2;
+		Exit;
+	end;
+
+	Result:=tmp;
+{$Endif}
+end;
+
+
+//Replaces the all 'source' char with 'replace' char, and returns the result.
+function StrReplaceChar(const S: AnsiString; const Source, Replace: Char): AnsiString;
+var
+  I: Integer;
+begin
+  Result := S;
+  for I := 1 to Length(S) do
+    if Result[I] = Source then
+      Result[I] := Replace;
+end;
+
+//Extracts the string from start to 'separator'. Returns that, and returns the rest of the string
+//in 's'
+function StrToken(var S: AnsiString; const Separator: AnsiChar): AnsiString;
+var
+  I: Integer;
+begin
+  I := Pos(Separator, S);
+  if I <> 0 then
+  begin
+    Result := Copy(S, 1, I - 1);
+    Delete(S, 1, I);
+  end else
+	begin
+    Result := S;
+    S := '';
+  end;
+end;
+
+function CompStr(const s1,s2 : String;ignorecase : Boolean;maxlen : Integer) : Integer;
+begin
+  if maxlen=-1 then
+  begin
+    if ignorecase then
+      Result:=StrIComp(PChar(s1),PChar(s2))
+    else
+      Result:=StrComp(PChar(s1),PChar(s2));
+  end else
+  begin
+    if ignorecase then
+      Result:=StrLIComp(PChar(s1),PChar(s2),maxlen)
+    else
+      Result:=StrLComp(PChar(s1),PChar(s2),maxlen);
+  end;
+end;
+
+//Extracts a value from a name/value string.
+function ValueExtract(const s:String;valuename : String) : String;
+var
+	tmp : String;
+	vallen : Integer;
+begin
+	tmp:=s;
+	vallen:=Length(valuename);
+	if (Length(s)>=vallen) then
+		Delete(tmp,1,vallen+1);
+	Result :=Trim(tmp);
+end;
+
+
+function StringToBool(const s : String) : Boolean;
+begin
+  if (CompStr(s,'True')=0) or (CompStr(s,'1')=0) or (CompStr(s,'Yes')=0) then
+    Result:=True
+  else
+    Result:=False;
+end;
+
+function BoolToString(const value : Boolean) : String;
+begin
+	if value=true then Result:='True'
+	else Result:='False';
+end;
+
+{$IFDEF COMPILER5}
+function MergeStrings(lst : TStrings) : String;
+var
+i,cnt : Integer;
+s : String;
+P : PChar;
+begin
+  cnt:=lst.Count;
+  Result:='';
+  if cnt=1 then
+  begin
+    Result:=lst.Strings[0];
+    Exit;
+  end;
+  for i:=0 to (cnt-1) do
+  begin
+    s:=lst.Strings[i];
+    P:=PChar(s);
+      while not (P^ in [#0..' ']) do
+        Inc(P);
+      Result := Result + S + ' ';
+  end;
+  System.Delete(Result, Length(Result), 1);
+end;
+
+procedure SplitStrings(const src : String;lst : TStrings);
+var
+  P, Start: PChar;
+  S: string;
+begin
+  lst.Clear;
+  P := Pointer(src);
+  if P <> nil then
+  begin
+    while P^ <> #0 do
+    begin
+      Start := P;
+      while not (P^ in [#0, #10, #13]) do Inc(P);
+      SetString(S, Start, P - Start);
+      lst.Add(S);
+      if P^ = #13 then Inc(P);
+      if P^ = #10 then Inc(P);
+    end;
+  end;
+end;
+{$ENDIF}
+
+end.
+ @

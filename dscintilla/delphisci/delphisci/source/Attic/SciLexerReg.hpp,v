@@ -1,0 +1,90 @@
+head	1.2;
+access;
+symbols
+	test:1.1.1.1 hdalis:1.1.1;
+locks; strict;
+comment	@// @;
+
+
+1.2
+date	2004.10.03.20.46.24;	author hdalis;	state dead;
+branches;
+next	1.1;
+
+1.1
+date	2004.10.01.21.02.12;	author hdalis;	state Exp;
+branches
+	1.1.1.1;
+next	;
+
+1.1.1.1
+date	2004.10.01.21.02.12;	author hdalis;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@no message
+@
+text
+@// Borland C++ Builder
+// Copyright (c) 1995, 2002 by Borland Software Corporation
+// All rights reserved
+
+// (DO NOT EDIT: machine generated header) 'SciLexerReg.pas' rev: 6.00
+
+#ifndef SciLexerRegHPP
+#define SciLexerRegHPP
+
+#pragma delphiheader begin
+#pragma option push -w-
+#pragma option push -Vx
+#include <Dialogs.hpp>	// Pascal unit
+#include <Forms.hpp>	// Pascal unit
+#include <Controls.hpp>	// Pascal unit
+#include <Graphics.hpp>	// Pascal unit
+#include <Classes.hpp>	// Pascal unit
+#include <SysUtils.hpp>	// Pascal unit
+#include <Messages.hpp>	// Pascal unit
+#include <Windows.hpp>	// Pascal unit
+#include <SysInit.hpp>	// Pascal unit
+#include <System.hpp>	// Pascal unit
+
+//-- user supplied -----------------------------------------------------------
+
+namespace Scilexerreg
+{
+//-- type declarations -------------------------------------------------------
+//-- var, const, procedure ---------------------------------------------------
+extern PACKAGE void __fastcall Register(void);
+
+}	/* namespace Scilexerreg */
+using namespace Scilexerreg;
+#pragma option pop	// -w-
+#pragma option pop	// -Vx
+
+#pragma delphiheader end.
+//-- end unit ----------------------------------------------------------------
+#endif	// SciLexerReg
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@@
+
+
+1.1.1.1
+log
+@no message
+@
+text
+@@

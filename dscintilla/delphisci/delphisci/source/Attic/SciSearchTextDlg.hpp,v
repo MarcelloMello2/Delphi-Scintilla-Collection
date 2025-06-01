@@ -1,0 +1,158 @@
+head	1.2;
+access;
+symbols
+	test:1.1.1.1 hdalis:1.1.1;
+locks; strict;
+comment	@// @;
+
+
+1.2
+date	2004.10.03.20.46.24;	author hdalis;	state dead;
+branches;
+next	1.1;
+
+1.1
+date	2004.10.01.21.05.26;	author hdalis;	state Exp;
+branches
+	1.1.1.1;
+next	;
+
+1.1.1.1
+date	2004.10.01.21.05.26;	author hdalis;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@no message
+@
+text
+@// Borland C++ Builder
+// Copyright (c) 1995, 2002 by Borland Software Corporation
+// All rights reserved
+
+// (DO NOT EDIT: machine generated header) 'SciSearchTextDlg.pas' rev: 6.00
+
+#ifndef SciSearchTextDlgHPP
+#define SciSearchTextDlgHPP
+
+#pragma delphiheader begin
+#pragma option push -w-
+#pragma option push -Vx
+#include <Buttons.hpp>	// Pascal unit
+#include <ExtCtrls.hpp>	// Pascal unit
+#include <StdCtrls.hpp>	// Pascal unit
+#include <Dialogs.hpp>	// Pascal unit
+#include <Forms.hpp>	// Pascal unit
+#include <Controls.hpp>	// Pascal unit
+#include <Graphics.hpp>	// Pascal unit
+#include <Classes.hpp>	// Pascal unit
+#include <SysUtils.hpp>	// Pascal unit
+#include <Messages.hpp>	// Pascal unit
+#include <Windows.hpp>	// Pascal unit
+#include <SysInit.hpp>	// Pascal unit
+#include <System.hpp>	// Pascal unit
+
+//-- user supplied -----------------------------------------------------------
+
+namespace Scisearchtextdlg
+{
+//-- type declarations -------------------------------------------------------
+class DELPHICLASS TTextSearchDialog;
+class PASCALIMPLEMENTATION TTextSearchDialog : public Forms::TForm 
+{
+	typedef Forms::TForm inherited;
+	
+__published:
+	Stdctrls::TLabel* Label1;
+	Stdctrls::TComboBox* cbSearchText;
+	Extctrls::TRadioGroup* rgSearchDirection;
+	Stdctrls::TGroupBox* gbSearchOptions;
+	Stdctrls::TCheckBox* cbSearchCaseSensitive;
+	Stdctrls::TCheckBox* cbSearchWholeWords;
+	Stdctrls::TCheckBox* cbSearchFromCursor;
+	Stdctrls::TCheckBox* cbSearchSelectedOnly;
+	Stdctrls::TCheckBox* cbRegularExpression;
+	Buttons::TBitBtn* btnOK;
+	Buttons::TBitBtn* btnCancel;
+	void __fastcall FormCloseQuery(System::TObject* Sender, bool &CanClose);
+	void __fastcall cbRegularExpressionClick(System::TObject* Sender);
+	
+private:
+	bool __fastcall GetSearchBackwards(void);
+	bool __fastcall GetSearchCaseSensitive(void);
+	bool __fastcall GetSearchFromCursor(void);
+	bool __fastcall GetSearchInSelection(void);
+	AnsiString __fastcall GetSearchText();
+	AnsiString __fastcall GetSearchTextHistory();
+	bool __fastcall GetSearchWholeWords(void);
+	void __fastcall SetSearchBackwards(bool Value);
+	void __fastcall SetSearchCaseSensitive(bool Value);
+	void __fastcall SetSearchFromCursor(bool Value);
+	void __fastcall SetSearchInSelection(bool Value);
+	void __fastcall SetSearchText(AnsiString Value);
+	void __fastcall SetSearchTextHistory(AnsiString Value);
+	void __fastcall SetSearchWholeWords(bool Value);
+	void __fastcall SetSearchRegularExpression(const bool Value);
+	bool __fastcall GetSearchRegularExpression(void);
+	
+public:
+	__property bool SearchBackwards = {read=GetSearchBackwards, write=SetSearchBackwards, nodefault};
+	__property bool SearchCaseSensitive = {read=GetSearchCaseSensitive, write=SetSearchCaseSensitive, nodefault};
+	__property bool SearchFromCursor = {read=GetSearchFromCursor, write=SetSearchFromCursor, nodefault};
+	__property bool SearchInSelectionOnly = {read=GetSearchInSelection, write=SetSearchInSelection, nodefault};
+	__property AnsiString SearchText = {read=GetSearchText, write=SetSearchText};
+	__property AnsiString SearchTextHistory = {read=GetSearchTextHistory, write=SetSearchTextHistory};
+	__property bool SearchWholeWords = {read=GetSearchWholeWords, write=SetSearchWholeWords, nodefault};
+	__property bool SearchRegularExpression = {read=GetSearchRegularExpression, write=SetSearchRegularExpression, nodefault};
+public:
+	#pragma option push -w-inl
+	/* TCustomForm.Create */ inline __fastcall virtual TTextSearchDialog(Classes::TComponent* AOwner) : Forms::TForm(AOwner) { }
+	#pragma option pop
+	#pragma option push -w-inl
+	/* TCustomForm.CreateNew */ inline __fastcall virtual TTextSearchDialog(Classes::TComponent* AOwner, int Dummy) : Forms::TForm(AOwner, Dummy) { }
+	#pragma option pop
+	#pragma option push -w-inl
+	/* TCustomForm.Destroy */ inline __fastcall virtual ~TTextSearchDialog(void) { }
+	#pragma option pop
+	
+public:
+	#pragma option push -w-inl
+	/* TWinControl.CreateParented */ inline __fastcall TTextSearchDialog(HWND ParentWindow) : Forms::TForm(ParentWindow) { }
+	#pragma option pop
+	
+};
+
+
+//-- var, const, procedure ---------------------------------------------------
+
+}	/* namespace Scisearchtextdlg */
+using namespace Scisearchtextdlg;
+#pragma option pop	// -w-
+#pragma option pop	// -Vx
+
+#pragma delphiheader end.
+//-- end unit ----------------------------------------------------------------
+#endif	// SciSearchTextDlg
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@@
+
+
+1.1.1.1
+log
+@no message
+@
+text
+@@

@@ -1,0 +1,49 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	2004.11.08.00.00.35;	author hdalis;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Delphi Scintilla Interface Components v0.,12
+@
+text
+@INSTALLATION OF SCINTILLA COMPONENTS FOR DELPHI
+
+Delphi 7
+
+Open SCITED7.DPK. If a messagebox about TTcFontComboBox not existing appears,
+just click cancel. Compile the package the usual way.
+
+Open DCLSCITD7.DPK, and compile it the usual way.
+
+On the menu select Component->Install Packages
+Click add, and locate the compiled DCLSCITD7.BPL file
+(it's located where your default output path is).
+Select the package, and thats it.
+
+C++ Builder 6
+
+See above, but with the filenames SCITE.BPK and DCLSCITE.BPK
+
+OTHER COMPILERS
+
+If you get the packages to compile with another Delphi/C++ Builder
+version, give me a message, along with the package source for it.
+i.e packagename.bpk,packagename.res,packagename.cpp (C++ Builder) or
+packagename.dpk,packagename.cfg,packagename.dof,packagename.res (Delphi).
+
+
+@

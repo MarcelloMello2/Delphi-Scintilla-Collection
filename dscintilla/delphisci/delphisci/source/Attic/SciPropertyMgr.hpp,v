@@ -1,0 +1,132 @@
+head	1.2;
+access;
+symbols
+	test:1.1.1.1 hdalis:1.1.1;
+locks; strict;
+comment	@// @;
+
+
+1.2
+date	2004.10.03.20.46.24;	author hdalis;	state dead;
+branches;
+next	1.1;
+
+1.1
+date	2004.10.01.21.04.39;	author hdalis;	state Exp;
+branches
+	1.1.1.1;
+next	;
+
+1.1.1.1
+date	2004.10.01.21.04.39;	author hdalis;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@no message
+@
+text
+@// Borland C++ Builder
+// Copyright (c) 1995, 2002 by Borland Software Corporation
+// All rights reserved
+
+// (DO NOT EDIT: machine generated header) 'SciPropertyMgr.pas' rev: 6.00
+
+#ifndef SciPropertyMgrHPP
+#define SciPropertyMgrHPP
+
+#pragma delphiheader begin
+#pragma option push -w-
+#pragma option push -Vx
+#include <ScintillaSynLexers.hpp>	// Pascal unit
+#include <Graphics.hpp>	// Pascal unit
+#include <SciLexerMod.hpp>	// Pascal unit
+#include <Classes.hpp>	// Pascal unit
+#include <SysInit.hpp>	// Pascal unit
+#include <System.hpp>	// Pascal unit
+
+//-- user supplied -----------------------------------------------------------
+
+namespace Scipropertymgr
+{
+//-- type declarations -------------------------------------------------------
+typedef void __fastcall (__closure *TSCEvent_proploaditem)(System::TObject* Sender, const AnsiString CategoryName, const AnsiString PropName, const int Num, const AnsiString aValue, bool &Handled);
+
+typedef void __fastcall (__closure *TSCEvent_propsaveitem)(System::TObject* Sender, const int index, AnsiString &CategoryName, AnsiString &PropName, int &Num, AnsiString &aValue, bool &MoreToDo);
+
+class DELPHICLASS TSciPropertyLoader;
+class PASCALIMPLEMENTATION TSciPropertyLoader : public Classes::TComponent 
+{
+	typedef Classes::TComponent inherited;
+	
+private:
+	AnsiString fFileName;
+	Scilexermod::TScintilla* fEditor;
+	Scintillasynlexers::TSciLangStyle fDefaultStyle;
+	TSCEvent_proploaditem fOnPropLoadItem;
+	TSCEvent_propsaveitem fOnPropSaveItem;
+	bool __fastcall ParseStyleDefinition(const char * definition, Scintillasynlexers::TSciLangStyle &sty);
+	void __fastcall GenerateDefaultPropLine(AnsiString &dest, Scilexermod::TScintilla* component);
+	void __fastcall GenerateStylePropLine(AnsiString &dest, const AnsiString prefix, const Scintillasynlexers::TSciStyle* styl);
+	void __fastcall GenerateKwdPropLine(AnsiString &dest, const AnsiString prefix, const Scintillasynlexers::TSciKeywords* kwd);
+	bool __fastcall PropLineSplit(const AnsiString s, AnsiString &Lang, int &stylenum, AnsiString &prop, AnsiString &value);
+	
+protected:
+	bool __fastcall ProcessDataStart(AnsiString &CategoryName, AnsiString &PropName, int &Num, AnsiString &aValue);
+	bool __fastcall ProcessDataEnd(AnsiString &CategoryName, AnsiString &PropName, int &Num, AnsiString &aValue);
+	virtual void __fastcall Notification(Classes::TComponent* AComponent, Classes::TOperation Operation);
+	AnsiString __fastcall GetLexerMapperProps();
+	
+public:
+	void __fastcall FillWithDefaultStyle(Scintillasynlexers::TSciLangStyle &sty);
+	__fastcall virtual TSciPropertyLoader(Classes::TComponent* AOwner);
+	__fastcall virtual ~TSciPropertyLoader(void);
+	bool __fastcall Load(void);
+	bool __fastcall Save(void);
+	bool __fastcall LoadFromStream(Classes::TStream* fs);
+	bool __fastcall SaveToStream(Classes::TStream* fs);
+	
+__published:
+	__property AnsiString FileName = {read=fFileName, write=fFileName};
+	__property Scilexermod::TScintilla* Editor = {read=fEditor, write=fEditor};
+	__property TSCEvent_proploaditem OnLoadItem = {read=fOnPropLoadItem, write=fOnPropLoadItem};
+	__property TSCEvent_propsaveitem OnSaveItem = {read=fOnPropSaveItem, write=fOnPropSaveItem};
+};
+
+
+//-- var, const, procedure ---------------------------------------------------
+extern PACKAGE Graphics::TColor __fastcall ColourFromString(const AnsiString s, const Graphics::TColor defcolor);
+extern PACKAGE AnsiString __fastcall ColourToString(const Graphics::TColor clr);
+extern PACKAGE AnsiString __fastcall ValueExtract(const AnsiString s, AnsiString valuename);
+
+}	/* namespace Scipropertymgr */
+using namespace Scipropertymgr;
+#pragma option pop	// -w-
+#pragma option pop	// -Vx
+
+#pragma delphiheader end.
+//-- end unit ----------------------------------------------------------------
+#endif	// SciPropertyMgr
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@@
+
+
+1.1.1.1
+log
+@no message
+@
+text
+@@

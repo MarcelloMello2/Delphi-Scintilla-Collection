@@ -1,0 +1,3215 @@
+head	1.7;
+access;
+symbols
+	test:1.1.1.1 hdalis:1.1.1;
+locks; strict;
+comment	@ * @;
+
+
+1.7
+date	2004.12.03.17.19.00;	author hdalis;	state Exp;
+branches;
+next	1.6;
+
+1.6
+date	2004.11.21.04.20.21;	author hdalis;	state Exp;
+branches;
+next	1.5;
+
+1.5
+date	2004.11.13.04.29.51;	author hdalis;	state Exp;
+branches;
+next	1.4;
+
+1.4
+date	2004.11.08.00.00.42;	author hdalis;	state Exp;
+branches;
+next	1.3;
+
+1.3
+date	2004.10.18.10.24.49;	author hdalis;	state Exp;
+branches;
+next	1.2;
+
+1.2
+date	2004.10.16.10.17.25;	author hdalis;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2004.10.01.21.02.07;	author hdalis;	state Exp;
+branches
+	1.1.1.1;
+next	;
+
+1.1.1.1
+date	2004.10.01.21.02.07;	author hdalis;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.7
+log
+@Delphi Scintilla Interface Components 0.15
+@
+text
+@//CE_Desc_Include(helpdescriptions.txt)
+{
+	Delphi Scintilla Interface Components
+	Copyright (C) 2004, Jan Martin Pettersen (hdalis)
+
+	This library is free software; you can redistribute it and/or
+	modify it under the terms of the GNU Lesser General Public
+	License as published by the Free Software Foundation; either
+	version 2.1 of the License, or (at your option) any later
+	version.
+
+	This library is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+	Lesser General Public License for more details.
+
+	You should have received a copy of the GNU Lesser General Public
+	License along with this library; if not, write to the Free
+	Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+	02111-1307 USA
+}
+{
+  Author : hdalis
+      $Id: scilexermod.pas,v 1.5 2004/11/13 04:29:51 hdalis Exp $
+  History: 29/09/2004 Initial Release
+           13/10/2004 Added help using ClassExplorer 6.0, Use the helpgenerator to
+                      generate the help.
+           13/10/2004 Changed the ViewWSpace from boolean to sciWSMode, to allow all settings.
+					 17/10/2004 Removed LoadSettingsFromStream and SaveSettingsToStream, unnessecary now.
+           29/10/2004 Added The TSciHotSpot subclass to manage Active hotspot settings (TScintilla.ActiveHotspotOpts).
+           30/10/2004 Added CommentBox and CommentBlock functions.
+           10/11/2004 CommentBox and CommentStream now takes a boolean parameter 'includecommentcharsinselection'
+                      that if it's True it selects the commenting strings also, if not then the commenting
+                      strings are not selected.
+           11/11/2004 Added the FlipVars function.
+					            Updated the helpdescriptions in helpdescriptions.txt
+					 18/11/2004 Changed the TSciSynLexer to TSciLanguageManager, and changed all properties etc to reflect that.
+					            became more logical eventually.
+					            Added a keyboardmanager, is more easy to connect other components that also
+											want a keyboad/calltipclick that way.
+											The TSciLexerAuto component no longer exists. When you need autocomplete drop a
+											TSciAutoComplete component on the form, and set the editor property.
+											Or for Calltips drop a TSciCallTips component.
+           19/11/2004 Made a miniversion of this component, TScintillaMemo.. This is the immediate
+                      ancestor for TScintilla now. Separated in two files, SciLexerMemo.pas and SciLexerMod.Pas
+                      All commentfunctions now uses SetTarget* and ReplaceTarget, instead of SetSel and ReplaceSel.
+                      It seems faster to do it that way.
+
+}
+unit SciLexerMod;
+interface
+uses Classes, Windows, Controls, Messages, SysUtils, Graphics,SciLexer,ScintillaLanguageManager, SciKeyBindings,
+SciSupport,SciLexerMemo,SciControllerHandler;
+
+{$Include commondefs.inc}
+type
+  sciFoldDrawFlag=(sciBoxIfExpanded,sciAboveIfExpanded,sciAboveIfNotExpanded,sciBelowIfExpanded,sciBelowIfNotExpanded,sciHexLevels);
+  sciFoldDrawFlags=set of sciFoldDrawFlag;
+
+  // Display whitespace?
+	sciMarkerType =(sciMarkCircle=0,sciMarkBox=1,sciMarkPlusMinus=2,sciMarkArrows=3);
+  sciCodeFoldingFlag=(foldFold,foldCompact,foldComment,foldPreprocessor,foldCommentPython,foldQuotesPython,foldAtElse,foldHTML,foldHTMLPreProcessor);
+  sciCodeFoldingFlags=set of sciCodeFoldingFlag;
+
+	TScintilla =class;
+
+
+
+TScintilla = class(TScintillaMemo)
+  private
+		fLanguageManager : TSciLanguageManager;
+		FFoldMarkerType : sciMarkerType;
+    FCodeFoldingFlags : sciCodeFoldingFlags;
+    FFoldDrawFlags : sciFoldDrawFlags;
+		FBraceHilite : Boolean;
+
+		procedure SetFoldMarkerType(const Value : sciMarkerType);
+		procedure SetMarkers(const Value : sciMarkerType);
+    procedure SetLanguageManager(const Value : TSciLanguageManager);
+    procedure SetCodeFoldingFlags(const Value : sciCodeFoldingFlags);
+    procedure SetFoldDrawFlags(const Value : sciFoldDrawFlags);
+
+  {$IFNDEF NOCOMMENTING}
+	protected
+		procedure BoxComment(start_comment,middle_comment,end_comment : String;includecommentcharsinselection : Boolean=True);
+		procedure BlockComment(comment : String;commentatlinestart : Boolean);
+		procedure StreamComment(start_comment,end_comment : String;includecommentcharsinselection : Boolean=True);
+{$ENDIF}
+protected
+		procedure Expand(var line: integer; doExpand : Boolean;force: Boolean = false; visLevels: integer = 0; level : integer=-1);
+    procedure ProcessBraces; virtual;
+		procedure doSciUpdateUI;override;
+		procedure doSciMarginClick(const modifiers : LongInt; const position : LongInt; const margin : LongInt);override;
+		procedure doSciModified(const position : LongInt; const modificationType : LongInt; text : PChar;const length : LongInt; const linesAdded : LongInt; const line : LongInt;const foldLevelNow : LongInt; const foldLevelPrev : LongInt);override;
+		procedure CMFontChanged(var Message: TMessage); message CM_FONTCHANGED;
+		procedure CMColorChanged(var Message: TMessage); message CM_COLORCHANGED;
+		procedure Loaded; override;
+public
+		constructor Create(AOwner: TComponent); override;
+		destructor Destroy; override;
+		procedure CopyFrom(Source: TScintillaBase); override;
+		procedure FoldAll;
+		//Used for brace matching and highlighting
+		procedure FindMatchingBracePosition(var braceAtCaret : integer;var braceOpposite : integer; var IsInside : boolean; sloppy : boolean=true);
+		procedure GoMatchingBrace(Select : boolean; Sloppy : boolean); //Move carret to matching brace
+{$IFNDEF NOCOMMENTING}
+    procedure CommentBox(includecommentcharsinselection : Boolean=True);
+    procedure CommentBlock;
+    procedure CommentStream(includecommentcharsinselection : Boolean=True);
+{$ENDIF}
+    procedure ExportToHTML(Stream: TStream; Title : string;UseCurrentEOLMode : Boolean=True);
+    procedure FlipVars(const equalsign : String='=';spacebeforeandaftereq : Boolean=True;const endstatement : String=';');
+
+published
+		//Enable or disable brace highlighting
+		property BraceHilite : boolean read FBraceHilite write FBraceHilite;
+		//Enable or disable code folding if supported by the highlighter
+    property Folding : sciCodeFoldingFlags read FCodeFoldingFlags write SetCodeFoldingFlags;
+		property FoldMarkerType : sciMarkerType read FFoldMarkerType write SetFoldMarkerType;
+		//Get or set the Syntax highlighter
+		property LanguageManager : TSciLanguageManager read fLanguageManager write SetLanguageManager;
+    property FoldDrawFlags : sciFoldDrawFlags read FFoldDrawFlags write SetFoldDrawFlags;
+    property KeyCommands;
+end;
+
+
+TScintillaAuto=TScintilla;
+
+implementation
+uses Math,SciResLang;
+
+const
+  DefaultLinenumbersWidth = 4;
+
+
+constructor TScintilla.Create(AOwner : TComponent);
+begin
+	inherited;
+  FBraceHilite := True;
+	FFoldMarkerType :=sciMarkBox;
+  fLanguageManager := TSciLanguageManager.Create(Self);
+  FCodeFoldingFlags:=[foldCompact,foldComment,foldPreprocessor,foldAtElse,foldHTML,foldHTMLPreProcessor];
+end;
+
+destructor TScintilla.Destroy;
+begin
+  fLanguageManager.Free;
+  inherited;
+end;
+
+procedure TScintilla.CopyFrom(Source: TScintillaBase);
+begin
+	inherited;
+	if Source is TScintilla then
+	begin
+		BraceHilite :=TScintilla(Source).BraceHilite;
+		Folding:=TScintilla(Source).Folding;
+		FoldMarkerType:=TScintilla(Source).FoldMarkerType;
+		LanguageManager.Assign(TScintilla(Source).LanguageManager);
+    FoldDrawFlags:=TScintilla(Source).FoldDrawFlags;
+	end;
+end;
+
+{$IFNDEF NOCOMMENTING}
+procedure TScintilla.CommentStream(includecommentcharsinselection : Boolean);
+var
+  itm : TSciLangItem;
+begin
+  itm:=LanguageManager.LanguageList.Find(LanguageManager.SelectedLanguage);
+  if itm<>nil then
+  begin
+   if (itm.CommentStart='') or (itm.CommentEnd='') then
+   begin
+     raise Exception.CreateRes(@@sNoStartOrEndCommentDefined);
+   end;
+    StreamComment(itm.CommentStart,itm.CommentEnd,includecommentcharsinselection);
+  end else
+    StreamComment('/*','*/',includecommentcharsinselection);
+
+
+end;
+
+procedure TScintilla.CommentBox(includecommentcharsinselection : Boolean);
+var
+  itm : TSciLangItem;
+begin
+  itm:=LanguageManager.LanguageList.Find(LanguageManager.SelectedLanguage);
+  if itm<>nil then
+  begin
+    if (itm.CommentStart='') or (itm.CommentMiddle='') or (itm.CommentEnd='') then
+    begin
+      raise Exception.CreateRes(@@sNoStartMiddleOrEndCommentDefined);
+    end;
+    BoxComment(itm.CommentStart,itm.CommentMiddle,itm.CommentEnd,includecommentcharsinselection);
+  end else
+    BoxComment('/*','*','*/',includecommentcharsinselection);
+end;
+procedure TScintilla.CommentBlock;
+var
+  itm : TSciLangItem;
+begin
+  itm:=LanguageManager.LanguageList.Find(LanguageManager.SelectedLanguage);
+  if itm<>nil then
+  begin
+   if (itm.CommentOneliner='') then
+   begin
+     raise Exception.CreateRes(@@sNoOneLineCommentDefined);
+   end;
+
+    BlockComment(itm.CommentOneliner,itm.CommentAtLineStart);
+  end else
+    BlockComment('//',True);
+end;
+
+procedure TScintilla.BlockComment(comment : String;commentatlinestart : Boolean);
+var
+  caretPosition,
+  selectionStart,
+  selectionEnd,
+  selStartLine,
+  selEndLine,
+  firstSelLineStart,numlines,i,lineStart,lineIndent,lineEnd,comment_length,curbuflen  : LongInt;
+  move_caret : Boolean;
+  linebuf,long_comment : String;
+begin
+  comment:=comment+' ';
+  long_comment  :=comment;
+  curbuflen:=0;
+  comment_length:=Length(comment);
+  selectionStart:=GetSelectionStart;
+  selectionEnd  :=GetSelectionEnd;
+  caretPosition :=GetCurrentPos;
+  move_caret    :=(caretPosition<selectionEnd);
+  selStartLine  :=LineFromPosition(selectionStart);
+  selEndLine    :=LineFromPosition(selectionEnd);
+  numlines      :=selEndLine-selStartLine;
+  firstSelLineStart:=PositionFromLine(selStartLine);
+  if (numlines>0) and (selectionEnd=PositionFromLine(selEndLine)) then Dec(selEndLine);
+  BeginUndoAction;
+  for i:=selStartLine to selEndLine do
+  begin
+    lineStart:=PositionFromLine(i);
+    lineIndent:=lineStart;
+    lineEnd:=GetLineEndPosition(i);
+    if (lineEnd-lineIndent)>=curbuflen then
+    begin
+      curbuflen:=lineEnd-lineIndent;
+      SetLength(linebuf,curbuflen+1);
+    end;
+		if (commentatlinestart=True) then
+			GetRange(lineIndent, lineEnd, PChar(linebuf))
+		else
+    begin
+			lineIndent := GetLineIndentPosition(i);
+			GetRange(lineIndent, lineEnd, PChar(linebuf));
+		end;
+    if Length(linebuf)<1 then Continue;
+    // Insert comment removal here.
+    if CompareMem(PChar(linebuf),PChar(comment),comment_length-1) then
+    begin
+      if CompareMem(PChar(linebuf),PChar(long_comment),comment_length) then
+      begin
+        SetTargetStart(lineIndent);
+        SetTargetEnd(lineIndent+comment_length);
+        ReplaceTarget(-1,PChar(''));
+        if (i=selStartLine) then
+          Dec(selectionStart,comment_length);
+        Dec(selectionEnd,comment_length);
+        Continue;
+      end else
+      begin
+        SetTargetStart(lineIndent);
+        SetTargetEnd(lineIndent+(comment_length-1));
+
+        ReplaceTarget(-1,PChar(''));
+        if (i=selStartLine) then
+          Dec(selectionStart,comment_length-1);
+        Dec(selectionEnd,comment_length-1);
+        Continue;
+      end;
+    end;
+    Inc(selectionEnd,Length(comment));
+    InsertText(lineIndent,PChar(long_comment));
+  end;
+  if (selectionStart<firstSelLineStart) then
+  begin
+    if (selectionStart >= (selectionEnd - (Length(comment)- 1))) then
+      selectionEnd := firstSelLineStart;
+    selectionStart := firstSelLineStart;
+  end;
+  if move_caret=True then
+  begin
+    GotoPos(selectionEnd);
+    SetCurrentPos(selectionStart);
+  end else
+    SetSel(selectionStart,selectionEnd);
+  EndUndoAction;
+end;
+
+procedure TScintilla.BoxComment(start_comment,middle_comment,end_comment : String;includecommentcharsinselection : Boolean);
+var
+  caretPosition,selectionStart,selectionEnd,selStartLine,selEndLine,numlines,lineStart,lineEnd,i,
+  start_comment_length,middle_comment_length,end_comment_length,maxCommentLength,whitespace_length,eollen  : Integer;
+  move_caret : Boolean;
+  linebuf,whitespace : String;
+  tempstring : PChar;
+  hasselection : Boolean;
+begin
+
+  SetLength(linebuf,1000);
+  whitespace    :=' ';
+  start_comment :=start_comment+whitespace;
+  middle_comment:=middle_comment+whitespace;
+  selectionStart:=GetSelectionStart;
+  selectionEnd  :=GetSelectionEnd;
+  caretPosition :=GetCurrentPos;
+  hasselection  :=(selectionStart-selectionEnd)<>0;
+  move_caret    :=(caretPosition<selectionEnd);
+  selStartLine  :=LineFromPosition(selectionStart);
+  selEndLine    :=LineFromPosition(selectionEnd);
+  numlines      :=selEndLine-selStartLine;
+  if (numlines>1) and (selectionEnd=PositionFromLine(selEndLine)) then
+  begin
+    Dec(selEndLine);
+    Dec(numlines);
+    selectionEnd:=GetLineEndPosition(selEndLine);
+  end;
+  if numlines>1 then // More than one line, adjust the selection to the start of selstartline, and end of selendline.
+  begin
+    selectionStart:=PositionFromLine(selStartLine);
+    selectionEnd:=GetLineEndPosition(selEndLine);
+    SetSelectionStart(selectionStart);
+    SetSelectionEnd(selectionEnd);
+  end;
+  start_comment_length:=Length(start_comment);
+  middle_comment_length:=Length(middle_comment);
+  end_comment_length:=Length(end_comment);
+  maxCommentLength:=start_comment_length;
+  whitespace_length:=Length(whitespace);
+  if middle_comment_length>maxCommentLength then
+    maxCommentLength:=middle_comment_length;
+  if (end_comment_length+whitespace_length)>maxCommentLength then
+    maxCommentLength:=end_comment_length+whitespace_length;
+  GetMem(tempString,maxCommentLength+1);
+  case EOLStyle of
+    eolCRLF: begin
+               eollen:=2;
+             end;
+     eolCR:  begin
+               eollen:=1;
+             end;
+    eolLF:   begin
+               eollen:=1;
+             end;
+          else eollen:=2;
+  end;
+
+  BeginUndoAction; // Start undoable operation.
+  lineStart:=PositionFromLine(selStartLine);
+  GetRange(lineStart, lineStart + start_comment_length, PChar(tempString));
+  tempString[start_comment_length+1]:=#0;
+  if start_comment<>tempString then // If it's not a start_comment, add it.
+  begin
+    InsertText(lineStart,PChar(start_comment));
+    if numlines>1 then //More than one line selected
+    begin
+      Inc(selectionEnd,start_comment_length);
+      if (includecommentcharsinselection=False) then Inc(selectionStart,start_comment_length);
+    end else
+    begin
+      Inc(caretPosition,start_comment_length);
+      if (hasselection=True) then
+      begin
+        Inc(selectionStart,start_comment_length);
+        Inc(selectionEnd,start_comment_length);
+      end;
+    end;
+  end else // If it's a start_comment, remove it.
+  begin
+    SetTargetStart(lineStart);
+    SetTargetEnd(lineStart+start_comment_length);
+    ReplaceTarget(-1,'');
+    if numlines>1 then // More than one line selected
+    begin
+      Dec(selectionEnd,start_comment_length);
+    end else
+    begin
+      Dec(caretPosition,start_comment_length);
+      if (hasselection=True) then
+      begin
+      Dec(selectionStart,start_comment_length);
+      Dec(selectionEnd,start_comment_length);
+      end;
+    end;
+  end;
+  if numlines<=1 then // One line or less selected.
+  begin
+    lineEnd:=GetLineEndPosition(selEndLine);
+    GetRange(lineEnd - end_comment_length, lineEnd, PChar(tempString));
+    tempString[end_comment_length+1] := #0;
+    if (end_comment <> tempString) then // If it's not a end comment, add it.
+    begin
+      InsertText(lineEnd,PChar(whitespace+end_comment));
+    end else // If it's a end comment, remove it.
+    begin
+      SetTargetStart(lineEnd-end_comment_length-whitespace_length);
+      SetTargetEnd(lineEnd);
+      ReplaceTarget(-1,'');
+    end;
+  end else // More than one line selected.
+  begin
+    for i:=(selStartLine+1) to (selEndLine-1) do
+    begin
+      lineStart:=PositionFromLine(i);
+      GetRange(lineStart, lineStart + middle_comment_length, PChar(tempString));
+      tempString[middle_comment_length+1] := #0;
+      if (middle_comment <> tempString) then // If it's not a middle comment, add it.
+      begin
+        InsertText(lineStart,PChar(middle_comment));
+        Inc(selectionEnd,middle_comment_length);
+      end else // If it's a middle comment, remove it.
+      begin
+        SetTargetStart(lineStart);
+        SetTargetEnd(lineStart+middle_comment_length);
+        ReplaceTarget(-1,'');
+        Dec(selectionEnd,middle_comment_length);
+      end;
+    end;
+    lineStart:=PositionFromLine(selEndLine);
+    GetRange(lineStart, lineStart + end_comment_length, PChar(tempString));
+    tempString[end_comment_length+1] := #0;
+    if (end_comment <> tempString) then // If it's not a end comment, add it.
+    begin
+      GetRange(lineStart, lineStart + middle_comment_length, PChar(tempString));
+      tempString[middle_comment_length+1] := #0;
+      if (middle_comment <> tempString) then
+      begin
+        InsertText(lineStart,PChar(middle_comment));
+        Inc(selectionEnd,middle_comment_length);
+      end else
+      begin
+        SetTargetStart(lineStart);
+        SetTargetEnd(lineStart+middle_comment_length);
+        ReplaceTarget(-1,'');
+        Dec(selectionEnd,middle_comment_length);
+      end;
+      lineStart:=PositionFromLine(selEndLine+1);
+      GetRange(lineStart, lineStart + end_comment_length, PChar(tempString));
+      tempString[end_comment_length+1] := #0;
+      if (end_comment <> tempString) then // If it's not a end comment, add it.
+      begin
+        InsertText(lineStart,PChar(end_comment));
+        if (includecommentcharsinselection=True) then Inc(selectionEnd,end_comment_length);
+
+        case EOLStyle of // Add the correct linefeed, and increment selectionend
+          eolCRLF: begin
+                     InsertText(lineStart+end_comment_length,PChar(#13#10));
+                   end;
+          eolCR:   begin
+                     InsertText(lineStart+end_comment_length,PChar(#13));
+                   end;
+          eolLF:   begin
+                     InsertText(lineStart+end_comment_length,PChar(#10));
+                   end;
+        end;
+        if (includecommentcharsinselection=True) then Inc(selectionEnd,eollen);
+      end else // If it's a end comment, remove it.
+      begin
+        SetTargetStart(lineStart);
+        SetTargetEnd(lineStart++end_comment_length+eollen);
+        ReplaceTarget(-1,'');
+        if (includecommentcharsinselection=True) then Dec(selectionEnd,end_comment_length);
+        if (includecommentcharsinselection=True) then Dec(selectionEnd,eollen); // Decrement with the length of the correct linefeed
+      end;
+    end else // If it's a end comment, remove it.
+    begin
+      SetTargetStart(lineStart);
+      SetTargetEnd(lineStart+end_comment_length+eollen);
+      ReplaceTarget(-1,'');
+      Dec(selectionEnd,end_comment_length+eollen);
+    end;
+    EndUndoAction; // End undoable operation.
+  end;
+
+  if (move_caret=True) then
+  begin
+    GotoPos(selectionEnd);
+    SetCurrentPos(selectionStart);
+  end else if (numlines=0) then // If it wasn't selected anything, just move the caret to the corresponding previous position after the line was commented/not commented.
+  begin
+    if hasselection=True then
+      SetSel(selectionStart,selectionEnd)
+    else
+      GotoPos(caretPosition);
+  end else
+  SetSel(selectionStart,selectionEnd);
+  if assigned(tempString) then FreeMem(tempString);
+end;
+
+procedure TScintilla.StreamComment(start_comment,end_comment : String;includecommentcharsinselection : Boolean);
+var
+caretPosition,selectionStart,selectionEnd,lineEnd,current,end_comment_length,start_comment_length,startword,endword,start_counter,end_counter,selLine,lineIndent  : Integer;
+move_caret : Boolean;
+linebuf,whitespace : String;
+temp : PChar;
+begin
+  whitespace :=' ';
+	start_comment :=start_comment+ whitespace;
+	whitespace :=whitespace+end_comment;
+	end_comment := whitespace;
+  start_comment_length:=Length(start_comment);
+  end_comment_length:=Length(end_comment);
+  selectionStart:=GetSelectionStart;
+  selectionEnd  :=GetSelectionEnd;
+  caretPosition :=GetCurrentPos;
+  move_caret    :=(caretPosition<selectionEnd);
+  if selectionEnd-selectionStart<=0 then
+  begin
+    selLine:=LineFromPosition(selectionStart);
+    lineIndent:=GetLineIndentPosition(selLine);
+    lineEnd:=GetLineEndPosition(selLine);
+    if RangeIsAllWhitespace(lineIndent,lineEnd)=True then
+    begin
+      Exit;
+    end;
+    lineBuf:=GetLineS;
+    SetLength(lineBuf,1000);
+    current:=GetCaretInLine;
+    if (CharPos(WordChars,AnsiChar(lineBuf[current]))=0) then
+    begin
+      Exit;
+    end;
+    start_counter:=0;
+    end_counter:=0;
+    startword:=current;
+    endword:=current;
+		while ((startword > 0) and (CharPos(WordChars,AnsiChar(lineBuf[startword]))<>0)) do
+    begin
+			Inc(start_counter);
+			Dec(startword);
+		end;
+    if startword=current then
+    begin
+      Exit;
+    end;
+		while ((linebuf[endword + 1] <> #0) and (CharPos(WordChars,AnsiChar(lineBuf[endword + 1]))<>0)) do
+    begin
+			Inc(end_counter);
+			Inc(endword);
+		end;
+    Dec(selectionStart,start_counter);
+    Inc(selectionEnd,end_counter);
+  end else
+  begin
+    GetMem(temp,Max(start_comment_length,end_comment_length)+1);
+    GetRange(selectionStart, selectionStart + start_comment_length, temp);
+    temp[start_comment_length+1]:=#0;
+    if temp=start_comment then
+    begin
+      GetRange(selectionEnd - end_comment_length, selectionEnd, temp);
+      temp[end_comment_length+1]:=#0;
+      if temp=end_comment then
+      begin
+        BeginUndoAction;
+        SetTargetStart(selectionStart);
+        SetTargetEnd(selectionStart+start_comment_length);
+        ReplaceTarget(-1,'');
+        Dec(selectionEnd,start_comment_length);
+        SetTargetStart(selectionEnd-end_comment_length);
+        SetTargetEnd(selectionEnd);
+        ReplaceTarget(-1,'');
+        Dec(selectionEnd,end_comment_Length);
+        EndUndoAction;
+        if temp<>nil then FreeMem(temp);
+        if move_caret=True then
+        begin
+          GotoPos(selectionEnd);
+          SetCurrentPos(selectionStart);
+        end else
+        begin
+          SetSel(selectionStart,selectionEnd);
+        end;
+        Exit;
+      end;
+    end;
+    if temp<>nil then FreeMem(temp);
+  end;
+
+  BeginUndoAction;
+  InsertText(selectionStart,PChar(start_comment));
+  Inc(selectionEnd,start_comment_length);
+  if (includecommentcharsinselection=False) then Inc(selectionStart,start_comment_length);
+  InsertText(selectionEnd,PChar(end_comment));
+  if (includecommentcharsinselection=True) then Inc(selectionEnd,end_comment_length);
+  if move_caret=True then
+  begin
+    GotoPos(selectionEnd);
+    SetCurrentPos(selectionStart);
+  end else
+  begin
+    SetSel(selectionStart,selectionEnd);
+  end;
+  EndUndoAction;
+end;
+
+{$ENDIF}
+
+procedure TScintilla.CMFontChanged(var Message: TMessage);
+begin
+  inherited CMFontChanged(Message);
+  LanguageManager.Update;
+end;
+
+procedure TScintilla.CMColorChanged(var Message: TMessage);
+begin
+  inherited CMColorChanged(Message);
+  LanguageManager.Update;
+end;
+
+procedure TScintilla.Loaded;
+begin
+	inherited;
+	LanguageManager.Update;
+end;
+
+procedure TScintilla.doSciModified(const position : LongInt; const modificationType : LongInt; text : PChar;
+const length : LongInt; const linesAdded : LongInt; const line : LongInt; const foldLevelNow : LongInt; const foldLevelPrev : LongInt);
+var
+tmpline : Longint;
+begin
+	tmpline:=line;
+	if (modificationType and SC_MOD_CHANGEFOLD) <> 0 then begin
+		if (foldLevelNow and SC_FOLDLEVELHEADERFLAG) <> 0 then begin
+			if (foldLevelPrev and SC_FOLDLEVELHEADERFLAG) = 0 then
+				SetFoldExpanded(line, True);
+		end else if (foldLevelPrev and SC_FOLDLEVELHEADERFLAG) <> 0 then begin
+			if not GetFoldExpanded(line) then
+				// Removing the fold from one that has been contracted so should expand
+				// otherwise lines are left invisible with no way to make them visible
+				Expand(tmpline, true, false, 0, foldLevelPrev);
+		end;
+    end;
+	inherited doSciModified(position,modificationType,text,length,linesAdded,tmpline,foldLevelNow,foldLevelPrev);
+end;
+
+procedure TScintilla.doSciMarginClick(const modifiers : LongInt; const position : LongInt; const margin : LongInt);
+var
+LineClick,
+LevelClick : integer;
+begin
+	if (foldFold in FCodeFoldingFlags) and (Margin = 2) then
+		begin
+		LineClick := LineFromPosition(Position);
+		if (Modifiers and SCMOD_SHIFT <> 0) and (Modifiers and SCMOD_CTRL <> 0) then
+			FoldAll
+		else begin
+			LevelClick := GetFoldLevel(LineClick);
+			if (LevelClick and SC_FOLDLEVELHEADERFLAG) <> 0 then begin
+				if (modifiers and SCMOD_SHIFT) <> 0 then begin
+					// Ensure all children visible
+					SetFoldExpanded(LineClick, True);
+					Expand(lineClick, true, true, 100, levelClick);
+				end else if (modifiers and SCMOD_CTRL) <> 0 then begin
+					if GetFoldExpanded(lineClick) then begin
+						// Contract this line and all children
+						SetFoldExpanded(LineClick, False);
+						Expand(lineClick, false, true, 0, levelClick);
+					end else begin
+						// Expand this line and all children
+						SetFoldExpanded(LineClick, True);
+						Expand(lineClick, true, true, 100, levelClick);
+					end;
+				end else begin
+					// Toggle this line
+					ToggleFold(LineClick);
+				end;
+			end;
+		end;
+	end;
+	//if assigned(FOnmarginclick) then FOnmarginclick(Self, modifiers, position, margin);
+	inherited doSciMarginClick(modifiers,position,margin);
+end;
+
+procedure TScintilla.SetFoldMarkerType(const Value : sciMarkerType);
+begin
+	if Value<>FFoldMarkerType then
+	begin
+		FFoldMarkerType:=Value;
+		SetMarkers(Value);
+	end;
+end;
+
+procedure TScintilla.SetMarkers(const Value : sciMarkerType);
+begin
+	case Value of
+		sciMarkBox:
+			begin
+			DefineMarker(SC_MARKNUM_FOLDEROPEN, SC_MARK_BOXMINUS);
+			DefineMarker(SC_MARKNUM_FOLDER, SC_MARK_BOXPLUS);
+			DefineMarker(SC_MARKNUM_FOLDERSUB, SC_MARK_VLINE);
+			DefineMarker(SC_MARKNUM_FOLDERTAIL, SC_MARK_LCORNER);
+			DefineMarker(SC_MARKNUM_FOLDEREND, SC_MARK_BOXPLUSCONNECTED);
+			DefineMarker(SC_MARKNUM_FOLDEROPENMID, SC_MARK_BOXMINUSCONNECTED);
+			DefineMarker(SC_MARKNUM_FOLDERMIDTAIL, SC_MARK_TCORNER);
+			end;
+		sciMarkCircle:
+			begin
+			DefineMarker(SC_MARKNUM_FOLDEROPEN, SC_MARK_CIRCLEMINUS);
+			DefineMarker(SC_MARKNUM_FOLDER, SC_MARK_CIRCLEPLUS);
+			DefineMarker(SC_MARKNUM_FOLDERSUB, SC_MARK_VLINE);
+			DefineMarker(SC_MARKNUM_FOLDERTAIL, SC_MARK_LCORNERCURVE);
+			DefineMarker(SC_MARKNUM_FOLDEREND, SC_MARK_CIRCLEPLUSCONNECTED);
+			DefineMarker(SC_MARKNUM_FOLDEROPENMID, SC_MARK_CIRCLEMINUSCONNECTED);
+			DefineMarker(SC_MARKNUM_FOLDERMIDTAIL, SC_MARK_TCORNERCURVE);
+			end;
+		sciMarkPlusMinus:
+			begin
+			DefineMarker(SC_MARKNUM_FOLDEROPEN, SC_MARK_MINUS);
+			DefineMarker(SC_MARKNUM_FOLDER, SC_MARK_PLUS);
+			DefineMarker(SC_MARKNUM_FOLDERSUB, SC_MARK_EMPTY);
+			DefineMarker(SC_MARKNUM_FOLDERTAIL, SC_MARK_EMPTY);
+			DefineMarker(SC_MARKNUM_FOLDEREND, SC_MARK_EMPTY);
+			DefineMarker(SC_MARKNUM_FOLDEROPENMID, SC_MARK_EMPTY);
+			DefineMarker(SC_MARKNUM_FOLDERMIDTAIL, SC_MARK_EMPTY);
+			end;
+		sciMarkArrows:
+			begin
+			DefineMarker(SC_MARKNUM_FOLDEROPEN, SC_MARK_ARROWDOWN);
+			DefineMarker(SC_MARKNUM_FOLDER, SC_MARK_ARROW);
+			DefineMarker(SC_MARKNUM_FOLDERSUB, SC_MARK_EMPTY);
+			DefineMarker(SC_MARKNUM_FOLDERTAIL, SC_MARK_EMPTY);
+			DefineMarker(SC_MARKNUM_FOLDEREND, SC_MARK_EMPTY);
+			DefineMarker(SC_MARKNUM_FOLDEROPENMID, SC_MARK_EMPTY);
+			DefineMarker(SC_MARKNUM_FOLDERMIDTAIL, SC_MARK_EMPTY);
+			end;
+	end;
+end;
+
+procedure TScintilla.SetLanguageManager(const Value: TSciLanguageManager);
+begin
+  fLanguageManager.Assign(Value);
+end;
+
+procedure TScintilla.Expand(var line: integer; doExpand, force: Boolean;
+	visLevels, level: integer);
+Var
+  lineMaxSubord,LevelLine : integer;
+begin
+  lineMaxSubord :=  GetLastChild(line, level and SC_FOLDLEVELNUMBERMASK);
+  Inc(Line);
+  while (line <= lineMaxSubord) do begin
+    if force then begin
+      if visLevels > 0 then
+        ShowLines(line, line)
+      else
+        HideLines(line, line)
+    end else begin
+      if doExpand then
+        ShowLines(line, line)
+    end;
+    LevelLine := level;
+    if LevelLine = -1 then
+      LevelLine := GetFoldLevel(line);
+    if (levelLine and SC_FOLDLEVELHEADERFLAG) <> 0 then begin
+      if force then begin
+        if visLevels > 1 then
+          SetFoldExpanded(line, True)
+        else
+          SetFoldExpanded(line, False);
+        Expand(line, doExpand, force, visLevels - 1);
+      end else begin
+        if doExpand then begin
+          if not GetFoldExpanded(line) then
+            SetFoldExpanded(line, True);
+          Expand(line, true, force, visLevels - 1);
+        end else
+          Expand(line, false, force, visLevels - 1);
+      end;
+    end else
+      Inc(Line);
+	end;
+end;
+
+procedure TScintilla.FoldAll;
+Var
+  MaxLine,LineSeek,Line,Level,LineMaxSubord : Integer;
+  Expanding : Boolean;
+begin
+  Colourise(0, -1);
+  MaxLine := GetLineCount;
+  Expanding := True;
+  for LineSeek := 0 to MaxLine -1 do begin
+    if (GetFoldLevel(LineSeek) and  SC_FOLDLEVELHEADERFLAG) > 0 then begin
+      Expanding := not GetFoldExpanded(LineSeek);
+      break;
+    end;
+  end;
+  Line := 0;
+  While Line < MaxLine do begin
+    level := GetFoldLevel(line);
+    if ((level and SC_FOLDLEVELHEADERFLAG) <> 0) and
+		        (SC_FOLDLEVELBASE = (level and SC_FOLDLEVELNUMBERMASK)) then begin
+      if expanding then begin
+        SetFoldExpanded(line, True);
+        Expand(line, true, false, 0, level);
+        Dec(Line);
+      end else begin
+        LineMaxSubord := GetLastChild(line, -1);
+        SetFoldExpanded(line, False);
+        if LineMaxSubord > Line then
+          HideLines(line+1, lineMaxSubord);
+      end;
+    end;
+		Inc(Line);
+  end;
+end;
+
+
+procedure TScintilla.doSciUpdateUI;
+begin
+ if FBraceHilite then ProcessBraces;
+	inherited doSciUpdateUI;
+end;
+
+(**
+ * Find if there is a brace next to the caret, checking before caret first, then
+ * after caret. If brace found also find its matching brace.
+ * @@return @@c true if inside a bracket pair.
+ *)
+
+procedure TScintilla.FindMatchingBracePosition(var braceAtCaret : integer;
+             var braceOpposite : integer; var IsInside : boolean; sloppy : boolean=true);
+Var
+  IsAfter,ColonMode : boolean;
+  CharBefore, CharAfter: Char;
+  LineStart, LineMaxSubord,CaretPos :integer;
+begin
+  IsInside := False;
+  CaretPos := GetCurrentPos;
+  BraceAtCaret := -1;
+  BraceOpposite := -1;
+  CharBefore := #0;
+  if CaretPos > 0 then
+    CharBefore := Char(GetCharAt(CaretPos -1));
+  // Priority goes to character before caret
+	if (CharBefore <> #0) and  (Pos(CharBefore, '[](){}') > 0)  then
+		BraceAtCaret := caretPos - 1;
+
+  ColonMode := False;
+  if (GetLexer = SCLEX_PYTHON) and (CharBefore = ':') then begin
+		BraceAtCaret := caretPos - 1;
+		ColonMode := true;
+  end;
+
+  IsAfter := True;
+  If (Sloppy and (BraceAtCaret < 0)) then begin
+    // No brace found so check other side
+    CharAfter := Char(GetCharAt(CaretPos));
+  	if (CharAfter <> #0) and  (Pos(CharAfter, '[](){}') > 0)  then begin
+	  	BraceAtCaret := CaretPos;
+      IsAfter := False;
+    end;
+    if (GetLexer = SCLEX_PYTHON) and (CharAfter = ':') then begin
+      BraceAtCaret := caretPos;
+      ColonMode := true;
+    end;
+  end;
+
+  if BraceAtCaret >= 0 then begin
+    if ColonMode then begin
+			LineStart := LineFromPosition(BraceAtCaret);
+      LineMaxSubord := GetLastChild(LineStart, -1);
+      BraceOpposite := GetLineEndPosition(LineMaxSubord);
+    end else
+      BraceOpposite := BraceMatch(BraceAtCaret);
+
+    if BraceOpposite > BraceAtCaret then
+      IsInside := IsAfter
+    else
+      IsInside := not IsAfter;
+  end;
+end;
+
+procedure TScintilla.GoMatchingBrace(Select: boolean; Sloppy : boolean);
+Var
+  BraceAtCaret,BraceOpposite : integer;
+  IsInside : Boolean;
+begin
+  FindMatchingBracePosition(braceAtCaret, braceOpposite, IsInside, Sloppy);
+  // Convert the character positions into caret positions based on whether
+	// the caret position was inside or outside the braces.
+  if BraceOpposite >= 0 then begin
+    if IsInside then begin
+      if braceOpposite > braceAtCaret then
+        Inc(braceAtCaret)
+      else
+        Inc(braceOpposite);
+    end else begin
+      if braceOpposite > braceAtCaret then
+        Inc(braceOpposite)
+      else
+        Inc(braceAtCaret);
+    end;
+
+		EnsureRangeVisible(braceOpposite, braceOpposite);
+		if Select then
+			SetSel(braceAtCaret, braceOpposite)
+		else
+			SetSel(BraceOpposite, BraceOpposite);
+  end;
+end;
+
+
+procedure TScintilla.ProcessBraces;
+Var
+  ColumnAtCaret, ColumnOpposite,lineStart, indentPos, indentSize,indentPosNext, columnAtCaretNext,BraceAtCaret,BraceOpposite : integer;
+  IsInside : boolean;
+	chBrace : char;
+begin
+  FindMatchingBracePosition(BraceAtCaret, BraceOpposite, IsInside, True);
+	if ((BraceAtCaret <> -1) and (BraceOpposite = -1)) then begin
+		BraceBadLight(braceAtCaret);
+    Self.SetHighlightGuide(0);
+	end else begin
+		chBrace := Char(GetCharAt(BraceAtCaret));
+    BraceHighlight(braceAtCaret, braceOpposite);
+		columnAtCaret := GetColumn(BraceAtCaret);
+    columnOpposite := GetColumn(BraceOpposite);
+    if chBrace = ':' then begin
+			lineStart := LineFromPosition(braceAtCaret);
+			indentPos := GetLineIndentPosition(lineStart);
+			indentPosNext := GetLineIndentPosition(lineStart + 1);
+			columnAtCaret := GetColumn(indentPos);
+			columnAtCaretNext := GetColumn(indentPosNext);
+			indentSize := Self.GetIndent;
+			if (columnAtCaretNext - indentSize > 1) then
+				columnAtCaret := columnAtCaretNext - indentSize;
+			if (columnOpposite = 0) then	// If the final line of the structure is empty
+				columnOpposite := columnAtCaret;
+    end;
+    Self.SetHighlightGuide(Min(columnAtCaret, columnOpposite));
+  end;
+end;
+
+procedure TScintilla.ExportToHTML(Stream: TStream; Title : string;UseCurrentEOLMode : Boolean);
+Var
+  StyleIsUsed  : array [0..STYLE_MAX+1] of boolean;
+  lang : TSciLangItem;
+  eolstr : String;
+
+  procedure WriteS(const S : String);
+  begin
+    Stream.Write(S[1], Length(S));
+  end;
+
+  function ColorToHTMLColor(Color : TColor): string;
+  var
+    TempS : string;
+  begin
+    if ColorToIdent(Color, Result) then
+      Delete(Result, 1, 2)
+    else begin
+      FmtStr(Result, '%s%.6x', ['#', Color]);
+      // Now swap Blue and Red
+      TempS := Result;
+      Result[2] := TempS[6];
+      Result[3] := TempS[7];
+      Result[6] := TempS[2];
+      Result[7] := TempS[3];
+    end;
+  end;
+
+  procedure WriteStyle(const Style : TSciStyle);
+  begin
+    with Style do begin
+      if not StyleIsUsed[StyleNumber] then exit;
+      WriteS('.S'+IntToStr(StyleNumber)+ ' {'+eolstr);
+      if FontName <> '' then
+        WriteS(#9'font-family:' + FontName + ';'+eolstr);
+      if FontSize <> 0 then
+        WriteS(#9'font-size:' + IntToStr(Fontsize)+ 'pt' + ';'+eolstr);
+      if fsItalic in FontStyles then
+        WriteS(#9'font-style: italic;'+eolstr)
+      else
+        WriteS(#9'font-style: normal;'+eolstr);
+      if fsBold in FontStyles then
+        WriteS(#9'font-weight: 700;'+eolstr)
+      else
+        WriteS(#9'font-weight: 400;'+eolstr);
+      if fsUnderline in FontStyles then
+         WriteS(#9'text-decoration:underline;'+eolstr)
+      else
+         WriteS(#9'text-decoration:none;'+eolstr);
+      WriteS(#9'color: ' +  ColorToHTMLColor(ForeColor) +';'+eolstr);
+      WriteS(#9'tbackground: ' +  ColorToHTMLColor(ForeColor) +';'+eolstr);
+			WriteS('}'+eolstr);
+    end;
+  end;
+
+Var
+  i, itab,TabSize,Style, StyleCurrent, LengthDoc : integer;
+  ch : char;
+begin
+  if UseCurrentEOLMode=True then
+  begin
+  case EOLStyle of
+  eolCRLF: eolstr:=#13#10;
+  eolCR:eolstr:=#13;
+  eolLF:eolstr:=#10;
+  end;
+  end else eolstr:=#13#10;
+
+  Colourise(0,-1);
+  TabSize := TabWidth;
+  if TabSize = 0 then
+    TabSize := 4;
+  lang:=LanguageManager.LanguageList.Find(LanguageManager.SelectedLanguage);
+  LengthDoc := GetLength;
+  for i := 0 to STYLE_MAX + 1 do
+    StyleIsUsed[i] := false;
+  // check the used styles
+  for i := 0 to LengthDoc do
+    StyleIsUsed[GetStyleAt(i)] := true;
+  StyleIsUsed[STYLE_DEFAULT] := true;
+
+  WriteS('<!DOCTYPE html  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-strict.dtd">'+eolstr);
+  WriteS('<html xmlns="http://www.w3.org/1999/xhtml">'+eolstr);
+  WriteS('<head>'+eolstr);
+  WriteS('<title>'+Title+'</title>'+eolstr);
+  WriteS('<meta name="GENERATOR" content="SciTE - www.Scintilla.org" />'+eolstr);
+  if UseUnicode then
+    WriteS('<meta http-equiv="Content-Type" content="text/html; charset=utf-8">' +eolstr);
+  WriteS('<style type="text/css">'+eolstr);
+
+  // Write default style
+  WriteS('span {'+eolstr);
+  WriteS(#9'font-family:' + Font.Name + ';'+eolstr);
+  WriteS(#9'font-size:' + IntToStr(Font.Size)+ 'pt' + ';'+eolstr);
+  if fsItalic in Font.Style then
+    WriteS(#9'font-style: italic;'+eolstr)
+  else
+    WriteS(#9'font-style: normal;'+eolstr);
+  if fsBold in Font.Style then
+    WriteS(#9'font-weight: 700;'+eolstr)
+  else
+    WriteS(#9'font-weight: 400;'+eolstr);
+  if fsUnderline in Font.Style then
+     WriteS(#9'text-decoration:underline;'+eolstr)
+  else
+     WriteS(#9'text-decoration:none;'+eolstr);
+  WriteS(#9'color: ' +  ColorToHTMLColor(Font.Color) +';'+eolstr);
+  WriteS(#9'background: ' +  ColorToHTMLColor(Color) +';'+eolstr);
+  WriteS('}'+eolstr);
+  // Write all styles
+  for i := 0 to lang.Styles.Count - 1 do
+    WriteStyle(lang.Styles.Items[i] as TSciStyle);
+
+  WriteS('</style>'+eolstr);
+  WriteS('</head>'+eolstr);
+	if (Color <> clWhite) or (Color <> clWindow) then
+		WriteS('<body bgcolor=' + ColorToHTMLColor(Color) + '>'+eolstr)
+	else
+		WriteS('<body>'+eolstr);
+
+  StyleCurrent := GetStyleAt(0);
+//  Line = Self.GetLine(0);
+//	Level = (acc.LevelAt(line) & SC_FOLDLEVELNUMBERMASK) - SC_FOLDLEVELBASE;
+
+  WriteS('<span>');
+	WriteS('<span class="S'+ IntToStr(styleCurrent) + '">');
+	for i := 0 to lengthDoc -1 do begin
+		ch := Char(GetCharAt(i) and $FF);
+    Style := GetStyleAt(i);
+  	if Style <> StyleCurrent then begin
+  		WriteS('</span>');
+			styleCurrent := style; //moved this before the <span writing.. Didn't write the correct style otherwise.
+			WriteS('<span class="S'+ IntToStr(styleCurrent) + '">');
+	  end;
+		Case Ord(ch) of
+      Ord(' ') :
+        begin
+          if (Char(GetCharAt(i+1) and $FF) <> ' ') or (i+1 >= LengthDoc) then
+            // Single space, kept as is
+            WriteS(' ')
+          else
+            WriteS('&nbsp;');
+        end;
+      $9 :  //Tab
+        for itab := 1 to TabSize do WriteS('&nbsp;');
+      $D, $A :
+        begin
+  				if not ((ch = #13) and (GetCharAt(i+1) = $A)) then begin
+	  				WriteS('<br/>');
+            WriteS('</span>');
+            StyleCurrent := GetStyleAt(i + 1);
+            WriteS(eolstr);
+            // we know it's the correct next style
+            WriteS('<span class="S'+ IntToStr(styleCurrent) + '">');
+          end;
+			  end;
+      Ord('<') : WriteS('&lt;');
+      Ord('>') : WriteS('&gt;');
+      Ord('&') : WriteS('&amp;');
+    else
+      WriteS(ch);
+    end;
+  end;
+  WriteS('</span>');
+  WriteS('</span>');
+	WriteS(eolstr+'</body>'+eolstr+'</html>'+eolstr);
+end;
+
+//FlipVars may have a bug, but I've not been able to redo what caused it..
+//To be checked out..
+ { TODO 5 -ohdalis -cBug : Check out more throughly whether it's a bug in the FlipVars function. }
+procedure TScintilla.FlipVars(const equalsign : String;spacebeforeandaftereq : Boolean;const endstatement : String);
+  function SplitString(const src : String;var LeftSide,RightSide : String;const Separator,Eol : String;var notfound : Boolean) : String;
+  var
+    endstatementpos,eqpos,eollen,seplen : Integer;
+  begin
+    notfound:=False;
+    eqpos:=Pos(Separator,src);
+    seplen:=Length(Separator);
+    if eqpos=0 then
+    begin
+      notfound:=True;
+      Exit;
+    end;
+    if Eol='' then endstatementpos:=Length(src)
+    else
+      endstatementpos:=Pos(Eol,src);
+    if endstatementpos=0 then
+    begin
+      endstatementpos:=Length(src);
+      eollen:=0;
+    end
+    else eollen:=Length(Eol);
+    leftside:=System.Copy(src,1,eqpos-1);
+    rightside:=System.Copy(src,eqpos+seplen,endstatementpos-(eqpos+seplen));
+    Result:=System.Copy(src,endstatementpos+eollen,Length(src));
+  end;
+var
+  caretPosition,selectionStart,selectionEnd,selStartLine,selEndLine,numlines,lineStart,lineEnd,i,lineLength: Integer;
+  move_caret,hasselection,notfound : Boolean;
+  tmp,linebuf,whitespace,leftpart,rightpart: String;
+begin
+  SetLength(linebuf,1000);
+  whitespace    :=' ';
+  selectionStart:=GetSelectionStart;
+  selectionEnd  :=GetSelectionEnd;
+  caretPosition :=GetCurrentPos;
+  hasselection  :=(selectionStart-selectionEnd)<>0;
+  if (hasselection=False) then
+  begin
+    selStartLine:=LineFromPosition(caretPosition);
+    selectionStart:=GetLineIndentPosition(selStartLine);
+    selectionEnd:=GetLineEndPosition(LineFromPosition(caretPosition));
+  end;
+  move_caret    :=(caretPosition<selectionEnd);
+  selStartLine  :=LineFromPosition(selectionStart);
+  selEndLine    :=LineFromPosition(selectionEnd);
+  numlines      :=selEndLine-selStartLine;
+  if (numlines>1) and (selectionEnd=PositionFromLine(selEndLine)) then
+  begin
+    Dec(selEndLine);
+    selectionEnd:=GetLineEndPosition(selEndLine);
+  end;
+  BeginUndoAction;
+  for i:=selStartLine to selEndLine do
+  begin
+    lineStart:=GetLineIndentPosition(i);
+    lineEnd:=GetLineEndPosition(i);
+    if hasselection then
+    begin
+    if lineStart<selectionStart then lineStart:=selectionStart;
+    if selectionEnd<lineEnd then lineEnd:=selectionEnd;
+    end;
+    lineBuf:=GetLineS(i);
+    lineLength:=lineEnd-lineStart;
+    if lineLength<=0 then Continue;
+    SetLength(lineBuf,lineLength);
+    GetRange(lineStart,lineEnd,PChar(lineBuf));
+
+    if RangeIsAllWhiteSpace(lineStart,lineEnd)=False then
+    begin
+      tmp:='';
+      repeat
+        if notfound=False then
+        begin
+          if tmp<>'' then tmp:=tmp+' ';
+          if spacebeforeandaftereq=True then
+            tmp:=tmp+Trim(rightpart)+whitespace+equalsign+whitespace+Trim(leftpart)+endstatement
+          else
+            tmp:=tmp+Trim(rightpart)+equalsign+Trim(leftpart)+endstatement;
+        end;
+        lineBuf:=SplitString(lineBuf,leftpart,rightpart,equalsign,endstatement,notfound);
+      until(notfound=True);
+      if tmp<>'' then
+      begin
+        Inc(selectionEnd,Length(tmp)-lineLength);
+        SetSel(lineStart,lineEnd);
+        ReplaceSel(PChar(tmp));
+      end;
+    end;
+  end;
+  EndUndoAction;
+  if move_caret=True then
+  begin
+    if hasselection then
+    begin
+      GotoPos(selectionEnd);
+      SetCurrentPos(selectionStart);
+    end else GotoPos(caretPosition);
+  end else
+    if hasselection then
+    begin
+      SetSel(selectionStart,selectionEnd);
+    end else
+      GotoPos(caretPosition);
+end;
+
+procedure TScintilla.SetCodeFoldingFlags(const Value : sciCodeFoldingFlags);
+begin
+  FCodeFoldingFlags:=Value;
+	if foldFold in Value then
+  begin
+		Gutter2.Width := 14;
+		// Respond to mouse click
+		SetMarginSensitiveN(2, True);
+		// Tell the lexer that we want folding info
+    SetProperty('fold', '1');
+
+    if foldCompact in FCodeFoldingFlags then
+      SetProperty('fold.compact', '1')
+    else
+      SetProperty('fold.compact', '0');
+
+    if foldComment in FCodeFoldingFlags then
+      SetProperty('fold.comment', '1')  // Fold multiline comments
+    else
+      SetProperty('fold.comment', '0');
+    if foldPreProcessor in FCodeFoldingFlags then
+      SetProperty('fold.preprocessor', '1')
+    else
+     SetProperty('fold.preprocessor', '0');
+    if foldAtElse in FCodeFoldingFlags then
+      SetProperty('fold.at.else', '1')
+    else
+     SetProperty('fold.at.else', '0');
+    if foldHTML in FCodeFoldingFlags then
+      SetProperty('fold.html', '1')
+    else
+     SetProperty('fold.html', '0');
+    if foldHTMLPreProcessor in FCodeFoldingFlags then
+      SetProperty('fold.html.preprocessor', '1')
+    else
+     SetProperty('fold.html.preprocessor', '0');
+    if foldCommentPython in FCodeFoldingFlags then
+      SetProperty('fold.comment.python', '1')
+    else
+     SetProperty('fold.comment.python', '0');
+    if foldQuotesPython in FCodeFoldingFlags then
+      SetProperty('fold.quotes.python', '1')
+    else
+     SetProperty('fold.quotes.python', '0');
+
+		SetFoldFlags(16);
+		// Set folding styles
+		SetMarkers(FFoldMarkerType);
+		SetMarginMaskN(2,Integer(SC_MASK_FOLDERS));
+		//  The following is to handle SC_MOD_CHANGEFOLD in the Modified event handler
+		SetModEventMask(GetModEventMask or SC_MOD_CHANGEFOLD);
+	end else begin
+		SetProperty('fold', '0');
+    Gutter2.Width := 0;
+  end;
+end;
+
+procedure TScintilla.SetFoldDrawFlags(const Value : sciFoldDrawFlags);
+var
+tmp : LongInt;
+begin
+tmp:=0;
+  FFoldDrawFlags:=Value;
+  if sciBoxIfExpanded in FFoldDrawFlags then
+    tmp:=tmp+1;
+  if sciAboveIfExpanded in FFoldDrawFlags then
+    tmp:=tmp+2;
+  if sciAboveIfNotExpanded in FFoldDrawFlags then
+    tmp:=tmp+4;
+  if sciBelowIfExpanded in FFoldDrawFlags then
+    tmp:=tmp+8;
+  if sciBelowIfNotExpanded in FFoldDrawFlags then
+    tmp:=tmp+16;
+  if sciHexLevels in FFoldDrawFlags then
+    tmp:=tmp+64;
+  SetFoldFlags(tmp);
+end;
+
+end.@
+
+
+1.6
+log
+@Delphi Scintilla Interface Components 0.14
+@
+text
+@d52 1
+a52 1
+uses Classes, Windows, Controls, Messages, SysUtils, Graphics,SciLexer,ScintillaLanguageManager, SciKeyBindings,StrUtils,
+d113 1
+d123 1
+d130 1
+a130 1
+uses Math;
+d174 1
+a174 1
+     raise Exception.Create('No Start or End comment style defined. See the Comment* properties for this language.');
+d190 4
+a193 5
+   if (itm.CommentStart='') or (itm.CommentMiddle='') or (itm.CommentEnd='') then
+   begin
+     raise Exception.Create('No Start/Middle or End comment style defined. See the Comment* properties for this language.');
+   end;
+
+d207 1
+a207 1
+     raise Exception.Create('No Start/Middle or End comment style defined. See the Comment* properties for this language.');
+@
+
+
+1.5
+log
+@Updated to v0.13
+@
+text
+@d24 1
+a24 1
+      $Id: $
+d37 11
+d52 2
+a53 1
+uses Classes, Windows, Controls, Messages, SysUtils, Graphics,SciLexer,ScintillaSynLexers, SciKeyBindings,StrUtils;
+d57 2
+a58 4
+	sciWordWrapVisualFlag = (sciWWEnd,sciWWStart);
+	sciWordWrapVisualFlags = set of sciWordWrapVisualFlag;
+	sciWordWrapVisualFlagLocation = (sciEndByText,sciStartByText);
+	sciWordWrapVisualFlagLocations = set of sciWordWrapVisualFlagLocation;
+a60 2
+  sciWSMode = (sciWsInvisible=0,sciWsVisibleAlways=1,sciWsVisibleAfterIndent=2);
+	sciCacheType =(sciCacheNone=0,sciCacheCaret=1,sciCachePage=2,sciCacheDocument=3);
+d62 2
+a63 5
+	sciEdgeType =(sciEdgeNone=0,sciEdgeLine=1,sciEdgeBackground=2);
+  TIndentationOption = (KeepIndent, TabIndents, BackSpaceUnIndents, IndentationGuides);
+	TIndentationOptions = Set of TIndentationOption;
+  TEOLStyle = (eolCRLF=0, eolCR=1, eolLF=2);
+	TMarginType = (gutSymbol = 0, gutLineNumber = 1);
+a66 16
+  TMargin = class(TPersistent)
+  private
+    fScintilla : TScintilla;
+    fNumber    : integer;
+
+		function  GetWidth: integer;
+		procedure SetWidth(const Value: integer);
+		function  GetMarginType: TMarginType;
+		procedure SetMarginType(const Value: TMarginType);
+	public
+		constructor Create(Scintilla : TScintilla; Number : integer);
+		procedure   Assign(Source: TPersistent); override;
+	published
+		property Width      : integer     read GetWidth      write SetWidth;
+		property MarginType : TMarginType read GetMarginType write SetMarginType;
+	end;
+d69 1
+a69 104
+	TCaret = class(TPersistent)
+	private
+		fScintilla : TScintilla;
+
+		function  GetCaretFore: TColor;
+		procedure SetCaretFore(const Value: TColor);
+		function  GetCaretLineBack: TColor;
+		procedure SetCaretLineBack(const Value: TColor);
+		function  GetCaretLineVisible : LongBool;
+		procedure SetCaretLineVisible(const Value : LongBool);
+		function  GetCaretWidth : LongInt;
+		procedure SetCaretWidth(const Value : Longint);
+		procedure SetCaretPeriod(const Value : LongInt);
+		function  GetCaretPeriod : LongInt;
+	public
+		constructor Create(Scintilla : TScintilla);
+		procedure   Assign(Source: TPersistent); override;
+	published
+		property ForeColor        : TColor   read GetCaretFore        write SetCaretFore;
+		property LineBackColor    : TColor   read GetCaretLineBack    write SetCaretLineBack;
+		property LineVisible      : LongBool read GetCaretLineVisible write SetCaretLineVisible;
+		property Width            : LongInt  read GetCaretWidth       write SetCaretWidth;
+		property Period           : LongInt  read GetCaretPeriod      write SetCaretPeriod;
+  end;
+
+	TSciHotSpot = class(TPersistent)
+	private
+		fScintilla : TScintilla;
+    FHotActiveFore : TColor;
+    FHotActiveBack : TColor;
+    FHotActiveUnderline,
+    FHotActiveSingleLine : Boolean;
+
+		procedure SetHotActiveFore(const Value : TColor);
+		procedure SetHotActiveBack(const Value : TColor);
+    procedure SetHotActiveUnderline(Value : Boolean);
+    procedure SetHotActiveSingleLine(Value : Boolean);
+  public
+		constructor Create(Scintilla : TScintilla);
+		procedure   Assign(Source: TPersistent); override;
+  published
+		property BackColor : TColor read FHotActiveBack Write SetHotActiveBack nodefault;
+		property ForeColor : TColor read FHotActiveFore Write SetHotActiveFore nodefault;
+    property Underlined : Boolean read FHotActiveUnderline write SetHotActiveUnderline;
+    property SingleLine : Boolean read FHotActiveSingleLine write SetHotActiveSingleLine;
+  end;
+
+
+	TSciColors = class(TPersistent)
+	private
+		fScintilla : TScintilla;
+		FForeSelColor : TColor;
+		FBackSelColor : TColor;
+		FBookMarkBackColor : TColor;
+		FBookMarkForeColor : TColor;
+		FMarkerFore : TColor;
+		FMarkerBack : TColor;
+		FFoldHiColor : TColor;
+		FFoldLoColor : TColor;
+
+		procedure SetForeSel(const Value : TColor);
+		procedure SetBackSel(const Value : TColor);
+		procedure SetMarkerFore(const Value : TColor);
+		procedure SetMarkerBack(const Value : TColor);
+		procedure SetFoldHi(const Value : TColor);
+		procedure SetFoldLo(const Value : TColor);
+		procedure SetBookMarkFore(const Value : TColor);
+		procedure SetBookMarkBack(const Value : TColor);
+	public
+		constructor Create(Scintilla : TScintilla);
+		procedure Assign(Source: TPersistent); override;
+	published
+		property SelFore : TColor read FForeSelColor write SetForeSel nodefault;
+		property SelBack : TColor read FBackSelColor write SetBackSel nodefault;
+		property MarkerFore : TColor read FMarkerFore write SetMarkerFore nodefault;
+		property MarkerBack : TColor read FMarkerBack write SetMarkerBack nodefault;
+		property FoldHi : TColor read FFoldHiColor write SetFoldHi nodefault;
+		property FoldLo : TColor read FFoldLoColor write SetFoldLo nodefault;
+		property BookMarkBack : TColor read FBookMarkBackColor Write SetBookMarkBack nodefault;
+		property BookMarkFore : TColor read FBookMarkForeColor Write SetBookMarkFore nodefault;
+  end;
+
+	TDivOptions = class(TPersistent)
+	private
+		fScintilla : TScintilla;
+		function  GetBool(const Index : Integer) : Boolean;
+		procedure SetBool(const Index : Integer;const Value : Boolean);
+    function  GetWSMode : sciWSMode;
+    procedure SetWSMode(value : sciWSMode);
+	public
+		constructor Create(Scintilla : TScintilla);
+		procedure   Assign(Source: TPersistent); override;
+	published
+		property ViewWSpace : sciWSMode read GetWSMode write SetWSMode;
+		property UsePalette : Boolean index 0 read GetBool write SetBool;
+		property OverType : Boolean index 1 read GetBool write SetBool;
+		property ViewEOL : Boolean index 2 read GetBool write SetBool;
+		property EndAtLastLine : Boolean index 3 read GetBool write SetBool;
+		property ScrollBarH : Boolean index 4 read GetBool write SetBool;
+		property ScrollBarV : Boolean index 5 read GetBool write SetBool;
+
+	end;
+
+TScintilla = class(TScintillaBase)
+d71 4
+a74 6
+		fMargin0 : TMargin;
+    fMargin1 : TMargin;
+		fMargin2 : TMargin;
+		FLines : TStrings;
+		fKeepIndent : Boolean;
+    fCodeFolding : Boolean;
+d76 2
+a77 16
+		fHighlighter : TSciSynLexer;
+		fCaret : TCaret;
+		fColors : TSciColors;
+		fDivOptions : TDivOptions;
+    fHotSpot : TSciHotSpot;
+		FMarkerType : sciMarkerType;
+
+		fKeyCommands : TSciKeyCommandCollection;
+		FHideSel : LongBool;
+		// Property getters/setters
+		procedure SetKeyCommands(const Value : TSciKeyCommandCollection);
+		procedure SetLines(Const Value : TStrings);
+		procedure SetMargins(const Index: Integer; const Value: TMargin);
+		function  GetEOLStyle: TEOLStyle;
+		procedure SetEOLStyle(const Value: TEOLStyle);
+		procedure SetMarkerType(const Value : sciMarkerType);
+d79 5
+a83 13
+		function 	GetIndentation: TIndentationOptions;
+		procedure SetIndentation(const Value: TIndentationOptions);
+		function  GetWordWrapVisual : sciWordWrapVisualFlags;
+		procedure SetWordWrapVisual(const flags : sciWordWrapVisualFlags);
+		function  GetWordWrapVisualLoc : sciWordWrapVisualFlagLocations;
+		procedure SetWordWrapVisualLoc(const flags : sciWordWrapVisualFlagLocations);
+		procedure SetLCache(const value : sciCacheType);
+		function  GetLCache : sciCacheType;
+    procedure SetHighlighter(const Value : TSciSynLexer);
+		procedure SetHideSel(const value : LongBool);
+		procedure inSetEdgeMode(const value : sciEdgeType);
+		function  inGetEdgeMode : sciEdgeType;
+{$IFNDEF NOCOMMENTING}
+a88 2
+
+
+a89 2
+    procedure SetCodeFolding(const Value: Boolean); virtual;
+		procedure MaintainIndentation(ch : integer);
+a91 3
+		procedure doSciCharAdded(const ch : integer); override;
+		procedure CharAddedAutoComplete(const ch : integer); virtual;
+		procedure doSciUserListSelection(const listType : LongInt; text : PChar); override;
+a101 9
+
+		// Define a marker
+		procedure DefineMarker(MarkNum, Marker : integer;ForeColor : TColor=clDefault;BackColor : TColor=clDefault);
+		procedure BookmarkAdd(lineno : LongInt=-1);                 // Adds the marker SCITE_MARKER_BOOKMARK on the line 'lineno'
+		procedure BookmarkDelete(lineno : LongInt=-1);              // Deletes the marker SCITE_MARKER_BOOKMARK on the line 'lineno'
+		procedure BookmarkToggle(lineno : LongInt=-1);              // Toggles the marker SCITE_MARKER_BOOKMARK on the line 'lineno'
+		function  BookmarkPresent(lineno : LongInt=-1) : Boolean;   // Tests if SCITE_MARKER_BOOKMARK marker is on the line 'lineno'
+		function  BookmarkNext(forwardScan : Boolean=True) : Boolean;
+		//Fold all code blocks
+a111 1
+    procedure AutoAdjustLineNumberWidth;
+a113 34
+		// Events Start
+
+    property OnStyleNeeded;
+    property OnCharAdded;
+    property OnSavePointReached;
+    property OnSavePointLeft;
+    property OnModifyAttemptRO;
+{Don't know if this is really needed, since the standard OnDblClick also fires whenever the
+control is doubleclicked at runtime, so it's commented out.}
+//    property OnDoubleClick;
+    property OnUpdateUI;
+    property OnModified;
+		property OnMacroRecord;
+    property OnMarginClick;
+		property OnNeedShown;
+    property OnPainted;
+    property OnDblClick;
+    property OnUserListSelection;
+    property OnDwellStart;
+    property OnDwellEnd;
+    property OnZoom;
+		property OnHotSpotClick;
+    property OnHotSpotDoubleClick;
+		property OnCallTipClick;
+		property OnMsgSent;
+		property OnKeyUp;
+		property OnKeyDown;
+		property OnKeyPress;
+		property OnEnter;
+		property OnExit;
+		// Events End
+    property OnClick;
+		property  Lines : TStrings read FLines write SetLines;
+
+a114 1
+
+d117 2
+a118 37
+		property CodeFolding : Boolean read fCodeFolding write SetCodeFolding default False;
+		//Get or set the EOF style: EOL_CRLF, EOL_CR, EOL_LF
+		property EOLStyle : TEOLStyle read GetEOLStyle write SetEOLStyle;
+		//Get or set indentation options: - KeepIndent, - TabIndents, - BackSpaceUnIndents, - IndentationGuides
+		property Indentation : TIndentationOptions read GetIndentation write SetIndentation;
+		//Number of characters for code (un)indending.	If set to zero then the TabWidth is used instead
+		property IndentWidth : integer read GetIndent write SetIndent;
+		//Set the type of Gutter(margin) 0: gutSymbol = 0,gutLineNumber = 1
+		property Gutter0 : TMargin  index 0 read fMargin0 write SetMargins;
+		//Set the type of Gutter(margin) 1: gutSymbol = 0,gutLineNumber = 1
+    property Gutter1 : TMargin index 1 read fMargin1 write SetMargins;
+		//Set the type of Gutter(margin) 2: gutSymbol = 0,gutLineNumber = 1
+    property Gutter2 : TMargin index 2 read fMargin2 write SetMargins;
+		//Property for customising and saving the keyboard commands
+    property KeyCommands : TSciKeyCommandCollection read FKeyCommands write SetKeyCommands;
+		//Left Margin in pixels
+		property MarginLeft : LongInt read GetMarginLeft write SetMarginLeft;
+		//Right Margin in pixels
+		property MarginRight : LongInt read GetMarginRight write SetMarginRight;
+		//Tab width in characters
+    property TabWidth : integer read GetTabWidth write SetTabWidth default 8;
+		property ReadOnly;
+		//If false tab characters are replaced by spaces
+    property UseTabs : LongBool read GetUseTabs write SetUseTabs default true;
+		//Setting to true allows the use of multiple language in the same document.If true all text in and out of the control is interpreted as UTF8
+    property UseUnicode;
+		property Caret : TCaret read fCaret Write fCaret;
+		property DivOptions : TDivOptions read fDivOptions write fDivOptions;
+    property ActiveHotSpot : TSciHotSpot read fHotSpot write fHotSpot;
+		property Colors : TSciColors read fColors write fColors;
+		property MouseDwellTime : LongInt read GetMouseDwellTime write SetMouseDwellTime;
+		property ClearUndoAfterSave;
+		property MarkerType : sciMarkerType read FMarkerType write SetMarkerType default sciMarkBox;
+		//Enable/disable word wrap
+		property WordWrapVisualFlags : sciWordWrapVisualFlags read GetWordWrapVisual write SetWordWrapVisual;
+		property WordWrapVisualFlagsLocation : sciWordWrapVisualFlagLocations read GetWordWrapVisualLoc write SetWordWrapVisualLoc;
+		property LayoutCache : sciCacheType read GetLCache write SetLCache;
+d120 2
+a121 7
+		property Highlighter : TSciSynLexer read fHighlighter write SetHighlighter;
+		property HideSelect : LongBool read FHideSel write SetHideSel;
+		property WordWrap;
+		property EdgeMode : sciEdgeType read inGetEdgeMode write inSetEdgeMode default sciEdgeNone;
+		property EdgeColumn : Longint read GetEdgeColumn write SetEdgeColumn default 0;
+		property EdgeColor : TColor read GetEdgeColour write SetEdgeColour default clDefault;
+		property WordChars;
+d125 2
+d128 1
+a128 1
+uses Math,SciSupport;
+a132 144
+//////  Beginning of TScintillaStrings
+
+Type
+{ TScintillaStrings }
+  TScintillaStrings = class(TStrings)
+  private
+    Memo: TScintilla;
+  protected
+    function Get(Index: Integer): string; override;
+    function GetCount: Integer; override;
+    function GetTextStr: string; override;
+    procedure Put(Index: Integer; const S: string); override;
+    procedure SetTextStr(const Value: string); override;
+		procedure SetUpdateState(Updating: Boolean); override;
+  public
+    procedure Clear; override;
+    procedure Delete(Index: Integer); override;
+    procedure Insert(Index: Integer; const S: string); override;
+  end;
+
+function TScintillaStrings.GetCount: Integer;
+begin
+  Result := 0;
+  if Memo.HandleAllocated then
+  begin
+    Result := Memo.GetLineCount;
+    if Memo.GetLineEndPosition(Result-1) - Memo.PositionFromLine(Result-1) = 0 then Dec(Result);
+  end;
+end;
+
+function TScintillaStrings.Get(Index: Integer): string;
+var
+  S : string;
+  Len : integer;
+begin
+  Len := Memo.GetLineEndPosition(Index)-Memo.PositionFromLine(Index);
+  if Len > 0 then begin
+    SetLength(S, Len+2);
+    Memo.GetLine(Index, PChar(S));
+    Result := Copy(S, 1, Len);
+  end else
+    Result := '';
+end;
+
+procedure TScintillaStrings.Put(Index: Integer; const S: string);
+var
+  SelStart: Integer;
+begin
+  SelStart := Memo.PositionFromLine(Index);
+  if SelStart >= 0 then
+	begin
+    Memo.SetTargetStart(SelStart);
+    Memo.SetTargetEnd(Memo.GetLineEndPosition(Index));
+    Memo.ReplaceTarget(-1, PChar(S));
+  end;
+end;
+
+procedure TScintillaStrings.Insert(Index: Integer; const S: string);
+var
+  SelStart, LineLen: Integer;
+  Line: string;
+  EndOfLine : string;
+begin
+  if Index >= 0 then
+  begin
+    Case Memo.GetEOLMode of
+      SC_EOL_CRLF : EndOfLine := #13#10;
+      SC_EOL_CR   : EndOfLine := #13;
+      SC_EOL_LF : EndOfLine := #10;
+    end;
+    SelStart := Memo.PositionFromLine(Index);
+    if SelStart >= 0 then Line := S + EndOfLine else
+    begin
+      SelStart := Memo.PositionFromLine(Index-1);
+      if SelStart < 0 then Exit;
+      LineLen := Memo.GetLineEndPosition(Index-1) - SelStart;
+      if LineLen = 0 then Exit;
+      Inc(SelStart, LineLen);
+      Line := EndOfLine + s;
+    end;
+    Memo.SetTargetStart(SelStart);
+    Memo.SetTargetEnd(SelStart);
+    Memo.ReplaceTarget(-1, PChar(Line));
+  end;
+end;
+
+procedure TScintillaStrings.Delete(Index: Integer);
+const
+  Empty: PChar = '';
+var
+  SelStart, SelEnd: Integer;
+begin
+  SelStart := Memo.PositionFromLine(Index);
+  if SelStart >= 0 then
+  begin
+    SelEnd := Memo.PositionFromLine(Index+1);
+    if SelEnd < 0 then SelEnd := SelStart + Memo.LineLength(Index);
+    Memo.SetTargetStart(SelStart);
+    Memo.SetTargetEnd(SelEnd);
+    Memo.ReplaceTarget(-1, Empty);
+  end;
+end;
+
+procedure TScintillaStrings.Clear;
+begin
+  Memo.ClearAll;
+end;
+
+procedure TScintillaStrings.SetUpdateState(Updating: Boolean);
+begin
+  if Memo.HandleAllocated then
+  begin
+    SendMessage(Memo.Handle, WM_SETREDRAW, Ord(not Updating), 0);
+    if not Updating then
+    begin   // WM_SETREDRAW causes visibility side effects in memo controls
+      Memo.Perform(CM_SHOWINGCHANGED,0,0); // This reasserts the visibility we want
+      Memo.Refresh;
+    end;
+  end;
+end;
+
+function TScintillaStrings.GetTextStr: string;
+begin
+  Result := Memo.Text;
+end;
+
+procedure TScintillaStrings.SetTextStr(const Value: string);
+var
+  NewText: string;
+  Style: TTextLineBreakStyle;
+begin
+  Case Memo.GetEOLMode of
+    SC_EOL_CRLF : Style := tlbsCRLF;
+    SC_EOL_LF : Style := tlbsLF;
+  else
+    Style := tlbsCRLF;   // no other line break style available
+  end;
+  NewText := AdjustLineBreaks(Value, Style);
+  if (Length(NewText) <> Memo.GetTextLength) or (NewText <> Memo.Text) then
+  begin
+    Memo.SetText(PChar(NewText));
+    Memo.Perform(CM_TEXTCHANGED, 0, 0);
+  end;
+end;
+a133 1
+//////  End of TScintillaStrings
+a136 1
+  FCodeFolding := False;
+d138 3
+a140 13
+	FMarkerType :=sciMarkBox;
+  FLines := TScintillaStrings.Create;
+  TScintillaStrings(FLines).Memo := Self;
+  fMargin0 := TMargin.Create(Self, 0);
+  fMargin1:= TMargin.Create(Self, 1);
+  fMargin2:= TMargin.Create(Self, 2);
+	fCaret :=TCaret.Create(Self);
+	fColors :=TSciColors.Create(Self);
+	fDivOptions :=TDivOptions.Create(Self);
+  fHighlighter := TSciSynLexer.Create(Self);
+  fHotSpot :=TSciHotSpot.Create(Self);
+	FHideSel:=false;
+	fKeyCommands := TSciKeyCommandCollection.Create(Self);
+d145 1
+a145 7
+  FLines.Free;
+  fMargin0.Free;
+  fMargin1.Free;
+  fMargin2.Free;
+	fCaret.Free;
+  fHighlighter.Free;
+  fHotSpot.Free;
+a148 1
+
+d155 4
+a158 27
+		CodeFolding:=TScintilla(Source).CodeFolding;
+		EOLStyle:=TScintilla(Source).EOLStyle;
+		Indentation:=TScintilla(Source).Indentation;
+		IndentWidth:=TScintilla(Source).IndentWidth;
+		Gutter0.Assign(TScintilla(Source).Gutter0);
+		Gutter1.Assign(TScintilla(Source).Gutter1);
+		Gutter2.Assign(TScintilla(Source).Gutter2);
+		KeyCommands.Assign(TScintilla(Source).KeyCommands);
+		MarginLeft:=TScintilla(Source).MarginLeft;
+		MarginRight:=TScintilla(Source).MarginRight;
+		TabWidth:=TScintilla(Source).TabWidth;
+		UseTabs:=TScintilla(Source).UseTabs;
+		Caret.Assign(TScintilla(Source).Caret);
+		DivOptions.Assign(TScintilla(Source).DivOptions);
+		Colors.Assign(TScintilla(Source).Colors);
+		MouseDwellTime:=TScintilla(Source).MouseDwellTime;
+		MarkerType:=TScintilla(Source).MarkerType;
+		WordWrap:=TScintilla(Source).WordWrap;
+		WordWrapVisualFlags:=TScintilla(Source).WordWrapVisualFlags;
+		WordWrapVisualFlagsLocation:=TScintilla(Source).WordWrapVisualFlagsLocation;
+		LayoutCache:=TScintilla(Source).LayoutCache;
+		Highlighter.Assign(TScintilla(Source).Highlighter);
+		HideSelect:=TScintilla(Source).HideSelect;
+		EdgeColor:=TScintilla(Source).EdgeColor;
+		EdgeColumn:=TScintilla(Source).EdgeColumn;
+		EdgeMode:=TScintilla(Source).EdgeMode;
+    ActiveHotSpot.Assign(TScintilla(Source).ActiveHotSpot);
+d167 1
+a167 1
+  itm:=Highlighter.LanguageList.Find(Highlighter.SelectedLanguage);
+d185 1
+a185 1
+  itm:=Highlighter.LanguageList.Find(Highlighter.SelectedLanguage);
+d201 1
+a201 1
+  itm:=Highlighter.LanguageList.Find(Highlighter.SelectedLanguage);
+d221 1
+a221 1
+  firstSelLineStart,numlines,i,lineStart,lineIndent,lineEnd,comment_length  : Integer;
+d227 1
+a227 1
+  SetLength(linebuf,1000);
+d244 5
+a248 2
+    if (lineEnd-lineIndent)>=SizeOf(linebuf) then
+      SetLength(linebuf,lineEnd-lineIndent);
+d262 3
+a264 2
+        SetSel(lineIndent,lineIndent+comment_length);
+        ReplaceSel('');
+d271 4
+a274 2
+        SetSel(lineIndent,lineIndent+(comment_length-1));
+        ReplaceSel('');
+a280 2
+    if i=selStartLine then
+      Inc(selectionStart,Length(comment));
+d302 1
+a302 1
+  start_comment_length,middle_comment_length,end_comment_length,maxCommentLength,whitespace_length  : Integer;
+a305 1
+  eollen : Integer;
+d379 3
+a381 2
+    SetSel(lineStart,lineStart+(start_comment_length));
+    ReplaceSel('');
+d405 3
+a407 2
+      SetSel(lineEnd-end_comment_length-whitespace_length,lineEnd);
+      ReplaceSel('');
+d422 3
+a424 2
+        SetSel(lineStart,lineStart+middle_comment_length);
+        ReplaceSel('');
+d441 3
+a443 2
+        SetSel(lineStart,lineStart+middle_comment_length);
+        ReplaceSel('');
+d468 3
+a470 2
+        SetSel(lineStart,lineStart+end_comment_length+eollen);
+        ReplaceSel('');
+d476 3
+a478 2
+      SetSel(lineStart,lineStart+end_comment_length+eollen);
+      ReplaceSel('');
+d501 1
+a501 3
+caretPosition,selectionStart,selectionEnd,lineEnd,current,end_comment_length,
+start_comment_length,
+startword,endword,start_counter,end_counter  : Integer;
+a504 1
+selLine,lineIndent : Integer;
+a535 1
+
+d564 3
+a566 2
+        SetSel(selectionStart,selectionStart+start_comment_length);
+        ReplaceSel('');
+d568 3
+a570 2
+        SetSel(selectionEnd-end_comment_length,selectionEnd);
+        ReplaceSel('');
+a606 16
+procedure TScintilla.inSetEdgeMode(const value : sciEdgeType);
+begin
+	SetEdgeMode(LongInt(value));
+end;
+function  TScintilla.inGetEdgeMode : sciEdgeType;
+begin
+	result:=sciEdgeType(GetEdgeMode);
+end;
+
+procedure TScintilla.SetHideSel(const value : LongBool);
+begin
+	FHideSel:=value;
+	inherited HideSelection(value);
+end;
+
+
+d610 1
+a610 1
+  Highlighter.Update;
+d616 1
+a616 26
+  Highlighter.Update;
+end;
+
+procedure TScintilla.CharAddedAutoComplete(const ch : integer);
+begin
+  // This must be overrided to accept autocompletion..
+end;
+
+procedure TScintilla.doSciUserListSelection(const listType : LongInt; text : PChar);
+begin
+	inherited doSciUserListSelection(listType,text);
+	//if assigned(FOnuserlistselection) then FOnuserlistselection(Self, listType, text);
+end;
+
+procedure TScintilla.DefineMarker(MarkNum, Marker : integer;ForeColor,BackColor : TColor);
+begin
+	MarkerDefine(MarkNum, Marker);
+	if(ForeColor=clDefault) then
+		MarkerSetFore(MarkNum, Colors.MarkerFore)
+	else
+		MarkerSetFore(MarkNum, ForeColor);
+
+	if(BackColor=clDefault) then
+		MarkerSetBack(MarkNum, Colors.MarkerBack)
+	else
+		MarkerSetBack(MarkNum, BackColor)
+d622 1
+a622 16
+	DefineMarker(SCITE_MARKER_BOOKMARK,SC_MARK_CIRCLE,Colors.BookMarkFore,Colors.BookMarkBack);
+	//Highlighter.Language:=Highlighter.Language;
+	Highlighter.Update;
+  {$IFDEF USELEXWALKER}
+  Highlighter.RescanLexerNameMap;
+  {$ENDIF}
+
+end;
+
+procedure TScintilla.SetLCache(const value : sciCacheType);
+begin
+	SetLayoutCache(Longint(value));
+end;
+function  TScintilla.GetLCache : sciCacheType;
+begin
+	result :=sciCacheType(GetLayoutCache);
+a648 1
+
+d650 1
+a650 1
+	if FCodeFolding and (Margin = 2) then
+d683 1
+a683 1
+procedure TScintilla.SetMarkerType(const Value : sciMarkerType);
+d685 1
+a685 1
+	if Value<>FMarkerType then
+d687 1
+a687 1
+		FMarkerType:=Value;
+a736 180
+function TScintilla.GetWordWrapVisual : sciWordWrapVisualFlags;
+var
+tmp : sciWordWrapVisualFlags;
+x : Longint;
+begin
+	tmp:=[];
+	x:=GetWrapVisualFlags;
+	if (Boolean(x and SC_WRAPVISUALFLAG_END)) then Include(tmp,sciWWEnd)
+		else Exclude(tmp,sciWWEnd);
+	if (Boolean(x and SC_WRAPVISUALFLAG_START)) then Include(tmp,sciWWStart)
+		else Exclude(tmp,sciWWStart);
+	result :=tmp;
+end;
+
+procedure TScintilla.SetWordWrapVisual(const flags : sciWordWrapVisualFlags);
+var
+x : Longint;
+begin
+	x:=0;
+	if sciWWEnd in flags then x:=x+SC_WRAPVISUALFLAG_END;
+	if sciWWStart in flags then x:=x+SC_WRAPVISUALFLAG_START;
+	SetWrapVisualFlags(x);
+end;
+
+function TScintilla.GetWordWrapVisualLoc : sciWordWrapVisualFlagLocations;
+var
+tmp : sciWordWrapVisualFlagLocations;
+x : Longint;
+begin
+	tmp:=[];
+	x:=GetWrapVisualFlagsLocation;
+	if (Boolean(x and SC_WRAPVISUALFLAGLOC_END_BY_TEXT)) then Include(tmp,sciEndByText)
+		else Exclude(tmp,sciEndByText);
+	if (Boolean(x and SC_WRAPVISUALFLAGLOC_START_BY_TEXT)) then Include(tmp,sciStartByText)
+		else Exclude(tmp,sciStartByText);
+	result :=tmp;
+end;
+
+procedure TScintilla.SetWordWrapVisualLoc(const flags : sciWordWrapVisualFlagLocations);
+var
+x : Longint;
+begin
+	x:=0;
+	if sciEndByText in flags then x:=x+SC_WRAPVISUALFLAGLOC_END_BY_TEXT;
+	if sciStartByText in flags then x:=x+SC_WRAPVISUALFLAGLOC_START_BY_TEXT;
+	SetWrapVisualFlagsLocation(x);
+end;
+
+procedure TScintilla.BookmarkAdd(lineno : LongInt);
+	begin
+	if lineno = -1 then
+		lineno := GetCurrentLineNumber;
+	if not BookmarkPresent(lineno) then
+		MarkerAdd(lineno, SCITE_MARKER_BOOKMARK);
+end;
+
+procedure TScintilla.BookmarkDelete(lineno : LongInt);
+begin
+	if lineno = -1 then
+		lineno := GetCurrentLineNumber();
+	if BookmarkPresent(lineno) then
+		MarkerDelete(lineno, SCITE_MARKER_BOOKMARK);
+end;
+
+function TScintilla.BookmarkPresent(lineno : LongInt) : Boolean;
+var
+state : LongInt;
+begin
+	if lineno = -1 then
+		lineno := GetCurrentLineNumber();
+	state := MarkerGet(lineno);
+	result :=Boolean(state and (1 shl SCITE_MARKER_BOOKMARK));
+end;
+
+procedure TScintilla.BookmarkToggle(lineno : LongInt);
+begin
+	if lineno = -1 then
+		lineno := GetCurrentLineNumber();
+	if BookmarkPresent(lineno) then
+		BookmarkDelete(lineno)
+	else
+		BookmarkAdd(lineno);
+end;
+
+function TScintilla.BookmarkNext(forwardScan : Boolean) : Boolean;
+var
+lineno : LongInt;
+sci_marker : LongInt;
+lineStart : LongInt;
+lineRetry : LongInt;
+nextLine : LongInt;
+begin
+	lineno := GetCurrentLineNumber();
+	sci_marker := SCI_MARKERNEXT;
+	lineStart := lineno + 1;	//Scan starting from next line
+	lineRetry := 0;				//If not found, try from the beginning
+	if not forwardScan then
+	begin
+		lineStart := lineno - 1;		//Scan starting from previous line
+		lineRetry := GetLineCount;	//If not found, try from the end
+		sci_marker := SCI_MARKERPREVIOUS;
+	end;
+	nextLine := SPerform(sci_marker, lineStart, (1 shl SCITE_MARKER_BOOKMARK));
+	if nextLine < 0 then
+		nextLine := SPerform(sci_marker, lineRetry, (1 shl SCITE_MARKER_BOOKMARK));
+	if (nextLine < 0) or (nextLine = lineno) then // No bookmark (of the given type) or only one, and already on it
+	begin
+		result :=false;
+		Exit;
+	end	else begin
+		GotoLineEnsureVisible(nextLine);
+		result :=true;
+		Exit;
+	end;
+	result :=false;
+end;
+
+
+		////////////////////////////////////////////////////////////////////////////////
+
+
+procedure TScintilla.SetMargins(const Index: Integer; const Value: TMargin);
+begin
+	case Index of
+    0 : fMargin0.Assign(Value);
+    1 : fMargin1.Assign(Value);
+    2 : fMargin2.Assign(Value);
+  end;
+end;
+
+function TScintilla.GetIndentation: TIndentationOptions;
+begin
+  Result := [];
+  if fKeepIndent then Result := [KeepIndent];
+  if GetTabIndents then Result := Result + [TabIndents];
+  if GetBackSpaceUnIndents then Result := Result + [BackSpaceUnIndents];
+  if GetIndentationGuides then Result := Result + [IndentationGuides];
+end;
+
+procedure TScintilla.SetIndentation(const Value: TIndentationOptions);
+begin
+  fKeepIndent := KeepIndent in Value;
+  SetTabIndents(TabIndents in Value);
+  SetBackSpaceUnIndents(BackSpaceUnIndents in Value);
+  SetIndentationGuides(IndentationGuides in Value);
+end;
+procedure TScintilla.MaintainIndentation(ch : integer);
+Var
+	eolMode : integer;
+	curLine : Integer;
+	lastLine : Integer;
+	indentAmount : Integer;
+begin
+	eolMode := GetEOLMode;
+	curLine := LineFromPosition(GetCurrentPos);
+	lastLine := curLine - 1;
+	indentAmount := 0;
+
+	if (((eolMode = SC_EOL_CRLF) or (eolMode = SC_EOL_LF)) and (ch = 10)) or
+					 ((eolMode = SC_EOL_CR) and (ch = 13)) then begin
+		while (lastLine >= 0) and
+					(GetLineEndPosition(lastLine) - PositionFromLine(lastline) = 0) do
+			Dec(lastLine);
+		if (lastLine >= 0) then
+						indentAmount := GetLineIndentation(lastLine);
+		if (indentAmount > 0) then begin
+			SetLineIndentation(curLine, indentAmount);
+			SetCurrentPos(Self.GetLineIndentPosition(curLine));
+			Self.SetSel(GetCurrentPos, GetCurrentPos);
+		end;
+	end;
+end;
+
+procedure TScintilla.doSciCharAdded(const ch : integer);
+begin
+	if fKeepIndent then MaintainIndentation(ch);
+	CharAddedAutoComplete(ch);
+	//if Assigned(FOncharadded) then FOncharadded(Self,ch);
+	inherited doSciCharAdded(ch);
+end;
+d738 1
+a738 1
+function TScintilla.GetEOLStyle: TEOLStyle;
+d740 1
+a740 41
+	Result := TEOLStyle(GETEOLMode);
+end;
+
+procedure TScintilla.SetEOLStyle(const Value: TEOLStyle);
+begin
+	SetEOLMode(Ord(Value));
+  Self.ConvertEOLs(Ord(Value));
+end;
+
+procedure TScintilla.SetHighlighter(const Value: TSciSynLexer);
+begin
+  fHighlighter.Assign(Value);
+end;
+
+procedure TScintilla.SetCodeFolding(const Value: Boolean);
+begin
+	//if Value = fCodeFolding then exit;
+	if Value then begin
+		Gutter2.Width := 14;
+		// Respond to mouse click
+		SetMarginSensitiveN(2, True);
+		// Tell the lexer that we want folding info
+		SetProperty('fold', '1');
+		SetProperty('fold.compact', '0');  // Do not fold blank lines at block end
+		SetProperty('fold.comment', '1');  // Fold multiline comments
+		SetProperty('fold.preprocessor', '1');
+		SetProperty('fold.at.else', '1');
+		SetProperty('fold.html', '1');
+		SetProperty('fold.html.preprocessor', '1');
+
+		SetFoldFlags(16);
+		// Set folding styles
+		SetMarkers(MarkerType);
+		SetMarginMaskN(2,Integer(SC_MASK_FOLDERS));
+		//  The following is to handle SC_MOD_CHANGEFOLD in the Modified event handler
+		SetModEventMask(GetModEventMask or SC_MOD_CHANGEFOLD);
+	end else begin
+		SetProperty('fold', '0');
+    Gutter2.Width := 0;
+  end;
+  fCodeFolding := Value;
+d746 1
+a746 2
+  lineMaxSubord : integer;
+  LevelLine : integer;
+d785 1
+a785 5
+  MaxLine : integer;
+  LineSeek : integer;
+  Line : integer;
+  Level : integer;
+  LineMaxSubord : Integer;
+a821 2
+ //if assigned(FOnupdateui) then FOnupdateui(Self);
+
+d833 1
+a833 2
+  IsAfter : boolean;
+  CaretPos : integer;
+d835 1
+a835 2
+  ColonMode : boolean;
+  LineStart, LineMaxSubord :integer;
+d885 1
+a885 2
+  BraceAtCaret : integer;
+  BraceOpposite : integer;
+d915 1
+a915 2
+  BraceAtCaret : integer;
+  BraceOpposite : integer;
+a917 3
+  ColumnAtCaret, ColumnOpposite : integer;
+  lineStart, indentPos, indentSize : integer;
+  indentPosNext, columnAtCaretNext : integer;
+a943 10
+procedure TScintilla.SetKeyCommands(const Value: TSciKeyCommandCollection);
+begin
+	fKeyCommands.Assign(Value);
+end;
+
+procedure TScintilla.SetLines(Const Value : TStrings);
+begin
+  FLines.Assign(Value);
+end;
+
+d1000 1
+a1000 3
+  i, itab : integer;
+  TabSize : integer;
+  Style, StyleCurrent, LengthDoc : integer;
+d1016 1
+a1016 1
+  lang:=Highlighter.LanguageList.Find(Highlighter.SelectedLanguage);
+a1111 21
+procedure TScintilla.AutoAdjustLineNumberWidth;
+
+var
+lineCount : Integer;
+lineNumWidth : Integer;
+pixelWidth : Integer;
+begin
+	lineNumWidth := 1;
+  lineCount:=GetLineCount;
+  while (lineCount >= 10) do
+  begin
+    lineCount := lineCount div 10;
+    Inc(lineNumWidth);
+  end;
+  if (lineNumWidth < DefaultLinenumbersWidth) then
+    lineNumWidth := DefaultLinenumbersWidth;
+
+  pixelWidth := 4 + lineNumWidth * TextWidth(STYLE_LINENUMBER, '9');
+  Gutter0.Width:=pixelWidth;
+end;
+
+d1116 3
+a1118 8
+function SplitString(const src : String;var LeftSide,RightSide : String;const Separator,Eol : String;var notfound : Boolean) : String;
+var
+  endstatementpos,eqpos,eollen,seplen : Integer;
+begin
+  notfound:=False;
+  eqpos:=Pos(Separator,src);
+  seplen:=Length(Separator);
+  if eqpos=0 then
+d1120 20
+a1139 2
+    notfound:=True;
+    Exit;
+a1140 13
+  if Eol='' then endstatementpos:=Length(src)
+  else
+    endstatementpos:=Pos(Eol,src);
+  if endstatementpos=0 then
+  begin
+    endstatementpos:=Length(src);
+    eollen:=0;
+  end
+  else eollen:=Length(Eol);
+  leftside:=System.Copy(src,1,eqpos-1);
+  rightside:=System.Copy(src,eqpos+seplen,endstatementpos-(eqpos+seplen));
+  Result:=System.Copy(src,endstatementpos+eollen,Length(src));
+end;
+a1145 1
+
+d1221 1
+a1221 7
+
+constructor TDivOptions.Create(Scintilla: TScintilla);
+begin
+	fScintilla := Scintilla;
+end;
+
+procedure TDivOptions.Assign(Source: TPersistent);
+d1223 2
+a1224 1
+	if Source is TDivOptions then
+d1226 5
+a1230 10
+		ScrollBarV := TDivOptions(Source).ScrollBarV;
+		ScrollBarH := TDivOptions(Source).ScrollBarH;
+		UsePalette:= TDivOptions(Source).UsePalette;
+		OverType:= TDivOptions(Source).OverType;
+		ViewEOL:= TDivOptions(Source).ViewEOL;
+		EndAtLastLine:= TDivOptions(Source).EndAtLastLine;
+		ViewWSpace:=TDivOptions(Source).ViewWSpace;
+	end else
+		inherited;
+end;
+d1232 4
+a1235 34
+function  TDivOptions.GetWSMode : sciWSMode;
+var
+wsm : LongInt;
+begin
+  wsm:=fScintilla.GetViewWS;
+  Result:=sciWSMode(wsm);
+end;
+procedure TDivOptions.SetWSMode(value : sciWSMode);
+begin
+  fScintilla.SetViewWS(LongInt(value));
+end;
+function  TDivOptions.GetBool(const Index : Integer) : Boolean;
+begin
+	case Index of
+	0:result :=fScintilla.GetUsePalette;
+	1:result :=fScintilla.GetOverType;
+	2:result :=fScintilla.GetViewEOL;
+	3:result :=Boolean(fScintilla.GetEndAtLastLine);
+	4:result :=fScintilla.GetHScrollBar;
+	5:result :=fScintilla.GetVScrollBar;
+	else Result:=false;
+	end;
+end;
+procedure  TDivOptions.SetBool(const Index : Integer;const Value : Boolean);
+begin
+	case Index of
+	0:fScintilla.SetUsePalette(Value);
+	1:fScintilla.SetOverType(Value);
+	2:fScintilla.SetViewEOL(Value);
+	3:fScintilla.SetEndAtLastLine(Value<>false);
+	4:fScintilla.SetHScrollBar(Value);
+	5:fScintilla.SetVScrollBar(Value);
+	end;
+end;
+d1237 28
+a1264 9
+//TSciHotSpot
+constructor TSciHotSpot.Create(Scintilla: TScintilla);
+begin
+	fScintilla := Scintilla;
+  FHotActiveFore:=clDefault;
+  FHotActiveBack:=clDefault;
+  FHotActiveUnderline:=True;
+  FHotActiveSingleLine:=False;
+end;
+d1266 10
+a1275 31
+procedure TSciHotSpot.SetHotActiveFore(const Value : TColor);
+begin
+  FHotActiveFore:=Value;
+	if Value<>clDefault then
+	begin
+		fScintilla.SetHotspotActiveFore(true,Value);
+	end else
+	begin
+		fScintilla.SetHotspotActiveFore(false,Value);
+	end;
+end;
+procedure TSciHotSpot.SetHotActiveBack(const Value : TColor);
+begin
+  FHotActiveBack:=Value;
+	if Value<>clDefault then
+	begin
+		fScintilla.SetHotspotActiveBack(true,Value);
+	end else
+	begin
+		fScintilla.SetHotspotActiveBack(false,Value);
+	end;
+end;
+procedure TSciHotSpot.SetHotActiveUnderline(Value : Boolean);
+begin
+  FHotActiveUnderline:=Value;
+  fScintilla.SetHotspotActiveUnderline(Value);
+end;
+procedure TSciHotSpot.SetHotActiveSingleLine(Value : Boolean);
+begin
+  FHotActiveSingleLine:=Value;
+  fScintilla.SetHotspotSingleLine(Value);
+d1278 3
+a1280 242
+procedure TSciHotSpot.Assign(Source: TPersistent);
+begin
+	if Source is TSciHotSpot then begin
+		FHotActiveBack := TSciHotSpot(Source).BackColor;
+		FHotActiveFore:=TSciHotSpot(Source).ForeColor;
+    FHotActiveUnderline:=TSciHotSpot(Source).Underlined;
+    FHotActiveSingleLine:=TSciHotSpot(Source).SingleLine;
+	end else
+		inherited;
+end;
+
+// TSciColors
+
+constructor TSciColors.Create(Scintilla: TScintilla);
+begin
+	fScintilla := Scintilla;
+	FFoldHiColor :=clBlack;
+	FFoldLoColor :=clBlack;
+	FMarkerFore :=clYellow;
+	FMarkerBack :=clBlue;
+	FBookMarkForeColor :=clWhite;
+	FBookMarkBackColor :=clGray;
+	FForeSelColor :=clHighLightText;
+	FBackSelColor :=clHighLight;
+end;
+
+procedure TSciColors.Assign(Source: TPersistent);
+begin
+	if Source is TSciColors then begin
+		SelFore := TSciColors(Source).SelFore;
+		SelBack:=TSciColors(Source).SelBack;
+		MarkerFore:= TSciColors(Source).MarkerFore;
+		MarkerBack:= TSciColors(Source).MarkerBack;
+		FoldHi:=TSciColors(Source).FoldHi;
+		FoldLo:=TSciColors(Source).FoldLo;
+		BookMarkBack:=TSciColors(Source).BookMarkBack;
+		BookMarkFore:=TSciColors(Source).BookMarkFore;
+	end else
+		inherited;
+end;
+
+procedure TSciColors.SetFoldHi(const Value : TColor);
+begin
+	FFoldHiColor:=Value;
+	if Value<>clDefault then
+	begin
+		fScintilla.SetFoldMarginHiColour(true,Value);
+	end else
+	begin
+		fScintilla.SetFoldMarginHiColour(false,Value);
+	end;
+end;
+
+procedure TSciColors.SetFoldLo(const Value : TColor);
+begin
+	FFoldLoColor:=Value;
+	if Value<>clDefault then
+	begin
+		fScintilla.SetFoldMarginColour(true,Value);
+	end else
+	begin
+		fScintilla.SetFoldMarginColour(false,Value);
+	end;
+end;
+
+procedure TSciColors.SetBookMarkFore(const Value : TColor);
+begin
+	FBookMarkForeColor :=Value;
+	fScintilla.MarkerSetFore(SCITE_MARKER_BOOKMARK, Value);
+end;
+
+procedure TSciColors.SetBookMarkBack(const Value : TColor);
+begin
+	FBookMarkBackColor :=Value;
+	fScintilla.MarkerSetBack(SCITE_MARKER_BOOKMARK, Value);
+end;
+
+procedure TSciColors.SetMarkerFore(const Value : TColor);
+	procedure MarkFore(MarkNum, BackCol : TColor);
+	begin
+		fScintilla.MarkerSetFore(MarkNum, BackCol);
+	end;
+begin
+	FMarkerFore :=Value;
+	if(Value<>clDefault) then
+	begin
+		MarkFore(SC_MARKNUM_FOLDEROPEN,Value);
+		MarkFore(SC_MARKNUM_FOLDER,Value);
+		MarkFore(SC_MARKNUM_FOLDERSUB,Value);
+		MarkFore(SC_MARKNUM_FOLDERTAIL,Value);
+		MarkFore(SC_MARKNUM_FOLDEREND,Value);
+		MarkFore(SC_MARKNUM_FOLDEROPENMID, Value);
+		MarkFore(SC_MARKNUM_FOLDERMIDTAIL, Value);
+		if BookMarkFore=clDefault then
+			MarkFore(SCITE_MARKER_BOOKMARK,Value);
+	end;
+end;
+
+procedure TSciColors.SetMarkerBack(const Value : TColor);
+	procedure MarkBack(MarkNum, BackCol : TColor);
+	begin
+		fScintilla.MarkerSetBack(MarkNum, BackCol);
+	end;
+begin
+	FMarkerBack :=Value;
+	if(Value<>clDefault) then
+	begin
+		MarkBack(SC_MARKNUM_FOLDEROPEN,Value);
+		MarkBack(SC_MARKNUM_FOLDER,Value);
+		MarkBack(SC_MARKNUM_FOLDERSUB,Value);
+		MarkBack(SC_MARKNUM_FOLDERTAIL,Value);
+		MarkBack(SC_MARKNUM_FOLDEREND,Value);
+		MarkBack(SC_MARKNUM_FOLDEROPENMID, Value);
+		MarkBack(SC_MARKNUM_FOLDERMIDTAIL, Value);
+		if BookMarkBack=clDefault then
+			MarkBack(SCITE_MARKER_BOOKMARK,Value);
+	end;
+end;
+
+procedure TSciColors.SetForeSel(const Value : TColor);
+begin
+	FForeSelColor:=Value;
+	if Value<>clDefault then
+	begin
+		fScintilla.SetSelFore(true,Value);
+	end else
+	begin
+		fScintilla.SetSelFore(false,Value);
+	end;
+end;
+procedure TSciColors.SetBackSel(const Value : TColor);
+begin
+	FBackSelColor:=Value;
+	if Value<>clDefault then
+	begin
+		fScintilla.SetSelBack(true,Value);
+	end else
+	begin
+		fScintilla.SetSelBack(false,Value);
+	end;
+end;
+
+
+// TCaret
+constructor TCaret.Create(Scintilla: TScintilla);
+begin
+	fScintilla := Scintilla;
+end;
+
+procedure TCaret.Assign(Source: TPersistent);
+begin
+	if Source is TCaret then begin
+		LineBackColor := TCaret(Source).LineBackColor;
+		ForeColor:=TCaret(Source).ForeColor;
+		LineVisible := TCaret(Source).LineVisible;
+		Period :=TCaret(Source).Period;
+		Width :=TCaret(Source).Width;
+	end else
+		inherited;
+end;
+
+procedure TCaret.SetCaretPeriod(const Value : LongInt);
+begin
+	fScintilla.SetCaretPeriod(Value);
+end;
+function  TCaret.GetCaretPeriod : LongInt;
+begin
+	result :=fScintilla.GetCaretPeriod;
+end;
+function TCaret.GetCaretWidth : LongInt;
+begin
+	result:=fScintilla.GetCaretWidth;
+end;
+
+procedure TCaret.SetCaretWidth(const Value : Longint);
+begin
+	fScintilla.SetCaretWidth(Value);
+end;
+
+function TCaret.GetCaretFore: TColor;
+	begin
+		result:=fScintilla.GetCaretFore;
+	end;
+
+procedure TCaret.SetCaretFore(const Value: TColor);
+	begin
+		fScintilla.SetCaretFore(Value);
+	end;
+
+function TCaret.GetCaretLineBack: TColor;
+	begin
+		result:=fScintilla.GetCaretLineBack;
+	end;
+
+procedure TCaret.SetCaretLineBack(const Value: TColor);
+	begin
+		fScintilla.SetCaretLineBack(Value);
+	end;
+
+function TCaret.GetCaretLineVisible : LongBool;
+	begin
+		result:=fScintilla.GetCaretLineVisible;
+	end;
+
+procedure TCaret.SetCaretLineVisible(const Value : LongBool);
+	begin
+		fScintilla.SetCaretLineVisible(Value);
+	end;
+
+
+// TMargin
+constructor TMargin.Create(Scintilla: TScintilla; Number : integer);
+begin
+  fScintilla := Scintilla;
+  fNumber := Number;
+end;
+
+procedure TMargin.Assign(Source: TPersistent);
+begin
+	if Source is TMargin then begin
+		MarginType := TMargin(Source).MarginType;
+		Width := TMargin(Source).Width;
+	end else
+		inherited;
+end;
+
+function TMargin.GetMarginType: TMarginType;
+begin
+  Result := TMarginType(fScintilla.GetMarginTypeN(fNumber))
+end;
+
+function TMargin.GetWidth: integer;
+begin
+  Result := fScintilla.GetMarginWidthN(fNumber)
+end;
+
+procedure TMargin.SetMarginType(const Value: TMarginType);
+begin
+	fScintilla.SetMarginTypeN(fNumber, Ord(Value));
+end;
+
+procedure TMargin.SetWidth(const Value: integer);
+d1282 15
+a1296 1
+  fScintilla.SetMarginWidthN(fNumber, Value)
+@
+
+
+1.4
+log
+@Delphi Scintilla Interface Components v0.,12
+@
+text
+@d32 6
+d45 3
+a47 3
+	sciWordWrapVisualFlag          = (sciWWEnd,sciWWStart);
+	sciWordWrapVisualFlags         = set of sciWordWrapVisualFlag;
+	sciWordWrapVisualFlagLocation  = (sciEndByText,sciStartByText);
+d49 1
+d51 8
+a58 8
+  sciWSMode                      = (sciWsInvisible=0,sciWsVisibleAlways=1,sciWsVisibleAfterIndent=2);
+	sciCacheType                   =(sciCacheNone=0,sciCacheCaret=1,sciCachePage=2,sciCacheDocument=3);
+	sciMarkerType                  =(sciMarkCircle,sciMarkBox,sciMarkPlusMinus,sciMarkArrows);
+	sciEdgeType                    =(sciEdgeNone,sciEdgeLine,sciEdgeBackground);
+  TIndentationOption             = (KeepIndent, TabIndents, BackSpaceUnIndents, IndentationGuides);
+	TIndentationOptions            = Set of TIndentationOption;
+  TEOLStyle                      = (eolCRLF, eolCR, eolLF);
+	TMarginType                    = (gutSymbol = 0, gutLineNumber = 1);
+d221 5
+a225 2
+{$IFDEF NOCOMMENTING}
+  public
+d227 1
+a227 2
+    procedure BoxComment(start_comment,middle_comment,end_comment : String);
+    procedure BlockComment(comment : String;commentatlinestart : Boolean);
+a259 1
+
+d261 1
+a261 1
+    procedure CommentBox;
+d263 1
+d265 3
+a267 1
+    procedure ExportToHTML(Stream: TStream; Title : string);
+d276 3
+a278 1
+    property OnDoubleClick;
+d285 1
+a300 1
+    
+d358 3
+a506 1
+
+d577 19
+a595 1
+procedure TScintilla.CommentBox;
+d607 1
+a607 1
+    BoxComment(itm.CommentStart,itm.CommentMiddle,itm.CommentEnd);
+d609 1
+a609 1
+    BoxComment('/*','*','*/');
+a626 1
+{$ENDIF}
+d709 1
+a709 1
+procedure TScintilla.BoxComment(start_comment,middle_comment,end_comment : String);
+d717 1
+d727 1
+d776 4
+a779 2
+      Inc(selectionEnd,start_comment_length)
+    else
+d782 5
+d798 5
+d859 2
+a860 1
+        Inc(selectionEnd,end_comment_length);
+d872 1
+a872 2
+        Inc(selectionEnd,eollen);
+
+d877 2
+a878 2
+        Dec(selectionEnd,end_comment_length);
+        Dec(selectionEnd,eollen); // Decrement with the length of the correct linefeed
+d895 4
+a898 1
+    GotoPos(caretPosition);
+d904 90
+d995 16
+d1012 1
+d1104 1
+a1104 1
+	end;
+d1652 1
+a1652 1
+procedure TScintilla.ExportToHTML(Stream: TStream; Title : string);
+d1656 2
+d1684 1
+a1684 1
+      WriteS('.S'+IntToStr(StyleNumber)+ ' {'#13#10);
+d1686 1
+a1686 1
+        WriteS(#9'font-family:' + FontName + ';'#13#10);
+d1688 1
+a1688 1
+        WriteS(#9'font-size:' + IntToStr(Fontsize)+ 'pt' + ';'#13#10);
+d1690 1
+a1690 1
+        WriteS(#9'font-style: italic;'#13#10)
+d1692 1
+a1692 1
+        WriteS(#9'font-style: normal;'#13#10);
+d1694 1
+a1694 1
+        WriteS(#9'font-weight: 700;'#13#10)
+d1696 1
+a1696 1
+        WriteS(#9'font-weight: 400;'#13#10);
+d1698 1
+a1698 1
+         WriteS(#9'text-decoration:underline;'#13#10)
+d1700 4
+a1703 4
+         WriteS(#9'text-decoration:none;'#13#10);
+      WriteS(#9'color: ' +  ColorToHTMLColor(ForeColor) +';'#13#10);
+      WriteS(#9'tbackground: ' +  ColorToHTMLColor(ForeColor) +';'#13#10);
+			WriteS('}'#13#10);
+d1713 9
+d1735 5
+a1739 5
+  WriteS('<!DOCTYPE html  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-strict.dtd">'#13#10);
+  WriteS('<html xmlns="http://www.w3.org/1999/xhtml">'#13#10);
+  WriteS('<head>'#13#10);
+  WriteS('<title>'+Title+'</title>'#13#10);
+  WriteS('<meta name="GENERATOR" content="SciTE - www.Scintilla.org" />'#13#10);
+d1741 2
+a1742 2
+    WriteS('<meta http-equiv="Content-Type" content="text/html; charset=utf-8">' + #13#10);
+  WriteS('<style type="text/css">'#13#10);
+d1745 3
+a1747 3
+  WriteS('span {'#13#10);
+  WriteS(#9'font-family:' + Font.Name + ';'#13#10);
+  WriteS(#9'font-size:' + IntToStr(Font.Size)+ 'pt' + ';'#13#10);
+d1749 1
+a1749 1
+    WriteS(#9'font-style: italic;'#13#10)
+d1751 1
+a1751 1
+    WriteS(#9'font-style: normal;'#13#10);
+d1753 1
+a1753 1
+    WriteS(#9'font-weight: 700;'#13#10)
+d1755 1
+a1755 1
+    WriteS(#9'font-weight: 400;'#13#10);
+d1757 1
+a1757 1
+     WriteS(#9'text-decoration:underline;'#13#10)
+d1759 4
+a1762 4
+     WriteS(#9'text-decoration:none;'#13#10);
+  WriteS(#9'color: ' +  ColorToHTMLColor(Font.Color) +';'#13#10);
+  WriteS(#9'background: ' +  ColorToHTMLColor(Color) +';'#13#10);
+  WriteS('}'#13#10);
+d1767 2
+a1768 2
+  WriteS('</style>'#13#10);
+  WriteS('</head>'#13#10);
+d1770 1
+a1770 1
+		WriteS('<body bgcolor=' + ColorToHTMLColor(Color) + '>'#13#10)
+d1772 1
+a1772 1
+		WriteS('<body>'#13#10);
+d1805 1
+a1805 1
+            WriteS(#13#10);
+d1819 132
+a1950 1
+	WriteS(#13#10'</body>'#13#10'</html>'#13#10);
+d1953 1
+@
+
+
+1.3
+log
+@no message
+@
+text
+@a25 1
+           13/10/2004 Changed the ViewWSpace from boolean to sciWSMode, to allow all settings.
+d28 1
+d30 2
+a31 1
+
+a32 1
+
+d43 1
+d51 1
+a52 1
+	TMarginType                    = (Gut_Symbol = 0, Gut_LineNumber = 1);
+a54 1
+
+d98 21
+a118 1
+
+d128 2
+a129 2
+		FMarkerFore  : TColor;
+		FMarkerBack  : TColor;
+d143 1
+a143 1
+		procedure   Assign(Source: TPersistent); override;
+d145 6
+a150 6
+		property SelFore      : TColor read FForeSelColor      write SetForeSel nodefault;
+		property SelBack      : TColor read FBackSelColor      write SetBackSel nodefault;
+		property MarkerFore   : TColor read FMarkerFore        write SetMarkerFore nodefault;
+		property MarkerBack   : TColor read FMarkerBack        write SetMarkerBack nodefault;
+		property FoldHi       : TColor read FFoldHiColor       write SetFoldHi nodefault;
+		property FoldLo       : TColor read FFoldLoColor       write SetFoldLo nodefault;
+a154 1
+
+a161 1
+
+a164 1
+
+d166 7
+a172 7
+		property ViewWSpace    : sciWSMode read GetWSMode        write SetWSMode;
+		property UsePalette    : Boolean index 0 read GetBool        write SetBool;
+		property OverType      : Boolean index 1 read GetBool        write SetBool;
+		property ViewEOL       : Boolean index 2 read GetBool        write SetBool;
+		property EndAtLastLine : Boolean index 3 read GetBool        write SetBool;
+		property ScrollBarH    : Boolean index 4 read GetBool        write SetBool;
+		property ScrollBarV    : Boolean index 5 read GetBool        write SetBool;
+d177 6
+a182 6
+private
+		fMargin0     : TMargin;
+    fMargin1     : TMargin;
+		fMargin2     : TMargin;
+		FLines       : TStrings;
+		fKeepIndent  : Boolean;
+d186 5
+a190 4
+		fCaret       : TCaret;
+		fColors      : TSciColors;
+		fDivOptions  : TDivOptions;
+		FMarkerType  : sciMarkerType;
+d193 1
+a193 2
+		FHideSel     : LongBool;
+
+d214 5
+a224 1
+
+d230 1
+a230 4
+		procedure doSciModified(const position : LongInt; const modificationType : LongInt; text : PChar;
+														const length : LongInt; const linesAdded : LongInt; const line : LongInt;
+														const foldLevelNow : LongInt; const foldLevelPrev : LongInt);override;
+
+a234 1
+
+d237 1
+a237 1
+		procedure CopyFrom(Source: TPersistent); override;
+d241 5
+a245 5
+		procedure BookmarkAdd(lineno : LongInt);                 // Adds the marker SCITE_MARKER_BOOKMARK on the line 'lineno'
+		procedure BookmarkDelete(lineno : LongInt);              // Deletes the marker SCITE_MARKER_BOOKMARK on the line 'lineno'
+		procedure BookmarkToggle(lineno : LongInt);              // Toggles the marker SCITE_MARKER_BOOKMARK on the line 'lineno'
+		function  BookmarkPresent(lineno : LongInt) : Boolean;   // Tests if SCITE_MARKER_BOOKMARK marker is on the line 'lineno'
+		function  BookmarkNext(forwardScan : Boolean) : Boolean;
+d251 6
+a256 1
+		property Lines       				 : TStrings read FLines write SetLines;
+a257 1
+			{  Provides Delphi like access to the text buffer }
+a264 1
+  	property OnKey;
+d286 3
+d292 1
+a292 1
+		property BraceHilite 				 : boolean read FBraceHilite write FBraceHilite;
+d294 1
+a294 1
+		property CodeFolding 				 : Boolean read fCodeFolding write SetCodeFolding default False;
+d296 1
+a296 1
+		property EOLStyle    				 : TEOLStyle read GetEOLStyle write SetEOLStyle;
+d298 1
+a298 1
+		property Indentation 				 : TIndentationOptions read GetIndentation write SetIndentation;
+d300 7
+a306 7
+		property IndentWidth 				 : integer read GetIndent write SetIndent;
+		//Set the type of Gutter(margin) 0: GUT_SYMBOL = 0,GUT_LINENUMBER = 1
+		property Gutter0     				 : TMargin  index 0 read fMargin0 write SetMargins;
+    //Set the type of Gutter(margin) 1: GUT_SYMBOL = 0,GUT_LINENUMBER = 1
+    property Gutter1             : TMargin index 1 read fMargin1 write SetMargins;
+    //Set the type of Gutter(margin) 2: GUT_SYMBOL = 0,GUT_LINENUMBER = 1
+    property Gutter2     				 : TMargin index 2 read fMargin2 write SetMargins;
+d308 1
+a308 1
+    property KeyCommands 				 : TSciKeyCommandCollection read FKeyCommands write SetKeyCommands;
+d310 1
+a310 1
+		property MarginLeft  				 : LongInt read GetMarginLeft write SetMarginLeft;
+d312 1
+a312 1
+		property MarginRight 				 : LongInt read GetMarginRight write SetMarginRight;
+d314 1
+a314 1
+    property TabWidth    				 : integer read GetTabWidth write SetTabWidth default 8;
+d317 1
+a317 1
+    property UseTabs     				 : LongBool read GetUseTabs write SetUseTabs default true;
+d320 5
+a324 4
+		property Caret       				 : TCaret read fCaret Write fCaret;
+		property DivOptions  				 : TDivOptions read fDivOptions write fDivOptions;
+		property Colors      				 : TSciColors read fColors write fColors;
+		property MouseDwellTime      : LongInt read GetMouseDwellTime write SetMouseDwellTime;
+d326 1
+a326 1
+		property MarkerType 				 : sciMarkerType read FMarkerType write SetMarkerType default sciMarkBox;
+d330 1
+a330 1
+		property LayoutCache 				 : sciCacheType read GetLCache write SetLCache;
+d332 2
+a333 2
+		property Highlighter 				 : TSciSynLexer read fHighlighter write SetHighlighter;
+		property HideSelect       : LongBool read FHideSel write SetHideSel;
+d507 1
+d520 1
+d525 1
+a525 1
+procedure TScintilla.CopyFrom(Source: TPersistent);
+a541 1
+
+a546 1
+
+d557 1
+d559 14
+d574 279
+a885 2
+
+
+d888 1
+a888 1
+
+d917 4
+a1092 1
+
+a1241 1
+
+d1249 1
+a1249 1
+		// Tell the lexer that we want folidng info
+a1250 2
+		SetProperty('fold.html', '1');
+		SetProperty('fold.html.preprocessor', '1');
+d1255 3
+d1496 159
+d1674 1
+d1710 42
+d1753 10
+@
+
+
+1.2
+log
+@Some bugfixes, and other changes
+@
+text
+@d24 1
+d29 1
+a221 3
+	  procedure SaveSettingsToStream(Stream : TStream);
+		procedure LoadSettingsFromStream(Stream : TStream);
+
+a467 1
+
+a602 9
+procedure TScintilla.SaveSettingsToStream(Stream : TStream);
+begin
+	Stream.WriteComponent(Self);
+end;
+procedure TScintilla.LoadSettingsFromStream(Stream : TStream);
+begin
+	Stream.ReadComponent(Self);
+end;
+
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d1 21
+d24 5
+a28 1
+  History: 29/09/2004 Initial Release 
+d41 2
+a42 1
+	sciCacheType                   =(sciCacheNone,sciCacheCaret,sciCachePage,sciCacheDocument);
+d52 1
+d70 1
+d98 1
+d133 1
+d139 3
+d147 8
+a154 7
+		property ViewWSpace    : Boolean index 0 read GetBool        write SetBool;
+		property UsePalette    : Boolean index 1 read GetBool        write SetBool;
+		property OverType      : Boolean index 2 read GetBool        write SetBool;
+		property ViewEOL       : Boolean index 3 read GetBool        write SetBool;
+		property EndAtLastLine : Boolean index 4 read GetBool        write SetBool;
+		property ScrollBarH    : Boolean index 5 read GetBool        write SetBool;
+		property ScrollBarV    : Boolean index 6 read GetBool        write SetBool;
+a224 1
+
+a229 1
+
+a234 1
+
+d239 1
+d245 1
+a245 1
+		property OnKey;
+a253 1
+//    property OnURIDropped;
+a260 1
+
+a265 1
+
+d269 1
+a297 1
+
+a304 1
+
+d1195 2
+a1196 1
+	if Source is TDivOptions then begin
+d1207 11
+a1217 1
+
+d1221 6
+a1226 7
+	0:result :=Boolean(fScintilla.GetViewWS);
+	1:result :=fScintilla.GetUsePalette;
+	2:result :=fScintilla.GetOverType;
+	3:result :=fScintilla.GetViewEOL;
+	4:result :=Boolean(fScintilla.GetEndAtLastLine);
+	5:result :=fScintilla.GetHScrollBar;
+	6:result :=fScintilla.GetVScrollBar;
+d1233 6
+a1238 7
+	0:fScintilla.SetViewWS(LongInt(Value));
+	1:fScintilla.SetUsePalette(Value);
+	2:fScintilla.SetOverType(Value);
+	3:fScintilla.SetViewEOL(Value);
+	4:fScintilla.SetEndAtLastLine(Value<>false);
+	5:fScintilla.SetHScrollBar(Value);
+	6:fScintilla.SetVScrollBar(Value);
+@
+
+
+1.1.1.1
+log
+@no message
+@
+text
+@@

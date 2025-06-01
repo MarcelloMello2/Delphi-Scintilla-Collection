@@ -1,0 +1,225 @@
+head	1.2;
+access;
+symbols
+	test:1.1.1.1 hdalis:1.1.1;
+locks; strict;
+comment	@// @;
+
+
+1.2
+date	2004.10.03.20.46.24;	author hdalis;	state dead;
+branches;
+next	1.1;
+
+1.1
+date	2004.10.01.21.07.00;	author hdalis;	state Exp;
+branches
+	1.1.1.1;
+next	;
+
+1.1.1.1
+date	2004.10.01.21.07.00;	author hdalis;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@no message
+@
+text
+@// Borland C++ Builder
+// Copyright (c) 1995, 2002 by Borland Software Corporation
+// All rights reserved
+
+// (DO NOT EDIT: machine generated header) 'tcFontCombobox.pas' rev: 6.00
+
+#ifndef tcFontComboboxHPP
+#define tcFontComboboxHPP
+
+#pragma delphiheader begin
+#pragma option push -w-
+#pragma option push -Vx
+#include <Menus.hpp>	// Pascal unit
+#include <StdCtrls.hpp>	// Pascal unit
+#include <ExtCtrls.hpp>	// Pascal unit
+#include <Forms.hpp>	// Pascal unit
+#include <Controls.hpp>	// Pascal unit
+#include <Graphics.hpp>	// Pascal unit
+#include <Classes.hpp>	// Pascal unit
+#include <SysUtils.hpp>	// Pascal unit
+#include <Messages.hpp>	// Pascal unit
+#include <Windows.hpp>	// Pascal unit
+#include <SysInit.hpp>	// Pascal unit
+#include <System.hpp>	// Pascal unit
+
+//-- user supplied -----------------------------------------------------------
+
+namespace Tcfontcombobox
+{
+//-- type declarations -------------------------------------------------------
+class DELPHICLASS TFormExampleFont;
+class PASCALIMPLEMENTATION TFormExampleFont : public Forms::TForm 
+{
+	typedef Forms::TForm inherited;
+	
+__published:
+	Extctrls::TPanel* PanelPreview;
+	Extctrls::TPanel* PanelFontName;
+public:
+	#pragma option push -w-inl
+	/* TCustomForm.Create */ inline __fastcall virtual TFormExampleFont(Classes::TComponent* AOwner) : Forms::TForm(AOwner) { }
+	#pragma option pop
+	#pragma option push -w-inl
+	/* TCustomForm.CreateNew */ inline __fastcall virtual TFormExampleFont(Classes::TComponent* AOwner, int Dummy) : Forms::TForm(AOwner, Dummy) { }
+	#pragma option pop
+	#pragma option push -w-inl
+	/* TCustomForm.Destroy */ inline __fastcall virtual ~TFormExampleFont(void) { }
+	#pragma option pop
+	
+public:
+	#pragma option push -w-inl
+	/* TWinControl.CreateParented */ inline __fastcall TFormExampleFont(HWND ParentWindow) : Forms::TForm(ParentWindow) { }
+	#pragma option pop
+	
+};
+
+
+#pragma option push -b-
+enum TscFontType { ftTrueTypeAnsi, ftTrueTypeSymbol, ftRaster };
+#pragma option pop
+
+typedef Set<TscFontType, ftTrueTypeAnsi, ftRaster>  TscFontTypes;
+
+class DELPHICLASS TtcFontCombobox;
+class PASCALIMPLEMENTATION TtcFontCombobox : public Stdctrls::TCustomComboBox 
+{
+	typedef Stdctrls::TCustomComboBox inherited;
+	
+private:
+	TFormExampleFont* FormExample;
+	Graphics::TBitmap* BitmapTrueTypeAnsi;
+	Graphics::TBitmap* BitmapTrueTypeSymbol;
+	Graphics::TBitmap* BitmapRaster;
+	int IntCountUsed;
+	bool BlnDown;
+	int FIntPreviewWidth;
+	int FIntPreviewHeight;
+	AnsiString FStrFontName;
+	AnsiString FStrPreviewText;
+	bool FBlnMoveUsedToTop;
+	int FIntMaxUsed;
+	Graphics::TColor FColorUsed;
+	TscFontTypes FFontTypes;
+	bool FBlnShowPreviewInList;
+	bool FBlnShowPreview;
+	bool FBlnShowImagesFontType;
+	bool FBlnShowPreviewFontName;
+	void __fastcall SetPopupHeight(const int Value);
+	void __fastcall SetPopupWidth(const int Value);
+	void __fastcall SetFontName(const AnsiString Value);
+	void __fastcall SetPreviewText(const AnsiString Value);
+	void __fastcall SetShowPreviewFontName(const bool Value);
+	
+protected:
+	HIDESBASE MESSAGE void __fastcall OnCloseup(Messages::TWMCommand &Message);
+	virtual void __fastcall DrawItem(int Index, const Types::TRect &Rect, Windows::TOwnerDrawState State);
+	void __fastcall ChooseFont(void);
+	
+public:
+	__fastcall virtual TtcFontCombobox(Classes::TComponent* AOwner);
+	__fastcall virtual ~TtcFontCombobox(void);
+	virtual void __fastcall Loaded(void);
+	DYNAMIC void __fastcall DropDown(void);
+	DYNAMIC void __fastcall Click(void);
+	void __fastcall GetFontNames(void);
+	
+__published:
+	__property OnChange ;
+	__property OnClick ;
+	__property OnDblClick ;
+	__property OnDragDrop ;
+	__property OnDragOver ;
+	__property OnDropDown ;
+	__property OnEndDrag ;
+	__property OnExit ;
+	__property OnKeyDown ;
+	__property OnKeyPress ;
+	__property OnKeyUp ;
+	__property OnStartDrag ;
+	__property Anchors  = {default=3};
+	__property Color  = {default=-2147483643};
+	__property Ctl3D ;
+	__property Cursor  = {default=0};
+	__property DragCursor  = {default=-12};
+	__property DragMode  = {default=0};
+	__property DropDownCount  = {default=8};
+	__property Enabled  = {default=1};
+	__property Font ;
+	__property Height ;
+	__property HelpContext  = {default=0};
+	__property Hint ;
+	__property ImeMode  = {default=3};
+	__property ImeName ;
+	__property ItemHeight ;
+	__property Left ;
+	__property ParentColor  = {default=0};
+	__property ParentCtl3D  = {default=1};
+	__property ParentFont  = {default=1};
+	__property ParentShowHint  = {default=1};
+	__property PopupMenu ;
+	__property ShowHint ;
+	__property TabOrder  = {default=-1};
+	__property TabStop  = {default=1};
+	__property Visible  = {default=1};
+	__property bool MoveUsedToTop = {read=FBlnMoveUsedToTop, write=FBlnMoveUsedToTop, default=1};
+	__property int MaxUsed = {read=FIntMaxUsed, write=FIntMaxUsed, default=5};
+	__property Graphics::TColor ColorUsed = {read=FColorUsed, write=FColorUsed, default=8388608};
+	__property AnsiString PreviewText = {read=FStrPreviewText, write=SetPreviewText};
+	__property int PreviewWidth = {read=FIntPreviewWidth, write=SetPopupWidth, default=250};
+	__property int PreviewHeight = {read=FIntPreviewHeight, write=SetPopupHeight, default=45};
+	__property AnsiString FontName = {read=FStrFontName, write=SetFontName};
+	__property TscFontTypes FontTypes = {read=FFontTypes, write=FFontTypes, nodefault};
+	__property bool ShowPreview = {read=FBlnShowPreview, write=FBlnShowPreview, default=1};
+	__property bool ShowPreviewFontName = {read=FBlnShowPreviewFontName, write=SetShowPreviewFontName, default=1};
+	__property bool ShowPreviewInList = {read=FBlnShowPreviewInList, write=FBlnShowPreviewInList, default=1};
+	__property bool ShowImagesFontType = {read=FBlnShowImagesFontType, write=FBlnShowImagesFontType, default=1};
+public:
+	#pragma option push -w-inl
+	/* TWinControl.CreateParented */ inline __fastcall TtcFontCombobox(HWND ParentWindow) : Stdctrls::TCustomComboBox(ParentWindow) { }
+	#pragma option pop
+	
+};
+
+
+//-- var, const, procedure ---------------------------------------------------
+
+}	/* namespace Tcfontcombobox */
+using namespace Tcfontcombobox;
+#pragma option pop	// -w-
+#pragma option pop	// -Vx
+
+#pragma delphiheader end.
+//-- end unit ----------------------------------------------------------------
+#endif	// tcFontCombobox
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@@
+
+
+1.1.1.1
+log
+@no message
+@
+text
+@@

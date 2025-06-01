@@ -1,0 +1,158 @@
+head	1.2;
+access;
+symbols
+	test:1.1.1.1 hdalis:1.1.1;
+locks; strict;
+comment	@// @;
+
+
+1.2
+date	2004.10.03.20.46.24;	author hdalis;	state dead;
+branches;
+next	1.1;
+
+1.1
+date	2004.10.01.20.58.35;	author hdalis;	state Exp;
+branches
+	1.1.1.1;
+next	;
+
+1.1.1.1
+date	2004.10.01.20.58.35;	author hdalis;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@no message
+@
+text
+@// Borland C++ Builder
+// Copyright (c) 1995, 2002 by Borland Software Corporation
+// All rights reserved
+
+// (DO NOT EDIT: machine generated header) 'SciKeyBindings.pas' rev: 6.00
+
+#ifndef SciKeyBindingsHPP
+#define SciKeyBindingsHPP
+
+#pragma delphiheader begin
+#pragma option push -w-
+#pragma option push -Vx
+#include <SciSupport.hpp>	// Pascal unit
+#include <Controls.hpp>	// Pascal unit
+#include <Classes.hpp>	// Pascal unit
+#include <Windows.hpp>	// Pascal unit
+#include <SysInit.hpp>	// Pascal unit
+#include <System.hpp>	// Pascal unit
+
+//-- user supplied -----------------------------------------------------------
+
+namespace Scikeybindings
+{
+//-- type declarations -------------------------------------------------------
+typedef unsigned TSciKey;
+
+typedef Classes::TIdentMapEntry SciKeyBindings__1[86];
+
+class DELPHICLASS TSciKeyCommand;
+class PASCALIMPLEMENTATION TSciKeyCommand : public Classes::TCollectionItem 
+{
+	typedef Classes::TCollectionItem inherited;
+	
+private:
+	int FCommand;
+	Classes::TShortCut FShortCut;
+	void __fastcall SetCommand(const int Value);
+	void __fastcall SetShortCut(const Classes::TShortCut Value);
+	
+protected:
+	virtual AnsiString __fastcall GetDisplayName();
+	
+public:
+	__fastcall virtual TSciKeyCommand(Classes::TCollection* Collection);
+	virtual void __fastcall Assign(Classes::TPersistent* Source);
+	
+__published:
+	__property int Command = {read=FCommand, write=SetCommand, nodefault};
+	__property Classes::TShortCut ShortCut = {read=FShortCut, write=SetShortCut, nodefault};
+public:
+	#pragma option push -w-inl
+	/* TCollectionItem.Destroy */ inline __fastcall virtual ~TSciKeyCommand(void) { }
+	#pragma option pop
+	
+};
+
+
+class DELPHICLASS TSciKeyCommandCollection;
+class PASCALIMPLEMENTATION TSciKeyCommandCollection : public Classes::TCollection 
+{
+	typedef Classes::TCollection inherited;
+	
+private:
+	Controls::TWinControl* fEditor;
+	
+protected:
+	void __fastcall SetEditor(Controls::TWinControl* Editor);
+	
+public:
+	__fastcall TSciKeyCommandCollection(Controls::TWinControl* Editor);
+	virtual void __fastcall Update(Classes::TCollectionItem* Item);
+	void __fastcall AddCommandKey(Word Key, Word Mode, int Command);
+	void __fastcall ResetDefaultCommands(void);
+	TSciKeyCommand* __fastcall FindShortCut(Classes::TShortCut ShortCut);
+	__property Controls::TWinControl* Editor = {read=fEditor, write=SetEditor};
+public:
+	#pragma option push -w-inl
+	/* TCollection.Destroy */ inline __fastcall virtual ~TSciKeyCommandCollection(void) { }
+	#pragma option pop
+	
+};
+
+
+//-- var, const, procedure ---------------------------------------------------
+extern PACKAGE Word SCI_NORM;
+extern PACKAGE Word SCI_SHIFT;
+extern PACKAGE Word SCI_CTRL;
+extern PACKAGE Word SCI_ALT;
+extern PACKAGE Word SCI_ASHIFT;
+extern PACKAGE Word SCI_CSHIFT;
+extern PACKAGE Classes::TIdentMapEntry Sci_KeyboardCommandMap[86];
+extern PACKAGE Word __fastcall KeyToSciKey(Word keyIn);
+extern PACKAGE Word __fastcall SciKeyToKey(Word keyIn);
+extern PACKAGE Word __fastcall ShiftStateToSciMode(Classes::TShiftState Shift);
+extern PACKAGE unsigned __fastcall SciKey(Word Key, Word Mode);
+extern PACKAGE Classes::TShiftState __fastcall SciModeToShiftState(Word SciMode);
+extern PACKAGE Classes::TShortCut __fastcall SciKeyToShortCut(unsigned Key);
+extern PACKAGE unsigned __fastcall ShortCutToSciKey(Classes::TShortCut ShortCut);
+
+}	/* namespace Scikeybindings */
+using namespace Scikeybindings;
+#pragma option pop	// -w-
+#pragma option pop	// -Vx
+
+#pragma delphiheader end.
+//-- end unit ----------------------------------------------------------------
+#endif	// SciKeyBindings
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@@
+
+
+1.1.1.1
+log
+@no message
+@
+text
+@@

@@ -1,0 +1,625 @@
+head	1.7;
+access;
+symbols
+	test:1.1.1.1 hdalis:1.1.1;
+locks; strict;
+comment	@ * @;
+
+
+1.7
+date	2004.12.03.17.18.58;	author hdalis;	state Exp;
+branches;
+next	1.6;
+
+1.6
+date	2004.11.21.04.20.21;	author hdalis;	state Exp;
+branches;
+next	1.5;
+
+1.5
+date	2004.11.13.04.29.50;	author hdalis;	state Exp;
+branches;
+next	1.4;
+
+1.4
+date	2004.11.08.00.00.40;	author hdalis;	state Exp;
+branches;
+next	1.3;
+
+1.3
+date	2004.10.18.10.24.49;	author hdalis;	state Exp;
+branches;
+next	1.2;
+
+1.2
+date	2004.10.16.10.17.24;	author hdalis;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2004.10.01.20.58.14;	author hdalis;	state Exp;
+branches
+	1.1.1.1;
+next	;
+
+1.1.1.1
+date	2004.10.01.20.58.14;	author hdalis;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.7
+log
+@Delphi Scintilla Interface Components 0.15
+@
+text
+@//CE_Desc_Include(helpdescriptions.txt)
+{
+  Author : Jan Martin Pettersen (hdalis)
+  History 29/09/2004 Initial Release
+          17/10/2004 Moved the TExtensionMap to SciPropertyMgr.Pas,
+                     usually used there.
+	Delphi Scintilla Interface Components
+	Copyright (C) 2004, Jan Martin Pettersen (hdalis)
+
+	This library is free software; you can redistribute it and/or
+	modify it under the terms of the GNU Lesser General Public
+	License as published by the Free Software Foundation; either
+	version 2.1 of the License, or (at your option) any later
+	version.
+
+	This library is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+	Lesser General Public License for more details.
+
+	You should have received a copy of the GNU Lesser General Public
+	License along with this library; if not, write to the Free
+	Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+	02111-1307 USA
+}
+{
+  Author  : hdalis (hdalis@@users.sourceforge.net)
+       $Id: SciDetectUtils.pas,v 1.5 2004/11/13 04:29:50 hdalis Exp $
+  History : 29/09/2004 Initial Release
+            13/10/2004 Added help using ClassExplorer 6.0, Use the helpgenerator to
+                       generate the help.
+                       The TExtensionMapper is moved to SciPropertyMgr.pas
+            24/10/2004 Removed the TLexerNamesMap class, and the LexerMapper function
+                       these are now part of the TSciLanguageManager class (functions AddLanguage,
+                       DupLanguage,RemoveLanguage,FillListWithLanguages)
+
+}
+{.$WEAKPACKAGEUNIT ON}
+unit SciDetectUtils;
+interface
+uses Classes,SciLexer,SciLexerMod,ScintillaLanguageManager;
+{$Include commondefs.inc}
+
+procedure SetLangWordChars(fEditor : TScintilla;const Lang : String);
+
+implementation
+uses SysUtils;
+
+{Set the wordchars based on the requested language}
+procedure SetLangWordChars(fEditor : TScintilla;const Lang : String);
+var
+	ny : String;
+begin
+	if lang='' then ny:=sci_alphachars+sci_numericchars+sci_accentedchars+'_'
+	else if AnsiCompareText('PERL',lang)=0 then ny:=sci_alphachars+sci_numericchars+'_$@@%&'
+	else if (AnsiCompareText('CSS',lang)=0) or (AnsiCompareText('hypertext',lang)=0) or (AnsiCompareText('HTML',lang)=0) then ny:=sci_alphachars+sci_numericchars+'_-'
+	else if AnsiCompareText('PHP',lang)=0 then ny:=sci_alphachars+sci_numericchars+'_-$'
+	else if (AnsiCompareText('XML',lang)=0) or (AnsiCompareText('WML',lang)=0) then ny:=sci_alphachars+sci_numericchars+'_-'
+	else if AnsiCompareText('LUA',lang)=0 then ny:=sci_alphachars+sci_numericchars+'_%'
+	else if (AnsiCompareText('Ave',lang)=0) or (AnsiCompareText('cpp',lang)=0) or
+  (AnsiCompareText('Resource',lang)=0) or (AnsiCompareText('IDL',lang)=0) or
+  (AnsiCompareText('Java',lang)=0) or (AnsiCompareText('JavaScript',lang)=0) or
+  (AnsiCompareText('C#',lang)=0) or (AnsiCompareText('POV',lang)=0) or
+  (AnsiCompareText('Specman',lang)=0)  then ny:=sci_alphachars+sci_numericchars+'_#'
+	else if AnsiCompareText('Baan',lang)=0 then ny:=sci_alphachars+sci_numericchars+'_#.$'
+	else if AnsiCompareText('Forth',lang)=0 then ny:=sci_alphachars+sci_numericchars+'%-'
+	else if (AnsiCompareText('Lisp',lang)=0) or (AnsiCompareText('Scheme',lang)=0) then ny:=sci_alphachars+sci_numericchars+'_-<>.#+@@$%^&=*!?'
+	else if AnsiCompareText('lot',lang)=0 then ny:=sci_alphachars+sci_numericchars
+	else if AnsiCompareText('nnCronTab',lang)=0 then ny:=sci_alphachars+sci_numericchars+'%-'
+	else if AnsiCompareText('Verilog',lang)=0 then ny:=sci_alphachars+sci_numericchars+'_`$#'
+	else
+		ny:='_'+sci_alphachars;
+
+	fEditor.WordChars:=ny;
+end;
+
+end.
+@
+
+
+1.6
+log
+@Delphi Scintilla Interface Components 0.14
+@
+text
+@d55 13
+a67 13
+	else if AnsiCompareText('perl',lang)=0 then ny:=sci_alphachars+sci_numericchars+'_$@@%&'
+	else if (AnsiCompareText('css',lang)=0) or (AnsiCompareText('hypertext',lang)=0) then ny:=sci_alphachars+sci_numericchars+'_-'
+	else if AnsiCompareText('php',lang)=0 then ny:=sci_alphachars+sci_numericchars+'_-$'
+	else if (AnsiCompareText('xml',lang)=0) or (AnsiCompareText('wml',lang)=0) then ny:=sci_alphachars+sci_numericchars+'_-'
+	else if AnsiCompareText('lua',lang)=0 then ny:=sci_alphachars+sci_numericchars+'_%'
+	else if (AnsiCompareText('ave',lang)=0) or (AnsiCompareText('cpp',lang)=0) or
+  (AnsiCompareText('resource',lang)=0) or (AnsiCompareText('idl',lang)=0) or
+  (AnsiCompareText('java',lang)=0) or (AnsiCompareText('javascript',lang)=0) or
+  (AnsiCompareText('cs',lang)=0) or (AnsiCompareText('pov',lang)=0) or
+  (AnsiCompareText('specman',lang)=0)  then ny:=sci_alphachars+sci_numericchars+'_#'
+	else if AnsiCompareText('baan',lang)=0 then ny:=sci_alphachars+sci_numericchars+'_#.$'
+	else if AnsiCompareText('forth',lang)=0 then ny:=sci_alphachars+sci_numericchars+'%-'
+	else if AnsiCompareText('lisp',lang)=0 then ny:=sci_alphachars+sci_numericchars+'_-<>.#+@@$%^&=*!?'
+d69 2
+a70 2
+	else if AnsiCompareText('nncrontab',lang)=0 then ny:=sci_alphachars+sci_numericchars+'%-'
+	else if AnsiCompareText('verilog',lang)=0 then ny:=sci_alphachars+sci_numericchars+'_`$#'
+@
+
+
+1.5
+log
+@Updated to v0.13
+@
+text
+@d28 1
+a28 1
+       $Id: $
+d34 1
+a34 1
+                       these are now part of the TSciSynLexer class (functions AddLanguage,
+d41 1
+a41 1
+uses Classes,SciLexer,SciLexerMod,ScintillaSynLexers;
+@
+
+
+1.4
+log
+@Delphi Scintilla Interface Components v0.,12
+@
+text
+@@
+
+
+1.3
+log
+@no message
+@
+text
+@d30 6
+a36 2
+           13/10/2004 Added help using ClassExplorer 6.0, Use the helpgenerator to
+                      generate the help.
+a43 19
+type
+
+TLexerNamesMap =class(TObject)
+  private
+  lexers    : TStringList;
+  extras    : TStringList;
+
+  procedure FillNameMap;
+  procedure AddName(const name : String);
+  public
+  constructor Create;
+  destructor  Destroy;override;
+  procedure   FillListWithLexers(lst : TStrings;const Justlexers : Boolean=false;const upperfirst : Boolean=True);
+  procedure   Add(fEditor : TScintilla;const Lang,Lexer : String);
+end;
+
+
+
+function  LexerMapper : TLexerNamesMap;
+a48 159
+var
+  FLexerNamesMapper : TLexerNamesMap;
+
+
+function LexerMapper : TLexerNamesMap;
+begin
+  if FLexerNamesMapper=nil then
+  FLexerNamesMapper:=TLexerNamesMap.Create;
+  Result:=FLexerNamesMapper;
+end;
+
+constructor TLexerNamesMap.Create;
+begin
+  lexers:=TStringList.Create;
+  extras:=TStringList.Create;
+  FillNameMap;
+end;
+
+destructor TLexerNamesMap.Destroy;
+begin
+  if(lexers<>nil) then lexers.Free;
+	if(extras<>nil) then extras.Free;
+  inherited;
+end;
+
+procedure TLexerNamesMap.FillListWithLexers(lst : TStrings;const Justlexers : Boolean;const upperfirst : Boolean);
+var
+  cnt : Integer;
+  i : Integer;
+  tmpstr : String;
+begin
+  if lst=nil then Exit;
+  try
+    lst.BeginUpdate;
+    lst.Clear;
+    cnt:=lexers.Count;
+    for i:=0 to (cnt-1) do
+    begin
+      tmpstr:=lexers.Strings[i];
+			if upperfirst=True then
+      tmpstr[1]:=UpCase(tmpstr[1]);
+      lst.Add(tmpstr);
+    end;
+    if (Justlexers=False) then
+    begin
+      cnt:=extras.Count;
+      for i:=0 to (cnt-1) do
+      begin
+        tmpstr:=extras.Strings[i];
+				if upperfirst=True then
+        tmpstr[1]:=UpCase(tmpstr[1]);
+        lst.Add(tmpstr);
+      end;
+    end;
+  finally
+    lst.EndUpdate;
+  end;
+end;
+
+procedure TLexerNamesMap.FillNameMap;
+begin
+{Fill the namelist with all the lexers we have}
+  with lexers do
+  begin
+    Add('null');
+    Add('ada');
+    Add('apdl');
+    Add('asm');
+    Add('au3');
+    Add('ave');
+    Add('baan');
+    Add('bash');
+    Add('bullant');
+    Add('clw');
+    Add('clwnocase');
+    Add('conf');
+    Add('cpp');
+    Add('cppnocase');
+    Add('tcl');
+    Add('nncrontab');
+    Add('css');
+    Add('eiffel');
+    Add('eiffelkw');
+    Add('erlang');
+    Add('escript');
+    Add('forth');
+    Add('fortran');
+    Add('f77');
+    Add('gui4cli');
+    Add('hypertext');
+    Add('xml');
+    Add('asp');
+    Add('php');
+    Add('kix');
+    Add('lisp');
+    Add('lout');
+    Add('lua');
+    Add('matlab');
+    Add('octave');
+    Add('metapost');
+    Add('mmixal');
+    Add('lot');
+    Add('mssql');
+    Add('nsis');
+    Add('batch');
+    Add('diff');
+    Add('props');
+    Add('makefile');
+    Add('errorlist');
+    Add('latex');
+    Add('pascal');
+    Add('powerbasic');
+    Add('perl');
+    Add('pov');
+    Add('ps');
+    Add('python');
+    Add('ruby');
+    Add('scriptol');
+    Add('specman');
+    Add('sql');
+    Add('tex');
+    Add('vb');
+    Add('vbscript');
+    Add('verilog');
+    Add('yaml');
+  end;
+{and some of the extra languages we have. More can be added at designtime or runtime}
+  with extras do
+  begin
+    Add('java');
+    Add('javascript');
+    Add('resource');
+    Add('idl');
+    Add('wml');
+    Add('cs');
+    Add('scheme');
+    Add('xcode');
+  end;
+end;
+procedure TLexerNamesMap.AddName(const name : String);
+begin
+  if (lexers.IndexOf(name)=-1) and (extras.IndexOf(name)=-1) then
+  begin
+    extras.Insert(0,name);
+  end;
+end;
+
+procedure TLexerNamesMap.Add(fEditor : TScintilla;const Lang,Lexer : String);
+var
+  itm : TSciLangItem;
+begin
+  itm:=fEditor.Highlighter.LanguageList.GetStyleListStr(Lang);
+  if itm<>nil then
+  begin
+    itm.Lexer:=Lexer;
+  end;
+  AddName(Lang);
+end;
+
+d54 1
+a54 1
+	if lang='' then ny:=sci_alphachars+sci_numericchars+sci_accentedchars+'-'
+@
+
+
+1.2
+log
+@Some bugfixes, and other changes
+@
+text
+@d2 1
+a2 1
+{ 
+d5 2
+a6 1
+
+d26 4
+d31 3
+a33 6
+//  Author   hdalis (hdalis@@users.sourceforge.net)
+//  History  29/09/2004 Initial Release
+//
+//           13/10/2004 Added help using ClassExplorer 6.0, Use the helpgenerator to
+//                      generate the help.
+
+a40 14
+TExtensionMapper=class(TObject)
+  private
+  extensions : TStringList;
+  extsadded : Integer;
+
+  procedure FillExtensionMap;
+  public
+  constructor Create;
+  destructor  Destroy;override;
+  procedure   Add(const mapfromext : String;const maptolexer : String);
+  function    GetProps : String; // Used by the propertymanager to output added extensions
+  function    DetectLexer(const extension : string) : String;
+
+end;
+d52 1
+a52 1
+  procedure   FillListWithLexers(lst : TStrings;const Justlexers : Boolean=false);
+a57 1
+function  ExtMapper : TExtensionMapper;
+a64 1
+  FExtMap : TExtensionMapper;
+a66 17
+{This function exists in the TStrings class in Delphi7 but not in CBuilder6
+ therefore a wrapper for it.
+}
+function ValueFromIndex(lst : TStrings;index : Integer) : String;
+{$Ifndef VER150}
+var
+name : String;
+value : String;
+begin
+	name:=lst.Names[index];
+	value:=lst.Values[name];
+	Result:=value;
+{$Else}
+begin
+  Result:=lst.ValueFromIndex[index];
+{$Endif}
+end;
+d89 1
+a89 1
+procedure TLexerNamesMap.FillListWithLexers(lst : TStrings;const Justlexers : Boolean);
+d103 1
+d113 1
+a222 101
+
+function ExtMapper : TExtensionMapper;
+begin
+  if FExtMap=nil then
+  FExtMap:=TExtensionMapper.Create;
+  Result:=FExtMap;
+end;
+
+constructor TExtensionMapper.Create;
+begin
+  extensions:=nil;
+  FillExtensionMap;
+end;
+destructor TExtensionMapper.Destroy;
+begin
+  if extensions<>nil then extensions.Free;
+  inherited;
+end;
+
+{Fill the list with default extensionmappings.
+}
+procedure TExtensionMapper.FillExtensionMap;
+begin
+  if extensions=nil then extensions:=TStringList.Create;
+  with extensions do
+  begin
+		Add('.c=cpp');Add('.cc=cpp');Add('.cpp=cpp');Add('.cxx=cpp');Add('.h=cpp');Add('.hh=cpp');Add('.hxx=cpp');Add('.hpp=cpp');Add('.cs=cpp');
+		Add('.rc=resource');Add('.rc2=resource');Add('.dlg=resource');
+		Add('.htm=hypertext');Add('.html=hypertext');Add('.asp=hypertext');Add('.shtml=hypertext');Add('.htd=hypertext');Add('.htt=hypertext');Add('.cfm=hypertext');Add('.tpl=hypertext');Add('.hta=hypertext');Add('.php=hypertext');Add('.php3=hypertext');Add('.phtml=hypertext');
+		Add('.xml=xml');Add('.xsl=xml');Add('.svg=xml');Add('.xul=xml');Add('.xsd=xml');Add('.dtd=xml');Add('.xslt=xml');Add('.axl=xml');Add('.xrc=xml');Add('.bpk=xml');Add('.dpk=xml');Add('.dpr=xml');Add('.bpr=xml');Add('.ant=xml');
+		Add('.wml=wml');
+		Add('.pl=perl');Add('.pm=perl');Add('.cgi=perl');Add('.pod=perl');
+		Add('.css=css');
+		Add('.pas=pascal');Add('.inc=pascal');
+		Add('.sql=sql');
+		Add('.vb=vb');Add('.bas=vb');Add('.frm=vb');Add('.cls=vb');Add('.ctl=vb');Add('.pag=vb');Add('.dsr=vb');Add('.dob=vb');
+		Add('.vbs=vbscript');Add('.dsm=vbscript');
+		Add('.java=java');
+		Add('.js=javascript');
+		Add('.idl=idl');Add('.odl=idl');
+		Add('.py=python');Add('.pyw=python');
+		Add('.tcl=tcl');
+		Add('.lua=lua');
+		Add('.diff=diff');Add('.patch=diff');
+		Add('.mak=makefile');Add('makefile=makefile');Add('.make=makefile');Add('.iface=makefile');
+		Add('.bat=batch');Add('.cmd=batch');Add('.nt=batch');
+		Add('.conf=conf');
+		Add('.properties=props');Add('.ini=props');Add('.inf=props');Add('.reg=props');Add('.url=props');Add('.cfg=props');Add('.cnf=props');
+		Add('.ads=ada');Add('.adb=ada');
+		Add('.spf=nncrontab');Add('.tab=nncrontab');
+		Add('.cs=cs');
+		Add('.lsp=lisp');Add('.lisp=lisp');
+		Add('.scm=scheme');Add('.smd=scheme');Add('.ss=scheme');
+		Add('.au3=au3');
+    Add('.tex=tex');Add('.sty=tex');
+  end;
+end;
+
+// Add a language mapping.. New mappings overrides previous
+procedure TExtensionMapper.Add(const mapfromext : String;const maptolexer : String);
+var
+  tmpstr : String;
+begin
+  if extensions=nil then Exit;
+  if (mapfromext<>'') and (maptolexer<>'') then
+  begin
+  if mapfromext[1]<>'.' then
+    tmpstr:='.'+mapfromext
+  else tmpstr:=mapfromext;
+  tmpstr:=tmpstr+'='+maptolexer;
+  extensions.Insert(0,tmpstr); //Insert at top to override previous assignment
+  Inc(extsadded);
+  end;
+end;
+
+// Returns any extra languages that has been added. Used by SciPropertyMgr
+function TExtensionMapper.GetProps : String;
+var
+  tmp : String;
+  i : Integer;
+begin
+  tmp:='';
+  if extensions=nil then
+  begin
+    Result:=tmp;
+    Exit;
+  end;
+  if extsadded>0 then
+  begin
+    tmp:=#13#10+'# ---------------- Extension assignments START ----------------'+#13#10;
+    for i:=0 to (extsadded-1) do
+    begin
+      if extensions.Names[i][1]<>'.' then
+      tmp:=tmp+'extension.'+extensions.Strings[i]+#13#10
+			else tmp:=tmp+'extension'+extensions.Names[i]+'='+ValueFromIndex(extensions,i)+#13#10;
+    end;
+    tmp:=tmp+'# ---------------- Extension assignments END ----------------'+#13#10;
+  end;
+  Result:=tmp;
+end;
+
+a250 16
+function TExtensionMapper.DetectLexer(const extension : string) : String;
+var
+	i : Integer;
+begin
+  if extensions=nil then
+  begin
+    Result:='null';
+    Exit;
+  end;
+  i:=extensions.IndexOfName(extension);
+  if(i<>-1) then
+  begin
+		Result:=ValueFromIndex(extensions,i);
+	end else
+  Result :='null';
+end;
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d1 3
+a3 5
+{ Assorted utilities for detecting language based on file extension, and
+	changing the wordchars based on language
+  The TLexerNamesMap maps languages to lexers, keeps track of all lexer/languagenames.
+  The TExtensionMap maps fileextensions to the corresponding lexer or language.
+  Author : hdalis
+d6 18
+d25 7
+d36 1
+a37 1
+{$Include commondefs.inc}
+d40 1
+d43 1
+d47 5
+a51 5
+  destructor Destroy;override;
+  procedure Add(const mapfromext : String;const maptolexer : String);
+  function GetProps : String; // Used by the propertymanager to output added extensions
+{Returns the SynLexer to use with the file'extension' if found in map, else returns 'null'}
+  function DetectLexer(const extension : string) : String;
+d55 4
+a58 2
+  lexers : TStringList;
+  extras : TStringList;
+d63 3
+a65 4
+  destructor Destroy;override;
+  {Fill the optionsbox with the current lexers (and languages)}
+  procedure FillListWithLexers(lst : TStrings;const Justlexers : Boolean=false);
+  procedure Add(fEditor : TScintilla;const Lang,Lexer : String);
+a67 2
+function ExtMapper : TExtensionMapper; // Returns the fileextensionsmapper
+function LexerMapper : TLexerNamesMap;  // Returns the lexermapper
+d70 2
+a71 1
+{Sets what chars is wordchars for the language 'lang'}
+d73 1
+@
+
+
+1.1.1.1
+log
+@no message
+@
+text
+@@

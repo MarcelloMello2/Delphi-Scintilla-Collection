@@ -1,0 +1,135 @@
+head	1.2;
+access;
+symbols
+	test:1.1.1.1 hdalis:1.1.1;
+locks; strict;
+comment	@// @;
+
+
+1.2
+date	2004.10.03.20.46.24;	author hdalis;	state dead;
+branches;
+next	1.1;
+
+1.1
+date	2004.10.01.21.05.14;	author hdalis;	state Exp;
+branches
+	1.1.1.1;
+next	;
+
+1.1.1.1
+date	2004.10.01.21.05.14;	author hdalis;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@no message
+@
+text
+@// Borland C++ Builder
+// Copyright (c) 1995, 2002 by Borland Software Corporation
+// All rights reserved
+
+// (DO NOT EDIT: machine generated header) 'SciSearchReplace.pas' rev: 6.00
+
+#ifndef SciSearchReplaceHPP
+#define SciSearchReplaceHPP
+
+#pragma delphiheader begin
+#pragma option push -w-
+#pragma option push -Vx
+#include <SciLexerMod.hpp>	// Pascal unit
+#include <Forms.hpp>	// Pascal unit
+#include <Controls.hpp>	// Pascal unit
+#include <Classes.hpp>	// Pascal unit
+#include <Types.hpp>	// Pascal unit
+#include <SysInit.hpp>	// Pascal unit
+#include <System.hpp>	// Pascal unit
+
+//-- user supplied -----------------------------------------------------------
+
+namespace Scisearchreplace
+{
+//-- type declarations -------------------------------------------------------
+class DELPHICLASS TSciSearchReplace;
+class PASCALIMPLEMENTATION TSciSearchReplace : public Classes::TComponent 
+{
+	typedef Classes::TComponent inherited;
+	
+private:
+	bool FSearchForSelWord;
+	Scilexermod::TScintilla* FScintilla;
+	bool FSearchFromCaretInt;
+	AnsiString FFoundText;
+	Classes::TNotifyEvent FOnTextFound;
+	Classes::TNotifyEvent FOnTextNotFound;
+	Classes::TNotifyEvent FOnTextReplaced;
+	
+protected:
+	virtual void __fastcall Notification(Classes::TComponent* AComponent, Classes::TOperation Operation);
+	
+public:
+	bool SearchBackwards;
+	bool SearchCaseSensitive;
+	bool SearchFromCaret;
+	bool SearchSelectionOnly;
+	bool SearchWholeWords;
+	bool SearchRegex;
+	AnsiString SearchText;
+	AnsiString SearchTextHistory;
+	AnsiString ReplaceText;
+	AnsiString ReplaceTextHistory;
+	__property AnsiString FoundText = {read=FFoundText};
+	void __fastcall DoSearchReplaceText(bool AReplace, bool ABackwards);
+	void __fastcall ShowSearchReplaceDialog(bool AReplace);
+	
+__published:
+	__property bool SearchForSelWord = {read=FSearchForSelWord, write=FSearchForSelWord, nodefault};
+	__property Scilexermod::TScintilla* Scintilla = {read=FScintilla, write=FScintilla};
+	__property Classes::TNotifyEvent OnTextFound = {read=FOnTextFound, write=FOnTextFound};
+	__property Classes::TNotifyEvent OnTextNotFound = {read=FOnTextNotFound, write=FOnTextNotFound};
+	__property Classes::TNotifyEvent OnTextReplaced = {read=FOnTextReplaced, write=FOnTextReplaced};
+public:
+	#pragma option push -w-inl
+	/* TComponent.Create */ inline __fastcall virtual TSciSearchReplace(Classes::TComponent* AOwner) : Classes::TComponent(AOwner) { }
+	#pragma option pop
+	#pragma option push -w-inl
+	/* TComponent.Destroy */ inline __fastcall virtual ~TSciSearchReplace(void) { }
+	#pragma option pop
+	
+};
+
+
+//-- var, const, procedure ---------------------------------------------------
+
+}	/* namespace Scisearchreplace */
+using namespace Scisearchreplace;
+#pragma option pop	// -w-
+#pragma option pop	// -Vx
+
+#pragma delphiheader end.
+//-- end unit ----------------------------------------------------------------
+#endif	// SciSearchReplace
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@@
+
+
+1.1.1.1
+log
+@no message
+@
+text
+@@

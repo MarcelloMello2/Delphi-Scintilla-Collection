@@ -1,0 +1,230 @@
+head	1.2;
+access;
+symbols
+	test:1.1.1.1 hdalis:1.1.1;
+locks; strict;
+comment	@// @;
+
+
+1.2
+date	2004.10.03.20.46.24;	author hdalis;	state dead;
+branches;
+next	1.1;
+
+1.1
+date	2004.10.01.20.58.19;	author hdalis;	state Exp;
+branches
+	1.1.1.1;
+next	;
+
+1.1.1.1
+date	2004.10.01.20.58.19;	author hdalis;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@no message
+@
+text
+@// Borland C++ Builder
+// Copyright (c) 1995, 2002 by Borland Software Corporation
+// All rights reserved
+
+// (DO NOT EDIT: machine generated header) 'SciDocuments.pas' rev: 6.00
+
+#ifndef SciDocumentsHPP
+#define SciDocumentsHPP
+
+#pragma delphiheader begin
+#pragma option push -w-
+#pragma option push -Vx
+#include <Menus.hpp>	// Pascal unit
+#include <Graphics.hpp>	// Pascal unit
+#include <SciLexer.hpp>	// Pascal unit
+#include <ComCtrls.hpp>	// Pascal unit
+#include <Contnrs.hpp>	// Pascal unit
+#include <Controls.hpp>	// Pascal unit
+#include <Classes.hpp>	// Pascal unit
+#include <Windows.hpp>	// Pascal unit
+#include <SysInit.hpp>	// Pascal unit
+#include <System.hpp>	// Pascal unit
+
+//-- user supplied -----------------------------------------------------------
+
+namespace Scidocuments
+{
+//-- type declarations -------------------------------------------------------
+typedef void __fastcall (__closure *TSCEvent_onclosing)(System::TObject* Sender, const int TabIndex, bool &AllowClose);
+
+typedef void __fastcall (__closure *TSCEvent_detecthighlighter)(System::TObject* Sender, const AnsiString Extension, AnsiString &StyleToUse);
+
+class DELPHICLASS TSciDoc;
+class PASCALIMPLEMENTATION TSciDoc : public System::TObject 
+{
+	typedef System::TObject inherited;
+	
+private:
+	Scilexer::TScintillaBase* fEditor;
+	int documentid;
+	AnsiString FTabName;
+	AnsiString fHighlighter;
+	int FSelStart;
+	int FSelLength;
+	bool FIsDirty;
+	int FFirstLineInView;
+	AnsiString FFileName;
+	int FIndex;
+	bool FUnicode;
+	bool FReadOnly;
+	Classes::TNotifyEvent FOnChanged;
+	AnsiString FWordChars;
+	bool FAutoIgnoreCase;
+	AnsiString FAutoStartChars;
+	AnsiString FAutoStopChars;
+	void __fastcall SetTabName(const AnsiString Value);
+	void __fastcall SetHighlighter(const AnsiString Value);
+	void __fastcall SetFileName(const AnsiString Value);
+	void __fastcall Changed(void);
+	void __fastcall AddRef(void);
+	void __fastcall Release(void);
+	void __fastcall SetWordChars(const AnsiString Value);
+	
+public:
+	__fastcall TSciDoc(Scilexer::TScintillaBase* pp, const bool getcurrent);
+	__fastcall virtual ~TSciDoc(void);
+	void __fastcall Activate(void);
+	bool __fastcall IsActive(void);
+	void __fastcall AssignFromEditor(void);
+	void __fastcall AssignToEditor(void);
+	__property Classes::TNotifyEvent OnChanged = {read=FOnChanged, write=FOnChanged};
+	__property AnsiString TabName = {read=FTabName, write=SetTabName};
+	__property AnsiString Highlighter = {read=fHighlighter, write=SetHighlighter};
+	__property AnsiString FileName = {read=FFileName, write=SetFileName};
+	__property int Index = {read=FIndex, write=FIndex, nodefault};
+	__property AnsiString WordChars = {read=FWordChars, write=SetWordChars};
+	__property bool AutoIgnoreCase = {read=FAutoIgnoreCase, write=FAutoIgnoreCase, nodefault};
+	__property AnsiString AutoStartChars = {read=FAutoStartChars, write=FAutoStartChars};
+	__property AnsiString AutoStopChars = {read=FAutoStopChars, write=FAutoStopChars};
+};
+
+
+class DELPHICLASS TSciDocumentTabControl;
+class PASCALIMPLEMENTATION TSciDocumentTabControl : public Comctrls::TCustomTabControl 
+{
+	typedef Comctrls::TCustomTabControl inherited;
+	
+private:
+	Contnrs::TObjectList* docs;
+	Scilexer::TScintillaBase* fEditor;
+	TSCEvent_onclosing FOnClosing;
+	TSCEvent_detecthighlighter FOnDetectHighlighter;
+	int __fastcall getCount(void);
+	void __fastcall ChgTab(const int newtab);
+	TSciDoc* __fastcall GetDocItm(const int Index);
+	void __fastcall tabChanged(System::TObject* Sender);
+	void __fastcall SetEditor(Scilexer::TScintillaBase* Value);
+	
+protected:
+	DYNAMIC void __fastcall Change(void);
+	DYNAMIC bool __fastcall CanChange(void);
+	virtual void __fastcall Notification(Classes::TComponent* AComponent, Classes::TOperation Operation);
+	void __fastcall Attach(void);
+	void __fastcall RefreshTabs(void);
+	
+public:
+	__fastcall virtual TSciDocumentTabControl(Classes::TComponent* AOwner);
+	__fastcall virtual ~TSciDocumentTabControl(void);
+	bool __fastcall Open(const AnsiString filename);
+	void __fastcall Close(void);
+	int __fastcall NewDocument(void);
+	void __fastcall Activate(const int docno);
+	int __fastcall Add(const AnsiString tabname);
+	HIDESBASE void __fastcall Remove(const int index);
+	__property int Count = {read=getCount, nodefault};
+	__property TSciDoc* Document[int Index] = {read=GetDocItm};
+	__property DisplayRect ;
+	__property Tabs ;
+	__property TabIndex  = {default=-1};
+	
+__published:
+	__property Scilexer::TScintillaBase* Editor = {read=fEditor, write=SetEditor};
+	__property TSCEvent_onclosing OnClosing = {read=FOnClosing, write=FOnClosing};
+	__property TSCEvent_detecthighlighter OnDetectHighlighter = {read=FOnDetectHighlighter, write=FOnDetectHighlighter};
+	__property Align  = {default=0};
+	__property Anchors  = {default=3};
+	__property BiDiMode ;
+	__property Constraints ;
+	__property DragCursor  = {default=-12};
+	__property DragMode  = {default=0};
+	__property Enabled  = {default=1};
+	__property Font ;
+	__property HotTrack  = {default=0};
+	__property MultiLine  = {default=0};
+	__property OwnerDraw  = {default=0};
+	__property ParentBiDiMode  = {default=1};
+	__property ParentShowHint  = {default=1};
+	__property PopupMenu ;
+	__property RaggedRight  = {default=0};
+	__property ScrollOpposite  = {default=0};
+	__property ShowHint ;
+	__property Style  = {default=0};
+	__property TabHeight  = {default=0};
+	__property TabOrder  = {default=-1};
+	__property TabPosition  = {default=0};
+	__property TabWidth  = {default=0};
+	__property Visible  = {default=1};
+	__property OnChange ;
+	__property OnChanging ;
+	__property OnContextPopup ;
+	__property OnDrawTab ;
+	__property OnEndDock ;
+	__property OnEndDrag ;
+	__property OnEnter ;
+	__property OnExit ;
+	__property OnMouseDown ;
+	__property OnMouseMove ;
+	__property OnMouseUp ;
+	__property OnResize ;
+	__property OnStartDock ;
+	__property OnUnDock ;
+public:
+	#pragma option push -w-inl
+	/* TWinControl.CreateParented */ inline __fastcall TSciDocumentTabControl(HWND ParentWindow) : Comctrls::TCustomTabControl(ParentWindow) { }
+	#pragma option pop
+	
+};
+
+
+//-- var, const, procedure ---------------------------------------------------
+
+}	/* namespace Scidocuments */
+using namespace Scidocuments;
+#pragma option pop	// -w-
+#pragma option pop	// -Vx
+
+#pragma delphiheader end.
+//-- end unit ----------------------------------------------------------------
+#endif	// SciDocuments
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@@
+
+
+1.1.1.1
+log
+@no message
+@
+text
+@@

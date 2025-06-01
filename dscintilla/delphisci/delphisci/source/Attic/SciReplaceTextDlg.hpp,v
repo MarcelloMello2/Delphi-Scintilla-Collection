@@ -1,0 +1,131 @@
+head	1.2;
+access;
+symbols
+	test:1.1.1.1 hdalis:1.1.1;
+locks; strict;
+comment	@// @;
+
+
+1.2
+date	2004.10.03.20.46.24;	author hdalis;	state dead;
+branches;
+next	1.1;
+
+1.1
+date	2004.10.01.21.05.08;	author hdalis;	state Exp;
+branches
+	1.1.1.1;
+next	;
+
+1.1.1.1
+date	2004.10.01.21.05.08;	author hdalis;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@no message
+@
+text
+@// Borland C++ Builder
+// Copyright (c) 1995, 2002 by Borland Software Corporation
+// All rights reserved
+
+// (DO NOT EDIT: machine generated header) 'SciReplaceTextDlg.pas' rev: 6.00
+
+#ifndef SciReplaceTextDlgHPP
+#define SciReplaceTextDlgHPP
+
+#pragma delphiheader begin
+#pragma option push -w-
+#pragma option push -Vx
+#include <Buttons.hpp>	// Pascal unit
+#include <ExtCtrls.hpp>	// Pascal unit
+#include <StdCtrls.hpp>	// Pascal unit
+#include <SciSearchTextDlg.hpp>	// Pascal unit
+#include <Dialogs.hpp>	// Pascal unit
+#include <Forms.hpp>	// Pascal unit
+#include <Controls.hpp>	// Pascal unit
+#include <Graphics.hpp>	// Pascal unit
+#include <Classes.hpp>	// Pascal unit
+#include <SysUtils.hpp>	// Pascal unit
+#include <Messages.hpp>	// Pascal unit
+#include <Windows.hpp>	// Pascal unit
+#include <SysInit.hpp>	// Pascal unit
+#include <System.hpp>	// Pascal unit
+
+//-- user supplied -----------------------------------------------------------
+
+namespace Scireplacetextdlg
+{
+//-- type declarations -------------------------------------------------------
+class DELPHICLASS TTextReplaceDialog;
+class PASCALIMPLEMENTATION TTextReplaceDialog : public Scisearchtextdlg::TTextSearchDialog 
+{
+	typedef Scisearchtextdlg::TTextSearchDialog inherited;
+	
+__published:
+	Stdctrls::TLabel* Label2;
+	Stdctrls::TComboBox* cbReplaceText;
+	HIDESBASE void __fastcall FormCloseQuery(System::TObject* Sender, bool &CanClose);
+	
+private:
+	AnsiString __fastcall GetReplaceText();
+	AnsiString __fastcall GetReplaceTextHistory();
+	void __fastcall SetReplaceText(AnsiString Value);
+	void __fastcall SetReplaceTextHistory(AnsiString Value);
+	
+public:
+	__property AnsiString ReplaceText = {read=GetReplaceText, write=SetReplaceText};
+	__property AnsiString ReplaceTextHistory = {read=GetReplaceTextHistory, write=SetReplaceTextHistory};
+public:
+	#pragma option push -w-inl
+	/* TCustomForm.Create */ inline __fastcall virtual TTextReplaceDialog(Classes::TComponent* AOwner) : Scisearchtextdlg::TTextSearchDialog(AOwner) { }
+	#pragma option pop
+	#pragma option push -w-inl
+	/* TCustomForm.CreateNew */ inline __fastcall virtual TTextReplaceDialog(Classes::TComponent* AOwner, int Dummy) : Scisearchtextdlg::TTextSearchDialog(AOwner, Dummy) { }
+	#pragma option pop
+	#pragma option push -w-inl
+	/* TCustomForm.Destroy */ inline __fastcall virtual ~TTextReplaceDialog(void) { }
+	#pragma option pop
+	
+public:
+	#pragma option push -w-inl
+	/* TWinControl.CreateParented */ inline __fastcall TTextReplaceDialog(HWND ParentWindow) : Scisearchtextdlg::TTextSearchDialog(ParentWindow) { }
+	#pragma option pop
+	
+};
+
+
+//-- var, const, procedure ---------------------------------------------------
+
+}	/* namespace Scireplacetextdlg */
+using namespace Scireplacetextdlg;
+#pragma option pop	// -w-
+#pragma option pop	// -Vx
+
+#pragma delphiheader end.
+//-- end unit ----------------------------------------------------------------
+#endif	// SciReplaceTextDlg
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@@
+
+
+1.1.1.1
+log
+@no message
+@
+text
+@@

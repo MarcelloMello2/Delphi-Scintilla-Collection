@@ -1,0 +1,122 @@
+head	1.2;
+access;
+symbols
+	test:1.1.1.1 hdalis:1.1.1;
+locks; strict;
+comment	@// @;
+
+
+1.2
+date	2004.10.03.20.46.24;	author hdalis;	state dead;
+branches;
+next	1.1;
+
+1.1
+date	2004.10.01.20.58.04;	author hdalis;	state Exp;
+branches
+	1.1.1.1;
+next	;
+
+1.1.1.1
+date	2004.10.01.20.58.04;	author hdalis;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@no message
+@
+text
+@// Borland C++ Builder
+// Copyright (c) 1995, 2002 by Borland Software Corporation
+// All rights reserved
+
+// (DO NOT EDIT: machine generated header) 'SciDetectUtils.pas' rev: 6.00
+
+#ifndef SciDetectUtilsHPP
+#define SciDetectUtilsHPP
+
+#pragma delphiheader begin
+#pragma option push -w-
+#pragma option push -Vx
+#include <ScintillaSynLexers.hpp>	// Pascal unit
+#include <SciLexerMod.hpp>	// Pascal unit
+#include <SciLexer.hpp>	// Pascal unit
+#include <Classes.hpp>	// Pascal unit
+#include <SysInit.hpp>	// Pascal unit
+#include <System.hpp>	// Pascal unit
+
+//-- user supplied -----------------------------------------------------------
+
+namespace Scidetectutils
+{
+//-- type declarations -------------------------------------------------------
+class DELPHICLASS TExtensionMapper;
+class PASCALIMPLEMENTATION TExtensionMapper : public System::TObject 
+{
+	typedef System::TObject inherited;
+	
+public:
+	Classes::TStringList* extensions;
+	int extsadded;
+	void __fastcall FillExtensionMap(void);
+	__fastcall TExtensionMapper(void);
+	__fastcall virtual ~TExtensionMapper(void);
+	void __fastcall Add(const AnsiString mapfromext, const AnsiString maptolexer);
+	AnsiString __fastcall GetProps();
+	AnsiString __fastcall DetectLexer(const AnsiString extension);
+};
+
+
+class DELPHICLASS TLexerNamesMap;
+class PASCALIMPLEMENTATION TLexerNamesMap : public System::TObject 
+{
+	typedef System::TObject inherited;
+	
+public:
+	Classes::TStringList* lexers;
+	Classes::TStringList* extras;
+	void __fastcall FillNameMap(void);
+	void __fastcall AddName(const AnsiString name);
+	__fastcall TLexerNamesMap(void);
+	__fastcall virtual ~TLexerNamesMap(void);
+	void __fastcall FillListWithLexers(Classes::TStrings* lst, const bool Justlexers = false);
+	void __fastcall Add(Scilexermod::TScintilla* fEditor, const AnsiString Lang, const AnsiString Lexer);
+};
+
+
+//-- var, const, procedure ---------------------------------------------------
+extern PACKAGE TLexerNamesMap* __fastcall LexerMapper(void);
+extern PACKAGE TExtensionMapper* __fastcall ExtMapper(void);
+extern PACKAGE void __fastcall SetLangWordChars(Classes::TPersistent* fEditor, const AnsiString Lang);
+
+}	/* namespace Scidetectutils */
+using namespace Scidetectutils;
+#pragma option pop	// -w-
+#pragma option pop	// -Vx
+
+#pragma delphiheader end.
+//-- end unit ----------------------------------------------------------------
+#endif	// SciDetectUtils
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@@
+
+
+1.1.1.1
+log
+@no message
+@
+text
+@@

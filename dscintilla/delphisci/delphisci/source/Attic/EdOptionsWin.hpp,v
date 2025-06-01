@@ -1,0 +1,344 @@
+head	1.2;
+access;
+symbols
+	test:1.1.1.1 hdalis:1.1.1;
+locks; strict;
+comment	@// @;
+
+
+1.2
+date	2004.10.03.20.46.24;	author hdalis;	state dead;
+branches;
+next	1.1;
+
+1.1
+date	2004.10.01.20.57.28;	author hdalis;	state Exp;
+branches
+	1.1.1.1;
+next	;
+
+1.1.1.1
+date	2004.10.01.20.57.28;	author hdalis;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@no message
+@
+text
+@// Borland C++ Builder
+// Copyright (c) 1995, 2002 by Borland Software Corporation
+// All rights reserved
+
+// (DO NOT EDIT: machine generated header) 'EdOptionsWin.pas' rev: 6.00
+
+#ifndef EdOptionsWinHPP
+#define EdOptionsWinHPP
+
+#pragma delphiheader begin
+#pragma option push -w-
+#pragma option push -Vx
+#include <tcFontCombobox.hpp>	// Pascal unit
+#include <Menus.hpp>	// Pascal unit
+#include <ScintillaSynLexers.hpp>	// Pascal unit
+#include <ComCtrls.hpp>	// Pascal unit
+#include <SciKeyBindings.hpp>	// Pascal unit
+#include <SciLexerMod.hpp>	// Pascal unit
+#include <Buttons.hpp>	// Pascal unit
+#include <StdCtrls.hpp>	// Pascal unit
+#include <ExtCtrls.hpp>	// Pascal unit
+#include <Dialogs.hpp>	// Pascal unit
+#include <Forms.hpp>	// Pascal unit
+#include <Controls.hpp>	// Pascal unit
+#include <Graphics.hpp>	// Pascal unit
+#include <Classes.hpp>	// Pascal unit
+#include <Variants.hpp>	// Pascal unit
+#include <SysUtils.hpp>	// Pascal unit
+#include <Messages.hpp>	// Pascal unit
+#include <Windows.hpp>	// Pascal unit
+#include <SysInit.hpp>	// Pascal unit
+#include <System.hpp>	// Pascal unit
+
+//-- user supplied -----------------------------------------------------------
+
+namespace Edoptionswin
+{
+//-- type declarations -------------------------------------------------------
+class DELPHICLASS TEditorOptions;
+class PASCALIMPLEMENTATION TEditorOptions : public Classes::TPersistent 
+{
+	typedef Classes::TPersistent inherited;
+	
+private:
+	bool FReadOnly;
+	bool FBraceHilite;
+	bool FGutter;
+	bool FWordWrap;
+	bool FLineNumbers;
+	Scilexermod::TIndentationOptions FIndentation;
+	bool FCodeFolding;
+	Graphics::TColor FCaretFore;
+	bool FUseUnicode;
+	int FIndentWidth;
+	int FTabWidth;
+	Scilexermod::TEOLStyle FEOLStyle;
+	BOOL FCaretLineVisible;
+	Graphics::TColor FCaretBack;
+	bool FSaveClearsUndo;
+	Graphics::TFont* FFont;
+	Scintillasynlexers::TSciSynLexer* FSynLexer;
+	Scikeybindings::TSciKeyCommandCollection* fKeyCommands;
+	int FCaretWidth;
+	Graphics::TColor FSelFore;
+	Graphics::TColor FSelBack;
+	Graphics::TColor FFoldLo;
+	Graphics::TColor FFoldHi;
+	Graphics::TColor FMarkerFore;
+	Graphics::TColor FMarkerBack;
+	Graphics::TColor FBMarkFore;
+	Graphics::TColor FBMarkBack;
+	void __fastcall SetFont(const Graphics::TFont* Value);
+	void __fastcall SetSynLexer(const Scintillasynlexers::TSciSynLexer* Value);
+	void __fastcall SetKeyCommands(const Scikeybindings::TSciKeyCommandCollection* Value);
+	
+public:
+	__fastcall TEditorOptions(void);
+	__fastcall virtual ~TEditorOptions(void);
+	virtual void __fastcall Assign(Classes::TPersistent* Source);
+	void __fastcall GetOptions(Scilexermod::TScintilla* Scintilla);
+	void __fastcall SetOptions(Scilexermod::TScintilla* Scintilla);
+	
+__published:
+	__property Scintillasynlexers::TSciSynLexer* SynLexer = {read=FSynLexer, write=SetSynLexer};
+	__property bool ReadOnly = {read=FReadOnly, write=FReadOnly, default=0};
+	__property bool BraceHilite = {read=FBraceHilite, write=FBraceHilite, default=1};
+	__property bool Gutter = {read=FGutter, write=FGutter, default=1};
+	__property Scilexermod::TIndentationOptions Indentation = {read=FIndentation, write=FIndentation, nodefault};
+	__property bool LineNumbers = {read=FLineNumbers, write=FLineNumbers, default=0};
+	__property bool UseUnicode = {read=FUseUnicode, write=FUseUnicode, default=1};
+	__property bool WordWrap = {read=FWordWrap, write=FWordWrap, default=0};
+	__property bool CodeFolding = {read=FCodeFolding, write=FCodeFolding, default=1};
+	__property Scilexermod::TEOLStyle EOLStyle = {read=FEOLStyle, write=FEOLStyle, default=0};
+	__property int TabWidth = {read=FTabWidth, write=FTabWidth, default=8};
+	__property int IndentWidth = {read=FIndentWidth, write=FIndentWidth, default=0};
+	__property Scikeybindings::TSciKeyCommandCollection* KeyCommands = {read=fKeyCommands, write=SetKeyCommands};
+	__property Graphics::TColor CaretFore = {read=FCaretFore, write=FCaretFore, nodefault};
+	__property Graphics::TColor CaretBack = {read=FCaretBack, write=FCaretBack, nodefault};
+	__property Graphics::TFont* Font = {read=FFont, write=SetFont};
+	__property int CaretWidth = {read=FCaretWidth, write=FCaretWidth, nodefault};
+	__property BOOL CaretLineVisible = {read=FCaretLineVisible, write=FCaretLineVisible, nodefault};
+	__property Graphics::TColor SelFore = {read=FSelFore, write=FSelFore, default=536870912};
+	__property Graphics::TColor SelBack = {read=FSelBack, write=FSelBack, default=536870912};
+	__property Graphics::TColor FoldLo = {read=FFoldLo, write=FFoldLo, default=536870912};
+	__property Graphics::TColor FoldHi = {read=FFoldHi, write=FFoldHi, default=536870912};
+	__property Graphics::TColor MarkerFore = {read=FMarkerFore, write=FMarkerFore, default=536870912};
+	__property Graphics::TColor MarkerBack = {read=FMarkerBack, write=FMarkerBack, default=536870912};
+	__property Graphics::TColor BMarkFore = {read=FBMarkFore, write=FBMarkFore, default=536870912};
+	__property Graphics::TColor BMarkBack = {read=FBMarkBack, write=FBMarkBack, default=536870912};
+	__property bool XSaveClearsUndo = {read=FSaveClearsUndo, write=FSaveClearsUndo, default=0};
+};
+
+
+class DELPHICLASS TEdOptionsWindow;
+class PASCALIMPLEMENTATION TEdOptionsWindow : public Forms::TForm 
+{
+	typedef Forms::TForm inherited;
+	
+__published:
+	Extctrls::TPanel* Panel1;
+	Comctrls::TPageControl* OptionPages;
+	Comctrls::TTabSheet* OptionsPage;
+	Comctrls::TTabSheet* Options2Page;
+	Extctrls::TPanel* opts2Panel;
+	Extctrls::TPanel* optionsPanel;
+	Stdctrls::TGroupBox* viewOptionsBox;
+	Stdctrls::TCheckBox* CodeFoldingCB;
+	Stdctrls::TCheckBox* GutterCB;
+	Stdctrls::TCheckBox* LineNumbersCB;
+	Stdctrls::TCheckBox* IndentationGuidesCB;
+	Buttons::TBitBtn* FontButton;
+	Stdctrls::TGroupBox* indentationBox;
+	Stdctrls::TLabel* Label1;
+	Stdctrls::TLabel* Label2;
+	Stdctrls::TCheckBox* KeepIndentCB;
+	Stdctrls::TCheckBox* TabIndentsCB;
+	Stdctrls::TCheckBox* BackSpaceUnIndentsCB;
+	Stdctrls::TGroupBox* otherBox;
+	Stdctrls::TLabel* Label3;
+	Stdctrls::TCheckBox* WordWrapCB;
+	Stdctrls::TCheckBox* UseUnicodeCB;
+	Stdctrls::TComboBox* EOLStyleCB;
+	Extctrls::TPanel* Panel3;
+	Buttons::TBitBtn* CancelBtn;
+	Buttons::TBitBtn* ApplyBtn;
+	Buttons::TBitBtn* OKBtn;
+	Comctrls::TTabSheet* HighlighterPage;
+	Extctrls::TPanel* highlighterPanel;
+	Dialogs::TFontDialog* FontDialog;
+	Stdctrls::TCheckBox* ReadOnlyCB;
+	Stdctrls::TGroupBox* GroupBox5;
+	Stdctrls::TListBox* StylesLB;
+	Stdctrls::TGroupBox* languageCBBox;
+	Stdctrls::TComboBox* LanguageCB;
+	Stdctrls::TGroupBox* stylenoBox;
+	Stdctrls::TLabel* Label4;
+	Stdctrls::TEdit* StyleNumberSE;
+	Stdctrls::TEdit* DescriptionEB;
+	Stdctrls::TLabel* Label9;
+	Buttons::TSpeedButton* AddStyleB;
+	Buttons::TSpeedButton* DeleteStyleB;
+	Comctrls::TTabSheet* KeywordsPage;
+	Extctrls::TPanel* keywordsPanel;
+	Stdctrls::TCheckBox* BraceHiliteCB;
+	Stdctrls::TGroupBox* StyleDefGB;
+	Stdctrls::TLabel* Label5;
+	Stdctrls::TCheckBox* DefaultFontCB;
+	Stdctrls::TEdit* SizeSE;
+	Stdctrls::TLabel* Label6;
+	Stdctrls::TLabel* Label7;
+	Stdctrls::TLabel* Label13;
+	Extctrls::TColorBox* ForeCB;
+	Extctrls::TColorBox* CaretCB;
+	Stdctrls::TLabel* Label8;
+	Extctrls::TColorBox* BackCB;
+	Stdctrls::TCheckBox* ItalicCB;
+	Stdctrls::TCheckBox* BoldCB;
+	Stdctrls::TCheckBox* UnderlineCB;
+	Stdctrls::TCheckBox* VisibleCB;
+	Stdctrls::TCheckBox* ChangeableCB;
+	Stdctrls::TCheckBox* EOLFilledCB;
+	Stdctrls::TLabel* Label10;
+	Stdctrls::TComboBox* CaseCB;
+	Stdctrls::TGroupBox* keywordlistBox;
+	Stdctrls::TListBox* KeyListsLB;
+	Stdctrls::TGroupBox* KeywordListGB;
+	Stdctrls::TLabel* Label11;
+	Stdctrls::TLabel* Label12;
+	Stdctrls::TLabel* Label14;
+	Stdctrls::TEdit* CaretWidthSE;
+	Buttons::TSpeedButton* KeyListAdd;
+	Buttons::TSpeedButton* KeyListDelete;
+	Stdctrls::TEdit* KeyListNumberSE;
+	Stdctrls::TEdit* KeyListDescriptionEB;
+	Stdctrls::TGroupBox* keywordskBox;
+	Stdctrls::TMemo* KeywordsM;
+	Comctrls::TTabSheet* KeyCommandsPage;
+	Extctrls::TPanel* keycommandsPanel;
+	Extctrls::TPanel* pnlCommands;
+	Comctrls::TListView* KeyCmdList;
+	Stdctrls::TEdit* TabWidthSE;
+	Stdctrls::TEdit* IndentWidthSE;
+	Stdctrls::TCheckBox* HotspotCB;
+	Stdctrls::TCheckBox* CaretLineVisCB;
+	Extctrls::TColorBox* CaretBackCB;
+	Stdctrls::TLabel* Label15;
+	Stdctrls::TLabel* Label16;
+	Stdctrls::TLabel* Label17;
+	Stdctrls::TLabel* Label18;
+	Stdctrls::TLabel* Label19;
+	Stdctrls::TLabel* Label20;
+	Stdctrls::TLabel* Label21;
+	Extctrls::TColorBox* SelForeCB;
+	Extctrls::TColorBox* SelBackCB;
+	Extctrls::TColorBox* FoldLoCB;
+	Extctrls::TColorBox* FoldHiCB;
+	Extctrls::TColorBox* MarkerForeCB;
+	Extctrls::TColorBox* MarkerBackCB;
+	Stdctrls::TCheckBox* SaveClearsUndoCB;
+	Extctrls::TColorBox* BMarkForeCB;
+	Extctrls::TColorBox* BMarkBackCB;
+	Stdctrls::TLabel* Label22;
+	Stdctrls::TLabel* Label23;
+	Tcfontcombobox::TtcFontCombobox* FontCB;
+	Buttons::TBitBtn* btnAdd;
+	Buttons::TBitBtn* btnEdit;
+	Buttons::TBitBtn* btnDelete;
+	Buttons::TBitBtn* btnReset;
+	void __fastcall FormCreate(System::TObject* Sender);
+	void __fastcall FormDestroy(System::TObject* Sender);
+	void __fastcall ApplyBtnClick(System::TObject* Sender);
+	void __fastcall FontButtonClick(System::TObject* Sender);
+	void __fastcall OKBtnClick(System::TObject* Sender);
+	void __fastcall CancelBtnClick(System::TObject* Sender);
+	void __fastcall StylesLBClick(System::TObject* Sender);
+	void __fastcall LanguageCBChange(System::TObject* Sender);
+	void __fastcall StyleElementChanged(System::TObject* Sender);
+	void __fastcall DeleteStyleBClick(System::TObject* Sender);
+	void __fastcall AddStyleBClick(System::TObject* Sender);
+	void __fastcall KeyListsLBClick(System::TObject* Sender);
+	void __fastcall KeyListElementsChange(System::TObject* Sender);
+	void __fastcall KeyListDeleteClick(System::TObject* Sender);
+	void __fastcall KeyListAddClick(System::TObject* Sender);
+	void __fastcall btnDeleteClick(System::TObject* Sender);
+	void __fastcall btnResetClick(System::TObject* Sender);
+	void __fastcall btnEditClick(System::TObject* Sender);
+	void __fastcall btnAddClick(System::TObject* Sender);
+	void __fastcall StyleNumberSEKeyPress(System::TObject* Sender, char &ch);
+	void __fastcall TestNumericOnly(System::TObject* Sender, char &Key);
+	
+private:
+	Scilexermod::TScintilla* FScintilla;
+	TEditorOptions* fEditorOptions;
+	TEditorOptions* fOldEditorOptions;
+	bool UpdatingStyle;
+	bool UpdatingKeyList;
+	void __fastcall SetScintilla(const Scilexermod::TScintilla* Value);
+	void __fastcall UpdateStyles(void);
+	void __fastcall UpdateKeywords(void);
+	void __fastcall UpdateKeyCommands(void);
+	
+public:
+	__property Scilexermod::TScintilla* Scintilla = {read=FScintilla, write=SetScintilla};
+public:
+	#pragma option push -w-inl
+	/* TCustomForm.Create */ inline __fastcall virtual TEdOptionsWindow(Classes::TComponent* AOwner) : Forms::TForm(AOwner) { }
+	#pragma option pop
+	#pragma option push -w-inl
+	/* TCustomForm.CreateNew */ inline __fastcall virtual TEdOptionsWindow(Classes::TComponent* AOwner, int Dummy) : Forms::TForm(AOwner, Dummy) { }
+	#pragma option pop
+	#pragma option push -w-inl
+	/* TCustomForm.Destroy */ inline __fastcall virtual ~TEdOptionsWindow(void) { }
+	#pragma option pop
+	
+public:
+	#pragma option push -w-inl
+	/* TWinControl.CreateParented */ inline __fastcall TEdOptionsWindow(HWND ParentWindow) : Forms::TForm(ParentWindow) { }
+	#pragma option pop
+	
+};
+
+
+//-- var, const, procedure ---------------------------------------------------
+extern PACKAGE TEdOptionsWindow* EdOptionsWindow;
+
+}	/* namespace Edoptionswin */
+using namespace Edoptionswin;
+#pragma option pop	// -w-
+#pragma option pop	// -Vx
+
+#pragma delphiheader end.
+//-- end unit ----------------------------------------------------------------
+#endif	// EdOptionsWin
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@@
+
+
+1.1.1.1
+log
+@no message
+@
+text
+@@

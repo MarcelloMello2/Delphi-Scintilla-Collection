@@ -1,0 +1,122 @@
+head	1.2;
+access;
+symbols
+	test:1.1.1.1 hdalis:1.1.1;
+locks; strict;
+comment	@// @;
+
+
+1.2
+date	2004.10.03.20.46.24;	author hdalis;	state dead;
+branches;
+next	1.1;
+
+1.1
+date	2004.10.01.21.02.09;	author hdalis;	state Exp;
+branches
+	1.1.1.1;
+next	;
+
+1.1.1.1
+date	2004.10.01.21.02.09;	author hdalis;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@no message
+@
+text
+@// Borland C++ Builder
+// Copyright (c) 1995, 2002 by Borland Software Corporation
+// All rights reserved
+
+// (DO NOT EDIT: machine generated header) 'SciLexerOptionsDlg.pas' rev: 6.00
+
+#ifndef SciLexerOptionsDlgHPP
+#define SciLexerOptionsDlgHPP
+
+#pragma delphiheader begin
+#pragma option push -w-
+#pragma option push -Vx
+#include <EdOptionsWin.hpp>	// Pascal unit
+#include <SciLexerMod.hpp>	// Pascal unit
+#include <Forms.hpp>	// Pascal unit
+#include <Controls.hpp>	// Pascal unit
+#include <Classes.hpp>	// Pascal unit
+#include <SysUtils.hpp>	// Pascal unit
+#include <SysInit.hpp>	// Pascal unit
+#include <System.hpp>	// Pascal unit
+
+//-- user supplied -----------------------------------------------------------
+
+namespace Scilexeroptionsdlg
+{
+//-- type declarations -------------------------------------------------------
+#pragma option push -b-
+enum TSciOptionPage { opOptions, opOptions2, opHighlighter, opKeywords, opKeyboard };
+#pragma option pop
+
+typedef Set<TSciOptionPage, opOptions, opKeyboard>  TSciOptionPages;
+
+class DELPHICLASS TScintillaOptionsDlg;
+class PASCALIMPLEMENTATION TScintillaOptionsDlg : public Classes::TComponent 
+{
+	typedef Classes::TComponent inherited;
+	
+private:
+	Scilexermod::TScintilla* FScintilla;
+	TSciOptionPage FActivePage;
+	TSciOptionPages FPages;
+	
+protected:
+	virtual void __fastcall Notification(Classes::TComponent* AComponent, Classes::TOperation Operation);
+	
+public:
+	__fastcall virtual TScintillaOptionsDlg(Classes::TComponent* AOwner);
+	bool __fastcall Execute(void);
+	
+__published:
+	__property Scilexermod::TScintilla* Scintilla = {read=FScintilla, write=FScintilla};
+	__property TSciOptionPage ActivePage = {read=FActivePage, write=FActivePage, default=0};
+	__property TSciOptionPages Pages = {read=FPages, write=FPages, default=29};
+public:
+	#pragma option push -w-inl
+	/* TComponent.Destroy */ inline __fastcall virtual ~TScintillaOptionsDlg(void) { }
+	#pragma option pop
+	
+};
+
+
+//-- var, const, procedure ---------------------------------------------------
+
+}	/* namespace Scilexeroptionsdlg */
+using namespace Scilexeroptionsdlg;
+#pragma option pop	// -w-
+#pragma option pop	// -Vx
+
+#pragma delphiheader end.
+//-- end unit ----------------------------------------------------------------
+#endif	// SciLexerOptionsDlg
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@@
+
+
+1.1.1.1
+log
+@no message
+@
+text
+@@

@@ -1,0 +1,165 @@
+head	1.2;
+access;
+symbols
+	test:1.1.1.1 hdalis:1.1.1;
+locks; strict;
+comment	@// @;
+
+
+1.2
+date	2004.10.03.20.46.24;	author hdalis;	state dead;
+branches;
+next	1.1;
+
+1.1
+date	2004.10.01.21.01.11;	author hdalis;	state Exp;
+branches
+	1.1.1.1;
+next	;
+
+1.1.1.1
+date	2004.10.01.21.01.11;	author hdalis;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@no message
+@
+text
+@// Borland C++ Builder
+// Copyright (c) 1995, 2002 by Borland Software Corporation
+// All rights reserved
+
+// (DO NOT EDIT: machine generated header) 'SciLexerAuto.pas' rev: 6.00
+
+#ifndef SciLexerAutoHPP
+#define SciLexerAutoHPP
+
+#pragma delphiheader begin
+#pragma option push -w-
+#pragma option push -Vx
+#include <Controls.hpp>	// Pascal unit
+#include <SciLexerMod.hpp>	// Pascal unit
+#include <SciLexer.hpp>	// Pascal unit
+#include <SysUtils.hpp>	// Pascal unit
+#include <Messages.hpp>	// Pascal unit
+#include <Windows.hpp>	// Pascal unit
+#include <Classes.hpp>	// Pascal unit
+#include <SysInit.hpp>	// Pascal unit
+#include <System.hpp>	// Pascal unit
+
+//-- user supplied -----------------------------------------------------------
+
+namespace Scilexerauto
+{
+//-- type declarations -------------------------------------------------------
+class DELPHICLASS TAutoCompleteOpts;
+class PASCALIMPLEMENTATION TAutoCompleteOpts : public Classes::TPersistent 
+{
+	typedef Classes::TPersistent inherited;
+	
+private:
+	Scilexermod::TScintilla* fScintilla;
+	AnsiString FStartChars;
+	Classes::TStrings* FStrings;
+	int FNumStartChars;
+	AnsiString FStopChars;
+	bool FDisableAutoComplete;
+	bool FAutoCompleteWord;
+	bool FAutoCompleteWordOnlyOne;
+	void __fastcall setStrings(Classes::TStrings* Value);
+	void __fastcall SetAutoCompleteStopChars(const AnsiString Value);
+	void __fastcall setOpt(const int Index, const BOOL Value);
+	BOOL __fastcall getOpt(int Index);
+	
+public:
+	__fastcall TAutoCompleteOpts(Scilexermod::TScintilla* Scintilla);
+	virtual void __fastcall Assign(Classes::TPersistent* Source);
+	__fastcall virtual ~TAutoCompleteOpts(void);
+	
+__published:
+	__property bool DisableAutoComplete = {read=FDisableAutoComplete, write=FDisableAutoComplete, nodefault};
+	__property int NumStartChars = {read=FNumStartChars, write=FNumStartChars, nodefault};
+	__property AnsiString StartChars = {read=FStartChars, write=FStartChars};
+	__property AnsiString StopChars = {read=FStopChars, write=SetAutoCompleteStopChars};
+	__property Classes::TStrings* AStrings = {read=FStrings, write=setStrings};
+	__property BOOL IgnoreCase = {read=getOpt, write=setOpt, index=0, nodefault};
+	__property BOOL ChooseSingle = {read=getOpt, write=setOpt, index=1, nodefault};
+	__property BOOL AutoHide = {read=getOpt, write=setOpt, index=2, nodefault};
+	__property BOOL DropRestOfWord = {read=getOpt, write=setOpt, index=3, nodefault};
+	__property BOOL CancelAtStart = {read=getOpt, write=setOpt, index=4, nodefault};
+	__property bool CompleteWord = {read=FAutoCompleteWord, write=FAutoCompleteWord, nodefault};
+	__property bool CompleteWordOnlyOne = {read=FAutoCompleteWordOnlyOne, write=FAutoCompleteWordOnlyOne, nodefault};
+};
+
+
+class DELPHICLASS TScintillaAuto;
+class PASCALIMPLEMENTATION TScintillaAuto : public Scilexermod::TScintilla 
+{
+	typedef Scilexermod::TScintilla inherited;
+	
+private:
+	TAutoCompleteOpts* fAutoOpts;
+	AnsiString FAutoStrings;
+	bool autoCCausedByOnlyOne;
+	int braceCount;
+	bool __fastcall StartAutoCompleteWord(const bool onlyOneWord);
+	void __fastcall StartAutoComplete(void);
+	
+protected:
+	virtual void __fastcall StartCallTip(void);
+	virtual void __fastcall ContinueCallTip(void);
+	virtual void __fastcall CharAddedAutoComplete(const int ch);
+	virtual void __fastcall CreateWnd(void);
+	
+public:
+	__fastcall virtual TScintillaAuto(Classes::TComponent* AOwner);
+	
+__published:
+	__property TAutoCompleteOpts* AutoCompleteOpts = {read=fAutoOpts, write=fAutoOpts};
+public:
+	#pragma option push -w-inl
+	/* TScintilla.Destroy */ inline __fastcall virtual ~TScintillaAuto(void) { }
+	#pragma option pop
+	
+public:
+	#pragma option push -w-inl
+	/* TWinControl.CreateParented */ inline __fastcall TScintillaAuto(HWND ParentWindow) : Scilexermod::TScintilla(ParentWindow) { }
+	#pragma option pop
+	
+};
+
+
+//-- var, const, procedure ---------------------------------------------------
+
+}	/* namespace Scilexerauto */
+using namespace Scilexerauto;
+#pragma option pop	// -w-
+#pragma option pop	// -Vx
+
+#pragma delphiheader end.
+//-- end unit ----------------------------------------------------------------
+#endif	// SciLexerAuto
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@@
+
+
+1.1.1.1
+log
+@no message
+@
+text
+@@

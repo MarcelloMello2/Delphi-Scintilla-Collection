@@ -1,0 +1,1973 @@
+head	1.7;
+access;
+symbols
+	test:1.1.1.1 hdalis:1.1.1;
+locks; strict;
+comment	@ * @;
+
+
+1.7
+date	2004.12.03.17.18.58;	author hdalis;	state Exp;
+branches;
+next	1.6;
+
+1.6
+date	2004.11.21.04.20.20;	author hdalis;	state Exp;
+branches;
+next	1.5;
+
+1.5
+date	2004.11.13.04.29.50;	author hdalis;	state Exp;
+branches;
+next	1.4;
+
+1.4
+date	2004.11.08.00.00.40;	author hdalis;	state Exp;
+branches;
+next	1.3;
+
+1.3
+date	2004.10.18.10.24.49;	author hdalis;	state Exp;
+branches;
+next	1.2;
+
+1.2
+date	2004.10.16.10.17.24;	author hdalis;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2004.10.01.20.57.50;	author hdalis;	state Exp;
+branches
+	1.1.1.1;
+next	;
+
+1.1.1.1
+date	2004.10.01.20.57.50;	author hdalis;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.7
+log
+@Delphi Scintilla Interface Components 0.15
+@
+text
+@//CE_Desc_Include(helpdescriptions.txt)
+unit EdOptionsWin;
+{
+Unit    : EdOptionsWin
+Purpose : Options Dialog for Scintilla editors
+Created : 20/03/2003
+     $Id: EdOptionsWin.pas,v 1.5 2004/11/13 04:29:50 hdalis Exp $
+Original Author: Kiriakos Vlahos (kvlahos@@london.edu)
+Current Author : hdalis
+History 29/09/2004 Initial Release with Delphi Scintilla Interface Components
+                   Extended and customized the optionsbox
+                   No longer accepts enums, now it accepts strings.
+                   Color,Caret,Hotspot etc properties added.
+                   (hdalis@@users.sourceforge.net)
+        13/10/2004 Added help using ClassExplorer 6.0, Use the helpgenerator to
+                   generate the help.
+                   Renamed the Scintilla property to Editor
+                   (hdalis@@users.sourceforge.net)
+        25/10/2004 Redesigned the whole form. Added add,copy,remove languages buttons.
+                   Added Active Hotspot options.
+                   The Keywords page doesn't exist anymore, it is now a part of the
+                   Highlighter page.
+                   (hdalis@@users.sourceforge.net)
+        02/11/2004 No longer displays a list of all lexers, now only defined languages
+                   are displayed, i.e those defined in the Highlighter.LanguageList.
+                   If you want to add a language, click Add and set the languagename and
+                   the lexer to use for it. You can have as many languages defined as you wish.
+        09/11/2004 Added EdgeColumn,EdgeType,EdgeColor
+                   Some redesign of the Options page to
+                   make it fit.. To be adjusted later.
+				18/11/2004 Changed the TSciSynLexer to TSciLanguageManager, and changed all properties etc to reflect that.
+        26/11/2004 Renamed the SetScintilla function to SetEditor to conform with the rest of them..
+BUGFIXES:
+        04/11/2004 When a new keylist was added, and you typed a description then the text
+                   in the listbox wasn't updated. Fixed.
+
+TODO:              Prevent languages defined with the 'container' lexer from creating styles and keywords
+                   with this dialog.
+}
+interface
+uses
+	Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+	Dialogs, ExtCtrls, StdCtrls, Buttons,SciLexerMod,SciLexerMemo,SciKeyBindings,
+	ComCtrls, ScintillaLanguageManager, tcFontCombobox;
+
+{$Include commondefs.inc}
+type
+	TEditorOptions = class(TPersistent)
+	private
+		FReadOnly : boolean;
+		FBraceHilite : boolean;
+		FGutter: boolean;
+		FWordWrap: boolean;
+		FLineNumbers: boolean;
+		FIndentation : TIndentationOptions;
+		FCodeFolding: sciCodeFoldingFlags;
+		FCaretFore : TColor;
+		FUseUnicode: boolean;
+		FIndentWidth: Integer;
+		FTabWidth: Integer;
+		FEOLStyle: TEOLStyle;
+		FCaretLineVisible : LongBool;
+		FCaretBack : TColor;
+		FSaveClearsUndo : Boolean;
+		FFont: TFont;
+		FLanguageManager: TSciLanguageManager;
+		fKeyCommands : TSciKeyCommandCollection;
+		FCaretWidth: Integer;
+		FSelFore : TColor;
+		FSelBack : TColor;
+		FFoldLo : TColor;
+		FFoldHi : TColor;
+		FMarkerFore : TColor;
+		FMarkerBack : TColor;
+		FBMarkFore : TColor;
+		FBMarkBack : TColor;
+    FHotActiveFore : TColor;
+    FHotActiveBack : TColor;
+    FHotActiveUnderline : Boolean;
+    FHotActiveSingleLine : Boolean;
+    FEdgeColor : TColor;
+    FEdgeColumn : TColor;
+    FEdgeType : sciEdgeType;
+    FMarkerType : sciMarkerType;
+    procedure SetFont(const Value: TFont);
+		procedure SetLanguageManager(const Value: TSciLanguageManager);
+		procedure SetKeyCommands(const Value: TSciKeyCommandCollection);
+	public
+		constructor Create;
+		destructor Destroy; override;
+		procedure Assign(Source: TPersistent);override;
+		procedure GetOptions(Scintilla : TScintilla);
+		procedure SetOptions(Scintilla : TScintilla);
+	published
+		property LanguageManager : TSciLanguageManager read FLanguageManager write SetLanguageManager;
+		property ReadOnly : boolean read fReadOnly write fReadOnly default False;
+		property BraceHilite : boolean read FBraceHilite write FBraceHilite default True;
+		property Gutter : boolean read FGutter write FGutter default True;
+		property Indentation : TIndentationOptions read FIndentation write fIndentation;
+		property LineNumbers : boolean read FLineNumbers write FLineNumbers default False;
+		property UseUnicode : boolean read FUseUnicode write FUseUnicode default True;
+		property WordWrap : boolean read FWordWrap write FWordWrap default False;
+		property CodeFolding : sciCodeFoldingFlags read FCodeFolding write FCodeFolding default [foldFold,foldCompact,foldComment,foldPreprocessor,foldAtElse,foldHTML,foldHTMLPreProcessor];
+		property EOLStyle : TEOLStyle read FEOLStyle write FEOLStyle default eolCRLF;
+		property TabWidth : integer read FTabWidth write FTabWidth  default 8;
+		property IndentWidth : integer read FIndentWidth write FIndentWidth default 0;
+		property KeyCommands : TSciKeyCommandCollection read FKeyCommands write SetKeyCommands;
+		property CaretFore : TColor read FCaretFore Write FCaretFore;
+		property CaretBack : TColor read FCaretBack Write FCaretBack;
+		property Font : TFont read FFont write SetFont;
+		property CaretWidth : Integer read FCaretWidth write FCaretWidth;
+		property CaretLineVisible : LongBool read FCaretLineVisible write FCaretLineVisible;
+		property SelFore : TColor read FSelFore write FSelFore default clDefault;
+		property SelBack : TColor read FSelBack write FSelBack default clDefault;
+		property FoldLo : TColor read FFoldLo write FFoldLo default clDefault;
+		property FoldHi : TColor read FFoldHi write FFoldHi default clDefault;
+		property MarkerFore : TColor read FMarkerFore write FMarkerFore default clDefault;
+		property MarkerBack : TColor read FMarkerBack write FMarkerBack default clDefault;
+		property BMarkFore : TColor read FBMarkFore write FBMarkFore default clDefault;
+		property BMarkBack : TColor read FBMarkBack write FBMarkBack default clDefault;
+		property XSaveClearsUndo : Boolean read FSaveClearsUndo write FSaveClearsUndo default false;
+    property HotActiveFore : TColor read FHotActiveFore write FHotActiveFore default clDefault;
+    property HotActiveBack : TColor read FHotActiveBack write FHotActiveBack default clDefault;
+    property HotActiveUnderline : Boolean read FHotActiveUnderline write FHotActiveUnderline;
+    property HotActiveSingleLine : Boolean read FHotActiveSingleLine write FHotActiveSingleLine;
+    property EdgeColor : TColor read FEdgeColor write FEdgeColor;
+    property EdgeColumn : TColor read FEdgeColumn write FEdgeColumn;
+    property EdgeType : sciEdgeType read FEdgeType write FEdgeType;
+    property MarkerType : sciMarkerType read FMarkerType write FMarkerType;
+	end;
+
+
+	TEdOptionsWindow = class(TForm)
+		OptionPages: TPageControl;
+		OptionsPage: TTabSheet;
+    ColorsPage: TTabSheet;
+    colorsPanel: TPanel;
+    optionsPanel: TPanel;
+    viewOptionsBox: TGroupBox;
+		CodeFoldingCB: TCheckBox;
+		GutterCB: TCheckBox;
+		LineNumbersCB: TCheckBox;
+		IndentationGuidesCB: TCheckBox;
+		FontButton: TBitBtn;
+    indentationBox: TGroupBox;
+    Label1: TLabel;
+    Label2: TLabel;
+    KeepIndentCB: TCheckBox;
+    TabIndentsCB: TCheckBox;
+    BackSpaceUnIndentsCB: TCheckBox;
+    buttonPanel: TPanel;
+    CancelBtn: TBitBtn;
+    ApplyBtn: TBitBtn;
+    OKBtn: TBitBtn;
+    HighlighterPage: TTabSheet;
+    highlighterPanel: TPanel;
+    FontDialog: TFontDialog;
+    languageCBBox: TGroupBox;
+    LanguageCB: TComboBox;
+		Label13: TLabel;
+		CaretCB: TColorBox;
+		Label14: TLabel;
+    CaretWidthSE: TEdit;
+		KeyCommandsPage: TTabSheet;
+    keycommandsPanel: TPanel;
+		KeyCmdList: TListView;
+    TabWidthSE: TEdit;
+    IndentWidthSE: TEdit;
+		CaretLineVisCB : TCheckBox;
+		CaretBackCB : TColorBox;
+		Label15: TLabel;
+		Label16: TLabel;
+		Label17: TLabel;
+		Label20: TLabel;
+		Label21: TLabel;
+		SelForeCB: TColorBox;
+		SelBackCB: TColorBox;
+		MarkerForeCB: TColorBox;
+		MarkerBackCB: TColorBox;
+		BMarkForeCB	: TColorBox;
+		BMarkBackCB	: TColorBox;
+		Label22 : TLabel;
+		Label23 : TLabel;
+    addLangButton: TBitBtn;
+    remLangButton: TBitBtn;
+    copyLangButton: TBitBtn;
+    keybuttonsPanel: TPanel;
+    btnAdd: TBitBtn;
+    btnEdit: TBitBtn;
+    btnDelete: TBitBtn;
+    btnReset: TBitBtn;
+    HotspotGB: TGroupBox;
+    Label24: TLabel;
+    Label25: TLabel;
+    HotActiveForeCB: TColorBox;
+    HotActiveBackCB: TColorBox;
+    HotActiveUnderlineCB: TCheckBox;
+    HotActiveSingleLineCB: TCheckBox;
+    FoldingGB: TGroupBox;
+    Label26: TLabel;
+    Label27: TLabel;
+    FoldLoCB: TColorBox;
+    FoldHiCB: TColorBox;
+    MarkersGB: TGroupBox;
+    highlighterPageCtrl: TPageControl;
+    stylesTabSheet: TTabSheet;
+    keywordsTabSheet: TTabSheet;
+    topStylePanel: TPanel;
+    GroupBox5: TGroupBox;
+    StylesLB: TListBox;
+    stylenoBox: TGroupBox;
+    Label4: TLabel;
+    Label9: TLabel;
+    StyleNumberSE: TEdit;
+    DescriptionEB: TEdit;
+    AddStyleB: TBitBtn;
+    DeleteStyleB: TBitBtn;
+    topKeywordsPanel: TPanel;
+    keywordlistBox: TGroupBox;
+    KeyListsLB: TListBox;
+    KeywordListGB: TGroupBox;
+    Label11: TLabel;
+    Label12: TLabel;
+    KeyListNumberSE: TEdit;
+    KeyListDescriptionEB: TEdit;
+    KeyListAdd: TBitBtn;
+    KeyListDelete: TBitBtn;
+    KeywordsM: TMemo;
+    Label18: TLabel;
+    Label19: TLabel;
+    StyleDefGB: TPanel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Label10: TLabel;
+    DefaultFontCB: TCheckBox;
+    SizeSE: TEdit;
+    ForeCB: TColorBox;
+    BackCB: TColorBox;
+    ItalicCB: TCheckBox;
+    BoldCB: TCheckBox;
+    UnderlineCB: TCheckBox;
+    VisibleCB: TCheckBox;
+    ChangeableCB: TCheckBox;
+    EOLFilledCB: TCheckBox;
+    CaseCB: TComboBox;
+    HotspotCB: TCheckBox;
+    FontCB: TtcFontCombobox;
+    gbRightEdge: TGroupBox;
+    Label28: TLabel;
+    Label29: TLabel;
+    EdgeColumnSE: TEdit;
+    EdgeColorCB: TColorBox;
+    WordWrapCB: TCheckBox;
+    BraceHiliteCB: TCheckBox;
+    Label30: TLabel;
+    EdgeTypeCB: TComboBox;
+    markerTypeCB: TComboBox;
+    Label31: TLabel;
+    OtherGB: TGroupBox;
+    UseUnicodeCB: TCheckBox;
+    SaveClearsUndoCB: TCheckBox;
+    ReadOnlyCB: TCheckBox;
+    Label3: TLabel;
+    EOLStyleCB: TComboBox;
+		procedure FormCreate(Sender: TObject);
+		procedure FormDestroy(Sender: TObject);
+		procedure ApplyBtnClick(Sender: TObject);
+		procedure FontButtonClick(Sender: TObject);
+		procedure OKBtnClick(Sender: TObject);
+		procedure CancelBtnClick(Sender: TObject);
+		procedure StylesLBClick(Sender: TObject);
+		procedure LanguageCBChange(Sender: TObject);
+		procedure StyleElementChanged(Sender: TObject);
+		procedure DeleteStyleBClick(Sender: TObject);
+		procedure AddStyleBClick(Sender: TObject);
+		procedure KeyListsLBClick(Sender: TObject);
+		procedure KeyListElementsChange(Sender: TObject);
+		procedure KeyListDeleteClick(Sender: TObject);
+		procedure KeyListAddClick(Sender: TObject);
+		procedure btnDeleteClick(Sender: TObject);
+		procedure btnResetClick(Sender: TObject);
+		procedure btnEditClick(Sender: TObject);
+		procedure btnAddClick(Sender: TObject);
+		procedure StyleNumberSEKeyPress(Sender : TObject;var ch : Char);
+    procedure TestNumericOnly(Sender: TObject; var Key: Char);
+    procedure addLangButtonClick(Sender: TObject);
+    procedure remLangButtonClick(Sender: TObject);
+    procedure copyLangButtonClick(Sender: TObject);
+    procedure OptionPagesChange(Sender: TObject);
+    procedure KeyCmdListCompare(Sender: TObject; Item1, Item2: TListItem;
+      Data: Integer; var Compare: Integer);
+	private
+		{ Private declarations }
+		FEditor : TScintilla;
+		fEditorOptions : TEditorOptions;
+		fOldEditorOptions : TEditorOptions;
+		UpdatingStyle : Boolean;
+		UpdatingKeyList : Boolean;
+		procedure SetEditor(const Value: TScintilla);
+		procedure UpdateStyles;
+		procedure UpdateKeywords;
+		procedure UpdateKeyCommands;
+	public
+		{ Public declarations }
+		property Editor : TScintilla read FEditor write SetEditor;
+    procedure   RescanLanguageList;
+
+	end;
+
+var
+	EdOptionsWindow: TEdOptionsWindow;
+
+implementation
+
+{$R *.dfm}
+
+Uses
+	SciSupport,SciKeyEditForm,SciAddLanguageFormUnit,Menus,SciResLang;
+
+{ TEditorOptions }
+function ToInt(s : String) : Integer;
+	var
+	tmp : integer;
+	fl : integer;
+begin
+	val(s,tmp,fl);
+	if fl<>0 then result:=0
+		else
+			result:=tmp;
+end;
+
+procedure TEditorOptions.Assign(Source: TPersistent);
+begin
+  if Source is TEditorOptions then
+    with TEditorOptions(Source) do
+    begin
+      Self.FReadOnly := ReadOnly;
+      Self.FBraceHilite := BraceHilite;
+      Self.FGutter := Gutter;
+      Self.FWordWrap := WordWrap;
+      Self.FLineNumbers := LineNumbers;
+      Self.FIndentation := Indentation;
+      Self.FCodeFolding := CodeFolding;
+      Self.FUseUnicode := UseUnicode;
+      Self.FTabWidth := TabWidth ;
+      Self.FIndentWidth := IndentWidth;
+      Self.FEOLStyle := EOLStyle;
+      Self.SetFont(Font);
+      Self.FLanguageManager.Assign(LanguageManager);
+      Self.KeyCommands.Assign(KeyCommands);
+      Self.FCaretBack :=CaretBack;
+      Self.FCaretFore :=CaretFore;
+      Self.FSelFore := SelFore;
+      Self.FFoldLo :=FoldLo;
+      Self.FFoldHi :=FoldHi;
+      Self.FMarkerFore :=MarkerFore;
+      Self.FMarkerBack :=MarkerBack;
+      Self.FBMarkFore :=BMarkFore;
+      Self.FBMarkBack :=BMarkBack;
+      Self.FSelBack := SelBack;
+      Self.FCaretWidth :=CaretWidth;
+      Self.FCaretLineVisible :=CaretLineVisible;
+      Self.FSaveClearsUndo :=XSaveClearsUndo;
+      Self.FHotActiveFore:=HotActiveFore;
+      Self.FHotActiveBack:=HotActiveBack;
+      Self.FHotActiveUnderline:=HotActiveUnderline;
+      Self.FHotActiveSingleLine:=HotActiveSingleLine;
+      Self.FEdgeColor:=EdgeColor;
+      Self.FEdgeColumn:=EdgeColumn;
+      Self.FEdgeType:=EdgeType;
+      Self.FMarkerType:=MarkerType;
+	  end
+  else if Source is TScintilla then
+  begin
+		GetOptions(Source as TScintilla);
+	end else
+		inherited;
+end;
+
+constructor TEditorOptions.Create;
+begin
+	inherited;
+	FFont := TFont.Create;
+	FLanguageManager := TSciLanguageManager.Create(nil);
+	fKeyCommands := TSciKeyCommandCollection.Create(nil);
+end;
+
+destructor TEditorOptions.Destroy;
+begin
+	FFont.Free;
+	FLanguageManager.Free;
+	inherited;
+end;
+
+procedure TEditorOptions.GetOptions(Scintilla: TScintilla);
+begin
+	with Scintilla do
+  begin
+		FReadOnly := ReadOnly;
+		FBraceHilite := BraceHilite;
+		FGutter := Gutter1.Width <> 0;
+		FWordWrap := WordWrap;
+		FLineNumbers := Gutter0.Width <> 0;
+		FIndentation := Indentation;
+		FCodeFolding := Folding;
+		FUseUnicode := UseUnicode;
+		FTabWidth := TabWidth ;
+		FIndentWidth := IndentWidth;
+		FEOLStyle := EOLStyle;
+		Self.SetFont(Font);
+		FLanguageManager.Assign(LanguageManager);
+		fKeyCommands.Assign(Scintilla.KeyCommands);
+		FSelFore:=Colors.SelFore;
+		FSelBack:=Colors.SelBack;
+		FFoldLo :=Colors.FoldLo;
+		FFoldHi :=Colors.FoldHi;
+		FMarkerFore :=Colors.MarkerFore;
+		FMarkerBack :=Colors.MarkerBack;
+		FBMarkFore :=Colors.BookMarkFore;
+		FBMarkBack :=Colors.BookMarkBack;
+    FHotActiveFore:=ActiveHotSpot.ForeColor;
+    FHotActiveBack:=ActiveHotSpot.BackColor;
+    Self.FHotActiveUnderline:=ActiveHotSpot.Underlined;
+    Self.FHotActiveSingleLine:=ActiveHotSpot.SingleLine;
+    Self.FEdgeColor:=EdgeColor;
+    Self.FEdgeColumn:=EdgeColumn;
+    Self.FEdgeType:=EdgeMode;
+    Self.FMarkerType:=FoldMarkerType;
+		FSaveClearsUndo :=ClearUndoAfterSave;
+		FCaretFore :=Caret.ForeColor;
+		FCaretBack :=Caret.LineBackColor;
+		FCaretWidth :=Caret.Width;
+		FCaretLineVisible :=Caret.LineVisible;
+	end;
+end;
+
+procedure TEditorOptions.SetFont(const Value: TFont);
+begin
+	FFont.Assign(Value);
+end;
+
+procedure TEditorOptions.SetKeyCommands(const Value: TSciKeyCommandCollection);
+begin
+	FKeyCommands.Assign(Value);
+end;
+
+procedure TEditorOptions.SetOptions(Scintilla: TScintilla);
+begin
+	with Scintilla do begin
+		Caret.ForeColor:=ColorToRGB(CaretFore);
+		Caret.Width:=FCaretWidth;
+		Caret.LineVisible :=FCaretLineVisible;
+		Caret.LineBackColor :=FCaretBack;
+		Colors.SelFore :=SelFore;
+		Colors.SelBack :=SelBack;
+		Colors.FoldLo :=FFoldLo;
+		Colors.FoldHi :=FFoldHi;
+		Colors.MarkerFore :=FMarkerFore;
+		Colors.MarkerBack :=FMarkerBack;
+		Colors.BookMarkBack :=FBMarkBack;
+		Colors.BookMarkFore :=FBMarkFore;
+    ActiveHotSpot.ForeColor:=FHotActiveFore;
+    ActiveHotSpot.BackColor:=FHotActiveBack;
+    ActiveHotSpot.Underlined :=Self.FHotActiveUnderline;
+    ActiveHotSpot.SingleLine :=Self.FHotActiveSingleLine;
+		ClearUndoAfterSave :=FSaveClearsUndo;
+    EdgeColor:=FEdgeColor;
+    EdgeColumn:=FEdgeColumn;
+    EdgeMode:=FEdgeType;
+    Scintilla.FoldMarkerType:=FMarkerType;
+		if ReadOnly <> FReadOnly then ReadOnly := FReadOnly;
+		BraceHilite := FBraceHilite;
+		if FGutter <> (Gutter1.Width <> 0) then
+    begin
+			if FGutter then	Gutter1.Width := 16
+			  else
+          Gutter1.Width := 0;
+		end;
+		if WordWrap <> FWordWrap then WordWrap := FWordWrap;
+		if FLineNumbers <> (Gutter0.Width <> 0) then
+    begin
+			if FLineNumbers then
+      begin
+				Gutter0.Width := 32;
+				Gutter0.MarginType := gutLineNumber;
+			end else
+				Gutter0.Width := 0;
+		end;
+		if Indentation <> FIndentation then
+      Indentation := FIndentation;
+		if CodeFolding<>Folding then
+    begin
+      Folding:=CodeFolding;
+    end;
+		if UseUnicode <> FUseUnicode then
+      UseUnicode := FUseUnicode;
+		if IndentWidth <> FIndentWidth then
+      IndentWidth := FIndentWidth;
+		if TabWidth <> FTabWidth then
+      TabWidth := FTabWidth;
+		if EOLStyle <> FEOLStyle then
+      EOLStyle := FEOLStyle;
+		if (Font.Name <> FFont.Name) or (Font.Size <> FFont.Size) or (Font.Charset <> FFont.Charset) or (Font.Style <> FFont.Style) then
+		  Font := FFont;
+		LanguageManager.Assign(Self.FLanguageManager);
+		LanguageManager.Update;
+		KeyCommands.Assign(FKeyCommands);
+	end;
+end;
+
+procedure TEditorOptions.SetLanguageManager(const Value: TSciLanguageManager);
+begin
+	FLanguageManager.Assign(Value);
+end;
+
+{ TEdOptionsWindow }
+
+procedure TEdOptionsWindow.StyleNumberSEKeyPress(Sender : TObject;var ch : Char);
+begin
+  TestNumericOnly(Sender,ch);
+	if ch<>#0 then StyleElementChanged(Sender);
+end;
+
+procedure TEdOptionsWindow.SetEditor(const Value: TScintilla);
+begin
+	FEditor := Value;
+  RescanLanguageList;
+	fEditorOptions.GetOptions(Editor);
+	with fEditorOptions do
+  begin
+		ReadOnlyCB.Checked := ReadOnly;
+		BraceHiliteCB.Checked := BraceHilite;
+		GutterCB.Checked := Gutter;
+		WordWrapCB.Checked := WordWrap;
+		LineNumbersCB.Checked := LineNumbers;
+		KeepIndentCB.Checked := SciLexerMemo.KeepIndent in Indentation;
+		TabIndentsCB.Checked := SciLexerMemo.TabIndents in Indentation;
+		BackSpaceUnindentsCB.Checked := SciLexerMemo.BackSpaceUnindents in Indentation;
+		IndentationGuidesCB.Checked := SciLexerMemo.IndentationGuides in Indentation;
+		CodeFoldingCB.Checked := (foldFold in CodeFolding);
+		UseUnicodeCB.Checked := UseUnicode;
+		TabWidthSE.Text := IntToStr(TabWidth);
+		IndentWidthSE.Text := IntToStr(IndentWidth);
+		EOLStyleCB.ItemIndex := Integer(EOLStyle);
+		CaretCB.Selected:=CaretFore;
+		SelForeCB.Selected:=SelFore;
+		SelBackCB.Selected:=SelBack;
+		CaretWidthSE.Text:=IntToStr(CaretWidth);
+		CaretLineVisCB.Checked :=CaretLineVisible;
+		CaretBackCB.Selected :=CaretBack;
+		FoldLoCB.Selected :=FoldLo;
+		FoldHiCB.Selected :=FoldHi;
+		MarkerForeCB.Selected :=MarkerFore;
+		MarkerBackCB.Selected :=MarkerBack;
+		BMarkForeCB.Selected :=BMarkFore;
+		BMarkBackCB.Selected :=BMarkBack;
+    HotActiveForeCB.Selected:=HotActiveFore;
+    HotActiveBackCB.Selected:=HotActiveBack;
+    HotActiveUnderlineCB.Checked:=HotActiveUnderline;
+    HotActiveSingleLineCB.Checked:=HotActiveSingleLine;
+		SaveClearsUndoCB.Checked :=XSaveClearsUndo;
+    EdgeColorCB.Selected:=EdgeColor;
+    EdgeColumnSE.Text:=IntToStr(EdgeColumn);
+    EdgeTypeCB.ItemIndex:=LongInt(EdgeType);
+    markerTypeCB.ItemIndex:=LongInt(MarkerType);
+		//  Syntax Highlighter
+		LanguageCB.ItemIndex := LanguageCB.Items.IndexOf(LanguageManager.SelectedLanguage);
+		UpdateStyles;
+		UpdateKeywords;
+		UpdateKeyCommands;
+	end;
+	fOldEditorOptions.Assign(FEditorOptions);
+end;
+
+procedure TEdOptionsWindow.FormCreate(Sender: TObject);
+begin
+	fEditorOptions := TEditorOptions.Create;
+	fOldEditorOptions := TEditorOptions.Create;
+end;
+
+procedure TEdOptionsWindow.FormDestroy(Sender: TObject);
+begin
+	fEditorOptions.Free;
+	fOldEditorOptions.Free;
+end;
+
+procedure TEdOptionsWindow.ApplyBtnClick(Sender: TObject);
+begin
+    with fEditorOptions do
+    begin
+		ReadOnly := ReadOnlyCB.Checked;
+		BraceHilite := BraceHiliteCB.Checked;
+		Gutter := GutterCB.Checked;
+		WordWrap := WordWrapCB.Checked;
+		LineNumbers := LineNumbersCB.Checked;
+		XSaveClearsUndo :=SaveClearsUndoCB.Checked;
+		Indentation := [];
+		if KeepIndentCB.Checked then
+      Indentation := Indentation + [SciLexerMemo.KeepIndent];
+		if TabIndentsCB.Checked then
+      Indentation := Indentation + [SciLexerMemo.TabIndents];
+		if BackSpaceUnindentsCB.Checked then
+      Indentation := Indentation + [SciLexerMemo.BackSpaceUnindents];
+		if IndentationGuidesCB.Checked then
+      Indentation := Indentation + [SciLexerMemo.IndentationGuides];
+    if CodeFoldingCB.Checked then
+		CodeFolding := CodeFolding+[foldFold]
+    else
+    CodeFolding := CodeFolding-[foldFold];
+
+		UseUnicode := UseUnicodeCB.Checked;
+		TabWidth := ToInt(TabWidthSE.Text);
+		IndentWidth := ToInt(IndentWidthSE.Text);
+		EOLStyle := TEOLStyle(EOLStyleCB.ItemIndex);
+		CaretFore :=CaretCB.Selected;
+		SelFore :=SelForeCB.Selected;
+		SelBack :=SelBackCB.Selected;
+		FoldLo :=FoldLoCB.Selected;
+		FoldHi :=FoldHiCB.Selected;
+		MarkerFore:=MarkerForeCB.Selected;
+		MarkerBack:=MarkerBackCB.Selected;
+		BMarkFore :=BMarkForeCB.Selected;
+		BMarkBack :=BMarkBackCB.Selected;
+
+    HotActiveFore:=HotActiveForeCB.Selected;
+    HotActiveBack :=HotActiveBackCB.Selected;
+    HotActiveUnderline :=HotActiveUnderlineCB.Checked;
+    HotActiveSingleLine :=HotActiveSingleLineCB.Checked;
+		CaretWidth :=ToInt(CaretWidthSE.Text);
+		CaretBack :=CaretBackCB.Selected;
+		CaretLineVisible :=CaretLineVisCB.Checked;
+    EdgeColor:=EdgeColorCB.Selected;
+    MarkerType:=sciMarkerType(markerTypeCB.ItemIndex);
+    EdgeColumn:=ToInt(EdgeColumnSE.Text);
+    EdgeType:=sciEdgeType(EdgeTypeCB.ItemIndex);
+
+		if Assigned(Editor) then
+      SetOptions(FEditor);
+	end;
+end;
+
+procedure TEdOptionsWindow.FontButtonClick(Sender: TObject);
+begin
+	FontDialog.Font := fEditorOptions.Font;
+	if FontDialog.Execute then
+		fEditorOptions.Font := FontDialog.Font;
+end;
+
+procedure TEdOptionsWindow.OKBtnClick(Sender: TObject);
+begin
+	ApplyBtnClick(Self);
+end;
+
+procedure TEdOptionsWindow.CancelBtnClick(Sender: TObject);
+begin
+// removed by hdalis.. No need to refresh the styles if nothing isn't changed.. I thing..
+//	if not Assigned(Scintilla) then Exit;
+//	fOldEditorOptions.SetOptions(FEditor);
+end;
+
+procedure TEdOptionsWindow.StylesLBClick(Sender: TObject);
+Var
+	SciStyle : TSciStyle;
+  langstr : String;
+begin
+	if StylesLB.ItemIndex >= 0 then begin
+		// To avoid getting into StyleElementChanged
+		UpdatingStyle := True;
+
+    langstr :=LanguageCB.Items[LanguageCB.ItemIndex];
+    SciStyle := FEditorOptions.LanguageManager.LanguageList.GetStyleList(langstr).Styles.Items[StylesLB.ItemIndex] as TSciStyle;
+		StyleNumberSE.Text := IntToStr(SciStyle.StyleNumber);
+		DescriptionEB.Text := SciStyle.Name;
+		if SciStyle.FontName = '' then
+    begin
+			FontCB.FontName := '';
+      FontCB.Enabled:=False;
+			DefaultFontCB.Checked := True;
+		end else
+    begin
+			FontCB.FontName := SciStyle.FontName;
+      FontCB.Enabled:=True;
+			DefaultFontCB.Checked := False;
+		end;
+		SizeSE.Text := IntToStr(SciStyle.FontSize);
+    if SciStyle.StyleNumber=STYLE_CONTROLCHAR then
+    begin
+      ForeCB.Enabled:=False;
+      BackCB.Enabled:=False;
+    end else
+    begin
+      if ForeCB.Enabled=False then ForeCB.Enabled:=True;
+      if BackCB.Enabled=False then BackCB.Enabled:=True;
+
+		  ForeCB.Selected := SciStyle.ForeColor;
+		  ForeCB.Repaint;
+		  BackCB.Selected := SciStyle.BackColor;
+		  BackCB.Repaint;
+    end;
+		CaseCB.ItemIndex := Integer(SciStyle.CharCase);
+		ItalicCB.Checked := fsItalic in SciStyle.FontStyles;
+		BoldCB.Checked := fsBold in SciStyle.FontStyles;
+		UnderlineCB.Checked := fsUnderline in SciStyle.FontStyles;
+		VisibleCB.Checked := SciStyle.Visible;
+		ChangeableCB.Checked := SciStyle.Changeable;
+		EOLFilledCB.Checked := SciStyle.EOLFilled;
+		HotspotCB.Checked := SciStyle.Hotspot;
+		// Now set it to false
+		UpdatingStyle := False;
+	end;
+end;
+
+procedure TEdOptionsWindow.LanguageCBChange(Sender: TObject);
+var
+langstr : String;
+begin
+	langstr:=LanguageCB.Items[LanguageCB.ItemIndex];
+	fEditorOptions.LanguageManager.SelectedLanguage := langstr;
+  UpdateStyles;
+  UpdateKeywords;
+end;
+
+procedure TEdOptionsWindow.UpdateStyles;
+Var
+	i : integer;
+	itm : TSciLangItem;
+	langstr : String;
+begin
+  langstr:=LanguageCB.Items[LanguageCB.ItemIndex];
+	with FEditorOptions do
+  begin
+		StylesLB.Items.BeginUpdate;
+		try
+			StylesLB.Items.Clear;
+      if AnsiCompareText(langstr,scicontainerconst)=0 then
+      begin
+        highlighterPageCtrl.Enabled:=False;
+        remLangButton.Enabled:=False;
+        copyLangButton.Enabled:=False;
+
+        StylesLB.Items.Add(sSetByCodeOnly);
+        StylesLB.Items.Add(sSeeTheHelp);
+      end else
+      begin
+        if (highlighterPageCtrl.Enabled=False) then
+          highlighterPageCtrl.Enabled:=True;
+        if remLangButton.Enabled=False then remLangButton.Enabled:=True;
+        if copyLangButton.Enabled=False then copyLangButton.Enabled:=True;
+
+        itm:=FLanguageManager.LanguageList.GetStyleList(langstr);
+        for i := 0 to itm.Styles.Count - 1 do
+          with itm.Styles.Items[i] as TSciStyle do
+            StylesLB.Items.Add(Name);
+      end;
+		finally
+      StylesLB.Items.EndUpdate;
+    end;
+    if AnsiCompareText(langstr,scicontainerconst)<>0 then
+    begin
+      if StylesLB.Count > 0 then
+      begin
+        StyleDefGB.Enabled := True;
+        StylesLB.ItemIndex := 0;
+        StylesLBClick(Self);
+      end else
+        StyleDefGB.Enabled := False;
+    end;
+  end;
+end;
+
+procedure TEdOptionsWindow.StyleElementChanged(Sender: TObject);
+Var
+	SciStyle : TSciStyle;
+begin
+	if UpdatingStyle then
+    Exit;
+	if StylesLB.ItemIndex >= 0 then
+  begin
+    SciStyle := FEditorOptions.LanguageManager.LanguageList.GetStyleList(LanguageCB.Items[LanguageCB.ItemIndex]).Styles.Items[StylesLB.ItemIndex] as TSciStyle;
+		SciStyle.StyleNumber := ToInt(StyleNumberSE.Text);
+		SciStyle.Name := DescriptionEB.Text;
+		StylesLB.Items[StylesLB.ItemIndex] := DescriptionEB.Text;
+		if DefaultFontCB.Checked=True then
+    begin
+			SciStyle.FontName := '';
+      FontCB.Enabled:=False;
+    end	else
+    begin
+			SciStyle.FontName := FontCB.FontName;
+      FontCB.Enabled:=True;
+    end;
+		SciStyle.FontSize := ToInt(SizeSE.Text);
+		SciStyle.ForeColor := ForeCB.Selected;
+		SciStyle.BackColor := BackCB.Selected;
+		SciStyle.CharCase := TSciCase(CaseCB.ItemIndex);
+		SciStyle.FontStyles := [];
+		if ItalicCB.Checked then
+      SciStyle.FontStyles := SciStyle.FontStyles + [fsItalic];
+		if BoldCB.Checked then
+      SciStyle.FontStyles := SciStyle.FontStyles + [fsBold];
+		if UnderlineCB.Checked then
+      SciStyle.FontStyles := SciStyle.FontStyles + [fsUnderline];
+		SciStyle.Visible := VisibleCB.Checked;
+		SciStyle.Changeable := ChangeableCB.Checked;
+		SciStyle.EOLFilled := EOLFilledCB.Checked;
+		SciStyle.Hotspot := HotspotCB.Checked;
+	end;
+end;
+
+procedure TEdOptionsWindow.DeleteStyleBClick(Sender: TObject);
+begin
+	if StylesLB.ItemIndex >= 0 then
+  begin
+    (FEditorOptions.LanguageManager.LanguageList.GetStyleList(LanguageCB.Items[LanguageCB.ItemIndex]).Styles.Items[StylesLB.ItemIndex] as TSciStyle).Free;
+		StylesLB.Items.Delete(StylesLB.ItemIndex);
+		UpdateStyles;
+	end;
+end;
+
+procedure TEdOptionsWindow.AddStyleBClick(Sender: TObject);
+var
+  langstr : String;
+  stylescnt : Integer;
+begin
+  langstr:=LanguageCB.Items[LanguageCB.ItemIndex];
+  with FEditorOptions.LanguageManager.LanguageList.GetStyleList(langstr).Styles.Add as TSciStyle do
+  begin
+    Name := sNewStyle;
+    StyleNumber :=  FEditorOptions.LanguageManager.LanguageList.GetStyleList(langstr).Styles.Count-1;
+	end;
+	UpdateStyles;
+  stylescnt:=StylesLB.Items.Count;
+	StylesLB.Selected[stylescnt-1] := True;
+	StylesLBClick(Self);
+end;
+
+procedure TEdOptionsWindow.UpdateKeywords;
+Var
+	i : integer;
+	itm : TSciLangItem;
+  langstr : String;
+begin
+  langstr:=LanguageCB.Items[LanguageCB.ItemIndex];
+	with FEditorOptions do
+  begin
+		KeyListsLB.Items.BeginUpdate;
+		try
+			KeyListsLB.Items.Clear;
+      if AnsiCompareText(langstr,scicontainerconst)=0 then
+      begin
+        highlighterPageCtrl.Enabled:=False;
+        remLangButton.Enabled:=False;
+        copyLangButton.Enabled:=False;
+        KeylistsLB.Items.Add(sSetByCodeOnly);
+        KeylistsLB.Items.Add(sSeeTheHelp);
+      end else
+      begin
+        if (highlighterPageCtrl.Enabled=False) then
+          highlighterPageCtrl.Enabled:=True;
+        if remLangButton.Enabled=False then remLangButton.Enabled:=True;
+        if copyLangButton.Enabled=False then copyLangButton.Enabled:=True;
+
+        itm:=FLanguageManager.LanguageList.GetStyleList(langstr);
+			  for i := 0 to itm.Keywords.Count - 1 do
+			    with itm.Keywords.Items[i] as TSciKeywords do
+				    KeyListsLB.Items.Add(Name);
+      end;
+		finally
+			KeyListsLB.Items.EndUpdate;
+		end;
+    if AnsiCompareText(langstr,scicontainerconst)<>0 then
+    begin
+		  if KeyListsLB.Count > 0 then
+      begin
+			  KeywordsM.Enabled := True;
+			  KeyListsLB.ItemIndex := 0;
+			  KeyListsLBClick(Self);
+		  end else
+      begin
+			  KeywordsM.Text := '';
+			  KeywordsM.Enabled := False;
+		  end;
+    end;
+	end;
+end;
+
+procedure TEdOptionsWindow.KeyListsLBClick(Sender: TObject);
+var
+	SciKeywords : TSciKeywords;
+begin
+	if KeyListsLB.ItemIndex >= 0 then
+  begin
+		// To avoid getting into KeyListElementChanged
+		UpdatingKeyList := True;
+    SciKeywords := FEditorOptions.LanguageManager.LanguageList.GetStyleList(LanguageCB.Items[LanguageCB.ItemIndex]).Keywords.Items[KeyListsLB.ItemIndex] as TSciKeywords;
+		KeyListNumberSE.Text := IntToStr(SciKeywords.KeywordListNumber);
+		KeyListDescriptionEB.Text := SciKeywords.Name;
+{$Ifndef COMPILER5}
+		SciKeywords.Keywords.Delimiter := ' ';
+		KeywordsM.Text := SciKeywords.Keywords.DelimitedText;
+{$Else}
+    KeywordsM.Text:=MergeStrings(SciKeywords.Keywords);
+{$Endif}    
+		UpdatingKeyList := False;
+	end;
+end;
+
+procedure TEdOptionsWindow.KeyListElementsChange(Sender: TObject);
+Var
+	SciKeywords : TSciKeywords;
+begin
+	if UpdatingKeyList then
+    Exit;
+	if KeyListsLB.ItemIndex >= 0 then
+  begin
+    SciKeywords := FEditorOptions.LanguageManager.LanguageList.GetStyleList(LanguageCB.Items[LanguageCB.ItemIndex]).Keywords.Items[KeyListsLB.ItemIndex] as TSciKeywords;
+		SciKeywords.Name := KeyListDescriptionEB.Text;
+    KeyListsLB.Items[KeyListsLB.ItemIndex] := KeyListDescriptionEB.Text;
+		SciKeywords.KeywordListNumber := ToInt(KeyListNumberSE.Text);
+{$Ifndef COMPILER5}
+		SciKeywords.Keywords.Delimiter := ' ';
+		SciKeywords.Keywords.DelimitedText := KeywordsM.Text;
+{$Else}
+    SplitStrings(KeywordsM.Text,SciKeywords.Keywords);
+{$Endif}
+	end;
+end;
+
+procedure TEdOptionsWindow.KeyListDeleteClick(Sender: TObject);
+begin
+	if KeyListsLB.ItemIndex >= 0 then
+  begin
+    (FEditorOptions.LanguageManager.LanguageList.GetStyleList(LanguageCB.Items[LanguageCB.ItemIndex]).Keywords.Items[KeyListsLB.ItemIndex] as TSciKeywords).Free;
+		KeyListsLB.Items.Delete(KeyListsLB.ItemIndex);
+		UpdateKeywords;
+	end;
+end;
+
+procedure TEdOptionsWindow.KeyListAddClick(Sender: TObject);
+var
+  langstr : String;
+begin
+  langstr:=LanguageCB.Items[LanguageCB.ItemIndex];
+  with FEditorOptions.LanguageManager.LanguageList.GetStyleList(langstr).Keywords.Add as TSciKeywords do
+  begin
+    Name := sNewKeyList;
+    KeywordListNumber:=  FEditorOptions.LanguageManager.LanguageList.GetStyleList(langstr).Keywords.Count-1;
+	end;
+	UpdateKeywords;
+	KeyListsLB.Selected[KeyListsLB.Items.Count-1] := True;
+	KeyListsLBClick(Self);
+end;
+
+procedure TEdOptionsWindow.UpdateKeyCommands;
+Var
+	i : integer;
+	KeyCommand : TSciKeyCommand;
+	Item : TListItem;
+	Ident : string;
+begin
+	KeyCmdList.Items.BeginUpdate;
+	try
+		KeyCmdList.Clear;
+		for i := 0 to fEditorOptions.fKeyCommands.Count - 1 do
+    begin
+			KeyCommand := fEditorOptions.fKeyCommands.Items[i] as TSciKeyCommand;
+			Item := KeyCmdList.Items.Add;
+			Item.Caption :=ShortCutToText(KeyCommand.ShortCut);
+			if IntToIdent(KeyCommand.Command, Ident, Sci_KeyboardCommandMap) then
+				Item.SubItems.Add(Ident);
+			Item.Data := KeyCommand;
+		end;
+	finally
+		KeyCmdList.Items.EndUpdate;
+	end;
+end;
+
+procedure TEdOptionsWindow.btnDeleteClick(Sender: TObject);
+begin
+	if Assigned(KeyCmdList.Selected) then
+  begin
+		TSciKeyCommand(KeyCmdList.Selected.Data).Free;
+		UpdateKeyCommands;
+	end;
+end;
+
+procedure TEdOptionsWindow.btnResetClick(Sender: TObject);
+begin
+	fEditorOptions.fKeyCommands.ResetDefaultCommands;
+	UpdateKeyCommands;
+end;
+
+procedure TEdOptionsWindow.btnEditClick(Sender: TObject);
+Var
+	KeyCommand : TSciKeyCommand;
+begin
+	if Assigned(KeyCmdList.Selected) then
+  begin
+		KeyCommand := TSciKeyCommand(KeyCmdList.Selected.Data);
+    with TKeyEditForm.Create(Self) do
+    begin
+      cmbCommand.ItemIndex :=  cmbCommand.Items.IndexOf(KeyCmdList.Selected.SubItems[0]);
+      HotKey.HotKey := KeyCommand.ShortCut;
+      HotKey.Modifiers := HotKey.Modifiers + [hkExt];
+      if (ShowModal = mrOK) and (cmbCommand.ItemIndex >= 0) and (HotKey.HotKey <> 0) then
+      begin
+        KeyCommand.ShortCut := HotKey.HotKey;
+        KeyCommand.Command :=  Integer(cmbCommand.Items.Objects[cmbCommand.ItemIndex]);
+        UpdateKeyCommands;
+      end;
+      Release;
+    end;
+  end;
+end;
+
+
+procedure TEdOptionsWindow.btnAddClick(Sender: TObject);
+Var
+  KeyCommand : TSciKeyCommand;
+begin
+    with TKeyEditForm.Create(Self) do
+    begin
+      if (ShowModal = mrOK) and (cmbCommand.ItemIndex >= 0) and (HotKey.HotKey <> 0) then
+      begin
+        KeyCommand := fEditorOptions.fKeyCommands.FindShortCut(HotKey.HotKey);
+        if not Assigned(KeyCommand) then
+          KeyCommand := fEditorOptions.fKeyCommands.Add as TSciKeyCommand;
+        KeyCommand.ShortCut := HotKey.HotKey;
+        KeyCommand.Command :=  Integer(cmbCommand.Items.Objects[cmbCommand.ItemIndex]);
+        UpdateKeyCommands;
+			end;
+      Release;
+    end;
+end;
+
+procedure TEdOptionsWindow.TestNumericOnly(Sender: TObject; var Key: Char);
+begin
+  if (Key>#31) and ((Key<'0') or (Key>'9')) then Key:=#0;
+end;
+
+procedure TEdOptionsWindow.addLangButtonClick(Sender: TObject);
+var
+  itm : TSciLangItem;
+  itmpos : Integer;
+begin
+  sciAddLanguageForm:=TsciAddLanguageForm.Create(self);
+  FEditorOptions.FLanguageManager.FillListWithLanguages(sciAddLanguageForm.LexerToUseCB.Items,True);
+  sciAddLanguageForm.LexerToUseCB.ItemIndex:=sciAddLanguageForm.LexerToUseCB.Items.IndexOf('null');
+  if sciAddLanguageForm.ShowModal=mrOk then
+  begin
+    itm:=FEditorOptions.FLanguageManager.AddLanguage(sciAddLanguageForm.languagename.Text,sciAddLanguageForm.LexerToUseCB.Items[sciAddLanguageForm.LexerToUseCB.ItemIndex]);
+    if itm<>nil then
+    begin
+      itmpos:=LanguageCB.Items.Add(sciAddLanguageForm.languagename.Text);
+      if itmpos>=0 then
+      begin
+        LanguageCB.ItemIndex:=itmpos;
+        LanguageCBChange(self);
+        if (LanguageCB.Items.Count>0) then
+          highlighterPageCtrl.Enabled:=True
+        else
+          highlighterPageCtrl.Enabled:=False;
+      end;
+    end else
+      raise Exception.Create(sCouldntAddTheLanguage);
+  end;
+end;
+
+procedure TEdOptionsWindow.remLangButtonClick(Sender: TObject);
+var
+  itmpos : Integer;
+  langstr : String;
+  notinstat : Boolean;
+begin
+  itmpos:=LanguageCB.ItemIndex;
+  if itmpos=-1 then Exit;
+  langstr:=LanguageCB.Items[itmpos];
+  if AnsiCompareText(langstr,scicontainerconst)=0 then
+  begin
+    raise Exception.Create(sCantRemoveLanguage);
+    Exit;
+  end;
+
+  if(FEditorOptions.FLanguageManager.RemoveLanguage(langstr,notinstat)=True) then
+  begin
+    if notinstat=True then //if not a static lexer
+    begin
+      try
+        LanguageCB.Items.BeginUpdate;
+        LanguageCB.Items.Delete(itmpos);
+        if itmpos>=LanguageCB.Items.Count then
+          itmpos:=(LanguageCB.Items.Count-1)
+        else
+          Dec(itmpos);
+        LanguageCB.ItemIndex:=itmpos;
+        LanguageCBChange(self);
+      finally
+        LanguageCB.Items.EndUpdate;
+      end;
+      if (LanguageCB.Items.Count>0) then
+        highlighterPageCtrl.Enabled:=True
+      else
+        highlighterPageCtrl.Enabled:=False;
+
+    end else //it was a static lexer, just update the styles and keywords.
+    begin
+	    UpdateStyles;
+	    UpdateKeywords;
+    end;
+  end;
+
+end;
+
+procedure TEdOptionsWindow.copyLangButtonClick(Sender: TObject);
+var
+  srclang,langstr : String;
+  itm : TSciLangItem;
+begin
+  srclang:=LanguageCB.Items[LanguageCB.ItemIndex];
+  if AnsiCompareText(srclang,scicontainerconst)=0 then
+  begin
+    raise Exception.Create(sCantCopyLanguage);
+    Exit;
+  end;
+
+  itm:=FEditorOptions.FLanguageManager.DupLanguage(srclang);
+  if itm<>nil then
+  begin
+    langstr:=sLMLanguage+'['+IntToStr(itm.ID)+']';
+    if(InputQuery(Format(sCopyLanguageQueryTitle,[srclang]),sNameOfNewLanguage,langstr)) then
+    begin
+    itm.Name:=langstr;
+    LanguageCB.ItemIndex:=LanguageCB.Items.Add(itm.Name);
+    LanguageCBChange(self);
+    end else
+    FEditorOptions.FLanguageManager.LanguageList.Delete(itm.Index);
+  end else
+  raise Exception.CreateResFmt(@@sCouldntCopyLangTo,[srclang,langstr]);
+end;
+
+procedure TEdOptionsWindow.OptionPagesChange(Sender: TObject);
+begin
+  if OptionPages.Showing then
+  begin
+    case OptionPages.ActivePageIndex of
+      0: GutterCB.SetFocus;
+      1: SelForeCB.SetFocus;
+      2: LanguageCB.SetFocus;
+      3: KeyCmdList.SetFocus;
+    end;
+  end;
+end;
+
+procedure   TEdOptionsWindow.RescanLanguageList;
+var
+cnt,i : Integer;
+begin
+  LanguageCB.Items.Clear;
+  cnt :=FEditor.LanguageManager.LanguageList.Count;
+  for i:=0 to (cnt-1) do
+  begin
+    LanguageCB.Items.Add(TSciLangItem(FEditor.LanguageManager.LanguageList.Items[i]).Name);
+  end;
+  if (LanguageCB.Items.IndexOf(scicontainerconst)=-1) then
+  begin
+    LanguageCB.Items.Add(scicontainerconst);
+  end;
+
+end;
+
+procedure TEdOptionsWindow.KeyCmdListCompare(Sender: TObject; Item1,
+  Item2: TListItem; Data: Integer; var Compare: Integer);
+begin
+  Compare:=AnsiCompareText(Item1.Caption,Item2.Caption);
+end;
+
+end.
+@
+
+
+1.6
+log
+@Delphi Scintilla Interface Components 0.14
+@
+text
+@d32 1
+d292 2
+d301 1
+a301 1
+		procedure SetScintilla(const Value: TScintilla);
+d307 3
+a309 1
+		property Editor : TScintilla read FEditor write SetScintilla;
+d320 1
+a320 1
+	SciSupport,SciKeyEditForm,SciAddLanguageFormUnit,Menus;
+a332 7
+function ToStr(ii : integer) : String;
+	var
+	tmp : String;
+begin
+	Str(ii,tmp);
+	result:=tmp;
+end;
+d407 1
+a407 1
+		FCodeFolding := CodeFolding;
+d430 1
+a430 1
+    Self.FMarkerType:=MarkerType;
+d472 1
+a472 1
+    MarkerType:=FMarkerType;
+d478 2
+a479 1
+			  else Gutter1.Width := 0;
+d493 4
+a496 2
+		if CodeFolding <> FCodeFolding then
+      CodeFolding := FCodeFolding;
+d526 1
+a526 3
+procedure TEdOptionsWindow.SetScintilla(const Value: TScintilla);
+var
+cnt,i : Integer;
+d529 1
+a529 11
+  LanguageCB.Items.Clear;
+  cnt :=FEditor.LanguageManager.LanguageList.Count;
+  for i:=0 to (cnt-1) do
+  begin
+    LanguageCB.Items.Add(TSciLangItem(FEditor.LanguageManager.LanguageList.Items[i]).Name);
+  end;
+  if (LanguageCB.Items.IndexOf(scicontainerconst)=-1) then
+  begin
+    LanguageCB.Items.Add(scicontainerconst);
+  end;
+
+d539 1
+a539 1
+		TabIndentsCB.Checked := SciLexerMemo.TabIndents in Indentation;;
+d544 2
+a545 2
+		TabWidthSE.Text := ToStr(TabWidth);
+		IndentWidthSE.Text := ToStr(IndentWidth);
+d550 1
+a550 1
+		CaretWidthSE.Text:=ToStr(CaretWidth);
+d565 1
+a565 1
+    EdgeColumnSE.Text:=ToStr(EdgeColumn);
+d674 1
+a674 1
+		StyleNumberSE.Text := ToStr(SciStyle.StyleNumber);
+d679 1
+d684 1
+d687 1
+a687 1
+		SizeSE.Text := ToStr(SciStyle.FontSize);
+d743 2
+a744 2
+        StylesLB.Items.Add('SET BY CODE ONLY!');
+        StylesLB.Items.Add('See the help.');
+d830 1
+a830 1
+    Name := 'New Style';
+d856 2
+a857 2
+        KeylistsLB.Items.Add('SET BY CODE ONLY!');
+        KeylistsLB.Items.Add('See the help.');
+d898 1
+a898 1
+		KeyListNumberSE.Text := ToStr(SciKeywords.KeywordListNumber);
+d900 1
+d903 3
+d922 1
+d925 3
+d948 1
+a948 1
+    Name := 'New Key List';
+d1067 1
+a1067 1
+      raise Exception.Create('Couldn''''t add the language.');
+d1082 1
+a1082 1
+    raise Exception.Create('Can''t remove the container lexer/language');
+d1124 1
+a1124 1
+    raise Exception.Create('Can''t copy the container lexer/language!');
+d1131 2
+a1132 2
+    langstr:='Language['+IntToStr(itm.ID)+']';
+    if(InputQuery('Copy Language '''+srclang+'''','Name of the new language',langstr)) then
+d1140 1
+a1140 1
+  raise Exception.Create('Couldn''t copy '+srclang+' to '+langstr);
+d1156 23
+@
+
+
+1.5
+log
+@Updated to v0.13
+@
+text
+@d7 1
+a7 1
+     $Id: $
+d31 1
+d42 2
+a43 2
+	Dialogs, ExtCtrls, StdCtrls, Buttons,SciLexerMod,SciKeyBindings,
+	ComCtrls, ScintillaSynLexers, tcFontCombobox;
+d55 1
+a55 1
+		FCodeFolding: boolean;
+d65 1
+a65 1
+		FSynLexer: TSciSynLexer;
+d85 1
+a85 1
+		procedure SetSynLexer(const Value: TSciSynLexer);
+d94 1
+a94 1
+		property SynLexer : TSciSynLexer read FSynLexer write SetSynLexer;
+d102 1
+a102 1
+		property CodeFolding : boolean read FCodeFolding write FCodeFolding default True;
+d353 1
+a353 1
+      Self.SynLexer.Assign(SynLexer);
+d388 1
+a388 1
+	FSynLexer := TSciSynLexer.Create(nil);
+d395 1
+a395 1
+	FSynLexer.Free;
+d415 1
+a415 1
+		SynLexer.Assign(Highlighter);
+d506 2
+a507 2
+		Highlighter.Assign(Self.SynLexer);
+		Highlighter.Update;
+d512 1
+a512 1
+procedure TEditorOptions.SetSynLexer(const Value: TSciSynLexer);
+d514 1
+a514 1
+	FSynLexer.Assign(Value);
+d531 1
+a531 1
+  cnt :=FEditor.Highlighter.LanguageList.Count;
+d534 1
+a534 1
+    LanguageCB.Items.Add(TSciLangItem(FEditor.Highlighter.LanguageList.Items[i]).Name);
+d549 5
+a553 5
+		KeepIndentCB.Checked := SciLexerMod.KeepIndent in Indentation;
+		TabIndentsCB.Checked := SciLexerMod.TabIndents in Indentation;;
+		BackSpaceUnindentsCB.Checked := SciLexerMod.BackSpaceUnindents in Indentation;
+		IndentationGuidesCB.Checked := SciLexerMod.IndentationGuides in Indentation;
+		CodeFoldingCB.Checked := CodeFolding;
+d580 1
+a580 1
+		LanguageCB.ItemIndex := LanguageCB.Items.IndexOf(SynLexer.SelectedLanguage);
+d612 1
+a612 1
+      Indentation := Indentation + [SciLexerMod.KeepIndent];
+d614 1
+a614 1
+      Indentation := Indentation + [SciLexerMod.TabIndents];
+d616 1
+a616 1
+      Indentation := Indentation + [SciLexerMod.BackSpaceUnindents];
+d618 6
+a623 2
+      Indentation := Indentation + [SciLexerMod.IndentationGuides];
+		CodeFolding := CodeFoldingCB.Checked;
+d684 1
+a684 1
+    SciStyle := FEditorOptions.SynLexer.LanguageList.GetStyleList(langstr).Styles.Items[StylesLB.ItemIndex] as TSciStyle;
+d729 1
+a729 1
+	fEditorOptions.SynLexer.SelectedLanguage := langstr;
+d761 1
+a761 1
+        itm:=FSynLexer.LanguageList.GetStyleList(langstr);
+d790 1
+a790 1
+    SciStyle := FEditorOptions.SynLexer.LanguageList.GetStyleList(LanguageCB.Items[LanguageCB.ItemIndex]).Styles.Items[StylesLB.ItemIndex] as TSciStyle;
+d825 1
+a825 1
+    (FEditorOptions.SynLexer.LanguageList.GetStyleList(LanguageCB.Items[LanguageCB.ItemIndex]).Styles.Items[StylesLB.ItemIndex] as TSciStyle).Free;
+d837 1
+a837 1
+  with FEditorOptions.SynLexer.LanguageList.GetStyleList(langstr).Styles.Add as TSciStyle do
+d840 1
+a840 1
+    StyleNumber :=  FEditorOptions.SynLexer.LanguageList.GetStyleList(langstr).Styles.Count-1;
+d874 1
+a874 1
+        itm:=FSynLexer.LanguageList.GetStyleList(langstr);
+d906 1
+a906 1
+    SciKeywords := FEditorOptions.SynLexer.LanguageList.GetStyleList(LanguageCB.Items[LanguageCB.ItemIndex]).Keywords.Items[KeyListsLB.ItemIndex] as TSciKeywords;
+d923 1
+a923 1
+    SciKeywords := FEditorOptions.SynLexer.LanguageList.GetStyleList(LanguageCB.Items[LanguageCB.ItemIndex]).Keywords.Items[KeyListsLB.ItemIndex] as TSciKeywords;
+d936 1
+a936 1
+    (FEditorOptions.SynLexer.LanguageList.GetStyleList(LanguageCB.Items[LanguageCB.ItemIndex]).Keywords.Items[KeyListsLB.ItemIndex] as TSciKeywords).Free;
+d947 1
+a947 1
+  with FEditorOptions.SynLexer.LanguageList.GetStyleList(langstr).Keywords.Add as TSciKeywords do
+d950 1
+a950 1
+    KeywordListNumber:=  FEditorOptions.SynLexer.LanguageList.GetStyleList(langstr).Keywords.Count-1;
+d1050 1
+a1050 1
+  FEditorOptions.FSynLexer.FillListWithLanguages(sciAddLanguageForm.LexerToUseCB.Items,True);
+d1054 1
+a1054 1
+    itm:=FEditorOptions.FSynLexer.AddLanguage(sciAddLanguageForm.languagename.Text,sciAddLanguageForm.LexerToUseCB.Items[sciAddLanguageForm.LexerToUseCB.ItemIndex]);
+d1087 1
+a1087 1
+  if(FEditorOptions.FSynLexer.RemoveLanguage(langstr,notinstat)=True) then
+d1129 1
+a1129 1
+  itm:=FEditorOptions.FSynLexer.DupLanguage(srclang);
+d1139 1
+a1139 1
+    FEditorOptions.FSynLexer.LanguageList.Delete(itm.Index);
+@
+
+
+1.4
+log
+@Delphi Scintilla Interface Components v0.,12
+@
+text
+@d28 3
+d36 1
+a36 1
+                   with this dialog. 
+d79 5
+a83 1
+		procedure SetFont(const Value: TFont);
+d124 4
+a127 1
+
+a148 5
+    otherBox: TGroupBox;
+    Label3: TLabel;
+    WordWrapCB: TCheckBox;
+    UseUnicodeCB: TCheckBox;
+    EOLStyleCB: TComboBox;
+a155 1
+    ReadOnlyCB: TCheckBox;
+a157 1
+    BraceHiliteCB: TCheckBox;
+a177 1
+    SaveClearsUndoCB : TCheckBox;
+d248 17
+d314 1
+a314 4
+	SciKeyEditForm,SciAddLanguageFormUnit,Menus;
+
+const
+  scicontainerconst='container';
+d371 4
+d428 4
+d470 4
+a473 1
+
+d574 4
+d640 5
+d692 14
+a705 4
+		ForeCB.Selected := SciStyle.ForeColor;
+		ForeCB.Repaint;
+		BackCB.Selected := SciStyle.BackColor;
+		BackCB.Repaint;
+@
+
+
+1.3
+log
+@no message
+@
+text
+@d3 32
+a34 17
+////////////////////////////////////////////////////////////////////////////////
+// Unit    : EdOptionsWin
+// Purpose : Options Dialog for Scintilla editors
+// Created : 20/03/2003
+//      $Id: $
+// Original Author  : Kiriakos Vlahos (kvlahos@@london.edu)
+// Author: hdalis
+// History 29/09/2004 Initial Release with Delphi Scintilla Components
+//                    Extended and customized the optionsbox
+//                    No longer accepts enums, now it accepts strings
+//                    Color,Caret etc properties added.
+//                    (hdalis@@users.sourceforge.net)
+//         13/10/2004 Added help using ClassExplorer 6.0, Use the helpgenerator to
+//                    generate the help.
+//                    Renamed the Scintilla property to Editor
+//                    (hdalis@@users.sourceforge.net)
+////////////////////////////////////////////////////////////////////////////////
+d39 1
+a39 1
+	ComCtrls, ScintillaSynLexers, Menus, tcFontCombobox;
+d72 4
+d112 5
+a117 1
+		property XSaveClearsUndo : Boolean read FSaveClearsUndo write FSaveClearsUndo default false;
+a121 1
+		Panel1: TPanel;
+d144 1
+a144 1
+    Panel3: TPanel;
+a151 2
+    GroupBox5: TGroupBox;
+    StylesLB: TListBox;
+a153 9
+    stylenoBox: TGroupBox;
+    Label4: TLabel;
+    StyleNumberSE: TEdit;
+		DescriptionEB: TEdit;
+    Label9: TLabel;
+    AddStyleB: TSpeedButton;
+    DeleteStyleB: TSpeedButton;
+    KeywordsPage: TTabSheet;
+    keywordsPanel: TPanel;
+a154 6
+		StyleDefGB: TGroupBox;
+    Label5: TLabel;
+    DefaultFontCB: TCheckBox;
+    SizeSE: TEdit;
+    Label6: TLabel;
+    Label7: TLabel;
+a155 1
+    ForeCB: TColorBox;
+a156 15
+    Label8: TLabel;
+    BackCB: TColorBox;
+    ItalicCB: TCheckBox;
+    BoldCB: TCheckBox;
+    UnderlineCB: TCheckBox;
+    VisibleCB: TCheckBox;
+    ChangeableCB: TCheckBox;
+    EOLFilledCB: TCheckBox;
+    Label10: TLabel;
+    CaseCB: TComboBox;
+    keywordlistBox: TGroupBox;
+    KeyListsLB: TListBox;
+    KeywordListGB: TGroupBox;
+    Label11: TLabel;
+		Label12: TLabel;
+a158 6
+		KeyListAdd: TSpeedButton;
+		KeyListDelete: TSpeedButton;
+    KeyListNumberSE: TEdit;
+		KeyListDescriptionEB: TEdit;
+    keywordskBox: TGroupBox;
+		KeywordsM: TMemo;
+a160 1
+		pnlCommands: TPanel;
+a163 1
+		HotspotCB: TCheckBox;
+a168 2
+		Label18: TLabel;
+		Label19: TLabel;
+a172 2
+		FoldLoCB: TColorBox;
+		FoldHiCB: TColorBox;
+d180 4
+a183 1
+    FontCB: TtcFontComboBox;
+d188 58
+d267 4
+a270 1
+//    procedure BitBtn1Click(Sender: TObject);
+d295 1
+a295 1
+	SciKeyEditForm,SciDetectUtils;
+d297 2
+d321 37
+a357 29
+  if Source is TEditorOptions then with TEditorOptions(Source) do begin
+    Self.FReadOnly := ReadOnly;
+    Self.FBraceHilite := BraceHilite;
+    Self.FGutter := Gutter;
+    Self.FWordWrap := WordWrap;
+    Self.FLineNumbers := LineNumbers;
+    Self.FIndentation := Indentation;
+    Self.FCodeFolding := CodeFolding;
+		Self.FUseUnicode := UseUnicode;
+		Self.FTabWidth := TabWidth ;
+    Self.FIndentWidth := IndentWidth;
+    Self.FEOLStyle := EOLStyle;
+    Self.SetFont(Font);
+    Self.SynLexer.Assign(SynLexer);
+		Self.KeyCommands.Assign(KeyCommands);
+		Self.FCaretBack :=CaretBack;
+		Self.FCaretFore :=CaretFore;
+		Self.FSelFore := SelFore;
+		Self.FFoldLo :=FoldLo;
+		Self.FFoldHi :=FoldHi;
+		Self.FMarkerFore :=MarkerFore;
+		Self.FMarkerBack :=MarkerBack;
+		Self.FBMarkFore :=BMarkFore;
+		Self.FBMarkBack :=BMarkBack;
+		Self.FSelBack := SelBack;
+		Self.FCaretWidth :=CaretWidth;
+		Self.FCaretLineVisible :=CaretLineVisible;
+		Self.FSaveClearsUndo :=XSaveClearsUndo;
+	end else if Source is TScintilla then begin
+d380 2
+a381 1
+	with Scintilla do begin
+d404 4
+d421 1
+a421 2
+procedure TEditorOptions.SetKeyCommands(
+	const Value: TSciKeyCommandCollection);
+d441 4
+d449 4
+a452 5
+		if FGutter <> (Gutter1.Width <> 0) then begin
+			if FGutter then
+				Gutter1.Width := 16
+			else
+				Gutter1.Width := 0;
+d455 4
+a458 2
+		if FLineNumbers <> (Gutter0.Width <> 0) then  begin
+			if FLineNumbers then begin
+d460 1
+a460 1
+				Gutter0.MarginType := GUT_LINENUMBER;
+d464 14
+a477 9
+		if Indentation <> FIndentation then Indentation := FIndentation;
+		if CodeFolding <> FCodeFolding then CodeFolding := FCodeFolding;
+		if UseUnicode <> FUseUnicode then UseUnicode := FUseUnicode;
+		if IndentWidth <> FIndentWidth then IndentWidth := FIndentWidth;
+		if TabWidth <> FTabWidth then TabWidth := FTabWidth;
+		if EOLStyle <> FEOLStyle then EOLStyle := FEOLStyle;
+		if (Font.Name <> FFont.Name) or (Font.Size <> FFont.Size) or
+			 (Font.Charset <> FFont.Charset) or (Font.Style <> FFont.Style) then
+			 Font := FFont;
+a480 1
+
+d498 2
+d501 11
+a512 1
+	FEditor := Value;
+d514 2
+a515 1
+	with fEditorOptions do begin
+d542 4
+d547 2
+a548 4
+
+		//  Synax Highlighter
+
+		LanguageCB.ItemIndex := LanguageCB.Items.IndexOf(LowerCase(SynLexer.LanguageStr));
+a559 1
+  LexerMapper.FillListWithLexers(LanguageCB.Items);
+d570 2
+a571 1
+    with fEditorOptions do begin
+d579 8
+a586 4
+		if KeepIndentCB.Checked then Indentation := Indentation + [SciLexerMod.KeepIndent];
+		if TabIndentsCB.Checked then Indentation := Indentation + [SciLexerMod.TabIndents];
+		if BackSpaceUnindentsCB.Checked then Indentation := Indentation + [SciLexerMod.BackSpaceUnindents];
+		if IndentationGuidesCB.Checked then Indentation := Indentation + [SciLexerMod.IndentationGuides];
+d601 5
+d609 2
+a610 1
+		if Assigned(Editor) then SetOptions(FEditor);
+d628 1
+d642 2
+a643 2
+      langstr :=LanguageCB.Items[LanguageCB.ItemIndex];
+      SciStyle := FEditorOptions.SynLexer.LanguageList.GetStyleListStr(langstr).Styles.Items[StylesLB.ItemIndex] as TSciStyle;
+d646 2
+a647 1
+		if SciStyle.FontName = '' then begin
+d650 2
+a651 1
+		end else begin
+d674 2
+d677 4
+a680 3
+    fEditorOptions.SynLexer.LanguageStr := LanguageCB.Items[LanguageCB.ItemIndex];
+	UpdateStyles;
+	UpdateKeywords;
+d687 1
+d689 3
+a691 1
+	with FEditorOptions do begin
+d695 20
+a714 4
+				itm:=FSynLexer.LanguageList.GetStyleListStr(LanguageCB.Items[LanguageCB.ItemIndex]);
+				for i := 0 to itm.Styles.Count - 1 do
+				with itm.Styles.Items[i] as TSciStyle do
+					StylesLB.Items.Add(Name);
+d718 10
+a727 6
+    if StylesLB.Count > 0 then begin
+      StyleDefGB.Enabled := True;
+      StylesLB.ItemIndex := 0;
+      StylesLBClick(Self);
+		end else
+      StyleDefGB.Enabled := False;
+d735 5
+a739 3
+	if UpdatingStyle then Exit;
+	if StylesLB.ItemIndex >= 0 then begin
+    SciStyle := FEditorOptions.SynLexer.LanguageList.GetStyleListStr(LanguageCB.Items[LanguageCB.ItemIndex]).Styles.Items[StylesLB.ItemIndex] as TSciStyle;
+d743 1
+a743 1
+		if DefaultFontCB.Checked then
+d747 1
+a747 2
+    end
+		else
+d757 6
+a762 3
+		if ItalicCB.Checked then SciStyle.FontStyles := SciStyle.FontStyles + [fsItalic];
+		if BoldCB.Checked then SciStyle.FontStyles := SciStyle.FontStyles + [fsBold];
+		if UnderlineCB.Checked then SciStyle.FontStyles := SciStyle.FontStyles + [fsUnderline];
+d772 3
+a774 2
+	if StylesLB.ItemIndex >= 0 then begin
+    (FEditorOptions.SynLexer.LanguageList.GetStyleListStr(LanguageCB.Items[LanguageCB.ItemIndex]).Styles.Items[StylesLB.ItemIndex] as TSciStyle).Free;
+d785 5
+a789 4
+    langstr:=LanguageCB.Items[LanguageCB.ItemIndex];
+    with FEditorOptions.SynLexer.LanguageList.GetStyleListStr(langstr).Styles.Add as TSciStyle do begin
+		Name := 'New Style';
+    StyleNumber :=  FEditorOptions.SynLexer.LanguageList.GetStyleListStr(langstr).Styles.Count-1;
+d801 1
+a801 1
+
+d803 3
+a805 1
+	with FEditorOptions do begin
+d809 19
+a827 4
+        itm:=FSynLexer.LanguageList.GetStyleListStr(LanguageCB.Items[LanguageCB.ItemIndex]);
+				for i := 0 to itm.Keywords.Count - 1 do
+				with itm.Keywords.Items[i] as TSciKeywords do
+					KeyListsLB.Items.Add(Name);
+d831 13
+a843 8
+		if KeyListsLB.Count > 0 then begin
+			KeywordsM.Enabled := True;
+			KeyListsLB.ItemIndex := 0;
+			KeyListsLBClick(Self);
+		end else begin
+			KeywordsM.Text := '';
+			KeywordsM.Enabled := False;
+		end;
+d851 2
+a852 1
+	if KeyListsLB.ItemIndex >= 0 then begin
+d855 1
+a855 2
+      SciKeywords := FEditorOptions.SynLexer.LanguageList.GetStyleListStr(LanguageCB.Items[LanguageCB.ItemIndex]).Keywords.Items[KeyListsLB.ItemIndex] as TSciKeywords;
+
+a859 1
+
+d868 5
+a872 4
+	if UpdatingKeyList then Exit;
+	if KeyListsLB.ItemIndex >= 0 then begin
+      SciKeywords := FEditorOptions.SynLexer.LanguageList.GetStyleListStr(LanguageCB.Items[LanguageCB.ItemIndex]).Keywords.Items[KeyListsLB.ItemIndex] as TSciKeywords;
+//		SciKeywords := FEditorOptions.SynLexer.KeywordsList.Items[KeyListsLB.ItemIndex] as TSciKeywords;
+d874 1
+d883 3
+a885 2
+	if KeyListsLB.ItemIndex >= 0 then begin
+     (FEditorOptions.SynLexer.LanguageList.GetStyleListStr(LanguageCB.Items[LanguageCB.ItemIndex]).Keywords.Items[KeyListsLB.ItemIndex] as TSciKeywords).Free;
+d893 1
+a893 1
+langstr : String;
+d895 5
+a899 4
+    langstr:=LanguageCB.Items[LanguageCB.ItemIndex];
+	  with FEditorOptions.SynLexer.LanguageList.GetStyleListStr(langstr).Keywords.Add as TSciKeywords do begin
+		Name := 'New Key List';
+    KeywordListNumber:=  FEditorOptions.SynLexer.LanguageList.GetStyleListStr(langstr).Keywords.Count-1;
+d916 2
+a917 1
+		for i := 0 to fEditorOptions.fKeyCommands.Count - 1 do begin
+d932 2
+a933 1
+	if Assigned(KeyCmdList.Selected) then begin
+d949 2
+a950 1
+	if Assigned(KeyCmdList.Selected) then begin
+d952 2
+a953 1
+    with TKeyEditForm.Create(Self) do begin
+d957 1
+a957 2
+      if (ShowModal = mrOK) and (cmbCommand.ItemIndex >= 0) and
+         (HotKey.HotKey <> 0) then
+d973 3
+a975 3
+    with TKeyEditForm.Create(Self) do begin
+      if (ShowModal = mrOK) and (cmbCommand.ItemIndex >= 0) and
+         (HotKey.HotKey <> 0) then
+d992 30
+a1021 2
+{
+procedure TEdOptionsWindow.BitBtn1Click(Sender: TObject);
+d1023 3
+a1025 1
+SciStyle : TSciStyle;
+d1027 34
+a1060 15
+	if StylesLB.ItemIndex >= 0 then begin
+    SciStyle := FEditorOptions.SynLexer.LanguageList.GetStyleListStr(LanguageCB.Items[LanguageCB.ItemIndex]).Styles.Items[StylesLB.ItemIndex] as TSciStyle;
+    FontDialog.Font.Color:=ForeCB.Selected;
+    FontDialog.Font.Size:=StrToInt(SizeSE.Text);
+    FontDialog.Font.Name:=FontCB.Text;
+
+    FontDialog.Font.Style:=SciStyle.FontStyles;
+    if(FontDialog.Execute) then
+    begin
+      FontCB.Text:=FontDialog.Font.Name;
+      ForeCB.Selected:=FontDialog.Font.Color;
+      SizeSE.Text:=IntToStr(FontDialog.Font.Size);
+      ItalicCB.Checked:=(fsItalic in FontDialog.Font.Style);
+      BoldCB.Checked:=(fsBold in FontDialog.Font.Style);
+      UnderlineCB.Checked:=(fsUnderline in FontDialog.Font.Style);
+d1062 1
+d1064 12
+d1078 26
+d1105 1
+a1105 1
+}
+@
+
+
+1.2
+log
+@Some bugfixes, and other changes
+@
+text
+@d7 1
+d102 2
+a103 2
+		Options2Page: TTabSheet;
+    opts2Panel : TPanel;
+d624 4
+a627 1
+			SciStyle.FontName := ''
+d631 1
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d1 1
+d9 2
+a10 1
+// History 29/09/2004 Extended and customized the optionsbox
+d13 5
+a19 1
+
+a26 1
+
+d96 1
+d231 1
+a231 1
+		FScintilla : TScintilla;
+d242 1
+a242 1
+		property Scintilla : TScintilla read fScintilla write SetScintilla;
+d435 2
+a436 2
+	fScintilla := Value;
+	fEditorOptions.GetOptions(Scintilla);
+d520 1
+a520 1
+		if Assigned(Scintilla) then SetOptions(FScintilla);
+d539 1
+a539 1
+//	fOldEditorOptions.SetOptions(FScintilla);
+d655 1
+d663 2
+a664 1
+	StylesLB.Selected[StylesLB.Items.Count-1] := True;
+@
+
+
+1.1.1.1
+log
+@no message
+@
+text
+@@

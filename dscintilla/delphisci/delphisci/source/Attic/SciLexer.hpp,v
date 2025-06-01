@@ -1,0 +1,736 @@
+head	1.2;
+access;
+symbols
+	test:1.1.1.1 hdalis:1.1.1;
+locks; strict;
+comment	@// @;
+
+
+1.2
+date	2004.10.03.20.46.24;	author hdalis;	state dead;
+branches;
+next	1.1;
+
+1.1
+date	2004.10.01.20.59.29;	author hdalis;	state Exp;
+branches
+	1.1.1.1;
+next	;
+
+1.1.1.1
+date	2004.10.01.20.59.29;	author hdalis;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@no message
+@
+text
+@// Borland C++ Builder
+// Copyright (c) 1995, 2002 by Borland Software Corporation
+// All rights reserved
+
+// (DO NOT EDIT: machine generated header) 'SciLexer.pas' rev: 6.00
+
+#ifndef SciLexerHPP
+#define SciLexerHPP
+
+#pragma delphiheader begin
+#pragma option push -w-
+#pragma option push -Vx
+#include <Menus.hpp>	// Pascal unit
+#include <SciSupport.hpp>	// Pascal unit
+#include <StdActns.hpp>	// Pascal unit
+#include <Graphics.hpp>	// Pascal unit
+#include <SysUtils.hpp>	// Pascal unit
+#include <Messages.hpp>	// Pascal unit
+#include <Forms.hpp>	// Pascal unit
+#include <Controls.hpp>	// Pascal unit
+#include <Windows.hpp>	// Pascal unit
+#include <Classes.hpp>	// Pascal unit
+#include <SysInit.hpp>	// Pascal unit
+#include <System.hpp>	// Pascal unit
+
+//-- user supplied -----------------------------------------------------------
+
+namespace Scilexer
+{
+//-- type declarations -------------------------------------------------------
+typedef bool __fastcall (*TTestingFunction)(const int ch);
+
+typedef void __fastcall (__closure *TSCEvent_styleneeded)(System::TObject* Sender, const int position);
+
+typedef void __fastcall (__closure *TSCEvent_charadded)(System::TObject* Sender, const int ch);
+
+typedef void __fastcall (__closure *TSCEvent_savepointreached)(System::TObject* Sender);
+
+typedef void __fastcall (__closure *TSCEvent_savepointleft)(System::TObject* Sender);
+
+typedef void __fastcall (__closure *TSCEvent_modifyattemptro)(System::TObject* Sender);
+
+typedef void __fastcall (__closure *TSCEvent_key)(System::TObject* Sender, const int ch, const int modifiers);
+
+typedef void __fastcall (__closure *TSCEvent_doubleclick)(System::TObject* Sender);
+
+typedef void __fastcall (__closure *TSCEvent_updateui)(System::TObject* Sender);
+
+typedef void __fastcall (__closure *TSCEvent_modified)(System::TObject* Sender, const int position, const int modificationType, char * text, const int length, const int linesAdded, const int line, const int foldLevelNow, const int foldLevelPrev);
+
+typedef void __fastcall (__closure *TSCEvent_macrorecord)(System::TObject* Sender, const int message, const int wParam, const int lParam);
+
+typedef void __fastcall (__closure *TSCEvent_marginclick)(System::TObject* Sender, const int modifiers, const int position, const int margin);
+
+typedef void __fastcall (__closure *TSCEvent_needshown)(System::TObject* Sender, const int position, const int length);
+
+typedef void __fastcall (__closure *TSCEvent_painted)(System::TObject* Sender);
+
+typedef void __fastcall (__closure *TSCEvent_userlistselection)(System::TObject* Sender, const int listType, char * text);
+
+typedef void __fastcall (__closure *TSCEvent_uridropped)(System::TObject* Sender, char * text);
+
+typedef void __fastcall (__closure *TSCEvent_dwellstart)(System::TObject* Sender, const int position);
+
+typedef void __fastcall (__closure *TSCEvent_dwellend)(System::TObject* Sender, const int position);
+
+typedef void __fastcall (__closure *TSCEvent_zoom)(System::TObject* Sender);
+
+typedef void __fastcall (__closure *TSCEvent_hotspotclick)(System::TObject* Sender, const int modifiers, const int position);
+
+typedef void __fastcall (__closure *TSCEvent_hotspotdoubleclick)(System::TObject* Sender, const int modifiers, const int position);
+
+typedef void __fastcall (__closure *TSCEvent_calltipclick)(System::TObject* Sender, const int position);
+
+typedef void __fastcall (__closure *TSCEventMsgSent)(System::TObject* Sender, int Msg, int wParam, int lParam);
+
+class DELPHICLASS TScintillaBase;
+class PASCALIMPLEMENTATION TScintillaBase : public Controls::TWinControl 
+{
+	typedef Controls::TWinControl inherited;
+	
+private:
+	Forms::TFormBorderStyle FBorderStyle;
+	bool FCreating;
+	Scisupport::TScintillaMessageFnc SCPerform;
+	void *sccmdctr;
+	bool FWantReturns;
+	bool FWantTabs;
+	bool FDirty;
+	TSCEventMsgSent FOnMsgSent;
+	bool FDummy;
+	bool initing;
+	bool FClearUndoAfterSave;
+	AnsiString FWordChars;
+	TSCEvent_styleneeded FOnstyleneeded;
+	TSCEvent_charadded FOncharadded;
+	TSCEvent_savepointreached FOnsavepointreached;
+	TSCEvent_savepointleft FOnsavepointleft;
+	TSCEvent_modifyattemptro FOnmodifyattemptro;
+	TSCEvent_key FOnkey;
+	TSCEvent_doubleclick FOndoubleclick;
+	TSCEvent_updateui FOnupdateui;
+	TSCEvent_modified FOnmodified;
+	TSCEvent_macrorecord FOnmacrorecord;
+	TSCEvent_marginclick FOnmarginclick;
+	TSCEvent_needshown FOnneedshown;
+	TSCEvent_painted FOnpainted;
+	TSCEvent_userlistselection FOnuserlistselection;
+	TSCEvent_uridropped FOnuridropped;
+	TSCEvent_dwellstart FOndwellstart;
+	TSCEvent_dwellend FOndwellend;
+	TSCEvent_zoom FOnzoom;
+	TSCEvent_hotspotclick FOnhotspotclick;
+	TSCEvent_hotspotdoubleclick FOnhotspotdoubleclick;
+	TSCEvent_calltipclick FOncalltipclick;
+	
+protected:
+	Classes::TMemoryStream* fStateStream;
+	virtual void __fastcall WndDestroy(void);
+	HIDESBASE MESSAGE void __fastcall CMFontChanged(Messages::TMessage &Message);
+	HIDESBASE MESSAGE void __fastcall CMColorChanged(Messages::TMessage &Message);
+	virtual void __fastcall Loaded(void);
+	virtual void __fastcall CreateParams(Controls::TCreateParams &Params);
+	virtual void __fastcall CreateWnd(void);
+	virtual void __fastcall DestroyWnd(void);
+	virtual void __fastcall doSciCharAdded(const int ch);
+	virtual void __fastcall doSciUserListSelection(const int listType, char * text);
+	virtual void __fastcall doSciUpdateUI(void);
+	virtual void __fastcall doSciModified(const int position, const int modificationType, char * text, const int length, const int linesAdded, const int line, const int foldLevelNow, const int foldLevelPrev);
+	virtual void __fastcall doSciMarginClick(const int modifiers, const int position, const int margin);
+	virtual void __fastcall doSciSavePointReached(void);
+	virtual void __fastcall doSciSavePointLeft(void);
+	virtual void __fastcall doSciStyleNeeded(const int position);
+	virtual void __fastcall doSciModifyAttemptRO(void);
+	virtual void __fastcall doSciDoubleClick(void);
+	virtual void __fastcall doSciNeedShown(const int position, const int len);
+	virtual void __fastcall doSciPainted(void);
+	virtual void __fastcall doSciDwellStart(const int position);
+	virtual void __fastcall doSciDwellEnd(const int position);
+	virtual void __fastcall doSciZoom(void);
+	virtual void __fastcall doSciHotspotClick(const int modifiers, const int position);
+	virtual void __fastcall doSciHotspotDoubleClick(const int modifiers, const int position);
+	virtual void __fastcall doSciMacroRecord(const int msg, const unsigned wParam, const int lParam);
+	virtual void __fastcall doSciKey(const int ch, const int modifiers);
+	virtual void __fastcall doSciCalltipClick(const int position);
+	
+private:
+	void __fastcall SetBorderStyle(Forms::TBorderStyle Value);
+	HIDESBASE MESSAGE void __fastcall CMCtl3DChanged(Messages::TMessage &Message);
+	MESSAGE void __fastcall WMGetDlgCode(Messages::TWMNoParams &Message);
+	HIDESBASE MESSAGE void __fastcall WMNCDestroy(Messages::TWMNoParams &Message);
+	HIDESBASE MESSAGE void __fastcall WMNotify(Messages::TWMNotify &Message);
+	void __fastcall inSetWordChars(const AnsiString Value);
+	void __fastcall SetDummy(bool Value);
+	bool __fastcall GetUseUnicode(void);
+	void __fastcall SetUseUnicode(const bool Value);
+	bool __fastcall GetWordWrap(void);
+	void __fastcall SetWordWrap(const bool Value);
+	AnsiString __fastcall GetSelection();
+	void __fastcall SetSelection(const AnsiString Value);
+	void __fastcall SetSelStart(const int value);
+	int __fastcall GetSelectionLength(void);
+	void __fastcall SetSelectionLength(const int Value);
+	
+public:
+	__fastcall virtual TScintillaBase(Classes::TComponent* AOwner);
+	__fastcall virtual ~TScintillaBase(void);
+	virtual void __fastcall DefaultHandler(void *Message);
+	int __fastcall SPerform(int Msg, int wParam, int lParam);
+	virtual void __fastcall CopyFrom(Classes::TPersistent* Source);
+	void __fastcall LoadFromStream(Classes::TStream* Stream);
+	void __fastcall SaveToStream(Classes::TStream* Stream);
+	void __fastcall LoadFromFile(const AnsiString FileName);
+	void __fastcall SaveToFile(const AnsiString FileName);
+	void __fastcall ClearDocument(void);
+	int __fastcall GetCurrentScrollPosition(void);
+	void __fastcall AddText(int length, char * text);
+	void __fastcall AddStyledText(int length, char * c);
+	void __fastcall InsertText(int pos, char * text);
+	void __fastcall ClearAll(void);
+	void __fastcall ClearDocumentStyle(void);
+	int __fastcall GetLength(void);
+	int __fastcall GetCharAt(int pos);
+	int __fastcall GetCurrentPos(void);
+	int __fastcall GetAnchor(void);
+	int __fastcall GetStyleAt(int pos);
+	void __fastcall Redo(void);
+	void __fastcall SetUndoCollection(BOOL collectUndo);
+	void __fastcall SelectAll(void);
+	void __fastcall SetSavePoint(void);
+	int __fastcall GetStyledText(Scisupport::PTextRange tr);
+	BOOL __fastcall CanRedo(void);
+	int __fastcall MarkerLineFromHandle(int handle);
+	void __fastcall MarkerDeleteHandle(int handle);
+	BOOL __fastcall GetUndoCollection(void);
+	int __fastcall GetViewWS(void);
+	void __fastcall SetViewWS(int viewWS);
+	int __fastcall PositionFromPoint(int x, int y);
+	int __fastcall PositionFromPointClose(int x, int y);
+	void __fastcall GotoLine(int line);
+	void __fastcall GotoPos(int pos);
+	void __fastcall SetAnchor(int posAnchor);
+	int __fastcall GetCurLine(int length, char * text);
+	int __fastcall GetEndStyled(void);
+	void __fastcall ConvertEOLs(int eolMode);
+	int __fastcall GetEOLMode(void);
+	void __fastcall SetEOLMode(int eolMode);
+	void __fastcall StartStyling(int pos, int mask);
+	void __fastcall SetStyling(int length, int style);
+	BOOL __fastcall GetBufferedDraw(void);
+	void __fastcall SetBufferedDraw(BOOL buffered);
+	void __fastcall SetTabWidth(int tabWidth);
+	int __fastcall GetTabWidth(void);
+	void __fastcall SetCodePage(int codePage);
+	void __fastcall SetUsePalette(BOOL usePalette);
+	void __fastcall MarkerDefine(int markerNumber, int markerSymbol);
+	void __fastcall MarkerSetFore(int markerNumber, Graphics::TColor fore);
+	void __fastcall MarkerSetBack(int markerNumber, Graphics::TColor back);
+	int __fastcall MarkerAdd(int line, int markerNumber);
+	void __fastcall MarkerDelete(int line, int markerNumber);
+	void __fastcall MarkerDeleteAll(int markerNumber);
+	int __fastcall MarkerGet(int line);
+	int __fastcall MarkerNext(int lineStart, int markerMask);
+	int __fastcall MarkerPrevious(int lineStart, int markerMask);
+	void __fastcall MarkerDefinePixmap(int markerNumber, char * pixmap);
+	void __fastcall SetMarginTypeN(int margin, int marginType);
+	int __fastcall GetMarginTypeN(int margin);
+	void __fastcall SetMarginWidthN(int margin, int pixelWidth);
+	int __fastcall GetMarginWidthN(int margin);
+	void __fastcall SetMarginMaskN(int margin, int mask);
+	int __fastcall GetMarginMaskN(int margin);
+	void __fastcall SetMarginSensitiveN(int margin, BOOL sensitive);
+	BOOL __fastcall GetMarginSensitiveN(int margin);
+	void __fastcall StyleClearAll(void);
+	void __fastcall StyleSetFore(int style, Graphics::TColor fore);
+	void __fastcall StyleSetBack(int style, Graphics::TColor back);
+	void __fastcall StyleSetBold(int style, BOOL bold);
+	void __fastcall StyleSetItalic(int style, BOOL italic);
+	void __fastcall StyleSetSize(int style, int sizePoints);
+	void __fastcall StyleSetFont(int style, char * fontName);
+	void __fastcall StyleSetEOLFilled(int style, BOOL filled);
+	void __fastcall StyleResetDefault(void);
+	void __fastcall StyleSetUnderline(int style, BOOL underline);
+	void __fastcall StyleSetCase(int style, int caseForce);
+	void __fastcall StyleSetCharacterSet(int style, int characterSet);
+	void __fastcall StyleSetHotSpot(int style, BOOL hotspot);
+	void __fastcall SetSelFore(BOOL useSetting, Graphics::TColor fore);
+	void __fastcall SetSelBack(BOOL useSetting, Graphics::TColor back);
+	void __fastcall SetCaretFore(Graphics::TColor fore);
+	void __fastcall AssignCmdKey(int km, int msg);
+	void __fastcall ClearCmdKey(int km);
+	void __fastcall ClearAllCmdKeys(void);
+	void __fastcall SetStylingEx(int length, char * styles);
+	void __fastcall StyleSetVisible(int style, BOOL visible);
+	int __fastcall GetCaretPeriod(void);
+	void __fastcall SetCaretPeriod(int periodMilliseconds);
+	void __fastcall SetWordChars(char * characters);
+	void __fastcall BeginUndoAction(void);
+	void __fastcall EndUndoAction(void);
+	void __fastcall IndicSetStyle(int indic, int style);
+	int __fastcall IndicGetStyle(int indic);
+	void __fastcall IndicSetFore(int indic, Graphics::TColor fore);
+	Graphics::TColor __fastcall IndicGetFore(int indic);
+	void __fastcall SetWhitespaceFore(BOOL useSetting, Graphics::TColor fore);
+	void __fastcall SetWhitespaceBack(BOOL useSetting, Graphics::TColor back);
+	void __fastcall SetStyleBits(int bits);
+	int __fastcall GetStyleBits(void);
+	void __fastcall SetLineState(int line, int state);
+	int __fastcall GetLineState(int line);
+	int __fastcall GetMaxLineState(void);
+	BOOL __fastcall GetCaretLineVisible(void);
+	void __fastcall SetCaretLineVisible(BOOL show);
+	Graphics::TColor __fastcall GetCaretLineBack(void);
+	void __fastcall SetCaretLineBack(Graphics::TColor back);
+	void __fastcall StyleSetChangeable(int style, BOOL changeable);
+	void __fastcall AutoCShow(int lenEntered, char * itemList);
+	void __fastcall AutoCCancel(void);
+	BOOL __fastcall AutoCActive(void);
+	int __fastcall AutoCPosStart(void);
+	void __fastcall AutoCComplete(void);
+	void __fastcall AutoCStops(char * characterSet);
+	void __fastcall AutoCSetSeparator(int separatorCharacter);
+	int __fastcall AutoCGetSeparator(void);
+	void __fastcall AutoCSelect(char * text);
+	void __fastcall AutoCSetCancelAtStart(BOOL cancel);
+	BOOL __fastcall AutoCGetCancelAtStart(void);
+	void __fastcall AutoCSetFillUps(char * characterSet);
+	void __fastcall AutoCSetChooseSingle(BOOL chooseSingle);
+	BOOL __fastcall AutoCGetChooseSingle(void);
+	void __fastcall AutoCSetIgnoreCase(BOOL ignoreCase);
+	BOOL __fastcall AutoCGetIgnoreCase(void);
+	void __fastcall UserListShow(int listType, char * itemList);
+	void __fastcall AutoCSetAutoHide(BOOL autoHide);
+	BOOL __fastcall AutoCGetAutoHide(void);
+	void __fastcall AutoCSetDropRestOfWord(BOOL dropRestOfWord);
+	BOOL __fastcall AutoCGetDropRestOfWord(void);
+	void __fastcall RegisterImage(int type_, char * xpmData);
+	void __fastcall ClearRegisteredImages(void);
+	int __fastcall AutoCGetTypeSeparator(void);
+	void __fastcall AutoCSetTypeSeparator(int separatorCharacter);
+	void __fastcall SetIndent(int indentSize);
+	int __fastcall GetIndent(void);
+	void __fastcall SetUseTabs(BOOL useTabs);
+	BOOL __fastcall GetUseTabs(void);
+	void __fastcall SetLineIndentation(int line, int indentSize);
+	int __fastcall GetLineIndentation(int line);
+	int __fastcall GetLineIndentPosition(int line);
+	int __fastcall GetColumn(int pos);
+	void __fastcall SetHScrollBar(BOOL show);
+	BOOL __fastcall GetHScrollBar(void);
+	void __fastcall SetIndentationGuides(BOOL show);
+	BOOL __fastcall GetIndentationGuides(void);
+	void __fastcall SetHighlightGuide(int column);
+	int __fastcall GetHighlightGuide(void);
+	int __fastcall GetLineEndPosition(int line);
+	int __fastcall GetCodePage(void);
+	Graphics::TColor __fastcall GetCaretFore(void);
+	BOOL __fastcall GetUsePalette(void);
+	BOOL __fastcall GetReadOnly(void);
+	void __fastcall SetCurrentPos(int pos);
+	void __fastcall SetSelectionStart(int pos);
+	int __fastcall GetSelectionStart(void);
+	void __fastcall SetSelectionEnd(int pos);
+	int __fastcall GetSelectionEnd(void);
+	void __fastcall SetPrintMagnification(int magnification);
+	int __fastcall GetPrintMagnification(void);
+	void __fastcall SetPrintColourMode(int mode);
+	int __fastcall GetPrintColourMode(void);
+	int __fastcall FindTextX(int flags, Scisupport::PTextToFind ft);
+	int __fastcall FormatRange(BOOL draw, int fr);
+	int __fastcall GetFirstVisibleLine(void);
+	int __fastcall GetLine(int line, char * text);
+	int __fastcall GetLineCount(void);
+	void __fastcall SetMarginLeft(int pixelWidth);
+	int __fastcall GetMarginLeft(void);
+	void __fastcall SetMarginRight(int pixelWidth);
+	int __fastcall GetMarginRight(void);
+	BOOL __fastcall GetModify(void);
+	void __fastcall SetSel(int start, int end_);
+	int __fastcall GetSelText(char * text);
+	int __fastcall GetTextRange(Scisupport::PTextRange tr);
+	void __fastcall HideSelection(BOOL normal);
+	int __fastcall PointXFromPosition(int pos);
+	int __fastcall PointYFromPosition(int pos);
+	int __fastcall LineFromPosition(int pos);
+	int __fastcall PositionFromLine(int line);
+	void __fastcall LineScroll(int columns, int lines);
+	void __fastcall ScrollCaret(void);
+	void __fastcall ReplaceSel(char * text);
+	void __fastcall SetReadOnly(BOOL readOnly);
+	void __fastcall Null(void);
+	BOOL __fastcall CanPaste(void);
+	BOOL __fastcall CanUndo(void);
+	void __fastcall EmptyUndoBuffer(void);
+	void __fastcall Undo(void);
+	void __fastcall Cut(void);
+	void __fastcall Copy(void);
+	void __fastcall Paste(void);
+	void __fastcall Clear(void);
+	HIDESBASE void __fastcall SetText(char * text);
+	HIDESBASE int __fastcall GetText(int length, char * text);
+	int __fastcall GetTextLength(void);
+	int __fastcall GetDirectFunction(void);
+	int __fastcall GetDirectPointer(void);
+	void __fastcall SetOvertype(BOOL overtype);
+	BOOL __fastcall GetOvertype(void);
+	void __fastcall SetCaretWidth(int pixelWidth);
+	int __fastcall GetCaretWidth(void);
+	void __fastcall SetTargetStart(int pos);
+	int __fastcall GetTargetStart(void);
+	void __fastcall SetTargetEnd(int pos);
+	int __fastcall GetTargetEnd(void);
+	int __fastcall ReplaceTarget(int length, char * text);
+	int __fastcall ReplaceTargetRE(int length, char * text);
+	int __fastcall SearchInTarget(int length, char * text);
+	void __fastcall SetSearchFlags(int flags);
+	int __fastcall GetSearchFlags(void);
+	void __fastcall CallTipShow(int pos, char * definition);
+	void __fastcall CallTipCancel(void);
+	BOOL __fastcall CallTipActive(void);
+	int __fastcall CallTipPosStart(void);
+	void __fastcall CallTipSetHlt(int start, int end_);
+	void __fastcall CallTipSetBack(Graphics::TColor back);
+	void __fastcall CallTipSetFore(Graphics::TColor fore);
+	void __fastcall CallTipSetForeHlt(Graphics::TColor fore);
+	int __fastcall VisibleFromDocLine(int line);
+	int __fastcall DocLineFromVisible(int lineDisplay);
+	void __fastcall SetFoldLevel(int line, int level);
+	int __fastcall GetFoldLevel(int line);
+	int __fastcall GetLastChild(int line, int level);
+	int __fastcall GetFoldParent(int line);
+	void __fastcall ShowLines(int lineStart, int lineEnd);
+	void __fastcall HideLines(int lineStart, int lineEnd);
+	BOOL __fastcall GetLineVisible(int line);
+	void __fastcall SetFoldExpanded(int line, BOOL expanded);
+	BOOL __fastcall GetFoldExpanded(int line);
+	void __fastcall ToggleFold(int line);
+	void __fastcall EnsureVisible(int line);
+	void __fastcall SetFoldFlags(int flags);
+	void __fastcall EnsureVisibleEnforcePolicy(int line);
+	void __fastcall SetTabIndents(BOOL tabIndents);
+	BOOL __fastcall GetTabIndents(void);
+	void __fastcall SetBackSpaceUnIndents(BOOL bsUnIndents);
+	BOOL __fastcall GetBackSpaceUnIndents(void);
+	void __fastcall SetMouseDwellTime(int periodMilliseconds);
+	int __fastcall GetMouseDwellTime(void);
+	int __fastcall WordStartPosition(int pos, BOOL onlyWordCharacters);
+	int __fastcall WordEndPosition(int pos, BOOL onlyWordCharacters);
+	void __fastcall SetWrapMode(int mode);
+	int __fastcall GetWrapMode(void);
+	void __fastcall SetWrapVisualFlags(int wrapVisualFlags);
+	int __fastcall GetWrapVisualFlags(void);
+	void __fastcall SetWrapVisualFlagsLocation(int wrapVisualFlagsLocation);
+	int __fastcall GetWrapVisualFlagsLocation(void);
+	void __fastcall SetWrapStartIndent(int indent);
+	int __fastcall GetWrapStartIndent(void);
+	void __fastcall SetLayoutCache(int mode);
+	int __fastcall GetLayoutCache(void);
+	void __fastcall SetScrollWidth(int pixelWidth);
+	int __fastcall GetScrollWidth(void);
+	int __fastcall TextWidth(int style, char * text);
+	void __fastcall SetEndAtLastLine(BOOL endAtLastLine);
+	int __fastcall GetEndAtLastLine(void);
+	int __fastcall TextHeight(int line);
+	void __fastcall SetVScrollBar(BOOL show);
+	BOOL __fastcall GetVScrollBar(void);
+	void __fastcall AppendText(int length, char * text);
+	BOOL __fastcall GetTwoPhaseDraw(void);
+	void __fastcall SetTwoPhaseDraw(BOOL twoPhase);
+	void __fastcall TargetFromSelection(void);
+	void __fastcall LinesJoin(void);
+	void __fastcall LinesSplit(int pixelWidth);
+	void __fastcall SetFoldMarginColour(BOOL useSetting, Graphics::TColor back);
+	void __fastcall SetFoldMarginHiColour(BOOL useSetting, Graphics::TColor fore);
+	void __fastcall LineDown(void);
+	void __fastcall LineDownExtend(void);
+	void __fastcall LineUp(void);
+	void __fastcall LineUpExtend(void);
+	void __fastcall CharLeft(void);
+	void __fastcall CharLeftExtend(void);
+	void __fastcall CharRight(void);
+	void __fastcall CharRightExtend(void);
+	void __fastcall WordLeft(void);
+	void __fastcall WordLeftExtend(void);
+	void __fastcall WordRight(void);
+	void __fastcall WordRightExtend(void);
+	void __fastcall Home(void);
+	void __fastcall HomeExtend(void);
+	void __fastcall LineEnd(void);
+	void __fastcall LineEndExtend(void);
+	void __fastcall DocumentStart(void);
+	void __fastcall DocumentStartExtend(void);
+	void __fastcall DocumentEnd(void);
+	void __fastcall DocumentEndExtend(void);
+	void __fastcall PageUp(void);
+	void __fastcall PageUpExtend(void);
+	void __fastcall PageDown(void);
+	void __fastcall PageDownExtend(void);
+	void __fastcall EditToggleOvertype(void);
+	void __fastcall Cancel(void);
+	void __fastcall DeleteBack(void);
+	void __fastcall Tab(void);
+	void __fastcall BackTab(void);
+	void __fastcall NewLine(void);
+	void __fastcall FormFeed(void);
+	void __fastcall VCHome(void);
+	void __fastcall VCHomeExtend(void);
+	void __fastcall ZoomIn(void);
+	void __fastcall ZoomOut(void);
+	void __fastcall DelWordLeft(void);
+	void __fastcall DelWordRight(void);
+	void __fastcall LineCut(void);
+	void __fastcall LineDelete(void);
+	void __fastcall LineTranspose(void);
+	void __fastcall LineDuplicate(void);
+	void __fastcall LowerCase(void);
+	void __fastcall UpperCase(void);
+	void __fastcall LineScrollDown(void);
+	void __fastcall LineScrollUp(void);
+	void __fastcall DeleteBackNotLine(void);
+	void __fastcall HomeDisplay(void);
+	void __fastcall HomeDisplayExtend(void);
+	void __fastcall LineEndDisplay(void);
+	void __fastcall LineEndDisplayExtend(void);
+	void __fastcall HomeWrap(void);
+	void __fastcall HomeWrapExtend(void);
+	void __fastcall LineEndWrap(void);
+	void __fastcall LineEndWrapExtend(void);
+	void __fastcall VCHomeWrap(void);
+	void __fastcall VCHomeWrapExtend(void);
+	void __fastcall LineCopy(void);
+	void __fastcall MoveCaretInsideView(void);
+	int __fastcall LineLength(int line);
+	void __fastcall BraceHighlight(int pos1, int pos2);
+	void __fastcall BraceBadLight(int pos);
+	int __fastcall BraceMatch(int pos);
+	BOOL __fastcall GetViewEOL(void);
+	void __fastcall SetViewEOL(BOOL visible);
+	int __fastcall GetDocPointer(void);
+	void __fastcall SetDocPointer(int pointer);
+	void __fastcall SetModEventMask(int mask);
+	int __fastcall GetEdgeColumn(void);
+	void __fastcall SetEdgeColumn(int column);
+	int __fastcall GetEdgeMode(void);
+	void __fastcall SetEdgeMode(int mode);
+	Graphics::TColor __fastcall GetEdgeColour(void);
+	void __fastcall SetEdgeColour(Graphics::TColor edgeColour);
+	void __fastcall SearchAnchor(void);
+	int __fastcall SearchNext(int flags, char * text);
+	int __fastcall SearchPrev(int flags, char * text);
+	int __fastcall LinesOnScreen(void);
+	void __fastcall UsePopUp(BOOL allowPopUp);
+	BOOL __fastcall SelectionIsRectangle(void);
+	void __fastcall SetZoom(int zoom);
+	int __fastcall GetZoom(void);
+	int __fastcall CreateDocument(void);
+	void __fastcall AddRefDocument(int doc);
+	void __fastcall ReleaseDocument(int doc);
+	int __fastcall GetModEventMask(void);
+	void __fastcall SetFocusEx(BOOL focus);
+	BOOL __fastcall GetFocus(void);
+	void __fastcall SetStatus(int statusCode);
+	int __fastcall GetStatus(void);
+	void __fastcall SetMouseDownCaptures(BOOL captures);
+	BOOL __fastcall GetMouseDownCaptures(void);
+	HIDESBASE void __fastcall SetCursor(int cursorType);
+	int __fastcall GetCursor(void);
+	void __fastcall SetControlCharSymbol(int symbol);
+	int __fastcall GetControlCharSymbol(void);
+	void __fastcall WordPartLeft(void);
+	void __fastcall WordPartLeftExtend(void);
+	void __fastcall WordPartRight(void);
+	void __fastcall WordPartRightExtend(void);
+	void __fastcall SetVisiblePolicy(int visiblePolicy, int visibleSlop);
+	void __fastcall DelLineLeft(void);
+	void __fastcall DelLineRight(void);
+	void __fastcall SetXOffset(int newOffset);
+	int __fastcall GetXOffset(void);
+	void __fastcall ChooseCaretX(void);
+	void __fastcall GrabFocus(void);
+	void __fastcall SetXCaretPolicy(int caretPolicy, int caretSlop);
+	void __fastcall SetYCaretPolicy(int caretPolicy, int caretSlop);
+	void __fastcall SetPrintWrapMode(int mode);
+	int __fastcall GetPrintWrapMode(void);
+	void __fastcall SetHotspotActiveFore(BOOL useSetting, Graphics::TColor fore);
+	void __fastcall SetHotspotActiveBack(BOOL useSetting, Graphics::TColor back);
+	void __fastcall SetHotspotActiveUnderline(BOOL underline);
+	void __fastcall SetHotspotSingleLine(BOOL singleLine);
+	void __fastcall ParaDown(void);
+	void __fastcall ParaDownExtend(void);
+	void __fastcall ParaUp(void);
+	void __fastcall ParaUpExtend(void);
+	int __fastcall PositionBefore(int pos);
+	int __fastcall PositionAfter(int pos);
+	void __fastcall CopyRange(int start, int end_);
+	void __fastcall CopyText(int length, char * text);
+	void __fastcall SetSelectionMode(int mode);
+	int __fastcall GetSelectionMode(void);
+	int __fastcall GetLineSelStartPosition(int line);
+	int __fastcall GetLineSelEndPosition(int line);
+	void __fastcall LineDownRectExtend(void);
+	void __fastcall LineUpRectExtend(void);
+	void __fastcall CharLeftRectExtend(void);
+	void __fastcall CharRightRectExtend(void);
+	void __fastcall HomeRectExtend(void);
+	void __fastcall VCHomeRectExtend(void);
+	void __fastcall LineEndRectExtend(void);
+	void __fastcall PageUpRectExtend(void);
+	void __fastcall PageDownRectExtend(void);
+	void __fastcall StutteredPageUp(void);
+	void __fastcall StutteredPageUpExtend(void);
+	void __fastcall StutteredPageDown(void);
+	void __fastcall StutteredPageDownExtend(void);
+	void __fastcall WordLeftEnd(void);
+	void __fastcall WordLeftEndExtend(void);
+	void __fastcall WordRightEnd(void);
+	void __fastcall WordRightEndExtend(void);
+	void __fastcall SetWhitespaceChars(char * characters);
+	void __fastcall SetCharsDefault(void);
+	int __fastcall AutoCGetCurrent(void);
+	void __fastcall Allocate(int bytes);
+	void __fastcall StartRecord(void);
+	void __fastcall StopRecord(void);
+	void __fastcall SetLexer(int lexer);
+	int __fastcall GetLexer(void);
+	void __fastcall Colourise(int start, int end_);
+	void __fastcall SetProperty(char * key, char * value);
+	void __fastcall SetKeyWords(int keywordSet, char * keyWords);
+	void __fastcall SetLexerLanguage(char * language);
+	void __fastcall LoadLexerLibrary(char * path);
+	
+protected:
+	__property TSCEvent_styleneeded OnStyleNeeded = {read=FOnstyleneeded, write=FOnstyleneeded};
+	__property TSCEvent_charadded OnCharAdded = {read=FOncharadded, write=FOncharadded};
+	__property TSCEvent_savepointreached OnSavePointReached = {read=FOnsavepointreached, write=FOnsavepointreached};
+	__property TSCEvent_savepointleft OnSavePointLeft = {read=FOnsavepointleft, write=FOnsavepointleft};
+	__property TSCEvent_modifyattemptro OnModifyAttemptRO = {read=FOnmodifyattemptro, write=FOnmodifyattemptro};
+	__property TSCEvent_key OnKey = {read=FOnkey, write=FOnkey};
+	__property TSCEvent_doubleclick OnDoubleClick = {read=FOndoubleclick, write=FOndoubleclick};
+	__property TSCEvent_updateui OnUpdateUI = {read=FOnupdateui, write=FOnupdateui};
+	__property TSCEvent_modified OnModified = {read=FOnmodified, write=FOnmodified};
+	__property TSCEvent_macrorecord OnMacroRecord = {read=FOnmacrorecord, write=FOnmacrorecord};
+	__property TSCEvent_marginclick OnMarginClick = {read=FOnmarginclick, write=FOnmarginclick};
+	__property TSCEvent_needshown OnNeedShown = {read=FOnneedshown, write=FOnneedshown};
+	__property TSCEvent_painted OnPainted = {read=FOnpainted, write=FOnpainted};
+	__property TSCEvent_userlistselection OnUserListSelection = {read=FOnuserlistselection, write=FOnuserlistselection};
+	__property TSCEvent_uridropped OnURIDropped = {read=FOnuridropped, write=FOnuridropped};
+	__property TSCEvent_dwellstart OnDwellStart = {read=FOndwellstart, write=FOndwellstart};
+	__property TSCEvent_dwellend OnDwellEnd = {read=FOndwellend, write=FOndwellend};
+	__property TSCEvent_zoom OnZoom = {read=FOnzoom, write=FOnzoom};
+	__property TSCEvent_hotspotclick OnHotSpotClick = {read=FOnhotspotclick, write=FOnhotspotclick};
+	__property TSCEvent_hotspotdoubleclick OnHotSpotDoubleClick = {read=FOnhotspotdoubleclick, write=FOnhotspotdoubleclick};
+	__property TSCEvent_calltipclick OnCallTipClick = {read=FOncalltipclick, write=FOncalltipclick};
+	__property TSCEventMsgSent OnMsgSent = {read=FOnMsgSent, write=FOnMsgSent};
+	
+public:
+	void __fastcall GetRange(const int start, const int end_, char * text);
+	void __fastcall GetLineInBuf(char * textbuf, const int sizeText, int linenum);
+	AnsiString __fastcall GetLineS(const int Index = 0xffffffff);
+	Scisupport::TCharacterRange __fastcall GetSelectionRng();
+	void __fastcall FindWordAtCaret(int &start, int &end_);
+	AnsiString __fastcall RangeExtendAndGrab(int &selStart, int &selEnd, TTestingFunction ischarforsel, const bool stripEol = true);
+	AnsiString __fastcall SelectionExtend(TTestingFunction ischarforsel, const bool stripEol = true);
+	void __fastcall SetSelectionS(const int anchor, const int end_);
+	bool __fastcall SelectWordAtCaret(void);
+	AnsiString __fastcall SelectionWord(const bool stripEol = true);
+	AnsiString __fastcall SelectionFileName();
+	int __fastcall GetLineLength(const int line = 0xffffffff);
+	int __fastcall GetCaretInLine(void);
+	int __fastcall GetCurrentLineNumber(void);
+	void __fastcall GotoLineEnsureVisible(const int line);
+	bool __fastcall RangeIsAllWhiteSpace(const int start, const int end_);
+	void __fastcall EnsureRangeVisible(const int PosStart, const int PosEnd);
+	DYNAMIC bool __fastcall ExecuteAction(Classes::TBasicAction* Action);
+	DYNAMIC bool __fastcall UpdateAction(Classes::TBasicAction* Action);
+	void __fastcall SetModified(const BOOL Value);
+	__property BOOL ReadOnly = {read=GetReadOnly, write=SetReadOnly, default=0};
+	__property bool UseUnicode = {read=GetUseUnicode, write=SetUseUnicode, default=0};
+	__property int SelLength = {read=GetSelectionLength, write=SetSelectionLength, nodefault};
+	__property int SelStart = {read=GetSelectionStart, write=SetSelStart, nodefault};
+	__property AnsiString SelText = {read=GetSelection, write=SetSelection};
+	__property bool WordWrap = {read=GetWordWrap, write=SetWordWrap, default=0};
+	__property bool IsDirty = {read=FDirty, write=FDirty, nodefault};
+	__property bool ClearUndoAfterSave = {read=FClearUndoAfterSave, write=FClearUndoAfterSave, default=0};
+	__property bool Dummy = {read=FDummy, write=SetDummy, nodefault};
+	__property BOOL Modified = {read=GetModify, write=SetModified, nodefault};
+	__property AnsiString WordChars = {read=FWordChars, write=inSetWordChars};
+	
+__published:
+	__property Color  = {default=-2147483643};
+	__property Font ;
+	__property PopupMenu ;
+	__property Align  = {default=0};
+	__property Hint ;
+	__property ShowHint ;
+	__property ParentShowHint  = {default=1};
+	__property ParentFont  = {default=0};
+	__property Forms::TBorderStyle BorderStyle = {read=FBorderStyle, write=SetBorderStyle, default=1};
+	__property Visible  = {default=1};
+public:
+	#pragma option push -w-inl
+	/* TWinControl.CreateParented */ inline __fastcall TScintillaBase(HWND ParentWindow) : Controls::TWinControl(ParentWindow) { }
+	#pragma option pop
+	
+};
+
+
+//-- var, const, procedure ---------------------------------------------------
+extern PACKAGE unsigned BorderStyles[2];
+static const Shortint SCITE_MARKER_BOOKMARK = 0x1;
+extern PACKAGE AnsiString sci_alphachars;
+extern PACKAGE AnsiString sci_numericchars;
+extern PACKAGE AnsiString sci_accentedchars;
+extern PACKAGE TSCEventMsgSent fMsgSentDummyProc;
+extern PACKAGE bool __fastcall iswordcharforsel(const int ch);
+extern PACKAGE bool __fastcall isfilenamecharforsel(const int ch);
+
+}	/* namespace Scilexer */
+using namespace Scilexer;
+#pragma option pop	// -w-
+#pragma option pop	// -Vx
+
+#pragma delphiheader end.
+//-- end unit ----------------------------------------------------------------
+#endif	// SciLexer
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@@
+
+
+1.1.1.1
+log
+@no message
+@
+text
+@@

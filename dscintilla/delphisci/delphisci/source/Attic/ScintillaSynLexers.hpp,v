@@ -1,0 +1,357 @@
+head	1.2;
+access;
+symbols
+	test:1.1.1.1 hdalis:1.1.1;
+locks; strict;
+comment	@// @;
+
+
+1.2
+date	2004.10.03.20.46.24;	author hdalis;	state dead;
+branches;
+next	1.1;
+
+1.1
+date	2004.10.01.21.04.18;	author hdalis;	state Exp;
+branches
+	1.1.1.1;
+next	;
+
+1.1.1.1
+date	2004.10.01.21.04.18;	author hdalis;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@no message
+@
+text
+@// Borland C++ Builder
+// Copyright (c) 1995, 2002 by Borland Software Corporation
+// All rights reserved
+
+// (DO NOT EDIT: machine generated header) 'ScintillaSynLexers.pas' rev: 6.00
+
+#ifndef ScintillaSynLexersHPP
+#define ScintillaSynLexersHPP
+
+#pragma delphiheader begin
+#pragma option push -w-
+#pragma option push -Vx
+#include <Graphics.hpp>	// Pascal unit
+#include <Classes.hpp>	// Pascal unit
+#include <SysUtils.hpp>	// Pascal unit
+#include <Windows.hpp>	// Pascal unit
+#include <SysInit.hpp>	// Pascal unit
+#include <System.hpp>	// Pascal unit
+
+//-- user supplied -----------------------------------------------------------
+
+namespace Scintillasynlexers
+{
+//-- type declarations -------------------------------------------------------
+typedef void __fastcall (__closure *TSCEvent_languagechanged)(System::TObject* Sender, AnsiString newlang);
+
+#pragma option push -b-
+enum TSciCase { CASE_MIXED, CASE_UPPER, CASE_LOWER };
+#pragma option pop
+
+#pragma option push -b-
+enum TSciBoolState { sciNotSet, sciTrue, sciFalse };
+#pragma option pop
+
+#pragma pack(push, 4)
+struct TSciLangKeywords
+{
+	AnsiString Name;
+	int KeywordListNumber;
+	AnsiString KeyWords;
+} ;
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+struct TSciLangName
+{
+	AnsiString Name;
+	AnsiString Description;
+} ;
+#pragma pack(pop)
+
+#pragma pack(push, 4)
+struct TSciLangStyle
+{
+	int StyleNumber;
+	AnsiString Name;
+	AnsiString FontName;
+	int FontSize;
+	Graphics::TFontStyles FontStyles;
+	Graphics::TColor ForeColor;
+	Graphics::TColor BackColor;
+	TSciCase CharCase;
+	bool Visible;
+	bool Changeable;
+	bool Hotspot;
+	bool EOLFilled;
+} ;
+#pragma pack(pop)
+
+class DELPHICLASS TSciKeywords;
+class PASCALIMPLEMENTATION TSciKeywords : public Classes::TCollectionItem 
+{
+	typedef Classes::TCollectionItem inherited;
+	
+private:
+	Classes::TStrings* fKeyWords;
+	AnsiString fName;
+	int fKeywordListNumber;
+	void __fastcall SetKeywords(const Classes::TStrings* Value);
+	void __fastcall SetName(const AnsiString Value);
+	void __fastcall SetKeywordListNumber(const int Value);
+	
+public:
+	__fastcall virtual TSciKeywords(Classes::TCollection* Collection);
+	__fastcall virtual ~TSciKeywords(void);
+	virtual void __fastcall Assign(Classes::TPersistent* Source);
+	void __fastcall AssignRec(const TSciLangKeywords &Rec);
+	void __fastcall AssignToRec(TSciLangKeywords &Rec);
+	
+__published:
+	__property int KeywordListNumber = {read=fKeywordListNumber, write=SetKeywordListNumber, nodefault};
+	__property AnsiString Name = {read=fName, write=SetName};
+	__property Classes::TStrings* Keywords = {read=fKeyWords, write=SetKeywords};
+};
+
+
+class DELPHICLASS TSciStyle;
+class PASCALIMPLEMENTATION TSciStyle : public Classes::TCollectionItem 
+{
+	typedef Classes::TCollectionItem inherited;
+	
+private:
+	int fStyleNumber;
+	AnsiString fName;
+	AnsiString fFontName;
+	int fFontSize;
+	Graphics::TFontStyles fFontStyles;
+	Graphics::TColor fForeColor;
+	Graphics::TColor fBackColor;
+	TSciCase fCharCase;
+	bool fVisible;
+	bool fChangeable;
+	bool fHotspot;
+	bool fEOLFilled;
+	void __fastcall SetBackColor(const Graphics::TColor Value);
+	void __fastcall SetFontName(const AnsiString Value);
+	void __fastcall SetFontSize(const int Value);
+	void __fastcall SetFontStyles(const Graphics::TFontStyles Value);
+	void __fastcall SetForeColor(const Graphics::TColor Value);
+	void __fastcall SetName(const AnsiString Value);
+	void __fastcall SetStyleNumber(const int Value);
+	void __fastcall SetCharCase(const TSciCase Value);
+	void __fastcall SetVisible(const bool Value);
+	void __fastcall SetChangeable(const bool Value);
+	void __fastcall SetEOLFilled(const bool Value);
+	void __fastcall SetHotspot(const bool Value);
+	
+public:
+	__fastcall virtual TSciStyle(Classes::TCollection* Collection);
+	virtual void __fastcall Assign(Classes::TPersistent* Source);
+	void __fastcall AssignRec(const TSciLangStyle &Rec);
+	void __fastcall AssignToRec(TSciLangStyle &Rec);
+	
+__published:
+	__property AnsiString FontName = {read=fFontName, write=SetFontName};
+	__property int FontSize = {read=fFontSize, write=SetFontSize, nodefault};
+	__property Graphics::TFontStyles FontStyles = {read=fFontStyles, write=SetFontStyles, nodefault};
+	__property Graphics::TColor ForeColor = {read=fForeColor, write=SetForeColor, default=536870912};
+	__property Graphics::TColor BackColor = {read=fBackColor, write=SetBackColor, default=536870912};
+	__property TSciCase CharCase = {read=fCharCase, write=SetCharCase, nodefault};
+	__property bool Visible = {read=fVisible, write=SetVisible, default=1};
+	__property bool Changeable = {read=fChangeable, write=SetChangeable, default=1};
+	__property bool EOLFilled = {read=fEOLFilled, write=SetEOLFilled, default=0};
+	__property bool Hotspot = {read=fHotspot, write=SetHotspot, default=0};
+	__property AnsiString Name = {read=fName, write=SetName};
+	__property int StyleNumber = {read=fStyleNumber, write=SetStyleNumber, nodefault};
+public:
+	#pragma option push -w-inl
+	/* TCollectionItem.Destroy */ inline __fastcall virtual ~TSciStyle(void) { }
+	#pragma option pop
+	
+};
+
+
+class DELPHICLASS TSciKeyWordsList;
+class PASCALIMPLEMENTATION TSciKeyWordsList : public Classes::TOwnedCollection 
+{
+	typedef Classes::TOwnedCollection inherited;
+	
+private:
+	Classes::TPersistent* fEditor;
+	
+public:
+	void __fastcall SetEditor(Classes::TPersistent* Editor);
+	virtual void __fastcall Update(Classes::TCollectionItem* Item);
+public:
+	#pragma option push -w-inl
+	/* TOwnedCollection.Create */ inline __fastcall TSciKeyWordsList(Classes::TPersistent* AOwner, TMetaClass* ItemClass) : Classes::TOwnedCollection(AOwner, ItemClass) { }
+	#pragma option pop
+	
+public:
+	#pragma option push -w-inl
+	/* TCollection.Destroy */ inline __fastcall virtual ~TSciKeyWordsList(void) { }
+	#pragma option pop
+	
+};
+
+
+class DELPHICLASS TSciStyleList;
+class PASCALIMPLEMENTATION TSciStyleList : public Classes::TOwnedCollection 
+{
+	typedef Classes::TOwnedCollection inherited;
+	
+private:
+	Classes::TPersistent* fEditor;
+	
+public:
+	void __fastcall SetEditor(Classes::TPersistent* Editor);
+	virtual void __fastcall Update(Classes::TCollectionItem* Item);
+public:
+	#pragma option push -w-inl
+	/* TOwnedCollection.Create */ inline __fastcall TSciStyleList(Classes::TPersistent* AOwner, TMetaClass* ItemClass) : Classes::TOwnedCollection(AOwner, ItemClass) { }
+	#pragma option pop
+	
+public:
+	#pragma option push -w-inl
+	/* TCollection.Destroy */ inline __fastcall virtual ~TSciStyleList(void) { }
+	#pragma option pop
+	
+};
+
+
+class DELPHICLASS TSciLangItem;
+class PASCALIMPLEMENTATION TSciLangItem : public Classes::TCollectionItem 
+{
+	typedef Classes::TCollectionItem inherited;
+	
+private:
+	AnsiString fLanguageStr;
+	AnsiString fLexer;
+	TSciStyleList* fStyles;
+	TSciKeyWordsList* fKeyWords;
+	AnsiString fLanguageName;
+	Classes::TPersistent* fEditor;
+	void __fastcall SetLanguageStr(const AnsiString Value);
+	void __fastcall SetLexer(const AnsiString Value);
+	void __fastcall SetName(const AnsiString Value);
+	void __fastcall SetKeywordsList(const TSciKeyWordsList* Value);
+	void __fastcall SetStyleList(const TSciStyleList* Value);
+	
+public:
+	__fastcall virtual TSciLangItem(Classes::TCollection* Collection);
+	__fastcall virtual ~TSciLangItem(void);
+	virtual void __fastcall Assign(Classes::TPersistent* Source);
+	void __fastcall Update(void);
+	void __fastcall SetEditor(Classes::TPersistent* Value);
+	
+__published:
+	__property AnsiString Name = {read=fLanguageName, write=SetName};
+	__property TSciStyleList* Styles = {read=fStyles, write=SetStyleList};
+	__property TSciKeyWordsList* Keywords = {read=fKeyWords, write=SetKeywordsList};
+	__property AnsiString LanguageStr = {read=fLanguageStr, write=SetLanguageStr};
+	__property AnsiString Lexer = {read=fLexer, write=SetLexer};
+};
+
+
+class DELPHICLASS TSciLangList;
+class PASCALIMPLEMENTATION TSciLangList : public Classes::TOwnedCollection 
+{
+	typedef Classes::TOwnedCollection inherited;
+	
+private:
+	Classes::TPersistent* fEditor;
+	
+public:
+	void __fastcall SetEditor(Classes::TPersistent* Editor);
+	void __fastcall Select(const AnsiString fLanguage);
+	TSciLangItem* __fastcall Find(const AnsiString fLanguage);
+	TSciLangItem* __fastcall GetStyleListStr(const AnsiString fLanguage);
+public:
+	#pragma option push -w-inl
+	/* TOwnedCollection.Create */ inline __fastcall TSciLangList(Classes::TPersistent* AOwner, TMetaClass* ItemClass) : Classes::TOwnedCollection(AOwner, ItemClass) { }
+	#pragma option pop
+	
+public:
+	#pragma option push -w-inl
+	/* TCollection.Destroy */ inline __fastcall virtual ~TSciLangList(void) { }
+	#pragma option pop
+	
+};
+
+
+typedef void __fastcall (__closure *TSCEvent_lexupdate)(System::TObject* Sender, Classes::TPersistent* Editor, AnsiString lang, TSciLangItem* Item);
+
+class DELPHICLASS TSciSynLexer;
+class PASCALIMPLEMENTATION TSciSynLexer : public Classes::TPersistent 
+{
+	typedef Classes::TPersistent inherited;
+	
+private:
+	Classes::TPersistent* fEditor;
+	AnsiString fLanguageStr;
+	TSciLangList* fLanguages;
+	TSCEvent_languagechanged fOnLanguageChanged;
+	TSCEvent_lexupdate fOnLexUpdate;
+	void __fastcall SetLanguageList(const TSciLangList* Value);
+	void __fastcall SetLLanguage(const AnsiString Value);
+	AnsiString __fastcall LangToLex(const AnsiString Lang);
+	
+protected:
+	DYNAMIC Classes::TPersistent* __fastcall GetOwner(void);
+	
+public:
+	__fastcall TSciSynLexer(Classes::TPersistent* Editor);
+	__fastcall virtual ~TSciSynLexer(void);
+	virtual void __fastcall Assign(Classes::TPersistent* Source);
+	void __fastcall Update(void);
+	
+__published:
+	__property TSciLangList* LanguageList = {read=fLanguages, write=SetLanguageList};
+	__property AnsiString LanguageStr = {read=fLanguageStr, write=SetLLanguage};
+	__property TSCEvent_languagechanged OnLanguageChanged = {read=fOnLanguageChanged, write=fOnLanguageChanged};
+	__property TSCEvent_lexupdate OnLexUpdate = {read=fOnLexUpdate, write=fOnLexUpdate};
+};
+
+
+//-- var, const, procedure ---------------------------------------------------
+
+}	/* namespace Scintillasynlexers */
+using namespace Scintillasynlexers;
+#pragma option pop	// -w-
+#pragma option pop	// -Vx
+
+#pragma delphiheader end.
+//-- end unit ----------------------------------------------------------------
+#endif	// ScintillaSynLexers
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@@
+
+
+1.1.1.1
+log
+@no message
+@
+text
+@@
