@@ -1,0 +1,1051 @@
+[FALCON]
+
+# Language definitions
+LangID=1046
+LangName=Português(Brasil)
+ImageIndex=28
+
+# Translated by
+Name=Mazinsw
+Email=mazinsw@gmail.com
+Version=2.0
+
+# Main Form
+# Top Menu
+1=&Arquivo
+2=&Editar
+3=&Procurar
+4=&Visualizar
+5=Pro&jeto
+6=E&xecutar
+7=&Ferramentas
+8=Aju&da
+
+# File Menu
+109=&Novo
+110=&Abrir...
+111=Reabrir
+113=&Salvar
+114=Salvar &como...
+115=Salvar todos
+117=Importar
+118=Exportar
+120=&Fechar
+121=Fechar &todos
+122=&Remover
+124=Im&primir
+126=Sai&r
+
+# Edit Menu
+221=Desfazer
+222=Refazer
+224=Cortar
+225=Copiar
+226=Colar
+228=Trocar cabeçalho/fonte
+230=Deletar
+231=Selecionar tudo
+233=Adicionar/Remover marcador
+234=Ir para um marcador
+236=Indentar
+237=Desindentar
+239=Adicionar/Remover comentário de linha
+241=Formatar
+243=Encolher Tudo
+244=Expandir Tudo
+
+# Search Menu
+334=Procurar...
+335=Próxima ocorrência
+336=Ocorrência anterior
+337=Procurar nos arquivos...
+338=Substituir...
+339=Busca Avançada...
+341=Ir para Função...
+342=Ir para função anterior
+343=Ir para próxima função
+344=Ir para Linha...
+
+# View Menu
+391=Gerenciador de Projetos
+392=Barra de Status
+393=Visualizador de Classes
+394=Saida do Compilador
+395=Barra de Ferramentas
+396=Temas
+397=Zoom
+399=Tela Cheia
+401=Restaurar padrão
+
+# Project Menu
+435=Adicionar...
+436=Remover...
+438=Construir
+440=Propriedades...
+
+# Run Menu
+541=Compilar e executar
+542=Compilar
+543=Executar
+545=Inserir/Remover Breakpoint
+546=Passar por dentro
+547=Próximo passo
+548=Sair da função
+549=Ir para o Cursor
+550=Parar
+
+# Tools Menu
+646=Opções do Ambiente...
+647=Opções do Compilador...
+648=Opções do Editor...
+650=Criador de Modelos...
+651=Criador de Pacotes...
+653=Pacotes...
+
+# Help Menu
+854=Ajuda do Falcon
+855=Dica do dia...
+857=Atualizações
+859=Sobre...
+
+# SubMenu New from File Menu
+959=&Projeto
+960=Arquivo C
+961=Arquivo C++
+962=Arquivo de cabeçalho
+963=Arquivo de recurso
+964=Arquivo vazio
+966=Pasta
+
+# SubMenu Import from File Menu
+970=Projeto do Dev-C++
+971=Projeto do Code::Blocks
+972=Projeto do MS Visual C++
+
+# SubMenu Toolbars from View Menu
+978=Barra Padrão
+979=Barra de Edição
+980=Barra de Busca
+981=Barra de Compilação
+982=Barra de Navegação
+983=Barra de Projetos
+984=Barra de Ajuda
+985=Barra de Depuração
+
+# DefaultBar ToolBar
+1067=Novo
+1068=Abrir
+1069=Remover
+1071=Salvar
+1072=Salvar todos
+
+# EditBar ToolBar
+1080=Desfazer
+1081=Refazer
+
+# NavigatorBar ToolBar
+1089=Aba anterior
+1090=Próxima aba
+1092=Adicionar/Remover marcador
+1093=Ir para um marcador
+
+# CompilerBar ToolBar
+1098=Compilar e Executar
+1099=Compilar
+1100=Executar
+1102=Parar
+
+# HelpBar ToolBar
+1110=Ajuda
+1111=Contexto de ajuda
+
+# ProjectBar ToolBar
+1119=Novo Projeto
+1120=Propriedades
+
+# DebugBar Toolbar
+1128=Passar por dentro
+1129=Próximo passo
+1130=Sair da função
+
+# SearchBar Toolbar
+1138=Procurar
+1139=Substituir
+1141=Ir para linha
+
+# PopupMenu from Project List
+1181=&Novo
+1183=Editar
+1184=Abrir
+1186=Adicionar para o projeto
+1187=Remover
+1188=Renomear
+1189=Deletar do disco
+1191=Propriedades...
+
+# PopupMenu from Editor
+1291=Abrir declaração
+1293=Completar classe do cursor
+1294=Trocar cabeçalho/fonte
+1296=Desfazer
+1297=Refazer
+1299=Cortar
+1300=Copiar
+1301=Colar
+1302=Deletar
+1303=Selecionar tudo
+1305=Ferramentas
+1307=Adicionar/Remover marcador
+1308=Ir para um marcador
+1310=Propriedades...
+
+# PopupMenu from Tabs
+1351=&Fechar
+1352=Fechar &todos
+1353=Fechar todos os outros
+1355=Salvar
+1356=Salvar todos
+1358=Copiar o nome completo do arquivo
+1359=Copiar apenas o nome do arquivo
+1360=Copiar o caminho da pasta
+1362=Trocar cabeçalho/fonte
+1364=Somente leitura
+1366=Abas no topo
+1367=Abas em baixo
+1369=Propriedades...
+
+# PopupMenu from Messages
+1375=Copiar
+1376=Copiar mensagem original
+1378=Mensagem original
+1380=Ir para a linha
+1381=Limpar
+
+# Tabs Left
+1405=Projetos
+1406=Explorar
+
+# Tabs Right
+1407=Estrutura
+
+# Tabs Down
+1408=Mensagens
+
+# Messages List
+1410=Arquivo
+1411=Linha
+1412=Notificação
+
+# Others
+1413=Projeto vazio
+1414=Deseja salvar as mudanças para "%s"?
+
+# Filters
+1415=Arquivo de projeto do Falcon C++
+1416=Todos os tipos
+
+# default FileName
+1417=NovoArquivo
+1418=NovaPasta
+1419=Principal
+1420=Recurso
+
+# Others
+1421=Executando
+1422=Compilando
+1423=Criando
+1424=Deseja remover o arquivo "%s" do projeto?
+1425=Deseja excluir o arquivo "%s" do disco?
+1426=Erro generico
+1427=Projeto
+
+# Splash Screen
+1428=Traduzido por: %s
+1429=Criando templates padrão...
+1430=Carregando Templates...
+1431=Carregando Projetos...
+1432=Criando ferramentas padrão...
+1433=Ajustando Variáveis de ambiente...
+1434=Preparando para Iniciar aplicação...
+1435=Vazio
+1436=Limpar Histórico
+1437=Carregando Histórico...
+1438=Arquivo %s não encontrado
+
+# Filters
+1439=Todos os arquivos conhecidos
+1440=Carregando todos os pacotes instalados...
+1441=Verificando por novos pacotes instalados...
+1442=dddd, d "de" mmmm "de" yyyy t
+
+# Compilation messages
+1443=Sucesso na compilação em %s s
+1444=Falha na compilação
+1445=Adicionando mensagens %d/%d
+1446=Traduzindo resultados %d/%d
+1447=Deseja criá-lo?
+1448=Debugando
+1449=Carregando configurações...
+1450=Nenhum compilador detectado
+1451=Não foi possível importar o projeto do %s.
+1452=Projeto do %s
+1453=Este arquivo foi modificado por outro programa.\nDeseja carregá-lo?
+1454=Variáveis
+1455=Continuar
+1456=Deseja remover a pasta "%s" do projeto?
+1457=Deseja excluir a pasta "%s" do disco?
+1458=O arquivo "%s" já existe.\nDeseja sobrescreve-lo?
+
+# Property Form
+# Tabs
+1528=Aplicação
+1529=Informações de versão
+1530=Compilador
+1531=Execução
+
+# Sheet Application
+1532=Configurações da aplicação
+1533=Nome do projeto:
+1534=Alvo:
+1535=Icone:
+1536=Clique duas vezes para alterar o icone
+1537=Mudar o icone...
+1538=Configurações de saida
+1539=Extensão do arquivo alvo:
+1540=Incluir todos os arquivos dentro do projeto
+1573=Propriedades
+1574=Tipo da aplicação
+1575=Aplicação console
+1576=Aplicação do windows
+1577=Biblioteca dinâmica(DLL)
+1578=Biblioteca estática
+1579=Habilitar tema
+1580=Requer nível de administrador
+1581=Criar uma biblioteca ligada
+1582=Selecione uma pasta para incluir na compilação
+1583=Editar selecionado
+1584=Selecione uma pasta contendo bibliotecas
+
+# Common buttons
+1541=Ok
+1542=Cancelar
+1543=Aplicar
+
+# Sheet Version Info
+1544=Incluir informações de versão no projeto
+1545=Números da versão
+1546=Versão maior
+1547=Versão menor
+1548=Lançamento
+1549=Compilações
+1550=Incrementar um a cada compilação
+1551=Linguagem
+1552=Local:
+1553=Propriedade
+1554=Valor
+
+# Sheet Compiler
+1555=Tipo de compilador
+1556=Otimizações
+1557=Minimizar tamanho
+1558=Mostrar avisos
+1559=Otimizar velocidade
+1560=Bibliotecas
+1561=Adicionar
+1562=Remover selecionado
+1563=Mover para cima
+1564=Mover para baixo
+1565=Incluir diretórios
+1566=Limpeza
+1567=Excluir objetos antes da compilação
+1568=Excluir objetos depois da compilação
+1569=Excluir o arquivo makefile depois da compilação
+1570=Excluir os recursos depois da compilação
+
+# Sheet Run
+1571=Aplicação
+1572=Parâmetros:
+
+# New Project Form
+1673=Novo Projeto
+1674=< Voltar
+1675=Próximo >
+1676=Concluir
+
+# Projects Frame
+1677=Descrição
+1678=Assistente de projeto do Falcon C++
+
+# Project Options Frame
+1679=Mudar
+1680=Ícone da aplicação
+1681=Empresa
+1682=Versão
+1683=Nome do produto
+1684=Nome
+
+# Update Frame
+4001=Atualização do aplicativo
+4002=Verificando atualizações...
+4003=&Atualizar
+4004=O Falcon C++ está aberto, deseja fecha-lo?
+4005=Falha na atualização
+4006=Problema na conexão.
+4007=Atualização completada com sucesso.
+4008=Atualização completada.
+4009=Falha no download: tente novamente.
+4010=Falha no download
+4011=Baixando 0%...
+4012=Conectando...
+4013=Baixando...
+
+# Get Version Frame
+4014=Localizando novas atualizações do Falcon C++...
+
+# Update Frame
+4015=Mudanças:
+4016=Erro no arquivo XML
+4017=Nenhuma atualização disponível
+4018=Esta versão é mais recente que a do repositório
+4019=A versão instalada ja é a versão mais nova
+4020=Atualização disponível
+4021=Nova atualização disponível: %s
+4022=&Fechar
+4023=&Ok
+4024=&Cancelar
+4025=Instalando...
+
+# Find/Replace Form
+4201=Localizar e substituir
+4202=&Localizar
+4203=&Substituir
+4204=Localizar nos ar&quivos
+4205=Localizar:
+4206=Substituir por:
+4207=Substituir
+4208=Na seleção
+4209=Substituir todos
+4210=Mais
+4211=Menos
+4212=Localizar próximo
+4213=Cancelar
+4214=Opções de pesquisa
+4215=Diferenciar maiúsculas/minúsculas
+4216=Coincidir palavra inteira
+4217=Pesquisa circular
+4218=Modo de pesquisa
+4219=Normal
+4220=Extendido (\n \r \t \0 \x...)
+4221=Expressão regular
+4222=Direção
+4223=Acima
+4224=Abaixo
+4225=Transparência
+4226=Opacidade
+4227=Procurar no
+4228=Projeto
+4229=Objeto selecionado
+4230=Não foi possível encontrar o texto:\n"%s"
+4231=%d ocorrências foram substituidas
+4232=Parar
+4233=Procurando por '%s' no arquivo '%s'
+4234=Palavra '%s' encontrada na linha %d e coluna %d
+
+# Editor Options Form
+4333=Opções do Editor
+
+# General Sheet
+4334=Geral
+4335=Opções do Editor
+4336=Indentação automática
+4338=Modo de inserção
+4339=Desfazer grupo
+4340=Manter espaços à direita
+4341=Exibir espaços e tabulações
+4342=Barra de rolagem com guia
+4343=Indentar/Desindentar com o Tab
+4344=Tab inteligente
+4345=Usar o caractere TAB
+4346=Tecla Home melhorada
+4347=Quantidade de desfazer:
+4348=Largura do TAB:
+4349=Destacar chaves ou parênteses
+4350=Cor normal
+4351=Cor com erro
+4352=Cor de fundo
+4353=Destacar linha atual
+4354=Cor
+4355=Navegar com o click
+4356=Restaurar padrão
+4470=Auto fechar parênteses e colchetes
+4471=Cursor depois do final da linha
+
+# Display Sheet
+4357=Visualização
+4358=Fonte do editor:
+4359=Tamanho:
+4360=Amostra:
+4361=Margem e espaço à esquerda
+4362=Mostrar margem à direita
+4363=Mostrar espaço à esquerda
+4364=Mostrar número das linhas
+4365=Espaço à direta com degradê
+4366=Margem da direita:
+4367=Largura do espaço à esquerda:
+
+# Colors Sheet
+4368=Cores
+4369=Tipo:
+4370=Sintaxes definidas:
+4371=Salvar sintaxe
+4372=Excluir sintaxe
+4373=Cor da letra:
+4374=Cor do fundo:
+4375=Estilos
+4376=Negrito
+4377=Itálico
+4378=Sublinhado
+4379=Nova sintaxe
+
+# Formatter
+4380=Formatador
+
+# Style
+4381=Estilo
+4382=Personalizado
+4383=Pré-visualizar
+4384=Amostra
+
+# Indentation
+4385=Indentação
+4386=Forçar usar TAB
+4387=Indentar classes (palavras chave public:, protected: e private:)
+4388=Indentar switches (palavras chave case:)
+4389=Indentar declarações case: nos switches (comandos case:)
+4390=Indentar chaves
+4391=Indentar blocos
+4392=Indentar namespaces
+4393=Indentar labels
+4394=Indentar definições de macro de multiplas linhas
+4395=Indentar comentários de linha simples
+
+# Hints
+4396=Indentar usando caracteres de tabulação.
+4397=Indent 'class' and 'struct' blocks so that the blocks 'public:', 'protected:' and 'private:' are indented. The struct blocks are\nindented only if an access modifier is declared somewhere in the struct. The entire block is indented. This option is \neffective for C++ files only.
+4398=Indent 'switch' blocks so that the 'case X:' statements are indented in the switch block. The entire case block is indented.
+4399=Indent 'case X:' blocks from the 'case X:' headers. Case statements not enclosed in blocks are NOT indented.
+4400=Add extra indentation to namespace blocks.
+4401=Add extra indentation to labels so they appear 1 indent less than the current indentation, \nrather than being flushed to the left (the default).
+4402=Indent multi-line preprocessor definitions ending with a backslash. Should be used with --convert-tabs for proper results. \nDoes a pretty good job, but cannot perform miracles in obfuscated preprocessor definitions. Without this option the \npreprocessor statements remain unchanged.
+4403=Indent C++ comments beginning in column one. By default C++ comments beginning in column one are not indented. \nThis option will allow the comments to be indented with the code.
+
+# Padding sheet
+4404=Organização
+4405=Criar linhas em branco ao redor de blocos ('if', 'while', ..)
+4406=Quebrar fechamento de blocos
+4407=Inserir espaço ao redor dos operadores
+4408=Inserir espaço ao redor dos parênteses por fora
+4409=Inserir espaço ao lado dos parênteses por dentro
+4410=Organizar parênteses
+4411=Remover espaço extra ao redor dos parênteses
+4412=Remover linhas em branco
+4413=Preencher linhas em branco com os espaços em branco da linha anterior
+
+# Hints
+4414=Pad empty lines around header blocks (e.g. 'if', 'for', 'while'...).
+4415=Pad empty lines around header blocks (e.g. 'if', 'for', 'while'...). Treat closing header blocks (e.g. 'else', 'catch') as \nstand-alone blocks.
+4416=Insert space padding around operators. Any end of line comments will remain in the original column, if possible. \nNote that there is no option to unpad. Once padded, they stay padded.
+4417=Insert space padding around parenthesis on the outside only. Any end of line comments will remain in the original column, \nif possible.
+4418=Insert space padding around parenthesis on the inside only. Any end of line comments will remain in the original column, \nif possible.
+4419=Insert space padding after paren headers only (e.g. 'if', 'for', 'while'...). Any end of line comments will remain in the \noriginal column, if possible.
+4420=Remove extra space padding around parenthesis on the inside and outside. Any end of line comments will remain in the \noriginal column, if possible.
+4421=Delete empty lines within a function or method. Empty lines outside of functions or methods are NOT deleted.
+4422=Fill empty lines with the white space of the previous line.
+
+# Formatting
+4423=Formatação
+4424=Estilo das chaves:
+4425=Nenhum
+4426=Quebrar
+4427=Anexar
+4428=Linux
+4429=Quebrar fechamento de chaves
+4430=Quebrar combinações de 'else if()' em linhas separadas
+4431=Adicionar chaves
+4432=Adicionar chaves em linha simples
+4433=Não quebrar blocos de uma linha
+4434=Não quebrar declarações complexas e multiplas declarações em uma simples linha
+4435=Converter TAB para espaços
+
+# Hints
+4436=When used with brackets=attach, brackets=linux, this breaks closing headers (e.g. 'else', 'catch', ...) from their\nimmediately preceding closing brackets. Closing header brackets are always broken with broken brackets, horstmann \nbrackets, indented blocks, and indented brackets.
+4437=Break "else if" header combinations into separate lines. This option has no effect if keep one line statements is used, the\n"else if" statements will remain as they are.\nIf this option is NOT used, "else if" header combinations will be placed on a single line.
+4438=Add brackets to unbracketed one line conditional statements (e.g. 'if', 'for', 'while'...). The statement must be on a single \nline. The brackets will be added according to the currently requested predefined style or bracket type. If no style or \nbracket type is requested the brackets will be attached. If add one line brackets is also used the result will be one line \nbrackets.
+4439=Add one line brackets to unbracketed one line conditional statements  (e.g. 'if', 'for', 'while'...). The statement must be on\na single line. The option implies keep one line blocks and will not break the one line blocks.
+4440=Don't break one-line blocks.
+4441=Don't break complex statements and multiple statements residing on a single line.
+4442=Converts tabs into spaces in the non-indentation part of the line. The number of spaces inserted will maintain the spacing \nof the tab. The current setting for spaces per tab is used. It may not produce the expected results if convert-tabs is used\nwhen changing spaces per tab. Tabs are not replaced in quotes.
+4443=Alinhamento de ponteiro:
+4444=Nenhum
+4445=Por tipo
+4446=No meio
+4447=Junto ao nome
+4448=Attach a pointer or reference operator (* or &) to either the variable type (left) or variable name (right), or place it\nbetween the type and name (middle). The spacing between the type and name will be preserved, if possible. To format\nreferences separately use the following align-reference option.
+
+# Code Resources
+4449=Recursos do código
+4450=Recursos automáticos
+4451=Completação de código
+4452=Parâmetro das funções
+4453=Dica que resolve expressões sob o mouse
+4454=Dica do texto sob o mouse
+4455=&Atraso:
+4456=%.1f seg
+4457=Cores da lista de completação
+4458=Símbolo de constantes:
+4459=Símbolo de funções:
+4460=&Símbolo de variáveis:
+4461=Símbolo de tipos:
+4462=Símbolo de typedef:
+4463=Macros:
+4464=Item selecionado:
+4465=Cor de fundo:
+4466=Modelos de códigos
+4467=Arquivo de modelo de código personalizável:
+4468=Abrir
+4469=Editar
+
+# Form Environment Options
+4569=Opções do ambiente
+
+# General
+4570=Geral
+4571=Padrão para C++ em novos arquivos
+4572=Mostrar barra de ferramentas quando em tela cheia
+4573=Remover arquivo quando fechar
+4574=Um clique para abrir um arquivo
+4575=Verificar por atualizações automaticamente
+4576=Criar arquivos de layout
+4577=Perguntar se deseja remover um arquivo do projeto
+4578=Executar aplicações console no executor de aplicações
+4579=Abrir automaticamente
+4580=Todos os arquivos de projetos
+4581=Todos os arquivos da última sessão
+4582=Somente o último arquivo que foi aberto
+4583=Somente o primeiro projeto
+4584=Nenhum
+
+# Interface
+4585=Interface
+4586=Número máximo de arquivos no menu reabrir:
+4587=Idioma:
+4588=Mostrar tela inicial
+4589=Tema
+
+# Files and Directories
+4590=Arquivos e diretórios
+4591=Arquivo de configuração alternativo
+4592=Arquivo de configuração
+4593=Diretório padrão do usuário
+4594=Diretório dos modelos
+4595=Diretório dos arquivos de idioma
+4596=Diretório dos Projetos
+4597=Diretório de arquivos de Ajuda ou Documentação
+4598=Diretório de exemplos
+4599=Abrir
+4600=Visualizar
+4601=Selecione um
+4602=Selecione um diretório
+4603=Reinicie a aplicação para aplicar as mudanças
+4604=Arquivos de configuração
+
+# Form Code Templates
+4704=Modelos
+4705=Código
+4706=Nome inválido!
+4707=O nome já existe
+4708=Adicionar modelo de código
+4709=Editar modelo de código
+
+# Form Prompt Code Templates
+4808=Nome
+4809=Descrição
+
+# About Form
+4909=Sobre
+4910=Compatibilidade: %s
+4911=Licença
+4912=Desenvolvedores
+4913=Tradutores
+4914=Testadores
+
+# Form Goto Line
+5015=Ir para Linha
+5016=Linha (%d - %d):
+
+# Form Goto Function
+5117=Ir para Função
+5118=Nome da função
+5119=Nome
+5120=Tipo de retorno
+5121=Linha
+5122=Arquivo
+
+# Console Runner
+6001=O Processo retornou %ld   tempo de execução : %0.3f s
+6002=Pressione uma tecla para continuar...
+
+# Package Manager
+# Loading form
+7001=Espere enquanto o pacote é extraido...
+7002=Extraindo dados: %d%%
+
+# Wizard form
+7101=Instalação do pacote %s
+7102=< Voltar
+7103=Próximo >
+7104=Cancelar
+7105=Eu Concordo
+7106=Instalar
+7107=Concluir
+7108=Deseja reiniciar o sistema agora?
+7109=Falcon C++ Assistente de Instalação
+7110=Deseja sair da instalação do pacote %s?
+7111=Erro: não foi possível abrir o arquivo "%s".
+7112=Erro: não foi possível criar o arquivo "%s".
+7113=Erro: não foi possível extrair o arquivo "%s".
+7114=O pacote %s foi instalado com sucesso.
+7115=Arquivo de informação de pacote não encontrado!
+7116=Dependencias:
+7117=Criando diretório:
+7118=Erro na criação do diretório:
+7119=O pacote %s foi instalado com erros\Não foi possível criar o diretório '%s'.
+7120=O pacote %s foi instalado com erros\n%d arquivos não foram instalados.
+7121=A instalação de %s foi abortada:\nErro: Não foi possível criar o diretório '%s'.
+7122=Erro ao abrir arquivo para escrita:
+7123=O pacote %s foi instalado com erros\nfile '%s' couldn't be installed.
+7124=A instalação de %s foi abortada:\nErro: Não foi possível abrir o arquivo '%s' para escrita.
+7125=Erro ao abrir arquivo temporário:
+7126=Removendo arquivos temporários...
+
+# Welcome frame
+7201=Bem-vindo ao assistente de instalação do pacote %s
+7202=Este assistente guiará você através da instalação do pacote %s.
+7203=É recomendado que você feche a aplicação Falcon C++ antes de iniciar a instalação. Isto tornará possível a atualização de todos os arquivos da pasta do compilador.
+7204=Clique em Próximo para continuar.
+
+# Install step frame
+7301=Falcon C++ Instalação de pacote
+
+# Agreement frame
+7401=Se você aceita os termos do acordo, clique em Eu Concordo para continuar. Você deve aceitar o acordo para instalar o pacote %s.
+7402=Acordo da licença
+7403=Por favor, reveja os termos da licença antes de instalar o pacote %s.
+7404=Pressione Page Down para ver o resto do acordo.
+
+# Readme frame
+7501=Pressione Page Down para ver o resto do texto LEIAME.
+7502=Clique em Próximo para continuar.
+7503=LEIAME
+7504=Por favor, leia o seguinte texto LEIAME.
+
+# Description frame
+7601=Descrição do pacote
+7602=Detalhes do pacote %s.
+7603=Espaço requerido:
+7604=Espaço disponível:
+7605=Descrição do pacote
+7606=Nome:
+7607=Versão:
+7608=Website:
+7609=Descrição:
+7610=Clique em Instalar para iniciar a instalação.
+
+# Progress frame
+7701=Mostrar detalhes
+7702=Instalando
+7703=Por favor, espere enquanto o pacote %s está sendo instalado.
+7704=Clique em abortar para parar a instalação,\nRepetir para tentar novamente, ou\nIgnorar para pular este arquivo.
+
+# Finish frame
+7801=Completando o assistente de instalação do pacote %s
+7802=Clique em Concluir para fechar este assistente.
+7803=Mostrar gerenciador de pacotes
+
+# Uninstall form
+7901=Desinstalando pacote...
+7902=Ok
+7903=Completo.
+7904=Pacote "%s" não encontrado
+7905=Outros pacotes dependem:
+
+# Package Manager form
+8001=Gerenciador de pacotes do Falcon C++
+8002=Pacotes
+8003=Visualizar
+8004=Ajuda
+8005=Instalar
+8006=Desinstalar
+8007=-
+8008=Recarregar
+8009=Verificar
+8010=-
+8011=Sair
+8012=Barra de ferramentas
+8013=Detalhes
+8014=Barra de status
+8015=Ajuda
+8016=-
+8017=Sobre...
+8018=Instalar
+8019=Desinstalar
+8020=Recarregar
+8021=Verificar
+8022=Ajuda
+8023=Sobre
+8024=Sair
+8025=Informações
+8026=Arquivos
+8027=Abrir pasta
+8028=Copiar caminho completo
+8029=%d arquivos não encontrados de %d instalados
+8030=Pacote intacto!
+8031=Deseja remover o pacote "%s" - Versão: %s ?
+
+# Help form
+8032=Ok
+
+# Download form
+8101=Instalar pacotes
+8102=Pacotes
+8103=Nome
+8104=Versão
+8105=Tamanho
+8106=Status
+8107=Mostrar
+8108=Atualizações/Novos pacotes
+8109=Instalados
+8110=Procurar pacote:
+8111=Instalar pacotes...
+8112=Remover pacotes...
+8113=Carregamento de pacotes concluído.
+8114=Carregando pacotes...
+8115=Erro no arquivo xml.
+8116=Repetir
+8117=Dependência "%s %s" para "%s %s" não encontrada
+8118=Baixando lista de pacotes %.2f%%.
+8119=Baixando lista de pacotes...
+8120=Instalar %d pacote...
+8121=Instalar %d pacotes...
+8122=Remover %d pacote...
+8123=Remover %d pacotes...
+8124=Download cancelado.
+8125=Erro no download: Arquivo xml inválido.
+8126=Desinstalar
+8127=Instalado
+8128=Instalar
+8129=Não instalado
+8130=Deseja cancelar a instalação dos pacotes?
+8131=O pacote já está instalado!
+8132=O pacote não pode ser instalado, uma versão mais antiga já está instalada!
+8133=O pacote não pode ser desinstalado, outros pacotes dependem dele!
+8134=Erro arquivo %s não encontrado
+8135=Instalando pacote %s...
+8136=Instalação de pacotes concluída.
+8137=Desinstalando pacote %s...
+8138=Desinstalação de pacotes concluída.
+8139=Baixando pacote %s...
+8140=Baixando pacote %s - %.1f%%...
+8141=Erro ao tentar instalar o pacote %s
+8142=Erro ao tentar desinstalar o pacote %s
+
+# Compiler messages
+1785=Na função '$2':
+1786=A função '$3' não foi declarada
+1787=atribuição feita a um ponteiro a partir de um inteiro sem um cast
+1788=Sufixo "$4" inválido em uma constante inteira
+1789=A variável '$3' não está sendo usada
+1790='$3' não foi declarado anteriormente
+1791=Era esperado um '$3' antes de '$4'
+1792=Foi passado $5 argumentos para "$4", mas é necessário apenas $6
+1793=A função "$4" requer $5 argumentos, e só foi passado $6
+1794=Erro neste ponto do arquivo
+1795=Há mais argumentos que o necessário na função '$3'
+1796='$3' não foi declarada para poder ser usada nesta função
+1797=Era esperado '$3' antes do número
+1798=Cada identificador não declarado que aparece é relatado somente uma vez para cada função
+1799=Declaração sem efeito
+1800=A Passagem do $3º argumento na função '$4' está sendo feita por um ponteiro sem um cast, sendo que o $3º argumento é do tipo inteiro
+1801=Nota: era esperado '$3' mas o argumento passado é do tipo '$4'
+1802=Erro na coversão de '$3' para '$4'
+1803=Erro na inicialização do argumento $3 da função '$4'
+1804=Pouco argumento para a função '$3'
+1805=Referência não definida para '$4'
+1806=Não foi possível converter '$3' para '$4' para o argumento '$5' até '$6'
+1807=Valor computado não está sendo usado
+1808='$3' está sendo usado sem ser inicializado nesta função
+1809=Operando base de '$3' não é do tipo ponteiro '$4'
+1810=O arquivo $4 ou diretório não foi encontrado
+1811='$3' não é o nome de um tipo
+1812=Era esperado um inicializador antes de '$3'
+1813=uma definição de função não é permitida aqui antes de '$3' sendo esperado '$4' no fim da entrada
+1814=Está retornando um ponteiro ao invés de um inteiro, você pode usar um cast
+1815=Sobrecarregamento na conversão da constante
+1816=A constante inteira é muito grande para o tipo '$3'
+1817=A constante inteira é muito grande para esse tipo
+1818=Esta constante decimal é sem sinal somente no padrão ISO C90
+1819=Era esperado um '$3' antes do símbolo '$4'
+1820=Era esperado uma expressão antes do símbolo '$3'
+1821='$3' foi declarada aqui
+1822=Declaração sem nenhum efeito
+1823=É necessário uma variável para a atribuição
+1824=Usando o tipo padrão '$3' na declaração de '$4'
+1825=Inicialização sendo feita a um inteiro a partir de um ponteiro sem um cast
+1826=Constante de caracteres muito grande para esse tipo
+1827=Era esperado um identificador ou '$3' antes da constante numérica
+1828=Era esperado '=', ',', ';', 'asm' ou '__attribute__' antes de '$3'
+1829=A indicação '$3' foi definida mas não está sendo usada
+1830='$4' não faz parte de '$3'
+1831=O índice do vetor não é inteiro
+1832=Pouco parâmetro para o formato
+1833=O formato '$3' é usado para o tipo '$4', mas o parâmetro $5 é do tipo '$6'
+1834=O parâmetro do switch não é um inteiro
+1835=Tipo incompatível com o parâmetro $3 da função '$4'
+1836=Era esperado alguma expressão ou símbolo antes de '$3'
+1837=A função não está retornando nenhum valor
+1838=A variavel '$3' pode está sendo usada sem ser inicializada nesta função
+1839=Está faltando chaves em torno da inicialização
+1840=Inicialização sendo feita apenas para '$3'
+1841=A declaração está sendo usada como uma referência, e não como chamada da função '$3'
+1842=A indicação do caso '$3', está fora da declaração do switch
+1843=Era esperado uma expressão primária antes de '$3'
+1844=Esta função não é void e não foi encontrada uma expressão de retorno
+1845=Era esperado um id incondicional antes de '$3'
+1846=O índice usado está acima dos limites do vetor
+1847=Sugerimos que use parênteses em torno da expressão usada como valor verdade
+1848=Tamanho de armazenamento de '$3' não é conhecido
+1849=Aplicação inválida de '$3' para o tipo incompleto '$4'
+1850=Declaração implícita incompatível da função interna '$3'
+1851=Comparação entre expressões inteiras com sinal e sem sinal
+1852=Conversão obsoleto de uma string constante para '$3'
+1853=Era esperado o nome da classe antes do símbolo '$3'
+1854=O padrão ISO C++ proíbe a declaração de '$3' sem um tipo
+1855=typedef '$3' é inicializado (use decltype em vez disso)
+1856=Era esperado um construtor, destruidor ou um tipo de conversão antes do símbolo '$3'
+1857=Era esperado um inicializador antes do símbolo '$3'
+1858=Era esperado um construtor, destruidor ou um tipo de conversão antes de '$3'
+1859=Incluido no arquivo $1
+1860=Primeiramente definido aqui
+1861=O valor da Enumeração '$3' não pode ser tratado no switch
+1862=Na função membro '$2'
+1863=Caractere '$3' inválido no programa
+1864=Era esperado '$3' no fim da entrada
+1865=A largura do campo deve ser do tipo '$3', mas o argumento $5 é do tipo '$5'
+1866=O valor subscrito não é nem o ponteiro do vetor
+1867=Tipo de vetor tem o tipo com quantidade de elementos incompletos
+1868=Muito argumento para o formato
+1869=A operação em '$3' pode ser indefinida
+1870=Comentário sem fim
+1871=Tem um "$4" dentro do comentário
+1872=Falta encerrar a string com $4
+1873=Arquivo ou diretório '$2' não encontrado
+1874=Falta encerrar a string com $3
+1875=Tamanho da matriz incompleta em '$3'
+1876=O $3º argumento de '$4' é incompatível com o tipo de ponteiro
+1877=Usando '$3' como tipo de retorno
+1878=Era esperado um identificador ou um '$3' antes de '$4'
+1879=Era esperado um identificador ou um '$3' no fim da entrada
+1880=Era esperado um especificador-qualificador-lista antes de '$3'
+1881=Essa declaração não declara nada
+1882=A largura do campo de bit '$3', não é uma constante inteira
+1883='$3' não foi declarado aqui (não nesta função)
+1884=Os parâmetros '$2' depois da última entrada do arquivo não tem efeito
+1885=Sem arquivos para compilar
+1886=Falha no pre-processamento
+1887=Largura zero para o campo de bits '$3'
+1888=A largura de '$3' excede o seu tipo
+1889=Use parenteses em torno do inicializador escalar
+1890=Inicialização com tipo de ponteiro incompatível
+1891=Elementos em excesso no inicializador escalar
+1892=O operando do lado esquerdo da expressão com vírgula não tem nenhum efeito
+1893=Atribuição com tipo de ponteiro incompatíveis
+1894=A string de inicialização para o vetor de caracteres é muito grande
+1895=Sem recursos
+1896=Aplicação inválida de '$3' para o tipo '$4' incompleto
+1897=Valor vazio não ignorado como deveria ser
+1898=Criando arquivo de biblioteca
+1899=Nome do tipo inútil na declaração vazia
+1900=Conversão desconhecida do tipo de caractere '$3' no formato
+1901=Nome do parâmetro omitido
+1902=Era esperada a declaração de especificadores antes de '$3'
+1903=Velho estilo de declarações de parâmetro na definição da função prototipada
+1904=Declaração vazia
+1905=Esperada declaração de especificadores antes do simbolo '$3'
+1906=Esperada declaração de especificadores ou '$3' antes de '$4'
+1907=Classe de armazenamento especificado para o parâmetro '$3'
+1908=Membro duplicado '$3'
+1909=Esperado '$3' antes da string constante
+1910=Objeto chamado '$3' não é uma função
+1911=Muitas referências de memória para '$3'
+1912=Elementos em excesso no inicializador do vetor
+1913=O tamanho do vetor '$3' é muito grande
+1914=Tipos incompatíveis na atribuição para o tipo '$3' apartir do tipo '$4'
+1915=Operandos inválidos para $3 binários (tem '$4' e '$5')
+1916=Assumindo estouro com sinal não ocorre quando assumindo que $3 é sempre $4
+1917=Mais referências indefinidas para '$3' seguidamente
+1918=Listas de inicializadores estendidos disponível apenas com $3 ou $4
+1919=Tipo do parâmetro formal $3 está incompleto
+1920=Desreferenciando o ponteiro '$3'
+1921=Requisição do membro '$3' em algo quen não é uma estrutura ou união
+1922=Conflitos de tipos para '$3'
+1923=Definição anterior de '$3' foi feita aqui
+1924=Especificador de classe de armazenamento inútil na declaração vazia
+1925='$3' foi ignorada nesta declaração
+1926=Dimensão do vetor muito grande
+1927=Desreferenciando ponteiro para um tipo incompleto
+1928=Nenhuma função correspondente para a chamada de '$3'
+1929=Candidatos são: $3
+1930=Declaração de '$3' esconde um parâmetro
+1931=Neste contexto
+1932=Declaração anterior de '$3' foi feita aqui
+1933=Declaração de retorno com um valor, em função retornando '$3'
+1934=Passando '$3' como '$4' argumento de '$5' descarta qualificadores
+1935=Argumento de modelo $3 é inválido
+1936=Esperado um id não qualificado antes do símbolo '$3'
+1937=O tipo de retorno de '$3' não é '$4'
+1938='$3' com um valor, em uma função que não retorna nada
+1939='$3' sem um valor, em uma função que retorna algo
+1940=Redefinição de '$3'
+1941=A constante inteira é tão grande que ela está sem sinal
+1942='$3' ou '$4' inválido para '$5'
+1943=Variável ou campo '$3' declarado void
+1944=Esperado expressão primária antes de '$3'
+1945=Redeclaração de '$3' sem ligação
+1946=Referência não definida para `$3'
+1947=Não foi possível abrir o arquivo de saida $2: Permissão negada
+1948=Muitos pontos decimais no número
+1949=Atribuição torna inteiro a partir de um ponteiro sem um cast [abilitado por padrão]
+1950=Valor da esquerda requerida como operando '$4' unário
+1951=Declarações iniciais de laço '$3' só são permitidos no modo $4
+1952=Use a opção $3 ou $4 para compilar seu código
+1953=Arquivo $4 não encontrado
+1954=Compilação encerrada.
+1955=Nenhuma linha em branco no final do arquivo
+1956='$3' Anteriormente definida aqui
+1957=Uso inválido de '$3'
+1958=Esperado uma declaração antes do símbolo '$3'
+1959='$3' definido, mas não usado
+1960=Variável objeto de tamanho não fixo não pode ser inicializada
+1961=Esta é a localização da definição anterior
+1962=Declaração friend '$3' declara uma função sem template
+1963=Se isso não é o que você pretendia, verifique se o template da função já foi declarado e adicione <> após o nome desta função
+1964='$3' Não foi declarado
+1965='$3' é uma base inacessível de '$4'
+1966=Na função '$2':
+1967='$3' não foi declarado neste escopo
+1968=Esperado '$3' antes de "$4"
+1969=Declaração '$3' desnecessária no membro '$4'
+1970=Elemento de inicialização não é uma constante
+1971=Conflito de tipos para '$3'
+1972=Declaração anterior de '$3' foi feita aqui
+1973=No nível do topo:

@@ -1,0 +1,235 @@
+//CE_Desc_Include(helpdescriptions.txt)
+{
+	Delphi Scintilla Interface Components
+	Copyright (C) 2004, Jan Martin Pettersen (hdalis)
+
+	This library is free software; you can redistribute it and/or
+	modify it under the terms of the GNU Lesser General Public
+	License as published by the Free Software Foundation; either
+	version 2.1 of the License, or (at your option) any later
+	version.
+
+	This library is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+	Lesser General Public License for more details.
+
+	You should have received a copy of the GNU Lesser General Public
+	License along with this library; if not, write to the Free
+	Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+	02111-1307 USA
+}
+{
+  Author : hdalis
+	Created: 24/11/2004, 18:21:20
+  History: 26/11/2004 Initial Release
+			$Id: sciAbbrevationManager.pas,v 1.1 2004/12/03 17:19:00 hdalis Exp $
+
+}
+unit sciAbbrevationManager;
+interface
+uses Classes,SciLexerMemo;
+
+type
+TSciAbbrevManager=class(TComponent)
+  private
+    fEditor : TScintillaMemo;
+    fAbbrevs : TStrings;
+    fIgnoreCase : Boolean;
+    procedure SetAbbrevs(Value : TStrings);
+    procedure SetIgnoreCase(const Value : Boolean);
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+  public
+    procedure ExpandAbbrev;
+    constructor Create(AOwner : TComponent);override;
+    destructor Destroy;override;
+  published
+    property Abbrevations : TStrings read fAbbrevs write SetAbbrevs;
+    property Editor : TScintillaMemo read fEditor write fEditor;
+    property IgnoreCase : Boolean read fIgnoreCase write SetIgnoreCase default False;
+end;
+
+implementation
+uses SciLexer,SysUtils,SciResLang;
+
+function Unslash(s : String) : String;
+var
+i,x,cnt : Integer;
+dest : String;
+extra : Integer;
+begin
+
+  cnt:=Length(s);
+  SetLength(dest,cnt);
+  x:=0;
+  extra:=0;
+  for i:=0 to (cnt-1) do
+  begin
+    if (i+extra)>(cnt) then break;
+    if s[i+extra]='\' then
+    begin
+      case s[i+extra+1] of
+        'r': begin dest[x]:=#13;Inc(extra);end;
+        'n': begin dest[x]:=#10;Inc(extra);end;
+        't': begin dest[x]:=#9;Inc(extra);end;
+        'b': begin dest[x]:=#7;Inc(extra);end;
+        'f': begin dest[x]:=#15;Inc(extra);end;
+        'v': begin dest[x]:=#11;Inc(extra);end;
+      end;
+    end else
+    dest[x]:=s[i+extra];
+    Inc(x);
+  end;
+  if x>0 then SetLength(dest,x-1);
+  Result:=dest;
+end;
+
+constructor TSciAbbrevManager.Create(AOwner : TComponent);
+begin
+  inherited;
+  fAbbrevs:=TStringList.Create;
+  TStringList(fAbbrevs).CaseSensitive:=True;
+  fIgnoreCase:=False;
+end;
+destructor TSciAbbrevManager.Destroy;
+begin
+  if fAbbrevs<>nil then fAbbrevs.Free;
+  inherited;
+end;
+
+procedure TSciAbbrevManager.Notification(AComponent: TComponent; Operation: TOperation);
+begin
+	inherited Notification(AComponent,Operation);
+	if Operation=opRemove then
+	begin
+		if AComponent=FEditor then
+		begin
+      fEditor:=nil;
+		end;
+	end;
+end;
+
+procedure TSciAbbrevManager.SetAbbrevs(Value : TStrings);
+begin
+  fAbbrevs.Assign(Value);
+end;
+
+procedure TSciAbbrevManager.ExpandAbbrev;
+var
+  abbrevpos,currentpos,currentlinenum,indent,
+  indentExtra,linestart,abbrlen,i,extrainc,caret_pos,indentsize: Integer;
+  abbrev,toabbrev,resultingabbr,linebuf : String;
+  c : AnsiChar;
+  isIndent,found : Boolean;
+begin
+  if fEditor=nil then
+    raise Exception.CreateResFmt(@sEditorPropertyNotAssigned,['TSciAbbrevManager']);
+  currentpos:=fEditor.GetCaretInLine;
+  if currentpos=0 then Exit; // expand only when at end of word.
+  isIndent:=True;
+  indentExtra:=0;
+  indent:=0;
+  currentLineNum:=fEditor.GetCurrentLineNumber;
+  linestart:=fEditor.PositionFromLine(currentlinenum);
+  if currentpos=0 then Exit;
+  indentsize:=fEditor.GetIndent;
+  SetLength(linebuf,currentpos);
+  fEditor.GetRange(linestart,linestart+currentpos,PChar(linebuf));
+  found:=False;
+  abbrev:='';
+  abbrevpos:=0;
+
+  if KeepIndent in fEditor.Indentation then
+  begin
+    indent := fEditor.GetLineIndentation(currentLineNum);
+  end;
+  for i:=currentpos downto 0 do
+  begin
+    if iswordcharforsel(Integer(linebuf[i]))=False then
+      break;
+  end;
+  if i<>currentpos then
+  begin
+    abbrevpos:=i;
+    toabbrev:=System.Copy(linebuf,abbrevpos+1,currentpos);
+    if abbrevpos=-1 then abbrevpos:=0;
+    if fAbbrevs.IndexOfName(toabbrev)<>-1 then
+    begin
+      abbrev:=fAbbrevs.Values[toabbrev];
+      abbrev:=Unslash(abbrev);
+      found:=True;
+    end;
+  end;
+
+  if Found then
+  begin
+    resultingabbr:='';
+    fEditor.SetSel(linestart+abbrevpos,linestart+abbrevpos+Length(toabbrev));
+    caret_pos:=-1;
+    fEditor.BeginUndoAction;
+    abbrlen:=Length(abbrev);
+    extrainc:=0;
+    for i:=1 to abbrlen do
+    begin
+      if i+extrainc>abbrlen then break;
+      resultingabbr:='';
+      c:=abbrev[i+extrainc];
+		  if (isIndent=True) and (c=#9) then
+      begin
+			  Inc(indentExtra);
+			  fEditor.SetLineIndentation(currentLineNum, indent + (indentsize * indentExtra));
+        fEditor.SetCurrentPos(fEditor.GetLineIndentPosition(currentLineNum));
+        fEditor.SetSel(fEditor.GetCurrentPos,fEditor.GetCurrentPos);
+		  end else
+      begin
+        case c of
+        '|': begin
+                if (i<abbrlen) and (abbrev[i+1]='|') then
+                begin
+                  resultingabbr:='|';
+                  Inc(extrainc);
+                end else
+                if caret_pos=-1 then
+                begin
+                  if i=0 then
+                    caret_pos:=linestart+abbrevpos
+                  else
+                    caret_pos:=fEditor.GetCurrentPos;
+                end;
+             end;
+        #10: begin
+               if (fEditor.EOLStyle=eolCRLF) or (fEditor.EOLStyle=eolCR) then
+               resultingabbr:=#13;
+               if (fEditor.EOLStyle=eolCRLF) or (fEditor.EOLStyle=eolLF) then
+               resultingabbr:=Concat(resultingabbr,#10);
+
+             end;
+        else
+             resultingabbr:=abbrev[i+extrainc];
+        end;
+        fEditor.ReplaceSel(PChar(resultingabbr));
+        if ((resultingabbr<>'') and (c=#10)) then
+        begin
+          isIndent:=True;
+          indentExtra:=0;
+          Inc(currentLineNum);
+          fEditor.SetLineIndentation(currentLineNum, indent);
+          fEditor.SetCurrentPos(fEditor.GetLineIndentPosition(currentLineNum));
+          fEditor.SetSel(fEditor.GetCurrentPos,fEditor.GetCurrentPos);
+        end else isIndent:=False;
+      end;
+    end;
+    fEditor.EndUndoAction;
+    if caret_pos<>-1 then
+      fEditor.GotoPos(caret_pos);
+  end;
+
+end;
+
+procedure TSciAbbrevManager.SetIgnoreCase(const Value : Boolean);
+begin
+  fIgnoreCase:=Value;
+  TStringList(fAbbrevs).CaseSensitive:=not Value;
+end;
+end.
