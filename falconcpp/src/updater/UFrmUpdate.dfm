@@ -13,13 +13,11 @@ object FrmUpdate: TFrmUpdate
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poScreenCenter
   OnClose = FormClose
   OnCreate = FormCreate
   OnKeyPress = FormKeyPress
   OnShow = FormShow
-  PixelsPerInch = 96
   TextHeight = 13
   object Bevel1: TBevel
     Left = 0
@@ -100,15 +98,15 @@ object FrmUpdate: TFrmUpdate
   end
   object UpdateDownload: TFileDownload
     OnFinish = UpdateDownloadFinish
-    Left = 8
-    Top = 30
+    Left = 64
+    Top = 102
   end
   object FileDownload: TFileDownload
     PartExt = '.part'
     OnStart = FileDownloadStart
     OnProgress = FileDownloadProgress
     OnFinish = FileDownloadFinish
-    Left = 8
-    Top = 62
+    Left = 64
+    Top = 110
   end
 end

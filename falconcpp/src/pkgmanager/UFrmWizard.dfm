@@ -13,13 +13,11 @@ object FrmWizard: TFrmWizard
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poScreenCenter
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnKeyPress = FormKeyPress
-  PixelsPerInch = 96
   TextHeight = 13
   object PanelFra: TPanel
     Left = 0

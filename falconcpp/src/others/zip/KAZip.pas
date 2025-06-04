@@ -91,12 +91,12 @@ unit KAZip;
 
 interface
 
-{.$DEFINE USE_BZIP2}
+{$DEFINE USE_BZIP2}
 
 uses
 	Windows, SysUtils, Classes, Masks, TypInfo
-{$IFDEF USE_BZIP2}, Compress.BZip2{$ENDIF}
-	, ZLibEx //zlib 1.2.8
+{$IFDEF USE_BZIP2}, AbBzip2{$ENDIF}
+	, ZLib //zlib 1.2.8
 	;
 
 type
@@ -1835,9 +1835,9 @@ begin
 	}
 //		OutputDebugString('SAMPLING ON');
 		compressor := TZCompressionStream.Create(FParent.FZipStream, compressionLevel,
-					-15, //windowBits - The default value is 15 if deflateInit is used instead.
-					8, //memLevel - The default value is 8
-					zsDefault); //strategy
+					-15); //windowBits - The default value is 15 if deflateInit is used instead.
+//					8, //memLevel - The default value is 8
+//					zsDefault); //strategy
 		try
 			compressor.OnProgress := FParent.OnCompress;
 
@@ -2021,7 +2021,7 @@ begin
 
 				if cm = ZipCompressionMethod_Deflate then
 				begin
-					Compressor := TZCompressionStream.Create(CS, Level);
+					Compressor := TZCompressionStream.Create(CS, Level, -15);
 					try
 						Compressor.OnProgress := FParent.OnCompress;
 						Compressor.Write(S[1], UL);
@@ -2163,7 +2163,7 @@ begin
 
 				if CM = ZipCompressionMethod_Deflate then
 				begin
-					Compressor := TZCompressionStream.Create(CS, Level);
+					Compressor := TZCompressionStream.Create(CS, Level, -15);
 					try
 						Compressor.OnProgress := FParent.OnCompress;
 						Compressor.Write(S[1], UL);
@@ -3962,9 +3962,9 @@ begin
 			that we don't want it to add a header.
 	}
 	Fcompressor := TZCompressionStream.Create(FTargetStream, compressionLevel,
-					-15, //windowBits - The default value is 15 if deflateInit is used instead.
-					8, //memLevel - The default value is 8
-					zsDefault); //strategy
+					-15); //windowBits - The default value is 15 if deflateInit is used instead.
+//					8, //memLevel - The default value is 8
+//					zsDefault); //strategy
 
 //	OutputDebugString('SAMPLING ON');
 
