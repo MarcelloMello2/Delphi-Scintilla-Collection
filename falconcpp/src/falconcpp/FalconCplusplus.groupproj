@@ -54,13 +54,13 @@
         <Projects Include="..\..\res\components\VirtualTreeView\Packages\RAD Studio XE6\VirtualTreesD.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="Falcon.dproj">
-            <Dependencies/>
-        </Projects>
         <Projects Include="..\pkgmanager\PkgManager.dproj">
             <Dependencies/>
         </Projects>
         <Projects Include="..\updater\Updater.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Falcon.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -224,15 +224,6 @@
     <Target Name="VirtualTreesD:Make">
         <MSBuild Projects="..\..\res\components\VirtualTreeView\Packages\RAD Studio XE6\VirtualTreesD.dproj" Targets="Make"/>
     </Target>
-    <Target Name="Falcon">
-        <MSBuild Projects="Falcon.dproj"/>
-    </Target>
-    <Target Name="Falcon:Clean">
-        <MSBuild Projects="Falcon.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="Falcon:Make">
-        <MSBuild Projects="Falcon.dproj" Targets="Make"/>
-    </Target>
     <Target Name="PkgManager">
         <MSBuild Projects="..\pkgmanager\PkgManager.dproj"/>
     </Target>
@@ -251,14 +242,23 @@
     <Target Name="Updater:Make">
         <MSBuild Projects="..\updater\Updater.dproj" Targets="Make"/>
     </Target>
+    <Target Name="Falcon">
+        <MSBuild Projects="Falcon.dproj"/>
+    </Target>
+    <Target Name="Falcon:Clean">
+        <MSBuild Projects="Falcon.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Falcon:Make">
+        <MSBuild Projects="Falcon.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="DScintillaRuntime;TB2000_Run;TB2000_Dsgn;TBX_Run;TBX_Dsgn;SpTBXLibDsgn;DScintillaDesign;FileDownloadDesign;FalconCpp;FormEffectDesign;ListGridViewDesign;IconDialogDesign;FormPositionDesign;OutputConsoleDesign;SendDataDesign;VirtualTreesR;VirtualTreesD;Falcon;PkgManager;Updater"/>
+        <CallTarget Targets="DScintillaRuntime;TB2000_Run;TB2000_Dsgn;TBX_Run;TBX_Dsgn;SpTBXLibDsgn;DScintillaDesign;FileDownloadDesign;FalconCpp;FormEffectDesign;ListGridViewDesign;IconDialogDesign;FormPositionDesign;OutputConsoleDesign;SendDataDesign;VirtualTreesR;VirtualTreesD;PkgManager;Updater;Falcon"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="DScintillaRuntime:Clean;TB2000_Run:Clean;TB2000_Dsgn:Clean;TBX_Run:Clean;TBX_Dsgn:Clean;SpTBXLibDsgn:Clean;DScintillaDesign:Clean;FileDownloadDesign:Clean;FalconCpp:Clean;FormEffectDesign:Clean;ListGridViewDesign:Clean;IconDialogDesign:Clean;FormPositionDesign:Clean;OutputConsoleDesign:Clean;SendDataDesign:Clean;VirtualTreesR:Clean;VirtualTreesD:Clean;Falcon:Clean;PkgManager:Clean;Updater:Clean"/>
+        <CallTarget Targets="DScintillaRuntime:Clean;TB2000_Run:Clean;TB2000_Dsgn:Clean;TBX_Run:Clean;TBX_Dsgn:Clean;SpTBXLibDsgn:Clean;DScintillaDesign:Clean;FileDownloadDesign:Clean;FalconCpp:Clean;FormEffectDesign:Clean;ListGridViewDesign:Clean;IconDialogDesign:Clean;FormPositionDesign:Clean;OutputConsoleDesign:Clean;SendDataDesign:Clean;VirtualTreesR:Clean;VirtualTreesD:Clean;PkgManager:Clean;Updater:Clean;Falcon:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="DScintillaRuntime:Make;TB2000_Run:Make;TB2000_Dsgn:Make;TBX_Run:Make;TBX_Dsgn:Make;SpTBXLibDsgn:Make;DScintillaDesign:Make;FileDownloadDesign:Make;FalconCpp:Make;FormEffectDesign:Make;ListGridViewDesign:Make;IconDialogDesign:Make;FormPositionDesign:Make;OutputConsoleDesign:Make;SendDataDesign:Make;VirtualTreesR:Make;VirtualTreesD:Make;Falcon:Make;PkgManager:Make;Updater:Make"/>
+        <CallTarget Targets="DScintillaRuntime:Make;TB2000_Run:Make;TB2000_Dsgn:Make;TBX_Run:Make;TBX_Dsgn:Make;SpTBXLibDsgn:Make;DScintillaDesign:Make;FileDownloadDesign:Make;FalconCpp:Make;FormEffectDesign:Make;ListGridViewDesign:Make;IconDialogDesign:Make;FormPositionDesign:Make;OutputConsoleDesign:Make;SendDataDesign:Make;VirtualTreesR:Make;VirtualTreesD:Make;PkgManager:Make;Updater:Make;Falcon:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

@@ -45,7 +45,7 @@ uses
 
 const
   cDScintillaDll  = 'Scintilla.dll';
-  cDSciLexerDll   = 'SciLexer.dll';
+//  cDSciLexerDll   = 'SciLexer.dll';
 
 type
 
@@ -159,7 +159,7 @@ implementation
 
 constructor TDScintillaCustom.Create(AOwner: TComponent);
 begin
-  FSciDllModule := cDSciLexerDll;
+  FSciDllModule := cDScintillaDll;
   FAccessMethod := smDirect;
 
   inherited Create(AOwner);
