@@ -12,7 +12,8 @@ uses
   Vcl.Controls,
   Vcl.Forms,
   Vcl.Dialogs,
-  Seven.Scintilla.CustomTextEditor, Vcl.StdCtrls;
+  Vcl.StdCtrls,
+  Seven.Scintilla.CustomTextEditor;
 
 type
   TForm1 = class(TForm)
