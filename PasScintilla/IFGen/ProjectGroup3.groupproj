@@ -1,0 +1,84 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{50BDC5D4-41F8-4C32-B867-F36BAA5464A3}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="SciIFGen.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="ScintillaIfaceGeneratorV1.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Seven.Scintilla.WrapperBuilderApp.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Seven.Scintilla.BuildDScintilla.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\Seven.Scintilla.IfaceGeneratorApp.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="SciIFGen">
+        <MSBuild Projects="SciIFGen.dproj"/>
+    </Target>
+    <Target Name="SciIFGen:Clean">
+        <MSBuild Projects="SciIFGen.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SciIFGen:Make">
+        <MSBuild Projects="SciIFGen.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ScintillaIfaceGeneratorV1">
+        <MSBuild Projects="ScintillaIfaceGeneratorV1.dproj"/>
+    </Target>
+    <Target Name="ScintillaIfaceGeneratorV1:Clean">
+        <MSBuild Projects="ScintillaIfaceGeneratorV1.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ScintillaIfaceGeneratorV1:Make">
+        <MSBuild Projects="ScintillaIfaceGeneratorV1.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Seven_Scintilla_WrapperBuilderApp">
+        <MSBuild Projects="Seven.Scintilla.WrapperBuilderApp.dproj"/>
+    </Target>
+    <Target Name="Seven_Scintilla_WrapperBuilderApp:Clean">
+        <MSBuild Projects="Seven.Scintilla.WrapperBuilderApp.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Seven_Scintilla_WrapperBuilderApp:Make">
+        <MSBuild Projects="Seven.Scintilla.WrapperBuilderApp.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Seven_Scintilla_BuildDScintilla">
+        <MSBuild Projects="Seven.Scintilla.BuildDScintilla.dproj"/>
+    </Target>
+    <Target Name="Seven_Scintilla_BuildDScintilla:Clean">
+        <MSBuild Projects="Seven.Scintilla.BuildDScintilla.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Seven_Scintilla_BuildDScintilla:Make">
+        <MSBuild Projects="Seven.Scintilla.BuildDScintilla.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Seven_Scintilla_IfaceGeneratorApp">
+        <MSBuild Projects="..\Seven.Scintilla.IfaceGeneratorApp.dproj"/>
+    </Target>
+    <Target Name="Seven_Scintilla_IfaceGeneratorApp:Clean">
+        <MSBuild Projects="..\Seven.Scintilla.IfaceGeneratorApp.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Seven_Scintilla_IfaceGeneratorApp:Make">
+        <MSBuild Projects="..\Seven.Scintilla.IfaceGeneratorApp.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="SciIFGen;ScintillaIfaceGeneratorV1;Seven_Scintilla_WrapperBuilderApp;Seven_Scintilla_BuildDScintilla;Seven_Scintilla_IfaceGeneratorApp"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="SciIFGen:Clean;ScintillaIfaceGeneratorV1:Clean;Seven_Scintilla_WrapperBuilderApp:Clean;Seven_Scintilla_BuildDScintilla:Clean;Seven_Scintilla_IfaceGeneratorApp:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="SciIFGen:Make;ScintillaIfaceGeneratorV1:Make;Seven_Scintilla_WrapperBuilderApp:Make;Seven_Scintilla_BuildDScintilla:Make;Seven_Scintilla_IfaceGeneratorApp:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
