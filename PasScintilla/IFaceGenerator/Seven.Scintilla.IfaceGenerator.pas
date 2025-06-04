@@ -7,6 +7,7 @@ uses
   System.Classes,
   System.StrUtils,
   System.IOUtils,
+  System.Character,
   System.RegularExpressions;
 
 
@@ -95,10 +96,10 @@ begin
   else if CppType = 'string' then Result := 'PAnsiChar'
   else if CppType = 'stringresult' then Result := 'PAnsiChar'
   else if CppType = 'cells' then Result := 'PAnsiChar'
-  else if CppType = 'textrange' then Result := 'PTextRange'
-  else if CppType = 'findtext' then Result := 'PFindText'
+  else if CppType = 'textrange' then Result := 'PSciTextRange'
+  else if CppType = 'findtext' then Result := 'PSciFindText'
   else if CppType = 'keymod' then Result := 'Integer'
-  else if CppType = 'formatrange' then Result := 'PFormatRange'
+  else if CppType = 'formatrange' then Result := 'PSciFormatRange'
   else Result := 'Integer'; // Padrão
 end;
 
@@ -125,9 +126,16 @@ begin
         if SpacePos > 0 then
         begin
           PType := Copy(Param, 1, SpacePos - 1);
-          PName := Copy(Param, SpacePos + 1, Length(Param));
+
+          PName := Trim(Copy(Param, SpacePos + 1, Length(Param)));
+          PName[1] := PName[1].ToUpper();
+
+          if Length(PName) > 1 then
+            PName := 'A' + PName;
+
+
           Params[I].ParamType := ConvertType(Trim(PType));
-          Params[I].ParamName := Trim(PName);
+          Params[I].ParamName := PName;
         end
         else
         begin
@@ -303,7 +311,7 @@ begin
         SL.Add('  // ' + LastEnum);
       end;
 
-      SL.Add(Format('  %s = %s;', [FConstants[I].Name, FConstants[I].Value]));
+      SL.Add(Format('  %s = %s;', [FConstants[I].Name, FConstants[I].Value.Replace('0x', '$')]));
     end;
 
     Result := SL.Text;
@@ -390,7 +398,7 @@ begin
 
       if Length(FFunctions[I].Params) >= 1 then
         if FFunctions[I].Params[0].ParamName <> '' then
-          WParam := FFunctions[I].Params[0].ParamName;
+          WParam := 'WPARAM(' + FFunctions[I].Params[0].ParamName + ')';
 
       if Length(FFunctions[I].Params) >= 2 then
         if FFunctions[I].Params[1].ParamName <> '' then
@@ -400,19 +408,21 @@ begin
       SL.Add('');
       if FFunctions[I].ReturnType <> '' then
       begin
-        SL.Add(Format('function TScintilla.%s(%s): %s;',
-          [FFunctions[I].Name, ParamStr, FFunctions[I].ReturnType]));
+        SL.Add(Format('function TCustomSciTextEditor.%s(%s): %s;', [FFunctions[I].Name, ParamStr, FFunctions[I].ReturnType]));
         SL.Add('begin');
-        SL.Add(Format('  Result := SendMessage(FHandle, %s, %s, %s);',
-          [FFunctions[I].MessageID, WParam, LParam]));
+
+        if SameText(FFunctions[I].ReturnType, 'Boolean') then
+          SL.Add(Format('  Result := Boolean(SendScintillaEditorMessage(%s, %s, %s));', [FFunctions[I].MessageID, WParam, LParam]))
+        else
+          SL.Add(Format('  Result := SendScintillaEditorMessage(%s, %s, %s);', [FFunctions[I].MessageID, WParam, LParam]));
         SL.Add('end;');
       end
       else
       begin
-        SL.Add(Format('procedure TScintilla.%s(%s);',
+        SL.Add(Format('procedure TCustomSciTextEditor.%s(%s);',
           [FFunctions[I].Name, ParamStr]));
         SL.Add('begin');
-        SL.Add(Format('  SendMessage(FHandle, %s, %s, %s);',
+        SL.Add(Format('  SendScintillaEditorMessage(%s, %s, %s);',
           [FFunctions[I].MessageID, WParam, LParam]));
         SL.Add('end;');
       end;
@@ -498,7 +508,14 @@ begin
     SL.Add('interface');
     SL.Add('');
     SL.Add('uses');
-    SL.Add('  Windows, Messages, SysUtils, Classes, Graphics, Controls;');
+    SL.Add('  Winapi.Windows,');
+    SL.Add('  Winapi.Messages,');
+    SL.Add('  System.SysUtils,');
+    SL.Add('  System.Classes,');
+    SL.Add('  Vcl.Graphics,');
+    SL.Add('  Vcl.Controls,');
+    SL.Add('  Seven.Scintilla.SciTypes,');
+    SL.Add('  Seven.Scintilla.BaseTextEditor;');
     SL.Add('');
 
     // Constantes
@@ -508,25 +525,31 @@ begin
     // Tipos
     SL.Add('type');
     SL.Add('  // Tipos auxiliares');
-    SL.Add('  PTextRange = ^TTextRange;');
-    SL.Add('  TTextRange = record');
-    SL.Add('    chrg: TCharRange;');
+    SL.Add('');
+    SL.Add('  TSciCharRange = Record');
+    SL.Add('    cpMin : Longint;');
+    SL.Add('	  cpMax : Longint;');
+    SL.Add('  end;');
+    SL.Add('');
+    SL.Add('  PSciTextRange = ^TSciTextRange;');
+    SL.Add('  TSciTextRange = record');
+    SL.Add('    chrg: TSciCharRange;');
     SL.Add('    lpstrText: PAnsiChar;');
     SL.Add('  end;');
     SL.Add('');
-    SL.Add('  PFindText = ^TFindText;');
-    SL.Add('  TFindText = record');
-    SL.Add('    chrg: TCharRange;');
+    SL.Add('  PSciFindText = ^TSciFindText;');
+    SL.Add('  TSciFindText = record');
+    SL.Add('    chrg: TSciCharRange;');
     SL.Add('    lpstrText: PAnsiChar;');
     SL.Add('  end;');
     SL.Add('');
-    SL.Add('  PFormatRange = ^TFormatRange;');
-    SL.Add('  TFormatRange = record');
+    SL.Add('  PSciFormatRange = ^TSciFormatRange;');
+    SL.Add('  TSciFormatRange = record');
     SL.Add('    hdc: HDC;');
     SL.Add('    hdcTarget: HDC;');
     SL.Add('    rc: TRect;');
     SL.Add('    rcPage: TRect;');
-    SL.Add('    chrg: TCharRange;');
+    SL.Add('    chrg: TSciCharRange;');
     SL.Add('  end;');
     SL.Add('');
 
@@ -534,33 +557,29 @@ begin
     if Length(FEvents) > 0 then
     begin
       SL.Add('  // Tipos de eventos');
-      SL.Add('  TScintillaCharEvent = procedure(Sender: TObject; Ch: AnsiChar) of object;');
-      SL.Add('  TScintillaPositionEvent = procedure(Sender: TObject; Position: Integer) of object;');
+      SL.Add('  TSciCharEvent = procedure(Sender: TObject; Ch: AnsiChar) of object;');
+      SL.Add('  TSciPositionEvent = procedure(Sender: TObject; Position: Integer) of object;');
       SL.Add('');
     end;
 
     // Classe principal
-    SL.Add('  TScintilla = class(TCustomControl)');
+    SL.Add('  TCustomSciTextEditor = class(TBaseSciTextEditor)');
     SL.Add('  private');
-    SL.Add('    FHandle: HWND;');
 
     // Eventos privados
     if Length(FEvents) > 0 then
     begin
       SL.Add('    // Eventos');
-      SL.Add('    FOnStyleNeeded: TScintillaPositionEvent;');
-      SL.Add('    FOnCharAdded: TScintillaCharEvent;');
+      SL.Add('    FOnStyleNeeded: TSciPositionEvent;');
+      SL.Add('    FOnCharAdded: TSciCharEvent;');
       SL.Add('    FOnModifyAttemptRO: TNotifyEvent;');
       SL.Add('');
     end;
 
     SL.Add('  protected');
-    SL.Add('    procedure CreateWnd; override;');
-    SL.Add('    procedure DestroyWnd; override;');
     SL.Add('    procedure CNNotify(var Message: TWMNotify); message CN_NOTIFY;');
     SL.Add('  public');
     SL.Add('    constructor Create(AOwner: TComponent); override;');
-    SL.Add('    destructor Destroy; override;');
 
     // Declarações de funções
     SL.Add(GenerateFunctionDeclarations);
@@ -574,8 +593,8 @@ begin
     begin
       SL.Add('');
       SL.Add('    // Eventos');
-      SL.Add('    property OnStyleNeeded: TScintillaPositionEvent read FOnStyleNeeded write FOnStyleNeeded;');
-      SL.Add('    property OnCharAdded: TScintillaCharEvent read FOnCharAdded write FOnCharAdded;');
+      SL.Add('    property OnStyleNeeded: TSciPositionEvent read FOnStyleNeeded write FOnStyleNeeded;');
+      SL.Add('    property OnCharAdded: TSciCharEvent read FOnCharAdded write FOnCharAdded;');
       SL.Add('    property OnModifyAttemptRO: TNotifyEvent read FOnModifyAttemptRO write FOnModifyAttemptRO;');
     end;
 
@@ -585,50 +604,18 @@ begin
     SL.Add('');
 
     // Implementações básicas
-    SL.Add('const');
-    SL.Add('  ScintillaClassName = ''Scintilla'';');
-    SL.Add('  ScintillaDLL = ''SciLexer.dll'';');
-    SL.Add('');
-
-    SL.Add('constructor TScintilla.Create(AOwner: TComponent);');
+    SL.Add('constructor TCustomSciTextEditor.Create(AOwner: TComponent);');
     SL.Add('begin');
     SL.Add('  inherited Create(AOwner);');
     SL.Add('  Width := 300;');
     SL.Add('  Height := 200;');
-    SL.Add('  ControlStyle := ControlStyle + [csCaptureMouse];');
     SL.Add('  TabStop := True;');
     SL.Add('end;');
     SL.Add('');
 
-    SL.Add('destructor TScintilla.Destroy;');
-    SL.Add('begin');
-    SL.Add('  inherited Destroy;');
-    SL.Add('end;');
-    SL.Add('');
-
-    SL.Add('procedure TScintilla.CreateWnd;');
-    SL.Add('begin');
-    SL.Add('  LoadLibrary(ScintillaDLL);');
-    SL.Add('  FHandle := CreateWindow(ScintillaClassName, nil,');
-    SL.Add('    WS_CHILD or WS_VISIBLE or WS_TABSTOP or WS_CLIPCHILDREN,');
-    SL.Add('    0, 0, Width, Height, Handle, 0, HInstance, nil);');
-    SL.Add('  Windows.SetParent(FHandle, Handle);');
-    SL.Add('end;');
-    SL.Add('');
-
-    SL.Add('procedure TScintilla.DestroyWnd;');
-    SL.Add('begin');
-    SL.Add('  if FHandle <> 0 then');
-    SL.Add('  begin');
-    SL.Add('    DestroyWindow(FHandle);');
-    SL.Add('    FHandle := 0;');
-    SL.Add('  end;');
-    SL.Add('end;');
-    SL.Add('');
-
-    SL.Add('procedure TScintilla.CNNotify(var Message: TWMNotify);');
-    SL.Add('var');
-    SL.Add('  SCN: PSCNotification;');
+    SL.Add('procedure TCustomSciTextEditor.CNNotify(var Message: TWMNotify);');
+    SL.Add('//var');
+    SL.Add('//  SCN: PSCNotification;');
     SL.Add('begin');
     SL.Add('  inherited;');
     SL.Add('  // Implementar tratamento de notificações aqui');
@@ -651,7 +638,7 @@ begin
     SL.Add('');
     SL.Add('end.');
 
-    SL.SaveToFile(OutputFile);
+    SL.SaveToFile(OutputFile, TEncoding.UTF8);
     WriteLn('Arquivo ' + GetCurrentDir() + '\' + OutputFile + ' gerado com sucesso!');
   finally
     SL.Free;

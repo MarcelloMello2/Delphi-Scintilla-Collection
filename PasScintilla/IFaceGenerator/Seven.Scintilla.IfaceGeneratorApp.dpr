@@ -32,7 +32,7 @@ begin
   if ParamCount >= 2 then
     OutputFile := ParamStr(2)
   else
-    OutputFile := 'Seven.Scintilla.TextEditor.pas';
+    OutputFile := '..\..\..\GeneratedFiles\Seven.Scintilla.CustomTextEditor.pas';
 
   Generator := TScintillaGenerator.Create;
   try
