@@ -1,60 +1,264 @@
-﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-		<PropertyGroup>
-			<ProjectGuid>{36659CA1-6B3A-4AB8-9A8B-CB5280AEB5C3}</ProjectGuid>
-		</PropertyGroup>
-		<ItemGroup>
-			<Projects Include="Falcon.dproj">
-				<Dependencies/>
-			</Projects>
-			<Projects Include="..\pkgmanager\PkgManager.dproj">
-				<Dependencies/>
-			</Projects>
-			<Projects Include="..\updater\Updater.dproj">
-				<Dependencies/>
-			</Projects>
-		</ItemGroup>
-		<ProjectExtensions>
-			<Borland.Personality>Default.Personality.12</Borland.Personality>
-			<Borland.ProjectType/>
-			<BorlandProject>
-				<Default.Personality/>
-			</BorlandProject>
-		</ProjectExtensions>
-		<Target Name="Falcon">
-			<MSBuild Projects="Falcon.dproj"/>
-		</Target>
-		<Target Name="Falcon:Clean">
-			<MSBuild Targets="Clean" Projects="Falcon.dproj"/>
-		</Target>
-		<Target Name="Falcon:Make">
-			<MSBuild Targets="Make" Projects="Falcon.dproj"/>
-		</Target>
-		<Target Name="PkgManager">
-			<MSBuild Projects="..\pkgmanager\PkgManager.dproj"/>
-		</Target>
-		<Target Name="PkgManager:Clean">
-			<MSBuild Targets="Clean" Projects="..\pkgmanager\PkgManager.dproj"/>
-		</Target>
-		<Target Name="PkgManager:Make">
-			<MSBuild Targets="Make" Projects="..\pkgmanager\PkgManager.dproj"/>
-		</Target>
-		<Target Name="Updater">
-			<MSBuild Projects="..\updater\Updater.dproj"/>
-		</Target>
-		<Target Name="Updater:Clean">
-			<MSBuild Targets="Clean" Projects="..\updater\Updater.dproj"/>
-		</Target>
-		<Target Name="Updater:Make">
-			<MSBuild Targets="Make" Projects="..\updater\Updater.dproj"/>
-		</Target>
-		<Target Name="Build">
-			<CallTarget Targets="Falcon;PkgManager;Updater"/>
-		</Target>
-		<Target Name="Clean">
-			<CallTarget Targets="Falcon:Clean;PkgManager:Clean;Updater:Clean"/>
-		</Target>
-		<Target Name="Make">
-			<CallTarget Targets="Falcon:Make;PkgManager:Make;Updater:Make"/>
-		</Target>
-		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')" Project="$(BDS)\Bin\CodeGear.Group.Targets"/>
-	</Project>
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{36659CA1-6B3A-4AB8-9A8B-CB5280AEB5C3}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="..\..\res\components\DScintilla\Packages\DScintillaRuntime.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\res\components\Toolbar2000\Toolbar2000\Packages\TB2000_Run.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\res\components\Toolbar2000\Toolbar2000\Packages\TB2000_Dsgn.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\res\components\Toolbar2000\TBX\Packages\TBX_Run.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\res\components\Toolbar2000\TBX\Packages\TBX_Dsgn.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\res\components\sptbxlib\Packages\RAD Studio 12 Athens\SpTBXLibDsgn.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\res\components\DScintilla\Packages\DScintillaDesign.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\res\components\FileDownload\FileDownloadDesign.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\res\components\FalconCpp\FalconCpp.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\res\components\FormEffect\FormEffectDesign.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\res\components\ListGridView\ListGridViewDesign.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\res\components\IconDialog\IconDialogDesign.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\res\components\FormPosition\FormPositionDesign.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\res\components\OutputConsole\OutputConsoleDesign.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\res\components\SendData\SendDataDesign.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\res\components\VirtualTreeView\Packages\RAD Studio XE6\VirtualTreesR.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\res\components\VirtualTreeView\Packages\RAD Studio XE6\VirtualTreesD.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Falcon.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\pkgmanager\PkgManager.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\updater\Updater.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="DScintillaRuntime">
+        <MSBuild Projects="..\..\res\components\DScintilla\Packages\DScintillaRuntime.dproj"/>
+    </Target>
+    <Target Name="DScintillaRuntime:Clean">
+        <MSBuild Projects="..\..\res\components\DScintilla\Packages\DScintillaRuntime.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="DScintillaRuntime:Make">
+        <MSBuild Projects="..\..\res\components\DScintilla\Packages\DScintillaRuntime.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="TB2000_Run">
+        <MSBuild Projects="..\..\res\components\Toolbar2000\Toolbar2000\Packages\TB2000_Run.dproj"/>
+    </Target>
+    <Target Name="TB2000_Run:Clean">
+        <MSBuild Projects="..\..\res\components\Toolbar2000\Toolbar2000\Packages\TB2000_Run.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="TB2000_Run:Make">
+        <MSBuild Projects="..\..\res\components\Toolbar2000\Toolbar2000\Packages\TB2000_Run.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="TB2000_Dsgn">
+        <MSBuild Projects="..\..\res\components\Toolbar2000\Toolbar2000\Packages\TB2000_Dsgn.dproj"/>
+    </Target>
+    <Target Name="TB2000_Dsgn:Clean">
+        <MSBuild Projects="..\..\res\components\Toolbar2000\Toolbar2000\Packages\TB2000_Dsgn.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="TB2000_Dsgn:Make">
+        <MSBuild Projects="..\..\res\components\Toolbar2000\Toolbar2000\Packages\TB2000_Dsgn.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="TBX_Run">
+        <MSBuild Projects="..\..\res\components\Toolbar2000\TBX\Packages\TBX_Run.dproj"/>
+    </Target>
+    <Target Name="TBX_Run:Clean">
+        <MSBuild Projects="..\..\res\components\Toolbar2000\TBX\Packages\TBX_Run.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="TBX_Run:Make">
+        <MSBuild Projects="..\..\res\components\Toolbar2000\TBX\Packages\TBX_Run.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="TBX_Dsgn">
+        <MSBuild Projects="..\..\res\components\Toolbar2000\TBX\Packages\TBX_Dsgn.dproj"/>
+    </Target>
+    <Target Name="TBX_Dsgn:Clean">
+        <MSBuild Projects="..\..\res\components\Toolbar2000\TBX\Packages\TBX_Dsgn.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="TBX_Dsgn:Make">
+        <MSBuild Projects="..\..\res\components\Toolbar2000\TBX\Packages\TBX_Dsgn.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="SpTBXLibDsgn">
+        <MSBuild Projects="..\..\res\components\sptbxlib\Packages\RAD Studio 12 Athens\SpTBXLibDsgn.dproj"/>
+    </Target>
+    <Target Name="SpTBXLibDsgn:Clean">
+        <MSBuild Projects="..\..\res\components\sptbxlib\Packages\RAD Studio 12 Athens\SpTBXLibDsgn.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SpTBXLibDsgn:Make">
+        <MSBuild Projects="..\..\res\components\sptbxlib\Packages\RAD Studio 12 Athens\SpTBXLibDsgn.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="DScintillaDesign">
+        <MSBuild Projects="..\..\res\components\DScintilla\Packages\DScintillaDesign.dproj"/>
+    </Target>
+    <Target Name="DScintillaDesign:Clean">
+        <MSBuild Projects="..\..\res\components\DScintilla\Packages\DScintillaDesign.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="DScintillaDesign:Make">
+        <MSBuild Projects="..\..\res\components\DScintilla\Packages\DScintillaDesign.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="FileDownloadDesign">
+        <MSBuild Projects="..\..\res\components\FileDownload\FileDownloadDesign.dproj"/>
+    </Target>
+    <Target Name="FileDownloadDesign:Clean">
+        <MSBuild Projects="..\..\res\components\FileDownload\FileDownloadDesign.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="FileDownloadDesign:Make">
+        <MSBuild Projects="..\..\res\components\FileDownload\FileDownloadDesign.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="FalconCpp">
+        <MSBuild Projects="..\..\res\components\FalconCpp\FalconCpp.dproj"/>
+    </Target>
+    <Target Name="FalconCpp:Clean">
+        <MSBuild Projects="..\..\res\components\FalconCpp\FalconCpp.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="FalconCpp:Make">
+        <MSBuild Projects="..\..\res\components\FalconCpp\FalconCpp.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="FormEffectDesign">
+        <MSBuild Projects="..\..\res\components\FormEffect\FormEffectDesign.dproj"/>
+    </Target>
+    <Target Name="FormEffectDesign:Clean">
+        <MSBuild Projects="..\..\res\components\FormEffect\FormEffectDesign.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="FormEffectDesign:Make">
+        <MSBuild Projects="..\..\res\components\FormEffect\FormEffectDesign.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ListGridViewDesign">
+        <MSBuild Projects="..\..\res\components\ListGridView\ListGridViewDesign.dproj"/>
+    </Target>
+    <Target Name="ListGridViewDesign:Clean">
+        <MSBuild Projects="..\..\res\components\ListGridView\ListGridViewDesign.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ListGridViewDesign:Make">
+        <MSBuild Projects="..\..\res\components\ListGridView\ListGridViewDesign.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="IconDialogDesign">
+        <MSBuild Projects="..\..\res\components\IconDialog\IconDialogDesign.dproj"/>
+    </Target>
+    <Target Name="IconDialogDesign:Clean">
+        <MSBuild Projects="..\..\res\components\IconDialog\IconDialogDesign.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="IconDialogDesign:Make">
+        <MSBuild Projects="..\..\res\components\IconDialog\IconDialogDesign.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="FormPositionDesign">
+        <MSBuild Projects="..\..\res\components\FormPosition\FormPositionDesign.dproj"/>
+    </Target>
+    <Target Name="FormPositionDesign:Clean">
+        <MSBuild Projects="..\..\res\components\FormPosition\FormPositionDesign.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="FormPositionDesign:Make">
+        <MSBuild Projects="..\..\res\components\FormPosition\FormPositionDesign.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OutputConsoleDesign">
+        <MSBuild Projects="..\..\res\components\OutputConsole\OutputConsoleDesign.dproj"/>
+    </Target>
+    <Target Name="OutputConsoleDesign:Clean">
+        <MSBuild Projects="..\..\res\components\OutputConsole\OutputConsoleDesign.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OutputConsoleDesign:Make">
+        <MSBuild Projects="..\..\res\components\OutputConsole\OutputConsoleDesign.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="SendDataDesign">
+        <MSBuild Projects="..\..\res\components\SendData\SendDataDesign.dproj"/>
+    </Target>
+    <Target Name="SendDataDesign:Clean">
+        <MSBuild Projects="..\..\res\components\SendData\SendDataDesign.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SendDataDesign:Make">
+        <MSBuild Projects="..\..\res\components\SendData\SendDataDesign.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="VirtualTreesR">
+        <MSBuild Projects="..\..\res\components\VirtualTreeView\Packages\RAD Studio XE6\VirtualTreesR.dproj"/>
+    </Target>
+    <Target Name="VirtualTreesR:Clean">
+        <MSBuild Projects="..\..\res\components\VirtualTreeView\Packages\RAD Studio XE6\VirtualTreesR.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="VirtualTreesR:Make">
+        <MSBuild Projects="..\..\res\components\VirtualTreeView\Packages\RAD Studio XE6\VirtualTreesR.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="VirtualTreesD">
+        <MSBuild Projects="..\..\res\components\VirtualTreeView\Packages\RAD Studio XE6\VirtualTreesD.dproj"/>
+    </Target>
+    <Target Name="VirtualTreesD:Clean">
+        <MSBuild Projects="..\..\res\components\VirtualTreeView\Packages\RAD Studio XE6\VirtualTreesD.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="VirtualTreesD:Make">
+        <MSBuild Projects="..\..\res\components\VirtualTreeView\Packages\RAD Studio XE6\VirtualTreesD.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Falcon">
+        <MSBuild Projects="Falcon.dproj"/>
+    </Target>
+    <Target Name="Falcon:Clean">
+        <MSBuild Projects="Falcon.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Falcon:Make">
+        <MSBuild Projects="Falcon.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="PkgManager">
+        <MSBuild Projects="..\pkgmanager\PkgManager.dproj"/>
+    </Target>
+    <Target Name="PkgManager:Clean">
+        <MSBuild Projects="..\pkgmanager\PkgManager.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="PkgManager:Make">
+        <MSBuild Projects="..\pkgmanager\PkgManager.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Updater">
+        <MSBuild Projects="..\updater\Updater.dproj"/>
+    </Target>
+    <Target Name="Updater:Clean">
+        <MSBuild Projects="..\updater\Updater.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Updater:Make">
+        <MSBuild Projects="..\updater\Updater.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="DScintillaRuntime;TB2000_Run;TB2000_Dsgn;TBX_Run;TBX_Dsgn;SpTBXLibDsgn;DScintillaDesign;FileDownloadDesign;FalconCpp;FormEffectDesign;ListGridViewDesign;IconDialogDesign;FormPositionDesign;OutputConsoleDesign;SendDataDesign;VirtualTreesR;VirtualTreesD;Falcon;PkgManager;Updater"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="DScintillaRuntime:Clean;TB2000_Run:Clean;TB2000_Dsgn:Clean;TBX_Run:Clean;TBX_Dsgn:Clean;SpTBXLibDsgn:Clean;DScintillaDesign:Clean;FileDownloadDesign:Clean;FalconCpp:Clean;FormEffectDesign:Clean;ListGridViewDesign:Clean;IconDialogDesign:Clean;FormPositionDesign:Clean;OutputConsoleDesign:Clean;SendDataDesign:Clean;VirtualTreesR:Clean;VirtualTreesD:Clean;Falcon:Clean;PkgManager:Clean;Updater:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="DScintillaRuntime:Make;TB2000_Run:Make;TB2000_Dsgn:Make;TBX_Run:Make;TBX_Dsgn:Make;SpTBXLibDsgn:Make;DScintillaDesign:Make;FileDownloadDesign:Make;FalconCpp:Make;FormEffectDesign:Make;ListGridViewDesign:Make;IconDialogDesign:Make;FormPositionDesign:Make;OutputConsoleDesign:Make;SendDataDesign:Make;VirtualTreesR:Make;VirtualTreesD:Make;Falcon:Make;PkgManager:Make;Updater:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
