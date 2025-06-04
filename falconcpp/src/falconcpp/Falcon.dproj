@@ -71,7 +71,7 @@
         <DCC_ImageBase>00400000</DCC_ImageBase>
         <DCC_Platform>x86</DCC_Platform>
         <SanitizedProjectName>Falcon</SanitizedProjectName>
-        <DCC_UnitSearchPath>editor;settings;..\..\res\components\SendData;..\..\res\components\DScintilla\Sources;..\..\res\components\sptbxlib\Source;..\..\res\components\tb2k-2.2.2\Source;..\others\bzip2;..\..\res\components\delphizlib.128;..\..\res\components\FormEffect;..\..\res\components\FalconCpp;..\..\\res\components\GdiPlus\Lib;..\..\res\components\OutputConsole;..\..\res\components\FileDownload;..\..\res\components\FormPosition;..\..\src\others\debugger;..\..\res\components\VirtualTreeView\Source;..\..\res\components\IconDialog;..\..\res\components\ListGridView;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>editor;settings;..\..\res\components\SendData;..\..\res\components\DScintilla\Sources;..\..\res\components\sptbxlib\Source;..\..\res\components\tb2k-2.2.2\Source;..\others\bzip2;..\..\res\components\delphizlib.128;..\..\res\components\FormEffect;..\..\res\components\FalconCpp;..\..\\res\components\GdiPlus\Lib;..\..\res\components\OutputConsole;..\..\res\components\FileDownload;..\..\res\components\FormPosition;..\..\src\others\debugger;..\..\res\components\VirtualTreeView\Source;..\..\res\components\IconDialog;..\..\res\components\ListGridView;..\..\src\others\Abbrevia-master\source;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <DCC_DcuOutput>T:\FalconCPP\bin\dcus</DCC_DcuOutput>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
