@@ -3,7 +3,9 @@
 {$APPTYPE CONSOLE}
 
 uses
-  SysUtils, Classes, DScintillaMigration;
+  SysUtils,
+  Classes,
+  Seven.Scintilla.DScintillaMigrationHelper in 'Seven.Scintilla.DScintillaMigrationHelper.pas';
 
 procedure ShowUsage;
 begin

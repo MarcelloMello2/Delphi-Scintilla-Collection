@@ -706,3 +706,4 @@ CallTipSetPosStart=Hidden~1
 DropSelectionN=Hidden~1
 GetStyleFromSubStyle=Hidden~1
 GetPrimaryStyleFromStyle=Hidden~1
+=EnumSet~1

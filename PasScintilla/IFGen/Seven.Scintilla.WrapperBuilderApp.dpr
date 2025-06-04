@@ -28,8 +28,7 @@ type
     procedure GenerateDocumentation;
 
     function FindPropertyPairs: TStringList;
-    function GeneratePropertyDeclaration(const PropName, GetterName,
-      SetterName, PropType: string): string;
+    function GeneratePropertyDeclaration(const PropName, GetterName, SetterName, PropType: string): string;
   public
     constructor Create;
     destructor Destroy; override;
@@ -558,7 +557,7 @@ begin
 end;
 
 // Programa principal
-// ScintillaWrapperBuilderApp. Scintilla.iface -o C:\Output -u MyScintilla -single
+// ScintillaWrapperBuilderApp Scintilla.iface -o C:\Output -u MyScintilla -single
 var
   Generator: TScintillaWrapperGenerator;
   InputFile: string;
@@ -569,7 +568,7 @@ begin
 
   if ParamCount < 1 then
   begin
-    WriteLn('Uso: ScintillaWrapperBuilder <arquivo.iface> [opcoes]');
+    WriteLn('Uso: ' + ExtractFileName(ParamStr(0)) + ' <arquivo.iface> [opcoes]');
     WriteLn('');
     WriteLn('Opcoes:');
     WriteLn('  -o <path>     Diretório de saída');

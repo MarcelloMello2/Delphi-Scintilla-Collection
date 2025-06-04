@@ -3,7 +3,7 @@
         <ProjectGuid>{4EC8B2DA-1821-4D1F-8CB7-B3E29D57B46D}</ProjectGuid>
         <ProjectVersion>20.3</ProjectVersion>
         <MainSource>SciIFGen.dpr</MainSource>
-        <Config Condition="'$(Config)'==''">FullDebugMode</Config>
+        <Config Condition="'$(Config)'==''">Debug</Config>
         <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>

@@ -16,9 +16,9 @@ var
 begin
   if ParamCount < 1 then
   begin
-    WriteLn('Uso: ScintillaIfaceGenerator <arquivo.iface> [arquivo_saida.pas]');
+    WriteLn('Uso: ' + ExtractFileName(ParamStr(0)) + ' <arquivo.iface> [arquivo_saida.pas]');
     WriteLn('');
-    WriteLn('Exemplo: ScintillaIfaceGenerator Scintilla.iface ScintillaWrapper.pas');
+    WriteLn('Exemplo: ' + ExtractFileName(ParamStr(0)) + ' Scintilla.iface ScintillaWrapper.pas');
     Exit;
   end;
 
