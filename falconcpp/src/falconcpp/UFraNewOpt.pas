@@ -60,7 +60,7 @@ uses UFrmNew;
 
 procedure TFraPrjOpt.BtnChgIconClick(Sender: TObject);
 begin
-  if OpenIcon.Execute(Handle) then
+  if OpenIcon.Execute() then
   begin
     if not Assigned(LoadedIcon) then
       LoadedIcon := TIcon.Create;

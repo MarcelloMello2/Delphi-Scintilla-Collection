@@ -509,7 +509,7 @@ end;
 
 procedure TFrmProperty.BtnLoadIconClick(Sender: TObject);
 begin
-  if OpenIcon.Execute(Handle) then
+  if OpenIcon.Execute() then
   begin
     if not Assigned(AppIcon) then
       AppIcon := TIcon.Create;

@@ -1,0 +1,95 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{12eff1f8-8066-4ac9-abed-f5f56817dd93}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
+    <DCC_DependencyCheckOutputName>Project5.exe</DCC_DependencyCheckOutputName>
+    <MainSource>Project5.dpr</MainSource>
+    <DCC_UsePackage>rtl;vcl;vclx;vclactnband;dbrtl;vcldb;vcldbx;bdertl;dsnap;dsnapcon;teeUI;teedb;tee;adortl;vclib;ibxpress;dbxcds;dbexpress;DbxCommonDriver;IndyCore;IndySystem;IndyProtocols;xmlrtl;inet;IntrawebDB_90_100;Intraweb_90_100;VclSmp;vclie;websnap;webdsnap;inetdbbde;inetdbxpress;soaprtl;Package6;XWB_R2006;SharedRPCBroker_R2006;elpkdbD7;elpproD7;SyntaxHighlight_D7;scited7;scitedbd7</DCC_UsePackage>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Version>7.0</Version>
+    <DCC_DebugInformation>False</DCC_DebugInformation>
+    <DCC_LocalDebugSymbols>False</DCC_LocalDebugSymbols>
+    <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
+    <DCC_Define>RELEASE</DCC_Define>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <Version>7.0</Version>
+    <DCC_Define>DEBUG</DCC_Define>
+  </PropertyGroup>
+  <ProjectExtensions>
+    <Borland.Personality>Delphi.Personality</Borland.Personality>
+    <Borland.ProjectType />
+    <BorlandProject>
+<BorlandProject><Delphi.Personality><Parameters><Parameters Name="UseLauncher">False</Parameters><Parameters Name="LoadAllSymbols">True</Parameters><Parameters Name="LoadUnspecifiedSymbols">False</Parameters></Parameters><VersionInfo><VersionInfo Name="IncludeVerInfo">False</VersionInfo><VersionInfo Name="AutoIncBuild">False</VersionInfo><VersionInfo Name="MajorVer">1</VersionInfo><VersionInfo Name="MinorVer">0</VersionInfo><VersionInfo Name="Release">0</VersionInfo><VersionInfo Name="Build">0</VersionInfo><VersionInfo Name="Debug">False</VersionInfo><VersionInfo Name="PreRelease">False</VersionInfo><VersionInfo Name="Special">False</VersionInfo><VersionInfo Name="Private">False</VersionInfo><VersionInfo Name="DLL">False</VersionInfo><VersionInfo Name="Locale">1046</VersionInfo><VersionInfo Name="CodePage">1252</VersionInfo></VersionInfo><VersionInfoKeys><VersionInfoKeys Name="CompanyName"></VersionInfoKeys><VersionInfoKeys Name="FileDescription"></VersionInfoKeys><VersionInfoKeys Name="FileVersion">1.0.0.0</VersionInfoKeys><VersionInfoKeys Name="InternalName"></VersionInfoKeys><VersionInfoKeys Name="LegalCopyright"></VersionInfoKeys><VersionInfoKeys Name="LegalTrademarks"></VersionInfoKeys><VersionInfoKeys Name="OriginalFilename"></VersionInfoKeys><VersionInfoKeys Name="ProductName"></VersionInfoKeys><VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys><VersionInfoKeys Name="Comments"></VersionInfoKeys></VersionInfoKeys><Source><Source Name="MainSource">Project5.dpr</Source></Source><Excluded_Packages>
+      <Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\5.0\Bpl\Package1.bpl">File C:\Users\Public\Documents\RAD Studio\5.0\Bpl\Package1.bpl not found</Excluded_Packages>
+      <Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\5.0\Bpl\Package188.bpl">(untitled)</Excluded_Packages>
+      <Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\5.0\Bpl\Borland2006.bpl">File C:\Users\Public\Documents\RAD Studio\5.0\Bpl\Borland2006.bpl not found</Excluded_Packages>
+      <Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\5.0\Bpl\VA2006.bpl">File C:\Users\Public\Documents\RAD Studio\5.0\Bpl\VA2006.bpl not found</Excluded_Packages>
+      <Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\5.0\Bpl\VAShared2006.bpl">File C:\Users\Public\Documents\RAD Studio\5.0\Bpl\VAShared2006.bpl not found</Excluded_Packages>
+      <Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\5.0\Bpl\VA508Access2006.bpl">File C:\Users\Public\Documents\RAD Studio\5.0\Bpl\VA508Access2006.bpl not found</Excluded_Packages>
+      <Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\5.0\Bpl\ORCtrlLib2006.bpl">File C:\Users\Public\Documents\RAD Studio\5.0\Bpl\ORCtrlLib2006.bpl not found</Excluded_Packages>
+      <Excluded_Packages Name="C:\Users\Marcelo\Downloads\CPRS-WVEHR3.0Ver2-16_20181008\Packages\ORDateLib2006.bpl">File C:\Users\Marcelo\Downloads\CPRS-WVEHR3.0Ver2-16_20181008\Packages\ORDateLib2006.bpl not found</Excluded_Packages>
+      <Excluded_Packages Name="$(BDS)\bin\dcloffice2k100.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+      <Excluded_Packages Name="$(BDS)\bin\dclofficexp100.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+      <Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\5.0\Bpl\VDOPrint.bpl">File C:\Users\Public\Documents\RAD Studio\5.0\Bpl\VDOPrint.bpl not found</Excluded_Packages>
+      <Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\5.0\Bpl\dclelpD7.bpl">EldoS Visual Components (Design-time)</Excluded_Packages>
+    </Excluded_Packages></Delphi.Personality></BorlandProject></BorlandProject>
+  </ProjectExtensions>
+  <Import Project="$(MSBuildBinPath)\Borland.Delphi.Targets" />
+  <ItemGroup>
+    <DelphiCompile Include="Project5.dpr">
+      <MainSource>MainSource</MainSource>
+    </DelphiCompile>
+    <DCCReference Include="..\source\Accessor.pas" />
+    <DCCReference Include="..\source\EdOptionsWin.pas">
+      <Form>EdOptionsWindow</Form>
+    </DCCReference>
+    <DCCReference Include="..\source\sciAbbrevationManager.pas" />
+    <DCCReference Include="..\source\sciAddLanguageFormUnit.pas">
+      <Form>sciAddLanguageForm</Form>
+    </DCCReference>
+    <DCCReference Include="..\source\SciAutoComplete.pas" />
+    <DCCReference Include="..\source\SciCallTips.pas" />
+    <DCCReference Include="..\source\SciConfirmReplaceDlg.pas">
+      <Form>ConfirmReplaceDialog</Form>
+    </DCCReference>
+    <DCCReference Include="..\source\SciControllerHandler.pas" />
+    <DCCReference Include="..\source\SciDetectUtils.pas" />
+    <DCCReference Include="..\source\SciDocuments.pas" />
+    <DCCReference Include="..\source\SciKeyBindings.pas" />
+    <DCCReference Include="..\source\SciKeyEditForm.pas">
+      <Form>KeyEditForm</Form>
+    </DCCReference>
+    <DCCReference Include="..\source\scilangfiller.pas" />
+    <DCCReference Include="..\source\SciLexer.pas" />
+    <DCCReference Include="..\source\SciLexerAuto.pas" />
+    <DCCReference Include="..\source\SciLexerMemo.pas" />
+    <DCCReference Include="..\source\scilexermod.pas" />
+    <DCCReference Include="..\source\SciLexerOptionsDlg.pas" />
+    <DCCReference Include="..\source\SciMacroRecording.pas" />
+    <DCCReference Include="..\source\ScintillaLanguageManager.pas" />
+    <DCCReference Include="..\source\ScintillaSynLexers.pas" />
+    <DCCReference Include="..\source\SciPropertyMgr.pas" />
+    <DCCReference Include="..\source\SciReplaceTextDlg.pas">
+      <Form>TextReplaceDialog</Form>
+    </DCCReference>
+    <DCCReference Include="..\source\SciResLang.pas" />
+    <DCCReference Include="..\source\SciResLangDcl.pas" />
+    <DCCReference Include="..\source\SciSearchReplace.pas" />
+    <DCCReference Include="..\source\SciSearchTextDlg.pas">
+      <Form>TextSearchDialog</Form>
+    </DCCReference>
+    <DCCReference Include="..\source\SciSupport.pas" />
+    <DCCReference Include="..\source\sciUtils.pas" />
+    <DCCReference Include="..\source\SciWhatToFillUnit.pas">
+      <Form>TSciWhatToFillForm</Form>
+    </DCCReference>
+    <DCCReference Include="..\source\tcFontCombobox.pas" />
+    <DCCReference Include="Unit5.pas">
+      <Form>Form5</Form>
+    </DCCReference>
+  </ItemGroup>
+</Project>

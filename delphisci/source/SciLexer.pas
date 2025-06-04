@@ -3720,7 +3720,7 @@ begin
 end;
 
 initialization
-	scmod := LoadLibrary('SciLexer.DLL');
+	scmod := LoadLibrary('E:\PortableApps\Programmers Notepad\SciLexer.dll');
 finalization
 	if scmod > 0 then FreeLibrary(scmod);
 

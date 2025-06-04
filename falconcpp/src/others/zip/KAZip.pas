@@ -91,7 +91,7 @@ unit KAZip;
 
 interface
 
-{$DEFINE USE_BZIP2}
+{.$DEFINE USE_BZIP2}
 
 uses
 	Windows, SysUtils, Classes, Masks, TypInfo

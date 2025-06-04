@@ -22,7 +22,7 @@ uses
   UParseMsgs, XPPanels, ModernTabs, ThreadFileDownload, VirtualTrees, SyncObjs,
   PluginManager, PluginServiceManager, UEditor, CppHighlighter, SintaxList,
   AutoComplete, DScintillaTypes, SearchEngine, SystemUtils, CompilerSettings,
-  SIImageList, {*libclang,*}
+  {SIImageList, *libclang,*}
   { TB2K }
   TB2Item, TB2Dock, TB2Toolbar, SpTBXSkins, SpTBXItem, SpTBXControls, SpTBXDkPanels;
 

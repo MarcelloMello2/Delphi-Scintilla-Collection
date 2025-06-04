@@ -31,12 +31,9 @@ I'm also interested in the package source files you've created for that
 version, or other contributions of code.
 }
 
-{$IFDEF BORLAND}
-	{$IFDEF VER170}
 		{$DEFINE COMPILER9}
 		{$DEFINE DELPHI9}
 		{$DEFINE DELPHICOMPILER9}
-	{$ENDIF}
 
 	{$IFDEF VER160}
 		{$DEFINE COMPILER8}
@@ -82,4 +79,3 @@ version, or other contributions of code.
 		{$DEFINE DELPHICOMPILER}
 	{$ENDIF ~BCB}
 
-{$ENDIF}
