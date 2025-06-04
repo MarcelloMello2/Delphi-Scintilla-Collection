@@ -1,10 +1,14 @@
-program CompleteDScintillaMigration;
+﻿program Seven.Scintilla.CompleteDScintillaMigrationApp;
 
 {$APPTYPE CONSOLE}
-{$MODE DELPHI}
+
+{$R *.res}
 
 uses
-  SysUtils, Classes, Windows, ShellAPI;
+  SysUtils,
+  Classes,
+  Windows,
+  ShellAPI;
 
 const
   VERSION = '1.0.0';
@@ -60,7 +64,7 @@ begin
   StartInfo.cb := SizeOf(StartInfo);
   StartInfo.dwFlags := STARTF_USESHOWWINDOW;
   StartInfo.wShowWindow := SW_HIDE;
-  
+
   if CreateProcess(nil, PChar(Command + ' ' + Params), nil, nil, False,
     CREATE_NEW_CONSOLE or NORMAL_PRIORITY_CLASS, nil, nil, StartInfo, ProcessInfo) then
   begin
@@ -94,14 +98,14 @@ var
   BackupFile: string;
 begin
   if not Config.BackupOldWrapper then Exit;
-  
+
   Step('Fazendo backup do wrapper antigo...');
-  
+
   if FileExists(Config.OldWrapperFile) then
   begin
-    BackupFile := ChangeFileExt(Config.OldWrapperFile, 
+    BackupFile := ChangeFileExt(Config.OldWrapperFile,
       '.backup.' + FormatDateTime('yyyymmdd_hhnnss', Now) + '.pas');
-    
+
     if CopyFile(PChar(Config.OldWrapperFile), PChar(BackupFile), True) then
       Success('Backup criado: ' + BackupFile)
     else
@@ -115,27 +119,27 @@ var
   NewWrapperFile: string;
 begin
   if not Config.GenerateNewWrapper then Exit;
-  
+
   Step('Gerando novo wrapper do Scintilla...');
-  
+
   // Verifica se o gerador existe
   if not FileExists('ScintillaIfaceGenerator.exe') then
   begin
     Step('Compilando gerador...');
     ExitCode := ExecuteAndWait('fpc', 'ScintillaIfaceGenerator.pas -O3');
-    
+
     if ExitCode <> 0 then
     begin
       Error('Falha ao compilar gerador');
       Exit;
     end;
   end;
-  
+
   // Executa o gerador
   NewWrapperFile := IncludeTrailingPathDelimiter(Config.OutputDir) + 'DScintilla.pas';
   ExitCode := ExecuteAndWait('ScintillaIfaceGenerator.exe',
     Config.ScintillaIfaceFile + ' ' + NewWrapperFile);
-  
+
   if ExitCode = 0 then
     Success('Novo wrapper gerado: ' + NewWrapperFile)
   else
@@ -149,36 +153,36 @@ var
   Params: string;
 begin
   if not (Config.GenerateCompatLayer or Config.GenerateReport) then Exit;
-  
+
   Step('Executando análise de migração...');
-  
+
   // Verifica se a ferramenta de migração existe
   if not FileExists('DScintillaMigrationTool.exe') then
   begin
     Step('Compilando ferramenta de migração...');
     ExitCode := ExecuteAndWait('fpc', 'DScintillaMigrationTool.pas -O3');
-    
+
     if ExitCode <> 0 then
     begin
       Error('Falha ao compilar ferramenta de migração');
       Exit;
     end;
   end;
-  
+
   OldFile := Config.OldWrapperFile;
   NewFile := IncludeTrailingPathDelimiter(Config.OutputDir) + 'DScintilla.pas';
-  
+
   Params := OldFile + ' ' + NewFile + ' -o ' + Config.OutputDir;
-  
+
   if Config.GenerateCompatLayer and Config.GenerateReport then
     Params := Params + ' -all'
   else if Config.GenerateCompatLayer then
     Params := Params + ' -compat'
   else if Config.GenerateReport then
     Params := Params + ' -report';
-  
+
   ExitCode := ExecuteAndWait('DScintillaMigrationTool.exe', Params);
-  
+
   if ExitCode = 0 then
   begin
     if Config.GenerateCompatLayer then
@@ -196,11 +200,11 @@ var
   TestFile: string;
 begin
   if not Config.GenerateTests then Exit;
-  
+
   Step('Gerando testes unitários...');
-  
+
   TestFile := IncludeTrailingPathDelimiter(Config.OutputDir) + 'DScintillaTests.pas';
-  
+
   SL := TStringList.Create;
   try
     SL.Add('unit DScintillaTests;');
@@ -271,7 +275,7 @@ begin
     SL.Add('  RegisterTest(TDScintillaTest.Suite);');
     SL.Add('');
     SL.Add('end.');
-    
+
     SL.SaveToFile(TestFile);
     Success('Testes unitários gerados: ' + TestFile);
   finally
@@ -285,9 +289,9 @@ var
   SummaryFile: string;
 begin
   Step('Gerando resumo da migração...');
-  
+
   SummaryFile := IncludeTrailingPathDelimiter(Config.OutputDir) + 'MIGRATION_SUMMARY.txt';
-  
+
   SL := TStringList.Create;
   try
     SL.Add('RESUMO DA MIGRAÇÃO DSCINTILLA');
@@ -296,26 +300,26 @@ begin
     SL.Add('');
     SL.Add('Arquivos Gerados:');
     SL.Add('-----------------');
-    
+
     if Config.BackupOldWrapper then
       SL.Add('- Backup do wrapper original');
-      
+
     if Config.GenerateNewWrapper then
     begin
       SL.Add('- DScintilla.pas (novo wrapper)');
       SL.Add('- Scintilla.Consts.inc');
       SL.Add('- Scintilla.Types.inc');
     end;
-    
+
     if Config.GenerateCompatLayer then
       SL.Add('- DScintillaCompat.pas (compatibilidade)');
-      
+
     if Config.GenerateReport then
       SL.Add('- MigrationReport.txt (relatório detalhado)');
-      
+
     if Config.GenerateTests then
       SL.Add('- DScintillaTests.pas (testes unitários)');
-    
+
     SL.Add('');
     SL.Add('Próximos Passos:');
     SL.Add('----------------');
@@ -334,7 +338,7 @@ begin
     SL.Add('// Passo 2: Migre gradualmente');
     SL.Add('uses DScintilla;');
     SL.Add('var Editor: TScintilla;');
-    
+
     SL.SaveToFile(SummaryFile);
     Success('Resumo gerado: ' + SummaryFile);
   finally
@@ -346,7 +350,7 @@ end;
 begin
   ShowBanner;
   InitializeConfig;
-  
+
   try
     // Cria diretório de saída
     if not DirectoryExists(Config.OutputDir) then
@@ -354,14 +358,14 @@ begin
       Step('Criando diretório de saída...');
       CreateDir(Config.OutputDir);
     end;
-    
+
     // Executa as etapas
     BackupOldWrapper;
     GenerateNewWrapper;
     RunMigrationAnalysis;
     GenerateTests;
     GenerateSummary;
-    
+
     WriteLn('');
     WriteLn('=====================================');
     WriteLn('Migração concluída com sucesso!');
@@ -374,7 +378,7 @@ begin
       ExitCode := 1;
     end;
   end;
-  
+
   WriteLn('');
   WriteLn('Pressione ENTER para sair...');
   ReadLn;

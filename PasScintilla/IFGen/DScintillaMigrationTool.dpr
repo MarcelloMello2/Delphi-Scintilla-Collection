@@ -1,7 +1,6 @@
-program DScintillaMigrationTool;
+﻿program DScintillaMigrationTool;
 
 {$APPTYPE CONSOLE}
-{$MODE DELPHI}
 
 uses
   SysUtils, Classes, DScintillaMigration;
@@ -23,7 +22,7 @@ begin
   WriteLn('  DScintillaMigrationTool DScintilla_old.pas DScintilla_new.pas -all');
 end;
 
-procedure RunMigration(const OldFile, NewFile: string; 
+procedure RunMigration(const OldFile, NewFile: string;
   GenerateCompat, GenerateReport: Boolean; const OutputDir: string);
 var
   MigrationHelper: TDScintillaMigrationHelper;
@@ -34,28 +33,28 @@ begin
     WriteLn('ERRO: Arquivo antigo não encontrado: ', OldFile);
     Exit;
   end;
-  
+
   if not FileExists(NewFile) then
   begin
     WriteLn('ERRO: Arquivo novo não encontrado: ', NewFile);
     Exit;
   end;
-  
+
   MigrationHelper := TDScintillaMigrationHelper.Create;
   try
     WriteLn('Iniciando análise de migração...');
     WriteLn('');
-    
+
     // Analisa o wrapper antigo
     MigrationHelper.AnalyzeExistingWrapper(OldFile);
-    
+
     // Analisa o wrapper novo
     MigrationHelper.AnalyzeNewWrapper(NewFile);
-    
+
     WriteLn('');
     WriteLn('Análise concluída!');
     WriteLn('');
-    
+
     // Gera relatório de migração
     if GenerateReport then
     begin
@@ -63,7 +62,7 @@ begin
       WriteLn('Gerando relatório de migração...');
       MigrationHelper.GenerateMigrationReport(ReportFile);
     end;
-    
+
     // Gera unit de compatibilidade
     if GenerateCompat then
     begin
@@ -71,10 +70,10 @@ begin
       WriteLn('Gerando unit de compatibilidade...');
       MigrationHelper.GenerateCompatibilityUnit(CompatFile);
     end;
-    
+
     WriteLn('');
     WriteLn('Processo de migração concluído!');
-    
+
     if GenerateCompat then
     begin
       WriteLn('');
@@ -100,16 +99,16 @@ begin
     ShowUsage;
     Exit;
   end;
-  
+
   // Parâmetros obrigatórios
   OldFile := ParamStr(1);
   NewFile := ParamStr(2);
-  
+
   // Valores padrão
   OutputDir := ExtractFilePath(ParamStr(0));
   GenerateCompat := False;
   GenerateReport := False;
-  
+
   // Processa opções
   I := 3;
   while I <= ParamCount do
@@ -129,10 +128,10 @@ begin
       GenerateCompat := True;
       GenerateReport := True;
     end;
-    
+
     Inc(I);
   end;
-  
+
   // Executa a migração
   try
     RunMigration(OldFile, NewFile, GenerateCompat, GenerateReport, OutputDir);
@@ -143,7 +142,7 @@ begin
       ExitCode := 1;
     end;
   end;
-  
+
   WriteLn('');
   WriteLn('Pressione ENTER para sair...');
   ReadLn;

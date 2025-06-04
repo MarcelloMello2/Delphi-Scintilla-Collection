@@ -9,7 +9,7 @@ uses
   Classes,
   StrUtils,
   Seven.Scintilla.IfaceParser in 'Seven.Scintilla.IfaceParser.pas',
-  Seven.Scintilla.DScintillaMigration in 'Seven.Scintilla.DScintillaMigration.pas';
+  Seven.Scintilla.DScintillaMigrationHelper in 'Seven.Scintilla.DScintillaMigrationHelper.pas';
 
 type
   TScintillaWrapperGenerator = class

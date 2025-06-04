@@ -1,15 +1,15 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <ProjectGuid>{1665F133-2A3C-4190-8AAD-A76F2E6E0013}</ProjectGuid>
+        <ProjectGuid>{CD4FC43B-84A5-4BA9-8D1A-20E550E283F0}</ProjectGuid>
         <ProjectVersion>20.3</ProjectVersion>
         <FrameworkType>None</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
-        <ProjectName Condition="'$(ProjectName)'==''">Seven.Scintilla.WrapperBuilderApp</ProjectName>
+        <ProjectName Condition="'$(ProjectName)'==''">DScintillaMigrationTool</ProjectName>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Console</AppType>
-        <MainSource>Seven.Scintilla.WrapperBuilderApp.dpr</MainSource>
+        <MainSource>DScintillaMigrationTool.dpr</MainSource>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
         <Base>true</Base>
@@ -64,7 +64,7 @@
         <DCC_F>false</DCC_F>
         <DCC_K>false</DCC_K>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;$(DCC_Namespace)</DCC_Namespace>
-        <SanitizedProjectName>Seven_Scintilla_WrapperBuilderApp</SanitizedProjectName>
+        <SanitizedProjectName>DScintillaMigrationTool</SanitizedProjectName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Android)'!=''">
         <DCC_UsePackage>fmx;emshosting;DbxCommonDriver;bindengine;IndyIPCommon;emsclient;FireDACCommonDriver;IndyProtocols;IndyIPClient;dbxcds;FmxTeeUI;emsedge;bindcompfmx;FireDACSqliteDriver;DbxClientDriver;soapmidas;fmxFireDAC;dbexpress;inet;DataSnapCommon;fmxase;dbrtl;FireDACDBXDriver;CustomIPTransport;DBXInterBaseDriver;IndySystem;bindcomp;FireDACCommon;emsserverresource;inetstn;IndyCore;RESTBackendComponents;bindcompdbx;rtl;RESTComponents;DBXSqliteDriver;IndyIPServer;dsnapxml;DataSnapClient;DataSnapProviderClient;DataSnapFireDAC;emsclientfiredac;FireDAC;FireDACDSDriver;xmlrtl;tethering;dsnap;CloudService;DataSnapNativeClient;FMXTee;soaprtl;soapserver;FireDACIBDriver;$(DCC_UsePackage)</DCC_UsePackage>
@@ -170,9 +170,6 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="Seven.Scintilla.IfaceParser.pas"/>
-        <DCCReference Include="Seven.Scintilla.DScintillaMigrationHelper.pas"/>
-        <None Include="scintilla-generator-config.ini"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -191,7 +188,7 @@
         <BorlandProject>
             <Delphi.Personality>
                 <Source>
-                    <Source Name="MainSource">Seven.Scintilla.WrapperBuilderApp.dpr</Source>
+                    <Source Name="MainSource">DScintillaMigrationTool.dpr</Source>
                 </Source>
             </Delphi.Personality>
             <Deployment Version="5">
@@ -210,15 +207,9 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win32\Debug\Seven.Scintilla.WrapperBuilderApp.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="Win32\Debug\DScintillaMigrationTool.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
-                        <RemoteName>Seven.Scintilla.WrapperBuilderApp.exe</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="scintilla-generator-config.ini" Configuration="Debug" Class="ProjectFile">
-                    <Platform Name="Win32">
-                        <RemoteDir>.\</RemoteDir>
+                        <RemoteName>DScintillaMigrationTool.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
