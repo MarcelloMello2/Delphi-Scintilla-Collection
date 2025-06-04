@@ -1,0 +1,205 @@
+// ===== CÓDIGO ANTIGO (usando DScintilla antiga) =====
+unit OldCodeExample;
+
+interface
+
+uses
+  Windows, Forms, DScintilla_Old;
+
+type
+  TMyEditor = class(TForm)
+  private
+    FScintilla: TScintilla;
+    procedure ConfigureEditor;
+  public
+    constructor Create(AOwner: TComponent); override;
+  end;
+
+implementation
+
+constructor TMyEditor.Create(AOwner: TComponent);
+begin
+  inherited;
+  FScintilla := TScintilla.Create(Self);
+  FScintilla.Parent := Self;
+  FScintilla.Align := alClient;
+  ConfigureEditor;
+end;
+
+procedure TMyEditor.ConfigureEditor;
+begin
+  // Usando constantes antigas que podem ter sido removidas/renomeadas
+  FScintilla.SendMessage(SCI_SETLEXER, SCLEX_PASCAL, 0);
+  FScintilla.SendMessage(SCI_SETSTYLEBITS, 5, 0);  // OBSOLETO
+  FScintilla.SendMessage(SCI_SETMARGINTYPEN, 0, SC_MARGIN_NUMBER);
+  
+  // Métodos que podem não existir mais
+  FScintilla.SetStyleBits(5); // Método removido no Scintilla novo
+  
+  // Usando constantes antigas de estilo
+  FScintilla.StyleSetFore(SCE_PAS_DEFAULT, clBlack);
+  FScintilla.StyleSetFore(SCE_PAS_COMMENT, clGreen);
+  FScintilla.StyleSetFore(SCE_PAS_STRING, clMaroon);
+end;
+
+end.
+
+// ===== CÓDIGO MIGRADO (usando DScintillaCompat) =====
+unit MigratedCodeExample;
+
+interface
+
+uses
+  Windows, Forms, 
+  DScintilla,        // Nova unit gerada
+  DScintillaCompat;  // Unit de compatibilidade
+
+type
+  TMyEditor = class(TForm)
+  private
+    FScintilla: TDScintillaCompat; // Usa classe de compatibilidade
+    procedure ConfigureEditor;
+  public
+    constructor Create(AOwner: TComponent); override;
+  end;
+
+implementation
+
+constructor TMyEditor.Create(AOwner: TComponent);
+begin
+  inherited;
+  FScintilla := TDScintillaCompat.Create(Self);
+  FScintilla.Parent := Self;
+  FScintilla.Align := alClient;
+  ConfigureEditor;
+end;
+
+procedure TMyEditor.ConfigureEditor;
+begin
+  // Código continua funcionando com a camada de compatibilidade
+  FScintilla.SetLexer(SCLEX_PASCAL);
+  
+  // SCI_SETSTYLEBITS foi mapeado pela compatibilidade
+  // mas mostrará aviso em modo DEBUG
+  FScintilla.SendEditor(SCI_SETSTYLEBITS, 5, 0);
+  
+  // Usa o novo método
+  FScintilla.SetMarginTypeN(0, SC_MARGIN_NUMBER);
+  
+  // SetStyleBits mostrará deprecated warning mas funcionará
+  FScintilla.SetStyleBits(5);
+  
+  // Constantes antigas são mapeadas automaticamente
+  FScintilla.StyleSetFore(SCE_PAS_DEFAULT, clBlack);
+  FScintilla.StyleSetFore(SCE_PAS_COMMENT, clGreen);
+  FScintilla.StyleSetFore(SCE_PAS_STRING, clMaroon);
+end;
+
+end.
+
+// ===== CÓDIGO FINAL (totalmente migrado) =====
+unit FinalCodeExample;
+
+interface
+
+uses
+  Windows, Forms, DScintilla; // Apenas a nova unit
+
+type
+  TMyEditor = class(TForm)
+  private
+    FScintilla: TScintilla; // Classe nova diretamente
+    procedure ConfigureEditor;
+  public
+    constructor Create(AOwner: TComponent); override;
+  end;
+
+implementation
+
+constructor TMyEditor.Create(AOwner: TComponent);
+begin
+  inherited;
+  FScintilla := TScintilla.Create(Self);
+  FScintilla.Parent := Self;
+  FScintilla.Align := alClient;
+  ConfigureEditor;
+end;
+
+procedure TMyEditor.ConfigureEditor;
+begin
+  // Código totalmente atualizado para a nova API
+  FScintilla.SetLexer(SCLEX_PASCAL);
+  
+  // SCI_SETSTYLEBITS foi removido, não é mais necessário
+  // na versão nova do Scintilla
+  
+  FScintilla.SetMarginTypeN(0, SC_MARGIN_NUMBER);
+  
+  // Usa propriedades quando disponíveis
+  if FScintilla.MarginWidth[0] = 0 then
+    FScintilla.MarginWidth[0] := 40;
+  
+  // Constantes atualizadas
+  FScintilla.StyleSetFore(SCE_PAS_DEFAULT, clBlack);
+  FScintilla.StyleSetFore(SCE_PAS_COMMENT, clGreen);
+  FScintilla.StyleSetFore(SCE_PAS_STRING, clMaroon);
+  
+  // Novos recursos disponíveis
+  FScintilla.SetMultipleSelection(True);
+  FScintilla.SetAdditionalSelectionTyping(True);
+end;
+
+end.
+
+// ===== EXEMPLO DE RELATÓRIO DE MIGRAÇÃO =====
+{
+DScintilla Migration Report
+==========================
+Generated: 04/06/2025 10:30:45
+
+Summary:
+--------
+Old constants: 450
+New constants: 520
+Deprecated constants: 23
+Renamed constants: 12
+Old methods: 180
+New methods: 210
+
+Deprecated Constants:
+--------------------
+  - SCI_SETSTYLEBITS
+  - SCI_GETSTYLEBITS
+  - SC_PRINT_BLACKONWHITE
+  - SC_CHARSET_JOHAB
+  - ...
+
+Possibly Renamed Constants:
+--------------------------
+  - SCI_SETMARGINTYPEN -> SCI_SETMARGINTYPE
+  - SCE_H_XCCOMMENT -> SCE_H_COMMENTDOC
+  - ...
+
+Removed Methods:
+---------------
+  - SetStyleBits
+  - GetStyleBits
+  - SetCharacterSet
+  - ...
+
+New Methods:
+-----------
+  + SetMultipleSelection
+  + GetMultipleSelection
+  + SetAdditionalSelectionTyping
+  + GetAdditionalSelectionTyping
+  + ...
+
+Migration Steps:
+---------------
+1. Backup your existing DScintilla unit
+2. Generate new wrapper using ScintillaWrapperBuilder  
+3. Include DScintillaCompat unit for backward compatibility
+4. Test your application thoroughly
+5. Gradually update deprecated constants and methods
+}

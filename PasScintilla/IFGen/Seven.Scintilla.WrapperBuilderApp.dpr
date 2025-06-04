@@ -16,7 +16,7 @@ type
   private
     FParser: TScintillaParser;
     FOutputPath: string;
-    FUnitName: string;
+    FUnitTargetName: string;
     FGenerateProperties: Boolean;
     FGenerateEvents: Boolean;
     FSplitFiles: Boolean;
@@ -38,7 +38,7 @@ type
     procedure GenerateWrapper;
 
     property OutputPath: string read FOutputPath write FOutputPath;
-    property UnitName: string read FUnitName write FUnitName;
+    property UnitTargetName: string read FUnitTargetName write FUnitTargetName;
     property GenerateProperties: Boolean read FGenerateProperties write FGenerateProperties;
     property GenerateEvents: Boolean read FGenerateEvents write FGenerateEvents;
     property SplitFiles: Boolean read FSplitFiles write FSplitFiles;
@@ -49,7 +49,7 @@ begin
   inherited;
   FParser := TScintillaParser.Create;
   FOutputPath := '';
-  FUnitName := 'DScintilla';
+  FUnitTargetName := 'DScintilla';
   FGenerateProperties := True;
   FGenerateEvents := True;
   FSplitFiles := True;
@@ -296,13 +296,13 @@ var
   FileName, ParamStr, WParam, LParam: string;
   Props: TStringList;
 begin
-  FileName := IncludeTrailingPathDelimiter(FOutputPath) + FUnitName + '.pas';
+  FileName := IncludeTrailingPathDelimiter(FOutputPath) + FUnitTargetName + '.pas';
   Props := nil;
 
   SL := TStringList.Create;
   try
     // Cabeçalho
-    SL.Add('unit ' + FUnitName + ';');
+    SL.Add('unit ' + FUnitTargetName + ';');
     SL.Add('');
     SL.Add('{');
     SL.Add('  Delphi Wrapper for Scintilla');
@@ -604,7 +604,7 @@ begin
       begin
         Inc(I);
         if I <= ParamCount then
-          Generator.UnitName := ParamStr(I);
+          Generator.UnitTargetName := ParamStr(I);
       end
       else if ParamStr(I) = '-single' then
         Generator.SplitFiles := False
