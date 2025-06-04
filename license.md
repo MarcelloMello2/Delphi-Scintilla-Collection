@@ -28,7 +28,7 @@ As modificações e atualizações realizadas neste repositório para fins de pr
 ```
 MIT License
 
-Copyright (c) 2024 Marcello Mello
+Copyright (c) 2025 Marcelo Melo
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
