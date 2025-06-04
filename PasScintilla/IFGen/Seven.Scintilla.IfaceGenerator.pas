@@ -3,7 +3,11 @@
 interface
 
 uses
-  SysUtils, Classes, StrUtils, System.RegularExpressions;
+  System.SysUtils,
+  System.Classes,
+  System.StrUtils,
+  System.IOUtils,
+  System.RegularExpressions;
 
 
 type
@@ -483,11 +487,11 @@ var
 begin
   SL := TStringList.Create;
   try
-    SL.Add('unit ScintillaWrapper;');
+    SL.Add(Format('unit %s;', [TPath.GetFileNameWithoutExtension(OutputFile)]));
     SL.Add('');
     SL.Add('{');
     SL.Add('  Wrapper Delphi para Scintilla');
-    SL.Add('  Gerado automaticamente por ScintillaIfaceGenerator');
+    SL.Add('  Gerado automaticamente por ' + ExtractFileName(ParamStr(0)));
     SL.Add('  Data: ' + DateTimeToStr(Now));
     SL.Add('}');
     SL.Add('');
@@ -648,7 +652,7 @@ begin
     SL.Add('end.');
 
     SL.SaveToFile(OutputFile);
-    WriteLn('Arquivo ' + OutputFile + ' gerado com sucesso!');
+    WriteLn('Arquivo ' + GetCurrentDir() + '\' + OutputFile + ' gerado com sucesso!');
   finally
     SL.Free;
   end;

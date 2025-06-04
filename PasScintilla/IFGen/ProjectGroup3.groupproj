@@ -3,9 +3,6 @@
         <ProjectGuid>{50BDC5D4-41F8-4C32-B867-F36BAA5464A3}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
-        <Projects Include="SciIFGen.dproj">
-            <Dependencies/>
-        </Projects>
         <Projects Include="Seven.Scintilla.IfaceGeneratorApp.dproj">
             <Dependencies/>
         </Projects>
@@ -29,15 +26,6 @@
             <Default.Personality/>
         </BorlandProject>
     </ProjectExtensions>
-    <Target Name="SciIFGen">
-        <MSBuild Projects="SciIFGen.dproj"/>
-    </Target>
-    <Target Name="SciIFGen:Clean">
-        <MSBuild Projects="SciIFGen.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="SciIFGen:Make">
-        <MSBuild Projects="SciIFGen.dproj" Targets="Make"/>
-    </Target>
     <Target Name="Seven_Scintilla_IfaceGeneratorApp">
         <MSBuild Projects="Seven.Scintilla.IfaceGeneratorApp.dproj"/>
     </Target>
@@ -84,13 +72,13 @@
         <MSBuild Projects="Seven.Scintilla.DScintillaMigrationToolApp.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="SciIFGen;Seven_Scintilla_IfaceGeneratorApp;Seven_Scintilla_WrapperBuilderApp;Seven_Scintilla_BuildDScintilla;Seven_Scintilla_CompleteDScintillaMigrationApp;Seven_Scintilla_DScintillaMigrationToolApp"/>
+        <CallTarget Targets="Seven_Scintilla_IfaceGeneratorApp;Seven_Scintilla_WrapperBuilderApp;Seven_Scintilla_BuildDScintilla;Seven_Scintilla_CompleteDScintillaMigrationApp;Seven_Scintilla_DScintillaMigrationToolApp"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="SciIFGen:Clean;Seven_Scintilla_IfaceGeneratorApp:Clean;Seven_Scintilla_WrapperBuilderApp:Clean;Seven_Scintilla_BuildDScintilla:Clean;Seven_Scintilla_CompleteDScintillaMigrationApp:Clean;Seven_Scintilla_DScintillaMigrationToolApp:Clean"/>
+        <CallTarget Targets="Seven_Scintilla_IfaceGeneratorApp:Clean;Seven_Scintilla_WrapperBuilderApp:Clean;Seven_Scintilla_BuildDScintilla:Clean;Seven_Scintilla_CompleteDScintillaMigrationApp:Clean;Seven_Scintilla_DScintillaMigrationToolApp:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="SciIFGen:Make;Seven_Scintilla_IfaceGeneratorApp:Make;Seven_Scintilla_WrapperBuilderApp:Make;Seven_Scintilla_BuildDScintilla:Make;Seven_Scintilla_CompleteDScintillaMigrationApp:Make;Seven_Scintilla_DScintillaMigrationToolApp:Make"/>
+        <CallTarget Targets="Seven_Scintilla_IfaceGeneratorApp:Make;Seven_Scintilla_WrapperBuilderApp:Make;Seven_Scintilla_BuildDScintilla:Make;Seven_Scintilla_CompleteDScintillaMigrationApp:Make;Seven_Scintilla_DScintillaMigrationToolApp:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
