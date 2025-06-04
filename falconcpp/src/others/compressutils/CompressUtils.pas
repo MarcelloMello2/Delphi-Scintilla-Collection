@@ -3,7 +3,7 @@ unit CompressUtils;
 interface
 
 uses
-  Windows, SysUtils, Classes, LibTar, {Compress.BZip2, }StrMatch, KAZip;
+  Windows, SysUtils, Classes, LibTar, AbBzip2, StrMatch, KAZip;
 
 const
   FILE_TYPE_BZIP2 = 0;
@@ -165,26 +165,25 @@ const
   BufferSize = 65536;
 var
   Count: Integer;
-//  Decomp: TZDecompressionStream;
+  Decomp: TBZDecompressionStream;
   Buffer: array[0..BufferSize - 1] of Byte;
 begin
-  raise Exception.Create('Ainda não fiz isso aqui');
-//  Result := False;
-//  try
-//    Decomp := TBZDecompressionStream.Create(FileStream);
-//    while True do
-//    begin
-//      Count := Decomp.Read(Buffer, BufferSize);
-//      if Count <> 0 then
-//        Stream.WriteBuffer(Buffer, Count)
-//      else
-//        Break;
-//    end;
-//    Decomp.Free;
-//  except
-//    Exit;
-//  end;
-//  Result := True;
+  Result := False;
+  try
+    Decomp := TBZDecompressionStream.Create(FileStream);
+    while True do
+    begin
+      Count := Decomp.Read(Buffer, BufferSize);
+      if Count <> 0 then
+        Stream.WriteBuffer(Buffer, Count)
+      else
+        Break;
+    end;
+    Decomp.Free;
+  except
+    Exit;
+  end;
+  Result := True;
 end;
 
 function FindTarFile(const FindName, Source: string; OutFile: TStream): Boolean;
