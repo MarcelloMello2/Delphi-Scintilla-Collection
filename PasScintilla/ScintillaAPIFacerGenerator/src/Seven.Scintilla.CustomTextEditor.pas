@@ -3,9 +3,8 @@
 {
   Wrapper Pascal para Scintilla
   Gerado automaticamente por ScintillaFacerGenerator.exe
-  Data: 04/06/2025 23:11:24
+  Data: 05/06/2025 01:22:15
 }
-
 
 {$IFDEF FPC}
   {$MODE DELPHI}
@@ -20,62 +19,58 @@ uses
   Winapi.Messages,
   System.SysUtils,
   System.Classes,
+  System.UITypes,
   Vcl.Graphics,
   Vcl.Controls,
   Seven.Scintilla.Types,
   Seven.Scintilla.BaseTextEditor;
 
+type
   TCustomSciTextEditor = class(TBaseSciTextEditor)
   strict private
-    FDirectPtr: Pointer;
-    FDirectFunction: Pointer;
   strict protected
-    procedure CreateWnd; override;
-    procedure DestroyWnd; override;
-    procedure WMGetDlgCode(var Message: TWMGetDlgCode); message WM_GETDLGCODE;
-    procedure WMEraseBkgnd(var Message: TWMEraseBkgnd); message WM_ERASEBKGND;
 
     // Basics
     /// <summary>
     /// Add text to the document at current position.
     /// </summary>
-    /// <param name="length">
+    /// <param name="ALength">
     /// Position in the document
     /// </param>
-    /// <param name="text">
+    /// <param name="AText">
     /// Text string
     /// </param>
-    procedure AddText(length: Integer; text: PAnsiChar);
+    procedure AddText(ALength: TSciPosition; AText: PAnsiChar);
     /// <summary>
     /// Add array of cells to document.
     /// </summary>
-    /// <param name="length">
+    /// <param name="ALength">
     /// Position in the document
     /// </param>
-    /// <param name="c">
-    /// The c parameter
+    /// <param name="C">
+    /// The C parameter
     /// </param>
-    procedure AddStyledText(length: Integer; c: PAnsiChar);
+    procedure AddStyledText(ALength: TSciPosition; C: PAnsiChar);
     /// <summary>
     /// Insert string at a position.
     /// </summary>
-    /// <param name="pos">
+    /// <param name="APos">
     /// Position in the document
     /// </param>
-    /// <param name="text">
+    /// <param name="AText">
     /// Text string
     /// </param>
-    procedure InsertText(pos: Integer; text: PAnsiChar);
+    procedure InsertText(APos: TSciPosition; AText: PAnsiChar);
     /// <summary>
     /// Change the text that is being inserted in response to SC_MOD_INSERTCHECK
     /// </summary>
-    /// <param name="length">
+    /// <param name="ALength">
     /// Position in the document
     /// </param>
-    /// <param name="text">
+    /// <param name="AText">
     /// Text string
     /// </param>
-    procedure ChangeInsertion(length: Integer; text: PAnsiChar);
+    procedure ChangeInsertion(ALength: TSciPosition; AText: PAnsiChar);
     /// <summary>
     /// Delete all text in the document.
     /// </summary>
@@ -83,13 +78,13 @@ uses
     /// <summary>
     /// Delete a range of text in the document.
     /// </summary>
-    /// <param name="start">
+    /// <param name="AStart">
     /// Position in the document
     /// </param>
-    /// <param name="lengthDelete">
+    /// <param name="ALengthDelete">
     /// Position in the document
     /// </param>
-    procedure DeleteRange(start: Integer; lengthDelete: Integer);
+    procedure DeleteRange(AStart: TSciPosition; ALengthDelete: TSciPosition);
     /// <summary>
     /// Set all style bytes to 0, remove all folding information.
     /// </summary>
@@ -100,51 +95,51 @@ uses
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetLength(): Integer;
+    function GetLength(): TSciPosition;
     /// <summary>
     /// Returns the character byte at the position.
     /// </summary>
-    /// <param name="pos">
+    /// <param name="APos">
     /// Position in the document
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function GetCharAt(pos: Integer): Integer;
+    function GetCharAt(APos: TSciPosition): Integer;
     /// <summary>
     /// Returns the position of the caret.
     /// </summary>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetCurrentPos(): Integer;
+    function GetCurrentPos(): TSciPosition;
     /// <summary>
     /// Returns the position of the opposite end of the selection to the caret.
     /// </summary>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetAnchor(): Integer;
+    function GetAnchor(): TSciPosition;
     /// <summary>
     /// Returns the style byte at the position.
     /// </summary>
-    /// <param name="pos">
+    /// <param name="APos">
     /// Position in the document
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function GetStyleAt(pos: Integer): Integer;
+    function GetStyleAt(APos: TSciPosition): Integer;
     /// <summary>
     /// Returns the unsigned style byte at the position.
     /// </summary>
-    /// <param name="pos">
+    /// <param name="APos">
     /// Position in the document
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function GetStyleIndexAt(pos: Integer): Integer;
+    function GetStyleIndexAt(APos: TSciPosition): Integer;
     /// <summary>
     /// Redoes the next action on the undo history.
     /// </summary>
@@ -153,10 +148,10 @@ uses
     /// Choose between collecting actions into the undo
     /// history and discarding them.
     /// </summary>
-    /// <param name="collectUndo">
+    /// <param name="ACollectUndo">
     /// Boolean value
     /// </param>
-    procedure SetUndoCollection(collectUndo: Boolean);
+    procedure SetUndoCollection(ACollectUndo: Boolean);
     /// <summary>
     /// Select all the text in the document.
     /// </summary>
@@ -170,24 +165,24 @@ uses
     /// Retrieve a buffer of cells.
     /// Returns the number of bytes in the buffer not including terminating NULs.
     /// </summary>
-    /// <param name="tr">
-    /// The tr parameter
+    /// <param name="ATr">
+    /// The ATr parameter
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetStyledText(tr: PSciTextRange): Integer;
+    function GetStyledText(ATr: PSciTextRange): TSciPosition;
     /// <summary>
     /// Retrieve a buffer of cells that can be past 2GB.
     /// Returns the number of bytes in the buffer not including terminating NULs.
     /// </summary>
-    /// <param name="tr">
-    /// The tr parameter
+    /// <param name="ATr">
+    /// The ATr parameter
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetStyledTextFull(tr: PSciTextRangeFull): Integer;
+    function GetStyledTextFull(ATr: PSciTextRangeFull): TSciPosition;
     /// <summary>
     /// Are there any redoable actions in the undo history?
     /// </summary>
@@ -198,46 +193,46 @@ uses
     /// <summary>
     /// Retrieve the line number at which a particular marker is located.
     /// </summary>
-    /// <param name="markerHandle">
+    /// <param name="AMarkerHandle">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the line number
     /// </returns>
-    function MarkerLineFromHandle(markerHandle: Integer): Integer;
+    function MarkerLineFromHandle(AMarkerHandle: Integer): TSciLine;
     /// <summary>
     /// Delete a marker.
     /// </summary>
-    /// <param name="markerHandle">
+    /// <param name="AMarkerHandle">
     /// Integer value
     /// </param>
-    procedure MarkerDeleteHandle(markerHandle: Integer);
+    procedure MarkerDeleteHandle(AMarkerHandle: Integer);
     /// <summary>
     /// Retrieve marker handles of a line
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="which">
+    /// <param name="AWhich">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function MarkerHandleFromLine(line: Integer; which: Integer): Integer;
+    function MarkerHandleFromLine(ALine: TSciLine; AWhich: Integer): Integer;
     /// <summary>
     /// Retrieve marker number of a marker handle
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="which">
+    /// <param name="AWhich">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function MarkerNumberFromLine(line: Integer; which: Integer): Integer;
+    function MarkerNumberFromLine(ALine: TSciLine; AWhich: Integer): Integer;
     /// <summary>
     /// Is undo history being collected?
     /// </summary>
@@ -252,14 +247,14 @@ uses
     /// <returns>
     /// Returns the viewws
     /// </returns>
-    function GetViewWS(): Integer;
+    function GetViewWS(): NativeInt;
     /// <summary>
     /// Make white space characters invisible, always visible or visible outside indentation.
     /// </summary>
-    /// <param name="viewWS">
-    /// The viewWS parameter
+    /// <param name="AViewWS">
+    /// The AViewWS parameter
     /// </param>
-    procedure SetViewWS(viewWS: Integer);
+    procedure SetViewWS(AViewWS: NativeInt);
     /// <summary>
     /// Retrieve the current tab draw mode.
     /// Returns one of SCTD_* constants.
@@ -267,128 +262,128 @@ uses
     /// <returns>
     /// Returns the tabdrawmode
     /// </returns>
-    function GetTabDrawMode(): Integer;
+    function GetTabDrawMode(): NativeInt;
     /// <summary>
     /// Set how tabs are drawn when visible.
     /// </summary>
-    /// <param name="tabDrawMode">
-    /// The tabDrawMode parameter
+    /// <param name="ATabDrawMode">
+    /// The ATabDrawMode parameter
     /// </param>
-    procedure SetTabDrawMode(tabDrawMode: Integer);
+    procedure SetTabDrawMode(ATabDrawMode: NativeInt);
     /// <summary>
     /// Find the position from a point within the window.
     /// </summary>
-    /// <param name="x">
+    /// <param name="X">
     /// Integer value
     /// </param>
-    /// <param name="y">
+    /// <param name="Y">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function PositionFromPoint(x: Integer; y: Integer): Integer;
+    function PositionFromPoint(X: Integer; Y: Integer): TSciPosition;
     /// <summary>
     /// Find the position from a point within the window but return
     /// INVALID_POSITION if not close to text.
     /// </summary>
-    /// <param name="x">
+    /// <param name="X">
     /// Integer value
     /// </param>
-    /// <param name="y">
+    /// <param name="Y">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function PositionFromPointClose(x: Integer; y: Integer): Integer;
+    function PositionFromPointClose(X: Integer; Y: Integer): TSciPosition;
     /// <summary>
     /// Set caret to start of a line and ensure it is visible.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    procedure GotoLine(line: Integer);
+    procedure GotoLine(ALine: TSciLine);
     /// <summary>
     /// Set caret to a position and ensure it is visible.
     /// </summary>
-    /// <param name="caret">
+    /// <param name="ACaret">
     /// Position in the document
     /// </param>
-    procedure GotoPos(caret: Integer);
+    procedure GotoPos(ACaret: TSciPosition);
     /// <summary>
     /// Set the selection anchor to a position. The anchor is the opposite
     /// end of the selection from the caret.
     /// </summary>
-    /// <param name="anchor">
+    /// <param name="AAnchor">
     /// Position in the document
     /// </param>
-    procedure SetAnchor(anchor: Integer);
+    procedure SetAnchor(AAnchor: TSciPosition);
     /// <summary>
     /// Retrieve the text of the line containing the caret.
     /// Returns the index of the caret on the line.
     /// Result is NUL-terminated.
     /// </summary>
-    /// <param name="length">
+    /// <param name="ALength">
     /// Position in the document
     /// </param>
-    /// <param name="text">
+    /// <param name="AText">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetCurLine(length: Integer; text: PAnsiChar): Integer;
+    function GetCurLine(ALength: TSciPosition; AText: PAnsiChar): TSciPosition;
     /// <summary>
     /// Retrieve the position of the last correctly styled character.
     /// </summary>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetEndStyled(): Integer;
+    function GetEndStyled(): TSciPosition;
     /// <summary>
     /// Convert all line endings in the document to one mode.
     /// </summary>
-    /// <param name="eolMode">
-    /// The eolMode parameter
+    /// <param name="AEolMode">
+    /// The AEolMode parameter
     /// </param>
-    procedure ConvertEOLs(eolMode: Integer);
+    procedure ConvertEOLs(AEolMode: NativeInt);
     /// <summary>
     /// Retrieve the current end of line mode - one of CRLF, CR, or LF.
     /// </summary>
     /// <returns>
     /// Returns the eolmode
     /// </returns>
-    function GetEOLMode(): Integer;
+    function GetEOLMode(): NativeInt;
     /// <summary>
     /// Set the current end of line mode.
     /// </summary>
-    /// <param name="eolMode">
-    /// The eolMode parameter
+    /// <param name="AEolMode">
+    /// The AEolMode parameter
     /// </param>
-    procedure SetEOLMode(eolMode: Integer);
+    procedure SetEOLMode(AEolMode: NativeInt);
     /// <summary>
     /// Set the current styling position to start.
     /// The unused parameter is no longer used and should be set to 0.
     /// </summary>
-    /// <param name="start">
+    /// <param name="AStart">
     /// Position in the document
     /// </param>
-    /// <param name="unused">
+    /// <param name="AUnused">
     /// Integer value
     /// </param>
-    procedure StartStyling(start: Integer; unused: Integer);
+    procedure StartStyling(AStart: TSciPosition; AUnused: Integer);
     /// <summary>
     /// Change style from current styling position for length characters to a style
     /// and move the current styling position to after this newly styled segment.
     /// </summary>
-    /// <param name="length">
+    /// <param name="ALength">
     /// Position in the document
     /// </param>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    procedure SetStyling(length: Integer; style: Integer);
+    procedure SetStyling(ALength: TSciPosition; AStyle: Integer);
     /// <summary>
     /// Is drawing done first into a buffer or direct to the screen?
     /// </summary>
@@ -400,17 +395,17 @@ uses
     /// If drawing is buffered then each line of text is drawn into a bitmap buffer
     /// before drawing it to the screen to avoid flicker.
     /// </summary>
-    /// <param name="buffered">
+    /// <param name="ABuffered">
     /// Boolean value
     /// </param>
-    procedure SetBufferedDraw(buffered: Boolean);
+    procedure SetBufferedDraw(ABuffered: Boolean);
     /// <summary>
     /// Change the visible size of a tab to be a multiple of the width of a space character.
     /// </summary>
-    /// <param name="tabWidth">
+    /// <param name="ATabWidth">
     /// Integer value
     /// </param>
-    procedure SetTabWidth(tabWidth: Integer);
+    procedure SetTabWidth(ATabWidth: Integer);
     /// <summary>
     /// Retrieve the visible size of a tab.
     /// </summary>
@@ -421,10 +416,10 @@ uses
     /// <summary>
     /// Set the minimum visual width of a tab.
     /// </summary>
-    /// <param name="pixels">
+    /// <param name="APixels">
     /// Integer value
     /// </param>
-    procedure SetTabMinimumWidth(pixels: Integer);
+    procedure SetTabMinimumWidth(APixels: Integer);
     /// <summary>
     /// Get the minimum visual width of a tab.
     /// </summary>
@@ -435,403 +430,403 @@ uses
     /// <summary>
     /// Clear explicit tabstops on a line.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    procedure ClearTabStops(line: Integer);
+    procedure ClearTabStops(ALine: TSciLine);
     /// <summary>
     /// Add an explicit tab stop for a line.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="x">
+    /// <param name="X">
     /// Integer value
     /// </param>
-    procedure AddTabStop(line: Integer; x: Integer);
+    procedure AddTabStop(ALine: TSciLine; X: Integer);
     /// <summary>
     /// Find the next explicit tab stop position on a line after a position.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="x">
+    /// <param name="X">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function GetNextTabStop(line: Integer; x: Integer): Integer;
+    function GetNextTabStop(ALine: TSciLine; X: Integer): Integer;
     /// <summary>
     /// Set the code page used to interpret the bytes of the document as characters.
     /// The SC_CP_UTF8 value can be used to enter Unicode mode.
     /// </summary>
-    /// <param name="codePage">
+    /// <param name="ACodePage">
     /// Integer value
     /// </param>
-    procedure SetCodePage(codePage: Integer);
+    procedure SetCodePage(ACodePage: Integer);
     /// <summary>
     /// Set the locale for displaying text.
     /// </summary>
-    /// <param name="localeName">
+    /// <param name="ALocaleName">
     /// Text string
     /// </param>
-    procedure SetFontLocale(localeName: PAnsiChar);
+    procedure SetFontLocale(ALocaleName: PAnsiChar);
     /// <summary>
     /// Get the locale for displaying text.
     /// </summary>
-    /// <param name="localeName">
+    /// <param name="ALocaleName">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function GetFontLocale(localeName: PAnsiChar): Integer;
+    function GetFontLocale(ALocaleName: PAnsiChar): Integer;
     /// <summary>
     /// Is the IME displayed in a window or inline?
     /// </summary>
     /// <returns>
     /// Returns the imeinteraction
     /// </returns>
-    function GetIMEInteraction(): Integer;
+    function GetIMEInteraction(): NativeInt;
     /// <summary>
     /// Choose to display the IME in a window or inline.
     /// </summary>
-    /// <param name="imeInteraction">
-    /// The imeInteraction parameter
+    /// <param name="AImeInteraction">
+    /// The AImeInteraction parameter
     /// </param>
-    procedure SetIMEInteraction(imeInteraction: Integer);
+    procedure SetIMEInteraction(AImeInteraction: NativeInt);
     /// <summary>
     /// Set the symbol used for a particular marker number.
     /// </summary>
-    /// <param name="markerNumber">
+    /// <param name="AMarkerNumber">
     /// Integer value
     /// </param>
-    /// <param name="markerSymbol">
-    /// The markerSymbol parameter
+    /// <param name="AMarkerSymbol">
+    /// The AMarkerSymbol parameter
     /// </param>
-    procedure MarkerDefine(markerNumber: Integer; markerSymbol: Integer);
+    procedure MarkerDefine(AMarkerNumber: Integer; AMarkerSymbol: NativeInt);
     /// <summary>
     /// Set the foreground colour used for a particular marker number.
     /// </summary>
-    /// <param name="markerNumber">
+    /// <param name="AMarkerNumber">
     /// Integer value
     /// </param>
-    /// <param name="fore">
+    /// <param name="AFore">
     /// Color value
     /// </param>
-    procedure MarkerSetFore(markerNumber: Integer; fore: TColor);
+    procedure MarkerSetFore(AMarkerNumber: Integer; AFore: TColor);
     /// <summary>
     /// Set the background colour used for a particular marker number.
     /// </summary>
-    /// <param name="markerNumber">
+    /// <param name="AMarkerNumber">
     /// Integer value
     /// </param>
-    /// <param name="back">
+    /// <param name="ABack">
     /// Color value
     /// </param>
-    procedure MarkerSetBack(markerNumber: Integer; back: TColor);
+    procedure MarkerSetBack(AMarkerNumber: Integer; ABack: TColor);
     /// <summary>
     /// Set the background colour used for a particular marker number when its folding block is selected.
     /// </summary>
-    /// <param name="markerNumber">
+    /// <param name="AMarkerNumber">
     /// Integer value
     /// </param>
-    /// <param name="back">
+    /// <param name="ABack">
     /// Color value
     /// </param>
-    procedure MarkerSetBackSelected(markerNumber: Integer; back: TColor);
+    procedure MarkerSetBackSelected(AMarkerNumber: Integer; ABack: TColor);
     /// <summary>
     /// Set the foreground colour used for a particular marker number.
     /// </summary>
-    /// <param name="markerNumber">
+    /// <param name="AMarkerNumber">
     /// Integer value
     /// </param>
-    /// <param name="fore">
-    /// The fore parameter
+    /// <param name="AFore">
+    /// The AFore parameter
     /// </param>
-    procedure MarkerSetForeTranslucent(markerNumber: Integer; fore: TColorAlpha);
+    procedure MarkerSetForeTranslucent(AMarkerNumber: Integer; AFore: TColorAlpha);
     /// <summary>
     /// Set the background colour used for a particular marker number.
     /// </summary>
-    /// <param name="markerNumber">
+    /// <param name="AMarkerNumber">
     /// Integer value
     /// </param>
-    /// <param name="back">
-    /// The back parameter
+    /// <param name="ABack">
+    /// The ABack parameter
     /// </param>
-    procedure MarkerSetBackTranslucent(markerNumber: Integer; back: TColorAlpha);
+    procedure MarkerSetBackTranslucent(AMarkerNumber: Integer; ABack: TColorAlpha);
     /// <summary>
     /// Set the background colour used for a particular marker number when its folding block is selected.
     /// </summary>
-    /// <param name="markerNumber">
+    /// <param name="AMarkerNumber">
     /// Integer value
     /// </param>
-    /// <param name="back">
-    /// The back parameter
+    /// <param name="ABack">
+    /// The ABack parameter
     /// </param>
-    procedure MarkerSetBackSelectedTranslucent(markerNumber: Integer; back: TColorAlpha);
+    procedure MarkerSetBackSelectedTranslucent(AMarkerNumber: Integer; ABack: TColorAlpha);
     /// <summary>
     /// Set the width of strokes used in .01 pixels so 50  = 1/2 pixel width.
     /// </summary>
-    /// <param name="markerNumber">
+    /// <param name="AMarkerNumber">
     /// Integer value
     /// </param>
-    /// <param name="hundredths">
+    /// <param name="AHundredths">
     /// Integer value
     /// </param>
-    procedure MarkerSetStrokeWidth(markerNumber: Integer; hundredths: Integer);
+    procedure MarkerSetStrokeWidth(AMarkerNumber: Integer; AHundredths: Integer);
     /// <summary>
     /// Enable/disable highlight for current folding block (smallest one that contains the caret)
     /// </summary>
-    /// <param name="enabled">
+    /// <param name="AEnabled">
     /// Boolean value
     /// </param>
-    procedure MarkerEnableHighlight(enabled: Boolean);
+    procedure MarkerEnableHighlight(AEnabled: Boolean);
     /// <summary>
     /// Add a marker to a line, returning an ID which can be used to find or delete the marker.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="markerNumber">
+    /// <param name="AMarkerNumber">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function MarkerAdd(line: Integer; markerNumber: Integer): Integer;
+    function MarkerAdd(ALine: TSciLine; AMarkerNumber: Integer): Integer;
     /// <summary>
     /// Delete a marker from a line.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="markerNumber">
+    /// <param name="AMarkerNumber">
     /// Integer value
     /// </param>
-    procedure MarkerDelete(line: Integer; markerNumber: Integer);
+    procedure MarkerDelete(ALine: TSciLine; AMarkerNumber: Integer);
     /// <summary>
     /// Delete all markers with a particular number from all lines.
     /// </summary>
-    /// <param name="markerNumber">
+    /// <param name="AMarkerNumber">
     /// Integer value
     /// </param>
-    procedure MarkerDeleteAll(markerNumber: Integer);
+    procedure MarkerDeleteAll(AMarkerNumber: Integer);
     /// <summary>
     /// Get a bit mask of all the markers set on a line.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function MarkerGet(line: Integer): Integer;
+    function MarkerGet(ALine: TSciLine): Integer;
     /// <summary>
     /// Find the next line at or after lineStart that includes a marker in mask.
     /// Return -1 when no more lines.
     /// </summary>
-    /// <param name="lineStart">
+    /// <param name="ALineStart">
     /// Line number
     /// </param>
-    /// <param name="markerMask">
+    /// <param name="AMarkerMask">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the line number
     /// </returns>
-    function MarkerNext(lineStart: Integer; markerMask: Integer): Integer;
+    function MarkerNext(ALineStart: TSciLine; AMarkerMask: Integer): TSciLine;
     /// <summary>
     /// Find the previous line before lineStart that includes a marker in mask.
     /// </summary>
-    /// <param name="lineStart">
+    /// <param name="ALineStart">
     /// Line number
     /// </param>
-    /// <param name="markerMask">
+    /// <param name="AMarkerMask">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the line number
     /// </returns>
-    function MarkerPrevious(lineStart: Integer; markerMask: Integer): Integer;
+    function MarkerPrevious(ALineStart: TSciLine; AMarkerMask: Integer): TSciLine;
     /// <summary>
     /// Define a marker from a pixmap.
     /// </summary>
-    /// <param name="markerNumber">
+    /// <param name="AMarkerNumber">
     /// Integer value
     /// </param>
-    /// <param name="pixmap">
+    /// <param name="APixmap">
     /// Text string
     /// </param>
-    procedure MarkerDefinePixmap(markerNumber: Integer; pixmap: PAnsiChar);
+    procedure MarkerDefinePixmap(AMarkerNumber: Integer; APixmap: PAnsiChar);
     /// <summary>
     /// Add a set of markers to a line.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="markerSet">
+    /// <param name="AMarkerSet">
     /// Integer value
     /// </param>
-    procedure MarkerAddSet(line: Integer; markerSet: Integer);
+    procedure MarkerAddSet(ALine: TSciLine; AMarkerSet: Integer);
     /// <summary>
     /// Set the alpha used for a marker that is drawn in the text area, not the margin.
     /// </summary>
-    /// <param name="markerNumber">
+    /// <param name="AMarkerNumber">
     /// Integer value
     /// </param>
-    /// <param name="alpha">
-    /// The alpha parameter
+    /// <param name="AAlpha">
+    /// The AAlpha parameter
     /// </param>
-    procedure MarkerSetAlpha(markerNumber: Integer; alpha: Integer);
+    procedure MarkerSetAlpha(AMarkerNumber: Integer; AAlpha: NativeInt);
     /// <summary>
     /// Get the layer used for a marker that is drawn in the text area, not the margin.
     /// </summary>
-    /// <param name="markerNumber">
+    /// <param name="AMarkerNumber">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the value
     /// </returns>
-    function MarkerGetLayer(markerNumber: Integer): Integer;
+    function MarkerGetLayer(AMarkerNumber: Integer): NativeInt;
     /// <summary>
     /// Set the layer used for a marker that is drawn in the text area, not the margin.
     /// </summary>
-    /// <param name="markerNumber">
+    /// <param name="AMarkerNumber">
     /// Integer value
     /// </param>
-    /// <param name="layer">
-    /// The layer parameter
+    /// <param name="ALayer">
+    /// The ALayer parameter
     /// </param>
-    procedure MarkerSetLayer(markerNumber: Integer; layer: Integer);
+    procedure MarkerSetLayer(AMarkerNumber: Integer; ALayer: NativeInt);
     /// <summary>
     /// Set a margin to be either numeric or symbolic.
     /// </summary>
-    /// <param name="margin">
+    /// <param name="AMargin">
     /// Integer value
     /// </param>
-    /// <param name="marginType">
-    /// The marginType parameter
+    /// <param name="AMarginType">
+    /// The AMarginType parameter
     /// </param>
-    procedure SetMarginTypeN(margin: Integer; marginType: Integer);
+    procedure SetMarginTypeN(AMargin: Integer; AMarginType: NativeInt);
     /// <summary>
     /// Retrieve the type of a margin.
     /// </summary>
-    /// <param name="margin">
+    /// <param name="AMargin">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the margintypen
     /// </returns>
-    function GetMarginTypeN(margin: Integer): Integer;
+    function GetMarginTypeN(AMargin: Integer): NativeInt;
     /// <summary>
     /// Set the width of a margin to a width expressed in pixels.
     /// </summary>
-    /// <param name="margin">
+    /// <param name="AMargin">
     /// Integer value
     /// </param>
-    /// <param name="pixelWidth">
+    /// <param name="APixelWidth">
     /// Integer value
     /// </param>
-    procedure SetMarginWidthN(margin: Integer; pixelWidth: Integer);
+    procedure SetMarginWidthN(AMargin: Integer; APixelWidth: Integer);
     /// <summary>
     /// Retrieve the width of a margin in pixels.
     /// </summary>
-    /// <param name="margin">
+    /// <param name="AMargin">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function GetMarginWidthN(margin: Integer): Integer;
+    function GetMarginWidthN(AMargin: Integer): Integer;
     /// <summary>
     /// Set a mask that determines which markers are displayed in a margin.
     /// </summary>
-    /// <param name="margin">
+    /// <param name="AMargin">
     /// Integer value
     /// </param>
-    /// <param name="mask">
+    /// <param name="AMask">
     /// Integer value
     /// </param>
-    procedure SetMarginMaskN(margin: Integer; mask: Integer);
+    procedure SetMarginMaskN(AMargin: Integer; AMask: Integer);
     /// <summary>
     /// Retrieve the marker mask of a margin.
     /// </summary>
-    /// <param name="margin">
+    /// <param name="AMargin">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function GetMarginMaskN(margin: Integer): Integer;
+    function GetMarginMaskN(AMargin: Integer): Integer;
     /// <summary>
     /// Make a margin sensitive or insensitive to mouse clicks.
     /// </summary>
-    /// <param name="margin">
+    /// <param name="AMargin">
     /// Integer value
     /// </param>
-    /// <param name="sensitive">
+    /// <param name="ASensitive">
     /// Boolean value
     /// </param>
-    procedure SetMarginSensitiveN(margin: Integer; sensitive: Boolean);
+    procedure SetMarginSensitiveN(AMargin: Integer; ASensitive: Boolean);
     /// <summary>
     /// Retrieve the mouse click sensitivity of a margin.
     /// </summary>
-    /// <param name="margin">
+    /// <param name="AMargin">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns true if successful, false otherwise
     /// </returns>
-    function GetMarginSensitiveN(margin: Integer): Boolean;
+    function GetMarginSensitiveN(AMargin: Integer): Boolean;
     /// <summary>
     /// Set the cursor shown when the mouse is inside a margin.
     /// </summary>
-    /// <param name="margin">
+    /// <param name="AMargin">
     /// Integer value
     /// </param>
-    /// <param name="cursor">
-    /// The cursor parameter
+    /// <param name="ACursor">
+    /// The ACursor parameter
     /// </param>
-    procedure SetMarginCursorN(margin: Integer; cursor: Integer);
+    procedure SetMarginCursorN(AMargin: Integer; ACursor: NativeInt);
     /// <summary>
     /// Retrieve the cursor shown in a margin.
     /// </summary>
-    /// <param name="margin">
+    /// <param name="AMargin">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the margincursorn
     /// </returns>
-    function GetMarginCursorN(margin: Integer): Integer;
+    function GetMarginCursorN(AMargin: Integer): NativeInt;
     /// <summary>
     /// Set the background colour of a margin. Only visible for SC_MARGIN_COLOUR.
     /// </summary>
-    /// <param name="margin">
+    /// <param name="AMargin">
     /// Integer value
     /// </param>
-    /// <param name="back">
+    /// <param name="ABack">
     /// Color value
     /// </param>
-    procedure SetMarginBackN(margin: Integer; back: TColor);
+    procedure SetMarginBackN(AMargin: Integer; ABack: TColor);
     /// <summary>
     /// Retrieve the background colour of a margin
     /// </summary>
-    /// <param name="margin">
+    /// <param name="AMargin">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the color value
     /// </returns>
-    function GetMarginBackN(margin: Integer): TColor;
+    function GetMarginBackN(AMargin: Integer): TColor;
     /// <summary>
     /// Allocate a non-standard number of margins.
     /// </summary>
-    /// <param name="margins">
+    /// <param name="AMargins">
     /// Integer value
     /// </param>
-    procedure SetMargins(margins: Integer);
+    procedure SetMargins(AMargins: Integer);
     /// <summary>
     /// How many margins are there?.
     /// </summary>
@@ -846,73 +841,73 @@ uses
     /// <summary>
     /// Set the foreground colour of a style.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    /// <param name="fore">
+    /// <param name="AFore">
     /// Color value
     /// </param>
-    procedure StyleSetFore(style: Integer; fore: TColor);
+    procedure StyleSetFore(AStyle: Integer; AFore: TColor);
     /// <summary>
     /// Set the background colour of a style.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    /// <param name="back">
+    /// <param name="ABack">
     /// Color value
     /// </param>
-    procedure StyleSetBack(style: Integer; back: TColor);
+    procedure StyleSetBack(AStyle: Integer; ABack: TColor);
     /// <summary>
     /// Set a style to be bold or not.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    /// <param name="bold">
+    /// <param name="ABold">
     /// Boolean value
     /// </param>
-    procedure StyleSetBold(style: Integer; bold: Boolean);
+    procedure StyleSetBold(AStyle: Integer; ABold: Boolean);
     /// <summary>
     /// Set a style to be italic or not.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    /// <param name="italic">
+    /// <param name="AItalic">
     /// Boolean value
     /// </param>
-    procedure StyleSetItalic(style: Integer; italic: Boolean);
+    procedure StyleSetItalic(AStyle: Integer; AItalic: Boolean);
     /// <summary>
     /// Set the size of characters of a style.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    /// <param name="sizePoints">
+    /// <param name="ASizePoints">
     /// Integer value
     /// </param>
-    procedure StyleSetSize(style: Integer; sizePoints: Integer);
+    procedure StyleSetSize(AStyle: Integer; ASizePoints: Integer);
     /// <summary>
     /// Set the font of a style.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    /// <param name="fontName">
+    /// <param name="AFontName">
     /// Text string
     /// </param>
-    procedure StyleSetFont(style: Integer; fontName: PAnsiChar);
+    procedure StyleSetFont(AStyle: Integer; AFontName: PAnsiChar);
     /// <summary>
     /// Set a style to have its end of line filled or not.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    /// <param name="eolFilled">
+    /// <param name="AEolFilled">
     /// Boolean value
     /// </param>
-    procedure StyleSetEOLFilled(style: Integer; eolFilled: Boolean);
+    procedure StyleSetEOLFilled(AStyle: Integer; AEolFilled: Boolean);
     /// <summary>
     /// Reset the default style to its state at startup
     /// </summary>
@@ -920,375 +915,375 @@ uses
     /// <summary>
     /// Set a style to be underlined or not.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    /// <param name="underline">
+    /// <param name="AUnderline">
     /// Boolean value
     /// </param>
-    procedure StyleSetUnderline(style: Integer; underline: Boolean);
+    procedure StyleSetUnderline(AStyle: Integer; AUnderline: Boolean);
     /// <summary>
     /// Get the foreground colour of a style.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the color value
     /// </returns>
-    function StyleGetFore(style: Integer): TColor;
+    function StyleGetFore(AStyle: Integer): TColor;
     /// <summary>
     /// Get the background colour of a style.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the color value
     /// </returns>
-    function StyleGetBack(style: Integer): TColor;
+    function StyleGetBack(AStyle: Integer): TColor;
     /// <summary>
     /// Get is a style bold or not.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns true if successful, false otherwise
     /// </returns>
-    function StyleGetBold(style: Integer): Boolean;
+    function StyleGetBold(AStyle: Integer): Boolean;
     /// <summary>
     /// Get is a style italic or not.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns true if successful, false otherwise
     /// </returns>
-    function StyleGetItalic(style: Integer): Boolean;
+    function StyleGetItalic(AStyle: Integer): Boolean;
     /// <summary>
     /// Get the size of characters of a style.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function StyleGetSize(style: Integer): Integer;
+    function StyleGetSize(AStyle: Integer): Integer;
     /// <summary>
     /// Get the font of a style.
     /// Returns the length of the fontName
     /// Result is NUL-terminated.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    /// <param name="fontName">
+    /// <param name="AFontName">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function StyleGetFont(style: Integer; fontName: PAnsiChar): Integer;
+    function StyleGetFont(AStyle: Integer; AFontName: PAnsiChar): Integer;
     /// <summary>
     /// Get is a style to have its end of line filled or not.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns true if successful, false otherwise
     /// </returns>
-    function StyleGetEOLFilled(style: Integer): Boolean;
+    function StyleGetEOLFilled(AStyle: Integer): Boolean;
     /// <summary>
     /// Get is a style underlined or not.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns true if successful, false otherwise
     /// </returns>
-    function StyleGetUnderline(style: Integer): Boolean;
+    function StyleGetUnderline(AStyle: Integer): Boolean;
     /// <summary>
     /// Get is a style mixed case, or to force upper or lower case.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the value
     /// </returns>
-    function StyleGetCase(style: Integer): Integer;
+    function StyleGetCase(AStyle: Integer): NativeInt;
     /// <summary>
     /// Get the character get of the font in a style.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the value
     /// </returns>
-    function StyleGetCharacterSet(style: Integer): Integer;
+    function StyleGetCharacterSet(AStyle: Integer): NativeInt;
     /// <summary>
     /// Get is a style visible or not.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns true if successful, false otherwise
     /// </returns>
-    function StyleGetVisible(style: Integer): Boolean;
+    function StyleGetVisible(AStyle: Integer): Boolean;
     /// <summary>
     /// Get is a style changeable or not (read only).
     /// Experimental feature, currently buggy.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns true if successful, false otherwise
     /// </returns>
-    function StyleGetChangeable(style: Integer): Boolean;
+    function StyleGetChangeable(AStyle: Integer): Boolean;
     /// <summary>
     /// Get is a style a hotspot or not.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns true if successful, false otherwise
     /// </returns>
-    function StyleGetHotSpot(style: Integer): Boolean;
+    function StyleGetHotSpot(AStyle: Integer): Boolean;
     /// <summary>
     /// Set a style to be mixed case, or to force upper or lower case.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    /// <param name="caseVisible">
-    /// The caseVisible parameter
+    /// <param name="ACaseVisible">
+    /// The ACaseVisible parameter
     /// </param>
-    procedure StyleSetCase(style: Integer; caseVisible: Integer);
+    procedure StyleSetCase(AStyle: Integer; ACaseVisible: NativeInt);
     /// <summary>
     /// Set the size of characters of a style. Size is in points multiplied by 100.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    /// <param name="sizeHundredthPoints">
+    /// <param name="ASizeHundredthPoints">
     /// Integer value
     /// </param>
-    procedure StyleSetSizeFractional(style: Integer; sizeHundredthPoints: Integer);
+    procedure StyleSetSizeFractional(AStyle: Integer; ASizeHundredthPoints: Integer);
     /// <summary>
     /// Get the size of characters of a style in points multiplied by 100
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function StyleGetSizeFractional(style: Integer): Integer;
+    function StyleGetSizeFractional(AStyle: Integer): Integer;
     /// <summary>
     /// Set the weight of characters of a style.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    /// <param name="weight">
-    /// The weight parameter
+    /// <param name="AWeight">
+    /// The AWeight parameter
     /// </param>
-    procedure StyleSetWeight(style: Integer; weight: Integer);
+    procedure StyleSetWeight(AStyle: Integer; AWeight: NativeInt);
     /// <summary>
     /// Get the weight of characters of a style.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the value
     /// </returns>
-    function StyleGetWeight(style: Integer): Integer;
+    function StyleGetWeight(AStyle: Integer): NativeInt;
     /// <summary>
     /// Set the character set of the font in a style.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    /// <param name="characterSet">
-    /// The characterSet parameter
+    /// <param name="ACharacterSet">
+    /// The ACharacterSet parameter
     /// </param>
-    procedure StyleSetCharacterSet(style: Integer; characterSet: Integer);
+    procedure StyleSetCharacterSet(AStyle: Integer; ACharacterSet: NativeInt);
     /// <summary>
     /// Set a style to be a hotspot or not.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    /// <param name="hotspot">
+    /// <param name="AHotspot">
     /// Boolean value
     /// </param>
-    procedure StyleSetHotSpot(style: Integer; hotspot: Boolean);
+    procedure StyleSetHotSpot(AStyle: Integer; AHotspot: Boolean);
     /// <summary>
     /// Indicate that a style may be monospaced over ASCII graphics characters which enables optimizations.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    /// <param name="checkMonospaced">
+    /// <param name="ACheckMonospaced">
     /// Boolean value
     /// </param>
-    procedure StyleSetCheckMonospaced(style: Integer; checkMonospaced: Boolean);
+    procedure StyleSetCheckMonospaced(AStyle: Integer; ACheckMonospaced: Boolean);
     /// <summary>
     /// Get whether a style may be monospaced.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns true if successful, false otherwise
     /// </returns>
-    function StyleGetCheckMonospaced(style: Integer): Boolean;
+    function StyleGetCheckMonospaced(AStyle: Integer): Boolean;
     /// <summary>
     /// Set the stretch of characters of a style.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    /// <param name="stretch">
-    /// The stretch parameter
+    /// <param name="AStretch">
+    /// The AStretch parameter
     /// </param>
-    procedure StyleSetStretch(style: Integer; stretch: Integer);
+    procedure StyleSetStretch(AStyle: Integer; AStretch: NativeInt);
     /// <summary>
     /// Get the stretch of characters of a style.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the value
     /// </returns>
-    function StyleGetStretch(style: Integer): Integer;
+    function StyleGetStretch(AStyle: Integer): NativeInt;
     /// <summary>
     /// Set the invisible representation for a style.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    /// <param name="representation">
+    /// <param name="ARepresentation">
     /// Text string
     /// </param>
-    procedure StyleSetInvisibleRepresentation(style: Integer; representation: PAnsiChar);
+    procedure StyleSetInvisibleRepresentation(AStyle: Integer; ARepresentation: PAnsiChar);
     /// <summary>
     /// Get the invisible representation for a style.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    /// <param name="representation">
+    /// <param name="ARepresentation">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function StyleGetInvisibleRepresentation(style: Integer; representation: PAnsiChar): Integer;
+    function StyleGetInvisibleRepresentation(AStyle: Integer; ARepresentation: PAnsiChar): Integer;
     /// <summary>
     /// Set the colour of an element. Translucency (alpha) may or may not be significant
     /// and this may depend on the platform. The alpha byte should commonly be 0xff for opaque.
     /// </summary>
-    /// <param name="element">
-    /// The element parameter
+    /// <param name="AElement">
+    /// The AElement parameter
     /// </param>
-    /// <param name="colourElement">
-    /// The colourElement parameter
+    /// <param name="AColourElement">
+    /// The AColourElement parameter
     /// </param>
-    procedure SetElementColour(element: Integer; colourElement: TColorAlpha);
+    procedure SetElementColour(AElement: NativeInt; AColourElement: TColorAlpha);
     /// <summary>
     /// Get the colour of an element.
     /// </summary>
-    /// <param name="element">
-    /// The element parameter
+    /// <param name="AElement">
+    /// The AElement parameter
     /// </param>
     /// <returns>
     /// Returns the elementcolour
     /// </returns>
-    function GetElementColour(element: Integer): TColorAlpha;
+    function GetElementColour(AElement: NativeInt): TColorAlpha;
     /// <summary>
     /// Use the default or platform-defined colour for an element.
     /// </summary>
-    /// <param name="element">
-    /// The element parameter
+    /// <param name="AElement">
+    /// The AElement parameter
     /// </param>
-    procedure ResetElementColour(element: Integer);
+    procedure ResetElementColour(AElement: NativeInt);
     /// <summary>
     /// Get whether an element has been set by SetElementColour.
     /// When false, a platform-defined or default colour is used.
     /// </summary>
-    /// <param name="element">
-    /// The element parameter
+    /// <param name="AElement">
+    /// The AElement parameter
     /// </param>
     /// <returns>
     /// Returns true if successful, false otherwise
     /// </returns>
-    function GetElementIsSet(element: Integer): Boolean;
+    function GetElementIsSet(AElement: NativeInt): Boolean;
     /// <summary>
     /// Get whether an element supports translucency.
     /// </summary>
-    /// <param name="element">
-    /// The element parameter
+    /// <param name="AElement">
+    /// The AElement parameter
     /// </param>
     /// <returns>
     /// Returns true if successful, false otherwise
     /// </returns>
-    function GetElementAllowsTranslucent(element: Integer): Boolean;
+    function GetElementAllowsTranslucent(AElement: NativeInt): Boolean;
     /// <summary>
     /// Get the colour of an element.
     /// </summary>
-    /// <param name="element">
-    /// The element parameter
+    /// <param name="AElement">
+    /// The AElement parameter
     /// </param>
     /// <returns>
     /// Returns the elementbasecolour
     /// </returns>
-    function GetElementBaseColour(element: Integer): TColorAlpha;
+    function GetElementBaseColour(AElement: NativeInt): TColorAlpha;
     /// <summary>
     /// Set the foreground colour of the main and additional selections and whether to use this setting.
     /// </summary>
-    /// <param name="useSetting">
+    /// <param name="AUseSetting">
     /// Boolean value
     /// </param>
-    /// <param name="fore">
+    /// <param name="AFore">
     /// Color value
     /// </param>
-    procedure SetSelFore(useSetting: Boolean; fore: TColor);
+    procedure SetSelFore(AUseSetting: Boolean; AFore: TColor);
     /// <summary>
     /// Set the background colour of the main and additional selections and whether to use this setting.
     /// </summary>
-    /// <param name="useSetting">
+    /// <param name="AUseSetting">
     /// Boolean value
     /// </param>
-    /// <param name="back">
+    /// <param name="ABack">
     /// Color value
     /// </param>
-    procedure SetSelBack(useSetting: Boolean; back: TColor);
+    procedure SetSelBack(AUseSetting: Boolean; ABack: TColor);
     /// <summary>
     /// Get the alpha of the selection.
     /// </summary>
     /// <returns>
     /// Returns the selalpha
     /// </returns>
-    function GetSelAlpha(): Integer;
+    function GetSelAlpha(): NativeInt;
     /// <summary>
     /// Set the alpha of the selection.
     /// </summary>
-    /// <param name="alpha">
-    /// The alpha parameter
+    /// <param name="AAlpha">
+    /// The AAlpha parameter
     /// </param>
-    procedure SetSelAlpha(alpha: Integer);
+    procedure SetSelAlpha(AAlpha: NativeInt);
     /// <summary>
     /// Is the selection end of line filled?
     /// </summary>
@@ -1299,38 +1294,38 @@ uses
     /// <summary>
     /// Set the selection to have its end of line filled or not.
     /// </summary>
-    /// <param name="filled">
+    /// <param name="AFilled">
     /// Boolean value
     /// </param>
-    procedure SetSelEOLFilled(filled: Boolean);
+    procedure SetSelEOLFilled(AFilled: Boolean);
     /// <summary>
     /// Get the layer for drawing selections
     /// </summary>
     /// <returns>
     /// Returns the selectionlayer
     /// </returns>
-    function GetSelectionLayer(): Integer;
+    function GetSelectionLayer(): NativeInt;
     /// <summary>
     /// Set the layer for drawing selections: either opaquely on base layer or translucently over text
     /// </summary>
-    /// <param name="layer">
-    /// The layer parameter
+    /// <param name="ALayer">
+    /// The ALayer parameter
     /// </param>
-    procedure SetSelectionLayer(layer: Integer);
+    procedure SetSelectionLayer(ALayer: NativeInt);
     /// <summary>
     /// Get the layer of the background of the line containing the caret.
     /// </summary>
     /// <returns>
     /// Returns the caretlinelayer
     /// </returns>
-    function GetCaretLineLayer(): Integer;
+    function GetCaretLineLayer(): NativeInt;
     /// <summary>
     /// Set the layer of the background of the line containing the caret.
     /// </summary>
-    /// <param name="layer">
-    /// The layer parameter
+    /// <param name="ALayer">
+    /// The ALayer parameter
     /// </param>
-    procedure SetCaretLineLayer(layer: Integer);
+    procedure SetCaretLineLayer(ALayer: NativeInt);
     /// <summary>
     /// Get only highlighting subline instead of whole line.
     /// </summary>
@@ -1341,34 +1336,34 @@ uses
     /// <summary>
     /// Set only highlighting subline instead of whole line.
     /// </summary>
-    /// <param name="subLine">
+    /// <param name="ASubLine">
     /// Boolean value
     /// </param>
-    procedure SetCaretLineHighlightSubLine(subLine: Boolean);
+    procedure SetCaretLineHighlightSubLine(ASubLine: Boolean);
     /// <summary>
     /// Set the foreground colour of the caret.
     /// </summary>
-    /// <param name="fore">
+    /// <param name="AFore">
     /// Color value
     /// </param>
-    procedure SetCaretFore(fore: TColor);
+    procedure SetCaretFore(AFore: TColor);
     /// <summary>
     /// When key+modifier combination keyDefinition is pressed perform sciCommand.
     /// </summary>
-    /// <param name="keyDefinition">
-    /// The keyDefinition parameter
+    /// <param name="AKeyDefinition">
+    /// The AKeyDefinition parameter
     /// </param>
-    /// <param name="sciCommand">
+    /// <param name="ASciCommand">
     /// Integer value
     /// </param>
-    procedure AssignCmdKey(keyDefinition: Integer; sciCommand: Integer);
+    procedure AssignCmdKey(AKeyDefinition: TSciKeyModifies; ASciCommand: Integer);
     /// <summary>
     /// When key+modifier combination keyDefinition is pressed do nothing.
     /// </summary>
-    /// <param name="keyDefinition">
-    /// The keyDefinition parameter
+    /// <param name="AKeyDefinition">
+    /// The AKeyDefinition parameter
     /// </param>
-    procedure ClearCmdKey(keyDefinition: Integer);
+    procedure ClearCmdKey(AKeyDefinition: TSciKeyModifies);
     /// <summary>
     /// Drop all key mappings.
     /// </summary>
@@ -1376,23 +1371,23 @@ uses
     /// <summary>
     /// Set the styles for a segment of the document.
     /// </summary>
-    /// <param name="length">
+    /// <param name="ALength">
     /// Position in the document
     /// </param>
-    /// <param name="styles">
+    /// <param name="AStyles">
     /// Text string
     /// </param>
-    procedure SetStylingEx(length: Integer; styles: PAnsiChar);
+    procedure SetStylingEx(ALength: TSciPosition; AStyles: PAnsiChar);
     /// <summary>
     /// Set a style to be visible or not.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    /// <param name="visible">
+    /// <param name="AVisible">
     /// Boolean value
     /// </param>
-    procedure StyleSetVisible(style: Integer; visible: Boolean);
+    procedure StyleSetVisible(AStyle: Integer; AVisible: Boolean);
     /// <summary>
     /// Get the time in milliseconds that the caret is on and off.
     /// </summary>
@@ -1403,36 +1398,36 @@ uses
     /// <summary>
     /// Get the time in milliseconds that the caret is on and off. 0 = steady on.
     /// </summary>
-    /// <param name="periodMilliseconds">
+    /// <param name="APeriodMilliseconds">
     /// Integer value
     /// </param>
-    procedure SetCaretPeriod(periodMilliseconds: Integer);
+    procedure SetCaretPeriod(APeriodMilliseconds: Integer);
     /// <summary>
     /// Set the set of characters making up words for when moving or selecting by word.
     /// First sets defaults like SetCharsDefault.
     /// </summary>
-    /// <param name="characters">
+    /// <param name="ACharacters">
     /// Text string
     /// </param>
-    procedure SetWordChars(characters: PAnsiChar);
+    procedure SetWordChars(ACharacters: PAnsiChar);
     /// <summary>
     /// Get the set of characters making up words for when moving or selecting by word.
     /// Returns the number of characters
     /// </summary>
-    /// <param name="characters">
+    /// <param name="ACharacters">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function GetWordChars(characters: PAnsiChar): Integer;
+    function GetWordChars(ACharacters: PAnsiChar): Integer;
     /// <summary>
     /// Set the number of characters to have directly indexed categories
     /// </summary>
-    /// <param name="countCharacters">
+    /// <param name="ACountCharacters">
     /// Integer value
     /// </param>
-    procedure SetCharacterCategoryOptimization(countCharacters: Integer);
+    procedure SetCharacterCategoryOptimization(ACountCharacters: Integer);
     /// <summary>
     /// Get the number of characters to have directly indexed categories
     /// </summary>
@@ -1466,10 +1461,10 @@ uses
     /// <summary>
     /// Set action as the save point
     /// </summary>
-    /// <param name="action">
+    /// <param name="AAction">
     /// Integer value
     /// </param>
-    procedure SetUndoSavePoint(action: Integer);
+    procedure SetUndoSavePoint(AAction: Integer);
     /// <summary>
     /// Which action is the save point?
     /// </summary>
@@ -1480,10 +1475,10 @@ uses
     /// <summary>
     /// Set action as the detach point
     /// </summary>
-    /// <param name="action">
+    /// <param name="AAction">
     /// Integer value
     /// </param>
-    procedure SetUndoDetach(action: Integer);
+    procedure SetUndoDetach(AAction: Integer);
     /// <summary>
     /// Which action is the detach point?
     /// </summary>
@@ -1494,10 +1489,10 @@ uses
     /// <summary>
     /// Set action as the tentative point
     /// </summary>
-    /// <param name="action">
+    /// <param name="AAction">
     /// Integer value
     /// </param>
-    procedure SetUndoTentative(action: Integer);
+    procedure SetUndoTentative(AAction: Integer);
     /// <summary>
     /// Which action is the tentative point?
     /// </summary>
@@ -1508,10 +1503,10 @@ uses
     /// <summary>
     /// Set action as the current point
     /// </summary>
-    /// <param name="action">
+    /// <param name="AAction">
     /// Integer value
     /// </param>
-    procedure SetUndoCurrent(action: Integer);
+    procedure SetUndoCurrent(AAction: Integer);
     /// <summary>
     /// Which action is the current point?
     /// </summary>
@@ -1522,223 +1517,223 @@ uses
     /// <summary>
     /// Push one action onto undo history with no text
     /// </summary>
-    /// <param name="type">
+    /// <param name="AType">
     /// Integer value
     /// </param>
-    /// <param name="pos">
+    /// <param name="APos">
     /// Position in the document
     /// </param>
-    procedure PushUndoActionType(type: Integer; pos: Integer);
+    procedure PushUndoActionType(AType: Integer; APos: TSciPosition);
     /// <summary>
     /// Set the text and length of the most recently pushed action
     /// </summary>
-    /// <param name="length">
+    /// <param name="ALength">
     /// Position in the document
     /// </param>
-    /// <param name="text">
+    /// <param name="AText">
     /// Text string
     /// </param>
-    procedure ChangeLastUndoActionText(length: Integer; text: PAnsiChar);
+    procedure ChangeLastUndoActionText(ALength: TSciPosition; AText: PAnsiChar);
     /// <summary>
     /// What is the type of an action?
     /// </summary>
-    /// <param name="action">
+    /// <param name="AAction">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function GetUndoActionType(action: Integer): Integer;
+    function GetUndoActionType(AAction: Integer): Integer;
     /// <summary>
     /// What is the position of an action?
     /// </summary>
-    /// <param name="action">
+    /// <param name="AAction">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetUndoActionPosition(action: Integer): Integer;
+    function GetUndoActionPosition(AAction: Integer): TSciPosition;
     /// <summary>
     /// What is the text of an action?
     /// </summary>
-    /// <param name="action">
+    /// <param name="AAction">
     /// Integer value
     /// </param>
-    /// <param name="text">
+    /// <param name="AText">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function GetUndoActionText(action: Integer; text: PAnsiChar): Integer;
+    function GetUndoActionText(AAction: Integer; AText: PAnsiChar): Integer;
     /// <summary>
     /// Set an indicator to plain, squiggle or TT.
     /// </summary>
-    /// <param name="indicator">
+    /// <param name="AIndicator">
     /// Integer value
     /// </param>
-    /// <param name="indicatorStyle">
-    /// The indicatorStyle parameter
+    /// <param name="AIndicatorStyle">
+    /// The AIndicatorStyle parameter
     /// </param>
-    procedure IndicSetStyle(indicator: Integer; indicatorStyle: Integer);
+    procedure IndicSetStyle(AIndicator: Integer; AIndicatorStyle: NativeInt);
     /// <summary>
     /// Retrieve the style of an indicator.
     /// </summary>
-    /// <param name="indicator">
+    /// <param name="AIndicator">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the value
     /// </returns>
-    function IndicGetStyle(indicator: Integer): Integer;
+    function IndicGetStyle(AIndicator: Integer): NativeInt;
     /// <summary>
     /// Set the foreground colour of an indicator.
     /// </summary>
-    /// <param name="indicator">
+    /// <param name="AIndicator">
     /// Integer value
     /// </param>
-    /// <param name="fore">
+    /// <param name="AFore">
     /// Color value
     /// </param>
-    procedure IndicSetFore(indicator: Integer; fore: TColor);
+    procedure IndicSetFore(AIndicator: Integer; AFore: TColor);
     /// <summary>
     /// Retrieve the foreground colour of an indicator.
     /// </summary>
-    /// <param name="indicator">
+    /// <param name="AIndicator">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the color value
     /// </returns>
-    function IndicGetFore(indicator: Integer): TColor;
+    function IndicGetFore(AIndicator: Integer): TColor;
     /// <summary>
     /// Set an indicator to draw under text or over(default).
     /// </summary>
-    /// <param name="indicator">
+    /// <param name="AIndicator">
     /// Integer value
     /// </param>
-    /// <param name="under">
+    /// <param name="AUnder">
     /// Boolean value
     /// </param>
-    procedure IndicSetUnder(indicator: Integer; under: Boolean);
+    procedure IndicSetUnder(AIndicator: Integer; AUnder: Boolean);
     /// <summary>
     /// Retrieve whether indicator drawn under or over text.
     /// </summary>
-    /// <param name="indicator">
+    /// <param name="AIndicator">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns true if successful, false otherwise
     /// </returns>
-    function IndicGetUnder(indicator: Integer): Boolean;
+    function IndicGetUnder(AIndicator: Integer): Boolean;
     /// <summary>
     /// Set a hover indicator to plain, squiggle or TT.
     /// </summary>
-    /// <param name="indicator">
+    /// <param name="AIndicator">
     /// Integer value
     /// </param>
-    /// <param name="indicatorStyle">
-    /// The indicatorStyle parameter
+    /// <param name="AIndicatorStyle">
+    /// The AIndicatorStyle parameter
     /// </param>
-    procedure IndicSetHoverStyle(indicator: Integer; indicatorStyle: Integer);
+    procedure IndicSetHoverStyle(AIndicator: Integer; AIndicatorStyle: NativeInt);
     /// <summary>
     /// Retrieve the hover style of an indicator.
     /// </summary>
-    /// <param name="indicator">
+    /// <param name="AIndicator">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the value
     /// </returns>
-    function IndicGetHoverStyle(indicator: Integer): Integer;
+    function IndicGetHoverStyle(AIndicator: Integer): NativeInt;
     /// <summary>
     /// Set the foreground hover colour of an indicator.
     /// </summary>
-    /// <param name="indicator">
+    /// <param name="AIndicator">
     /// Integer value
     /// </param>
-    /// <param name="fore">
+    /// <param name="AFore">
     /// Color value
     /// </param>
-    procedure IndicSetHoverFore(indicator: Integer; fore: TColor);
+    procedure IndicSetHoverFore(AIndicator: Integer; AFore: TColor);
     /// <summary>
     /// Retrieve the foreground hover colour of an indicator.
     /// </summary>
-    /// <param name="indicator">
+    /// <param name="AIndicator">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the color value
     /// </returns>
-    function IndicGetHoverFore(indicator: Integer): TColor;
+    function IndicGetHoverFore(AIndicator: Integer): TColor;
     /// <summary>
     /// Set the attributes of an indicator.
     /// </summary>
-    /// <param name="indicator">
+    /// <param name="AIndicator">
     /// Integer value
     /// </param>
-    /// <param name="flags">
-    /// The flags parameter
+    /// <param name="AFlags">
+    /// The AFlags parameter
     /// </param>
-    procedure IndicSetFlags(indicator: Integer; flags: Integer);
+    procedure IndicSetFlags(AIndicator: Integer; AFlags: NativeInt);
     /// <summary>
     /// Retrieve the attributes of an indicator.
     /// </summary>
-    /// <param name="indicator">
+    /// <param name="AIndicator">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the value
     /// </returns>
-    function IndicGetFlags(indicator: Integer): Integer;
+    function IndicGetFlags(AIndicator: Integer): NativeInt;
     /// <summary>
     /// Set the stroke width of an indicator in hundredths of a pixel.
     /// </summary>
-    /// <param name="indicator">
+    /// <param name="AIndicator">
     /// Integer value
     /// </param>
-    /// <param name="hundredths">
+    /// <param name="AHundredths">
     /// Integer value
     /// </param>
-    procedure IndicSetStrokeWidth(indicator: Integer; hundredths: Integer);
+    procedure IndicSetStrokeWidth(AIndicator: Integer; AHundredths: Integer);
     /// <summary>
     /// Retrieve the stroke width of an indicator.
     /// </summary>
-    /// <param name="indicator">
+    /// <param name="AIndicator">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function IndicGetStrokeWidth(indicator: Integer): Integer;
+    function IndicGetStrokeWidth(AIndicator: Integer): Integer;
     /// <summary>
     /// Set the foreground colour of all whitespace and whether to use this setting.
     /// </summary>
-    /// <param name="useSetting">
+    /// <param name="AUseSetting">
     /// Boolean value
     /// </param>
-    /// <param name="fore">
+    /// <param name="AFore">
     /// Color value
     /// </param>
-    procedure SetWhitespaceFore(useSetting: Boolean; fore: TColor);
+    procedure SetWhitespaceFore(AUseSetting: Boolean; AFore: TColor);
     /// <summary>
     /// Set the background colour of all whitespace and whether to use this setting.
     /// </summary>
-    /// <param name="useSetting">
+    /// <param name="AUseSetting">
     /// Boolean value
     /// </param>
-    /// <param name="back">
+    /// <param name="ABack">
     /// Color value
     /// </param>
-    procedure SetWhitespaceBack(useSetting: Boolean; back: TColor);
+    procedure SetWhitespaceBack(AUseSetting: Boolean; ABack: TColor);
     /// <summary>
     /// Set the size of the dots used to mark space characters.
     /// </summary>
-    /// <param name="size">
+    /// <param name="ASize">
     /// Integer value
     /// </param>
-    procedure SetWhitespaceSize(size: Integer);
+    procedure SetWhitespaceSize(ASize: Integer);
     /// <summary>
     /// Get the size of the dots used to mark space characters.
     /// </summary>
@@ -1749,23 +1744,23 @@ uses
     /// <summary>
     /// Used to hold extra styling information for each line.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="state">
+    /// <param name="AState">
     /// Integer value
     /// </param>
-    procedure SetLineState(line: Integer; state: Integer);
+    procedure SetLineState(ALine: TSciLine; AState: Integer);
     /// <summary>
     /// Retrieve the extra styling information for a line.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function GetLineState(line: Integer): Integer;
+    function GetLineState(ALine: TSciLine): Integer;
     /// <summary>
     /// Retrieve the last line number that has line state.
     /// </summary>
@@ -1783,10 +1778,10 @@ uses
     /// <summary>
     /// Display the background of the line containing the caret in a different colour.
     /// </summary>
-    /// <param name="show">
+    /// <param name="AShow">
     /// Boolean value
     /// </param>
-    procedure SetCaretLineVisible(show: Boolean);
+    procedure SetCaretLineVisible(AShow: Boolean);
     /// <summary>
     /// Get the colour of the background of the line containing the caret.
     /// </summary>
@@ -1797,10 +1792,10 @@ uses
     /// <summary>
     /// Set the colour of the background of the line containing the caret.
     /// </summary>
-    /// <param name="back">
+    /// <param name="ABack">
     /// Color value
     /// </param>
-    procedure SetCaretLineBack(back: TColor);
+    procedure SetCaretLineBack(ABack: TColor);
     /// <summary>
     /// Retrieve the caret line frame width.
     /// Width = 0 means this option is disabled.
@@ -1813,33 +1808,33 @@ uses
     /// Display the caret line framed.
     /// Set width != 0 to enable this option and width = 0 to disable it.
     /// </summary>
-    /// <param name="width">
+    /// <param name="AWidth">
     /// Integer value
     /// </param>
-    procedure SetCaretLineFrame(width: Integer);
+    procedure SetCaretLineFrame(AWidth: Integer);
     /// <summary>
     /// Set a style to be changeable or not (read only).
     /// Experimental feature, currently buggy.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    /// <param name="changeable">
+    /// <param name="AChangeable">
     /// Boolean value
     /// </param>
-    procedure StyleSetChangeable(style: Integer; changeable: Boolean);
+    procedure StyleSetChangeable(AStyle: Integer; AChangeable: Boolean);
     /// <summary>
     /// Display a auto-completion list.
     /// The lengthEntered parameter indicates how many characters before
     /// the caret should be used to provide context.
     /// </summary>
-    /// <param name="lengthEntered">
+    /// <param name="ALengthEntered">
     /// Position in the document
     /// </param>
-    /// <param name="itemList">
+    /// <param name="AItemList">
     /// Text string
     /// </param>
-    procedure AutoCShow(lengthEntered: Integer; itemList: PAnsiChar);
+    procedure AutoCShow(ALengthEntered: TSciPosition; AItemList: PAnsiChar);
     /// <summary>
     /// Remove the auto-completion list from the screen.
     /// </summary>
@@ -1857,7 +1852,7 @@ uses
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function AutoCPosStart(): Integer;
+    function AutoCPosStart(): TSciPosition;
     /// <summary>
     /// User has selected an item so remove the list and insert the selection.
     /// </summary>
@@ -1865,18 +1860,18 @@ uses
     /// <summary>
     /// Define a set of character that when typed cancel the auto-completion list.
     /// </summary>
-    /// <param name="characterSet">
+    /// <param name="ACharacterSet">
     /// Text string
     /// </param>
-    procedure AutoCStops(characterSet: PAnsiChar);
+    procedure AutoCStops(ACharacterSet: PAnsiChar);
     /// <summary>
     /// Change the separator character in the string setting up an auto-completion list.
     /// Default is space but can be changed if items contain space.
     /// </summary>
-    /// <param name="separatorCharacter">
+    /// <param name="ASeparatorCharacter">
     /// Integer value
     /// </param>
-    procedure AutoCSetSeparator(separatorCharacter: Integer);
+    procedure AutoCSetSeparator(ASeparatorCharacter: Integer);
     /// <summary>
     /// Retrieve the auto-completion list separator character.
     /// </summary>
@@ -1887,18 +1882,18 @@ uses
     /// <summary>
     /// Select the item in the auto-completion list that starts with a string.
     /// </summary>
-    /// <param name="select">
+    /// <param name="ASelect">
     /// Text string
     /// </param>
-    procedure AutoCSelect(select: PAnsiChar);
+    procedure AutoCSelect(ASelect: PAnsiChar);
     /// <summary>
     /// Should the auto-completion list be cancelled if the user backspaces to a
     /// position before where the box was created.
     /// </summary>
-    /// <param name="cancel">
+    /// <param name="ACancel">
     /// Boolean value
     /// </param>
-    procedure AutoCSetCancelAtStart(cancel: Boolean);
+    procedure AutoCSetCancelAtStart(ACancel: Boolean);
     /// <summary>
     /// Retrieve whether auto-completion cancelled by backspacing before start.
     /// </summary>
@@ -1910,17 +1905,17 @@ uses
     /// Define a set of characters that when typed will cause the autocompletion to
     /// choose the selected item.
     /// </summary>
-    /// <param name="characterSet">
+    /// <param name="ACharacterSet">
     /// Text string
     /// </param>
-    procedure AutoCSetFillUps(characterSet: PAnsiChar);
+    procedure AutoCSetFillUps(ACharacterSet: PAnsiChar);
     /// <summary>
     /// Should a single item auto-completion list automatically choose the item.
     /// </summary>
-    /// <param name="chooseSingle">
+    /// <param name="AChooseSingle">
     /// Boolean value
     /// </param>
-    procedure AutoCSetChooseSingle(chooseSingle: Boolean);
+    procedure AutoCSetChooseSingle(AChooseSingle: Boolean);
     /// <summary>
     /// Retrieve whether a single item auto-completion list automatically choose the item.
     /// </summary>
@@ -1931,10 +1926,10 @@ uses
     /// <summary>
     /// Set whether case is significant when performing auto-completion searches.
     /// </summary>
-    /// <param name="ignoreCase">
+    /// <param name="AIgnoreCase">
     /// Boolean value
     /// </param>
-    procedure AutoCSetIgnoreCase(ignoreCase: Boolean);
+    procedure AutoCSetIgnoreCase(AIgnoreCase: Boolean);
     /// <summary>
     /// Retrieve state of ignore case flag.
     /// </summary>
@@ -1945,20 +1940,20 @@ uses
     /// <summary>
     /// Display a list of strings and send notification when user chooses one.
     /// </summary>
-    /// <param name="listType">
+    /// <param name="AListType">
     /// Integer value
     /// </param>
-    /// <param name="itemList">
+    /// <param name="AItemList">
     /// Text string
     /// </param>
-    procedure UserListShow(listType: Integer; itemList: PAnsiChar);
+    procedure UserListShow(AListType: Integer; AItemList: PAnsiChar);
     /// <summary>
     /// Set whether or not autocompletion is hidden automatically when nothing matches.
     /// </summary>
-    /// <param name="autoHide">
+    /// <param name="AAutoHide">
     /// Boolean value
     /// </param>
-    procedure AutoCSetAutoHide(autoHide: Boolean);
+    procedure AutoCSetAutoHide(AAutoHide: Boolean);
     /// <summary>
     /// Retrieve whether or not autocompletion is hidden automatically when nothing matches.
     /// </summary>
@@ -1969,25 +1964,25 @@ uses
     /// <summary>
     /// Set autocompletion options.
     /// </summary>
-    /// <param name="options">
-    /// The options parameter
+    /// <param name="AOptions">
+    /// The AOptions parameter
     /// </param>
-    procedure AutoCSetOptions(options: Integer);
+    procedure AutoCSetOptions(AOptions: NativeInt);
     /// <summary>
     /// Retrieve autocompletion options.
     /// </summary>
     /// <returns>
     /// Returns the value
     /// </returns>
-    function AutoCGetOptions(): Integer;
+    function AutoCGetOptions(): NativeInt;
     /// <summary>
     /// Set whether or not autocompletion deletes any word characters
     /// after the inserted text upon completion.
     /// </summary>
-    /// <param name="dropRestOfWord">
+    /// <param name="ADropRestOfWord">
     /// Boolean value
     /// </param>
-    procedure AutoCSetDropRestOfWord(dropRestOfWord: Boolean);
+    procedure AutoCSetDropRestOfWord(ADropRestOfWord: Boolean);
     /// <summary>
     /// Retrieve whether or not autocompletion deletes any word characters
     /// after the inserted text upon completion.
@@ -1999,13 +1994,13 @@ uses
     /// <summary>
     /// Register an XPM image for use in autocompletion lists.
     /// </summary>
-    /// <param name="type">
+    /// <param name="AType">
     /// Integer value
     /// </param>
-    /// <param name="xpmData">
+    /// <param name="AXpmData">
     /// Text string
     /// </param>
-    procedure RegisterImage(type: Integer; xpmData: PAnsiChar);
+    procedure RegisterImage(AType: Integer; AXpmData: PAnsiChar);
     /// <summary>
     /// Clear all the registered XPM images.
     /// </summary>
@@ -2021,18 +2016,18 @@ uses
     /// Change the type-separator character in the string setting up an auto-completion list.
     /// Default is '?' but can be changed if items contain '?'.
     /// </summary>
-    /// <param name="separatorCharacter">
+    /// <param name="ASeparatorCharacter">
     /// Integer value
     /// </param>
-    procedure AutoCSetTypeSeparator(separatorCharacter: Integer);
+    procedure AutoCSetTypeSeparator(ASeparatorCharacter: Integer);
     /// <summary>
     /// Set the maximum width, in characters, of auto-completion and user lists.
     /// Set to 0 to autosize to fit longest item, which is the default.
     /// </summary>
-    /// <param name="characterCount">
+    /// <param name="ACharacterCount">
     /// Integer value
     /// </param>
-    procedure AutoCSetMaxWidth(characterCount: Integer);
+    procedure AutoCSetMaxWidth(ACharacterCount: Integer);
     /// <summary>
     /// Get the maximum width, in characters, of auto-completion and user lists.
     /// </summary>
@@ -2044,10 +2039,10 @@ uses
     /// Set the maximum height, in rows, of auto-completion and user lists.
     /// The default is 5 rows.
     /// </summary>
-    /// <param name="rowCount">
+    /// <param name="ARowCount">
     /// Integer value
     /// </param>
-    procedure AutoCSetMaxHeight(rowCount: Integer);
+    procedure AutoCSetMaxHeight(ARowCount: Integer);
     /// <summary>
     /// Set the maximum height, in rows, of auto-completion and user lists.
     /// </summary>
@@ -2058,10 +2053,10 @@ uses
     /// <summary>
     /// Set the style number used for auto-completion and user lists fonts.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    procedure AutoCSetStyle(style: Integer);
+    procedure AutoCSetStyle(AStyle: Integer);
     /// <summary>
     /// Get the style number used for auto-completion and user lists fonts.
     /// </summary>
@@ -2072,10 +2067,10 @@ uses
     /// <summary>
     /// Set the number of spaces used for one level of indentation.
     /// </summary>
-    /// <param name="indentSize">
+    /// <param name="AIndentSize">
     /// Integer value
     /// </param>
-    procedure SetIndent(indentSize: Integer);
+    procedure SetIndent(AIndentSize: Integer);
     /// <summary>
     /// Retrieve indentation size.
     /// </summary>
@@ -2087,10 +2082,10 @@ uses
     /// Indentation will only use space characters if useTabs is false, otherwise
     /// it will use a combination of tabs and spaces.
     /// </summary>
-    /// <param name="useTabs">
+    /// <param name="AUseTabs">
     /// Boolean value
     /// </param>
-    procedure SetUseTabs(useTabs: Boolean);
+    procedure SetUseTabs(AUseTabs: Boolean);
     /// <summary>
     /// Retrieve whether tabs will be used in indentation.
     /// </summary>
@@ -2101,76 +2096,76 @@ uses
     /// <summary>
     /// Change the indentation of a line to a number of columns.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="indentation">
+    /// <param name="AIndentation">
     /// Integer value
     /// </param>
-    procedure SetLineIndentation(line: Integer; indentation: Integer);
+    procedure SetLineIndentation(ALine: TSciLine; AIndentation: Integer);
     /// <summary>
     /// Retrieve the number of columns that a line is indented.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function GetLineIndentation(line: Integer): Integer;
+    function GetLineIndentation(ALine: TSciLine): Integer;
     /// <summary>
     /// Retrieve the position before the first non indentation character on a line.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetLineIndentPosition(line: Integer): Integer;
+    function GetLineIndentPosition(ALine: TSciLine): TSciPosition;
     /// <summary>
     /// Retrieve the column number of a position, taking tab width into account.
     /// </summary>
-    /// <param name="pos">
+    /// <param name="APos">
     /// Position in the document
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetColumn(pos: Integer): Integer;
+    function GetColumn(APos: TSciPosition): TSciPosition;
     /// <summary>
     /// Count characters between two positions.
     /// </summary>
-    /// <param name="start">
+    /// <param name="AStart">
     /// Position in the document
     /// </param>
-    /// <param name="end">
+    /// <param name="AEnd">
     /// Position in the document
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function CountCharacters(start: Integer; end: Integer): Integer;
+    function CountCharacters(AStart: TSciPosition; AEnd: TSciPosition): TSciPosition;
     /// <summary>
     /// Count code units between two positions.
     /// </summary>
-    /// <param name="start">
+    /// <param name="AStart">
     /// Position in the document
     /// </param>
-    /// <param name="end">
+    /// <param name="AEnd">
     /// Position in the document
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function CountCodeUnits(start: Integer; end: Integer): Integer;
+    function CountCodeUnits(AStart: TSciPosition; AEnd: TSciPosition): TSciPosition;
     /// <summary>
     /// Show or hide the horizontal scroll bar.
     /// </summary>
-    /// <param name="visible">
+    /// <param name="AVisible">
     /// Boolean value
     /// </param>
-    procedure SetHScrollBar(visible: Boolean);
+    procedure SetHScrollBar(AVisible: Boolean);
     /// <summary>
     /// Is the horizontal scroll bar visible?
     /// </summary>
@@ -2181,42 +2176,42 @@ uses
     /// <summary>
     /// Show or hide indentation guides.
     /// </summary>
-    /// <param name="indentView">
-    /// The indentView parameter
+    /// <param name="AIndentView">
+    /// The AIndentView parameter
     /// </param>
-    procedure SetIndentationGuides(indentView: Integer);
+    procedure SetIndentationGuides(AIndentView: NativeInt);
     /// <summary>
     /// Are the indentation guides visible?
     /// </summary>
     /// <returns>
     /// Returns the indentationguides
     /// </returns>
-    function GetIndentationGuides(): Integer;
+    function GetIndentationGuides(): NativeInt;
     /// <summary>
     /// Set the highlighted indentation guide column.
     /// 0 = no highlighted guide.
     /// </summary>
-    /// <param name="column">
+    /// <param name="AColumn">
     /// Position in the document
     /// </param>
-    procedure SetHighlightGuide(column: Integer);
+    procedure SetHighlightGuide(AColumn: TSciPosition);
     /// <summary>
     /// Get the highlighted indentation guide column.
     /// </summary>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetHighlightGuide(): Integer;
+    function GetHighlightGuide(): TSciPosition;
     /// <summary>
     /// Get the position after the last visible characters on a line.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetLineEndPosition(line: Integer): Integer;
+    function GetLineEndPosition(ALine: TSciLine): TSciPosition;
     /// <summary>
     /// Get the code page used to interpret the bytes of the document as characters.
     /// </summary>
@@ -2241,52 +2236,52 @@ uses
     /// <summary>
     /// Sets the position of the caret.
     /// </summary>
-    /// <param name="caret">
+    /// <param name="ACaret">
     /// Position in the document
     /// </param>
-    procedure SetCurrentPos(caret: Integer);
+    procedure SetCurrentPos(ACaret: TSciPosition);
     /// <summary>
     /// Sets the position that starts the selection - this becomes the anchor.
     /// </summary>
-    /// <param name="anchor">
+    /// <param name="AAnchor">
     /// Position in the document
     /// </param>
-    procedure SetSelectionStart(anchor: Integer);
+    procedure SetSelectionStart(AAnchor: TSciPosition);
     /// <summary>
     /// Returns the position at the start of the selection.
     /// </summary>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetSelectionStart(): Integer;
+    function GetSelectionStart(): TSciPosition;
     /// <summary>
     /// Sets the position that ends the selection - this becomes the caret.
     /// </summary>
-    /// <param name="caret">
+    /// <param name="ACaret">
     /// Position in the document
     /// </param>
-    procedure SetSelectionEnd(caret: Integer);
+    procedure SetSelectionEnd(ACaret: TSciPosition);
     /// <summary>
     /// Returns the position at the end of the selection.
     /// </summary>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetSelectionEnd(): Integer;
+    function GetSelectionEnd(): TSciPosition;
     /// <summary>
     /// Set caret to a position, while removing any existing selection.
     /// </summary>
-    /// <param name="caret">
+    /// <param name="ACaret">
     /// Position in the document
     /// </param>
-    procedure SetEmptySelection(caret: Integer);
+    procedure SetEmptySelection(ACaret: TSciPosition);
     /// <summary>
     /// Sets the print magnification added to the point size of each style for printing.
     /// </summary>
-    /// <param name="magnification">
+    /// <param name="AMagnification">
     /// Integer value
     /// </param>
-    procedure SetPrintMagnification(magnification: Integer);
+    procedure SetPrintMagnification(AMagnification: Integer);
     /// <summary>
     /// Returns the print magnification.
     /// </summary>
@@ -2297,156 +2292,156 @@ uses
     /// <summary>
     /// Modify colours when printing for clearer printed text.
     /// </summary>
-    /// <param name="mode">
-    /// The mode parameter
+    /// <param name="AMode">
+    /// The AMode parameter
     /// </param>
-    procedure SetPrintColourMode(mode: Integer);
+    procedure SetPrintColourMode(AMode: NativeInt);
     /// <summary>
     /// Returns the print colour mode.
     /// </summary>
     /// <returns>
     /// Returns the printcolourmode
     /// </returns>
-    function GetPrintColourMode(): Integer;
+    function GetPrintColourMode(): NativeInt;
     /// <summary>
     /// Find some text in the document.
     /// </summary>
-    /// <param name="searchFlags">
-    /// The searchFlags parameter
+    /// <param name="ASearchFlags">
+    /// The ASearchFlags parameter
     /// </param>
-    /// <param name="ft">
-    /// The ft parameter
+    /// <param name="AFt">
+    /// The AFt parameter
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function FindText(searchFlags: Integer; ft: PSciFindText): Integer;
+    function FindText(ASearchFlags: NativeInt; AFt: PSciFindText): TSciPosition;
     /// <summary>
     /// Find some text in the document.
     /// </summary>
-    /// <param name="searchFlags">
-    /// The searchFlags parameter
+    /// <param name="ASearchFlags">
+    /// The ASearchFlags parameter
     /// </param>
-    /// <param name="ft">
-    /// The ft parameter
+    /// <param name="AFt">
+    /// The AFt parameter
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function FindTextFull(searchFlags: Integer; ft: PSciFindTextFull): Integer;
+    function FindTextFull(ASearchFlags: NativeInt; AFt: PSciFindTextFull): TSciPosition;
     /// <summary>
     /// Draw the document into a display context such as a printer.
     /// </summary>
-    /// <param name="draw">
+    /// <param name="ADraw">
     /// Boolean value
     /// </param>
-    /// <param name="fr">
-    /// The fr parameter
+    /// <param name="AFr">
+    /// The AFr parameter
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function FormatRange(draw: Boolean; fr: PFormatRange): Integer;
+    function FormatRange(ADraw: Boolean; AFr: PSciFormatRange): TSciPosition;
     /// <summary>
     /// Draw the document into a display context such as a printer.
     /// </summary>
-    /// <param name="draw">
+    /// <param name="ADraw">
     /// Boolean value
     /// </param>
-    /// <param name="fr">
-    /// The fr parameter
+    /// <param name="AFr">
+    /// The AFr parameter
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function FormatRangeFull(draw: Boolean; fr: PFormatRangeFull): Integer;
+    function FormatRangeFull(ADraw: Boolean; AFr: PSciFormatRangeFull): TSciPosition;
     /// <summary>
     /// Enable or disable change history.
     /// </summary>
-    /// <param name="changeHistory">
-    /// The changeHistory parameter
+    /// <param name="AChangeHistory">
+    /// The AChangeHistory parameter
     /// </param>
-    procedure SetChangeHistory(changeHistory: Integer);
+    procedure SetChangeHistory(AChangeHistory: NativeInt);
     /// <summary>
     /// Report change history status.
     /// </summary>
     /// <returns>
     /// Returns the changehistory
     /// </returns>
-    function GetChangeHistory(): Integer;
+    function GetChangeHistory(): NativeInt;
     /// <summary>
     /// Enable or disable undo selection history.
     /// </summary>
-    /// <param name="undoSelectionHistory">
-    /// The undoSelectionHistory parameter
+    /// <param name="AUndoSelectionHistory">
+    /// The AUndoSelectionHistory parameter
     /// </param>
-    procedure SetUndoSelectionHistory(undoSelectionHistory: Integer);
+    procedure SetUndoSelectionHistory(AUndoSelectionHistory: NativeInt);
     /// <summary>
     /// Report undo selection history status.
     /// </summary>
     /// <returns>
     /// Returns the undoselectionhistory
     /// </returns>
-    function GetUndoSelectionHistory(): Integer;
+    function GetUndoSelectionHistory(): NativeInt;
     /// <summary>
     /// Set selection from serialized form.
     /// </summary>
-    /// <param name="selectionString">
+    /// <param name="ASelectionString">
     /// Text string
     /// </param>
-    procedure SetSelectionSerialized(selectionString: PAnsiChar);
+    procedure SetSelectionSerialized(ASelectionString: PAnsiChar);
     /// <summary>
     /// Retrieve serialized form of selection.
     /// </summary>
-    /// <param name="selectionString">
+    /// <param name="ASelectionString">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetSelectionSerialized(selectionString: PAnsiChar): Integer;
+    function GetSelectionSerialized(ASelectionString: PAnsiChar): TSciPosition;
     /// <summary>
     /// Retrieve the display line at the top of the display.
     /// </summary>
     /// <returns>
     /// Returns the line number
     /// </returns>
-    function GetFirstVisibleLine(): Integer;
+    function GetFirstVisibleLine(): TSciLine;
     /// <summary>
     /// Retrieve the contents of a line.
     /// Returns the length of the line.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="text">
+    /// <param name="AText">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetLine(line: Integer; text: PAnsiChar): Integer;
+    function GetLine(ALine: TSciLine; AText: PAnsiChar): TSciPosition;
     /// <summary>
     /// Returns the number of lines in the document. There is always at least one.
     /// </summary>
     /// <returns>
     /// Returns the line number
     /// </returns>
-    function GetLineCount(): Integer;
+    function GetLineCount(): TSciLine;
     /// <summary>
     /// Enlarge the number of lines allocated.
     /// </summary>
-    /// <param name="lines">
+    /// <param name="ALines">
     /// Line number
     /// </param>
-    procedure AllocateLines(lines: Integer);
+    procedure AllocateLines(ALines: TSciLine);
     /// <summary>
     /// Sets the size in pixels of the left margin.
     /// </summary>
-    /// <param name="pixelWidth">
+    /// <param name="APixelWidth">
     /// Integer value
     /// </param>
-    procedure SetMarginLeft(pixelWidth: Integer);
+    procedure SetMarginLeft(APixelWidth: Integer);
     /// <summary>
     /// Returns the size in pixels of the left margin.
     /// </summary>
@@ -2457,10 +2452,10 @@ uses
     /// <summary>
     /// Sets the size in pixels of the right margin.
     /// </summary>
-    /// <param name="pixelWidth">
+    /// <param name="APixelWidth">
     /// Integer value
     /// </param>
-    procedure SetMarginRight(pixelWidth: Integer);
+    procedure SetMarginRight(APixelWidth: Integer);
     /// <summary>
     /// Returns the size in pixels of the right margin.
     /// </summary>
@@ -2478,105 +2473,105 @@ uses
     /// <summary>
     /// Select a range of text.
     /// </summary>
-    /// <param name="anchor">
+    /// <param name="AAnchor">
     /// Position in the document
     /// </param>
-    /// <param name="caret">
+    /// <param name="ACaret">
     /// Position in the document
     /// </param>
-    procedure SetSel(anchor: Integer; caret: Integer);
+    procedure SetSel(AAnchor: TSciPosition; ACaret: TSciPosition);
     /// <summary>
     /// Retrieve the selected text.
     /// Return the length of the text.
     /// Result is NUL-terminated.
     /// </summary>
-    /// <param name="text">
+    /// <param name="AText">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetSelText(text: PAnsiChar): Integer;
+    function GetSelText(AText: PAnsiChar): TSciPosition;
     /// <summary>
     /// Retrieve a range of text.
     /// Return the length of the text.
     /// </summary>
-    /// <param name="tr">
-    /// The tr parameter
+    /// <param name="ATr">
+    /// The ATr parameter
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetTextRange(tr: PSciTextRange): Integer;
+    function GetTextRange(ATr: PSciTextRange): TSciPosition;
     /// <summary>
     /// Retrieve a range of text that can be past 2GB.
     /// Return the length of the text.
     /// </summary>
-    /// <param name="tr">
-    /// The tr parameter
+    /// <param name="ATr">
+    /// The ATr parameter
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetTextRangeFull(tr: PSciTextRangeFull): Integer;
+    function GetTextRangeFull(ATr: PSciTextRangeFull): TSciPosition;
     /// <summary>
     /// Draw the selection either highlighted or in normal (non-highlighted) style.
     /// </summary>
-    /// <param name="hide">
+    /// <param name="AHide">
     /// Boolean value
     /// </param>
-    procedure HideSelection(hide: Boolean);
+    procedure HideSelection(AHide: Boolean);
     function GetSelectionHidden(): Boolean;
     /// <summary>
     /// Retrieve the x value of the point in the window where a position is displayed.
     /// </summary>
-    /// <param name="pos">
+    /// <param name="APos">
     /// Position in the document
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function PointXFromPosition(pos: Integer): Integer;
+    function PointXFromPosition(APos: TSciPosition): Integer;
     /// <summary>
     /// Retrieve the y value of the point in the window where a position is displayed.
     /// </summary>
-    /// <param name="pos">
+    /// <param name="APos">
     /// Position in the document
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function PointYFromPosition(pos: Integer): Integer;
+    function PointYFromPosition(APos: TSciPosition): Integer;
     /// <summary>
     /// Retrieve the line containing a position.
     /// </summary>
-    /// <param name="pos">
+    /// <param name="APos">
     /// Position in the document
     /// </param>
     /// <returns>
     /// Returns the line number
     /// </returns>
-    function LineFromPosition(pos: Integer): Integer;
+    function LineFromPosition(APos: TSciPosition): TSciLine;
     /// <summary>
     /// Retrieve the position at the start of a line.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function PositionFromLine(line: Integer): Integer;
+    function PositionFromLine(ALine: TSciLine): TSciPosition;
     /// <summary>
     /// Scroll horizontally and vertically.
     /// </summary>
-    /// <param name="columns">
+    /// <param name="AColumns">
     /// Position in the document
     /// </param>
-    /// <param name="lines">
+    /// <param name="ALines">
     /// Line number
     /// </param>
-    procedure LineScroll(columns: Integer; lines: Integer);
+    procedure LineScroll(AColumns: TSciPosition; ALines: TSciLine);
     /// <summary>
     /// Ensure the caret is visible.
     /// </summary>
@@ -2586,27 +2581,27 @@ uses
     /// priority to the primary position then the secondary position.
     /// This may be used to make a search match visible.
     /// </summary>
-    /// <param name="secondary">
+    /// <param name="ASecondary">
     /// Position in the document
     /// </param>
-    /// <param name="primary">
+    /// <param name="APrimary">
     /// Position in the document
     /// </param>
-    procedure ScrollRange(secondary: Integer; primary: Integer);
+    procedure ScrollRange(ASecondary: TSciPosition; APrimary: TSciPosition);
     /// <summary>
     /// Replace the selected text with the argument text.
     /// </summary>
-    /// <param name="text">
+    /// <param name="AText">
     /// Text string
     /// </param>
-    procedure ReplaceSel(text: PAnsiChar);
+    procedure ReplaceSel(AText: PAnsiChar);
     /// <summary>
     /// Set to read only or read write.
     /// </summary>
-    /// <param name="readOnly">
+    /// <param name="AReadOnly">
     /// Boolean value
     /// </param>
-    procedure SetReadOnly(readOnly: Boolean);
+    procedure SetReadOnly(AReadOnly: Boolean);
     /// <summary>
     /// Null operation.
     /// </summary>
@@ -2652,32 +2647,32 @@ uses
     /// <summary>
     /// Replace the contents of the document with the argument text.
     /// </summary>
-    /// <param name="text">
+    /// <param name="AText">
     /// Text string
     /// </param>
-    procedure SetText(text: PAnsiChar);
+    procedure SetText(AText: PAnsiChar);
     /// <summary>
     /// Retrieve all the text in the document.
     /// Returns number of characters retrieved.
     /// Result is NUL-terminated.
     /// </summary>
-    /// <param name="length">
+    /// <param name="ALength">
     /// Position in the document
     /// </param>
-    /// <param name="text">
+    /// <param name="AText">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetText(length: Integer; text: PAnsiChar): Integer;
+    function GetText(ALength: TSciPosition; AText: PAnsiChar): TSciPosition;
     /// <summary>
     /// Retrieve the number of characters in the document.
     /// </summary>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetTextLength(): Integer;
+    function GetTextLength(): TSciPosition;
     /// <summary>
     /// Retrieve a pointer to a function that processes messages for this Scintilla.
     /// </summary>
@@ -2703,10 +2698,10 @@ uses
     /// <summary>
     /// Set to overtype (true) or insert mode.
     /// </summary>
-    /// <param name="overType">
+    /// <param name="AOverType">
     /// Boolean value
     /// </param>
-    procedure SetOvertype(overType: Boolean);
+    procedure SetOvertype(AOverType: Boolean);
     /// <summary>
     /// Returns true if overtype mode is active otherwise false is returned.
     /// </summary>
@@ -2717,10 +2712,10 @@ uses
     /// <summary>
     /// Set the width of the insert mode caret.
     /// </summary>
-    /// <param name="pixelWidth">
+    /// <param name="APixelWidth">
     /// Integer value
     /// </param>
-    procedure SetCaretWidth(pixelWidth: Integer);
+    procedure SetCaretWidth(APixelWidth: Integer);
     /// <summary>
     /// Returns the width of the insert mode caret.
     /// </summary>
@@ -2732,80 +2727,80 @@ uses
     /// Sets the position that starts the target which is used for updating the
     /// document without affecting the scroll position.
     /// </summary>
-    /// <param name="start">
+    /// <param name="AStart">
     /// Position in the document
     /// </param>
-    procedure SetTargetStart(start: Integer);
+    procedure SetTargetStart(AStart: TSciPosition);
     /// <summary>
     /// Get the position that starts the target.
     /// </summary>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetTargetStart(): Integer;
+    function GetTargetStart(): TSciPosition;
     /// <summary>
     /// Sets the virtual space of the target start
     /// </summary>
-    /// <param name="space">
+    /// <param name="ASpace">
     /// Position in the document
     /// </param>
-    procedure SetTargetStartVirtualSpace(space: Integer);
+    procedure SetTargetStartVirtualSpace(ASpace: TSciPosition);
     /// <summary>
     /// Get the virtual space of the target start
     /// </summary>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetTargetStartVirtualSpace(): Integer;
+    function GetTargetStartVirtualSpace(): TSciPosition;
     /// <summary>
     /// Sets the position that ends the target which is used for updating the
     /// document without affecting the scroll position.
     /// </summary>
-    /// <param name="end">
+    /// <param name="AEnd">
     /// Position in the document
     /// </param>
-    procedure SetTargetEnd(end: Integer);
+    procedure SetTargetEnd(AEnd: TSciPosition);
     /// <summary>
     /// Get the position that ends the target.
     /// </summary>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetTargetEnd(): Integer;
+    function GetTargetEnd(): TSciPosition;
     /// <summary>
     /// Sets the virtual space of the target end
     /// </summary>
-    /// <param name="space">
+    /// <param name="ASpace">
     /// Position in the document
     /// </param>
-    procedure SetTargetEndVirtualSpace(space: Integer);
+    procedure SetTargetEndVirtualSpace(ASpace: TSciPosition);
     /// <summary>
     /// Get the virtual space of the target end
     /// </summary>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetTargetEndVirtualSpace(): Integer;
+    function GetTargetEndVirtualSpace(): TSciPosition;
     /// <summary>
     /// Sets both the start and end of the target in one call.
     /// </summary>
-    /// <param name="start">
+    /// <param name="AStart">
     /// Position in the document
     /// </param>
-    /// <param name="end">
+    /// <param name="AEnd">
     /// Position in the document
     /// </param>
-    procedure SetTargetRange(start: Integer; end: Integer);
+    procedure SetTargetRange(AStart: TSciPosition; AEnd: TSciPosition);
     /// <summary>
     /// Retrieve the text in the target.
     /// </summary>
-    /// <param name="text">
+    /// <param name="AText">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetTargetText(text: PAnsiChar): Integer;
+    function GetTargetText(AText: PAnsiChar): TSciPosition;
     /// <summary>
     /// Make the target range start and end be the same as the selection range start and end.
     /// </summary>
@@ -2819,16 +2814,16 @@ uses
     /// Text is counted so it can contain NULs.
     /// Returns the length of the replacement text.
     /// </summary>
-    /// <param name="length">
+    /// <param name="ALength">
     /// Position in the document
     /// </param>
-    /// <param name="text">
+    /// <param name="AText">
     /// Text string
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function ReplaceTarget(length: Integer; text: PAnsiChar): Integer;
+    function ReplaceTarget(ALength: TSciPosition; AText: PAnsiChar): TSciPosition;
     /// <summary>
     /// Replace the target text with the argument text after \d processing.
     /// Text is counted so it can contain NULs.
@@ -2837,69 +2832,69 @@ uses
     /// Returns the length of the replacement text including any change
     /// caused by processing the \d patterns.
     /// </summary>
-    /// <param name="length">
+    /// <param name="ALength">
     /// Position in the document
     /// </param>
-    /// <param name="text">
+    /// <param name="AText">
     /// Text string
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function ReplaceTargetRE(length: Integer; text: PAnsiChar): Integer;
+    function ReplaceTargetRE(ALength: TSciPosition; AText: PAnsiChar): TSciPosition;
     /// <summary>
     /// Replace the target text with the argument text but ignore prefix and suffix that
     /// are the same as current.
     /// </summary>
-    /// <param name="length">
+    /// <param name="ALength">
     /// Position in the document
     /// </param>
-    /// <param name="text">
+    /// <param name="AText">
     /// Text string
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function ReplaceTargetMinimal(length: Integer; text: PAnsiChar): Integer;
+    function ReplaceTargetMinimal(ALength: TSciPosition; AText: PAnsiChar): TSciPosition;
     /// <summary>
     /// Search for a counted string in the target and set the target to the found
     /// range. Text is counted so it can contain NULs.
     /// Returns start of found range or -1 for failure in which case target is not moved.
     /// </summary>
-    /// <param name="length">
+    /// <param name="ALength">
     /// Position in the document
     /// </param>
-    /// <param name="text">
+    /// <param name="AText">
     /// Text string
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function SearchInTarget(length: Integer; text: PAnsiChar): Integer;
+    function SearchInTarget(ALength: TSciPosition; AText: PAnsiChar): TSciPosition;
     /// <summary>
     /// Set the search flags used by SearchInTarget.
     /// </summary>
-    /// <param name="searchFlags">
-    /// The searchFlags parameter
+    /// <param name="ASearchFlags">
+    /// The ASearchFlags parameter
     /// </param>
-    procedure SetSearchFlags(searchFlags: Integer);
+    procedure SetSearchFlags(ASearchFlags: NativeInt);
     /// <summary>
     /// Get the search flags used by SearchInTarget.
     /// </summary>
     /// <returns>
     /// Returns the searchflags
     /// </returns>
-    function GetSearchFlags(): Integer;
+    function GetSearchFlags(): NativeInt;
     /// <summary>
     /// Show a call tip containing a definition near position pos.
     /// </summary>
-    /// <param name="pos">
+    /// <param name="APos">
     /// Position in the document
     /// </param>
-    /// <param name="definition">
+    /// <param name="ADefinition">
     /// Text string
     /// </param>
-    procedure CallTipShow(pos: Integer; definition: PAnsiChar);
+    procedure CallTipShow(APos: TSciPosition; ADefinition: PAnsiChar);
     /// <summary>
     /// Remove the call tip from the screen.
     /// </summary>
@@ -2917,164 +2912,164 @@ uses
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function CallTipPosStart(): Integer;
+    function CallTipPosStart(): TSciPosition;
     /// <summary>
     /// Set the start position in order to change when backspacing removes the calltip.
     /// </summary>
-    /// <param name="posStart">
+    /// <param name="APosStart">
     /// Position in the document
     /// </param>
-    procedure CallTipSetPosStart(posStart: Integer);
+    procedure CallTipSetPosStart(APosStart: TSciPosition);
     /// <summary>
     /// Highlight a segment of the definition.
     /// </summary>
-    /// <param name="highlightStart">
+    /// <param name="AHighlightStart">
     /// Position in the document
     /// </param>
-    /// <param name="highlightEnd">
+    /// <param name="AHighlightEnd">
     /// Position in the document
     /// </param>
-    procedure CallTipSetHlt(highlightStart: Integer; highlightEnd: Integer);
+    procedure CallTipSetHlt(AHighlightStart: TSciPosition; AHighlightEnd: TSciPosition);
     /// <summary>
     /// Set the background colour for the call tip.
     /// </summary>
-    /// <param name="back">
+    /// <param name="ABack">
     /// Color value
     /// </param>
-    procedure CallTipSetBack(back: TColor);
+    procedure CallTipSetBack(ABack: TColor);
     /// <summary>
     /// Set the foreground colour for the call tip.
     /// </summary>
-    /// <param name="fore">
+    /// <param name="AFore">
     /// Color value
     /// </param>
-    procedure CallTipSetFore(fore: TColor);
+    procedure CallTipSetFore(AFore: TColor);
     /// <summary>
     /// Set the foreground colour for the highlighted part of the call tip.
     /// </summary>
-    /// <param name="fore">
+    /// <param name="AFore">
     /// Color value
     /// </param>
-    procedure CallTipSetForeHlt(fore: TColor);
+    procedure CallTipSetForeHlt(AFore: TColor);
     /// <summary>
     /// Enable use of STYLE_CALLTIP and set call tip tab size in pixels.
     /// </summary>
-    /// <param name="tabSize">
+    /// <param name="ATabSize">
     /// Integer value
     /// </param>
-    procedure CallTipUseStyle(tabSize: Integer);
+    procedure CallTipUseStyle(ATabSize: Integer);
     /// <summary>
     /// Set position of calltip, above or below text.
     /// </summary>
-    /// <param name="above">
+    /// <param name="AAbove">
     /// Boolean value
     /// </param>
-    procedure CallTipSetPosition(above: Boolean);
+    procedure CallTipSetPosition(AAbove: Boolean);
     /// <summary>
     /// Find the display line of a document line taking hidden lines into account.
     /// </summary>
-    /// <param name="docLine">
+    /// <param name="ADocLine">
     /// Line number
     /// </param>
     /// <returns>
     /// Returns the line number
     /// </returns>
-    function VisibleFromDocLine(docLine: Integer): Integer;
+    function VisibleFromDocLine(ADocLine: TSciLine): TSciLine;
     /// <summary>
     /// Find the document line of a display line taking hidden lines into account.
     /// </summary>
-    /// <param name="displayLine">
+    /// <param name="ADisplayLine">
     /// Line number
     /// </param>
     /// <returns>
     /// Returns the line number
     /// </returns>
-    function DocLineFromVisible(displayLine: Integer): Integer;
+    function DocLineFromVisible(ADisplayLine: TSciLine): TSciLine;
     /// <summary>
     /// The number of display lines needed to wrap a document line
     /// </summary>
-    /// <param name="docLine">
+    /// <param name="ADocLine">
     /// Line number
     /// </param>
     /// <returns>
     /// Returns the line number
     /// </returns>
-    function WrapCount(docLine: Integer): Integer;
+    function WrapCount(ADocLine: TSciLine): TSciLine;
     /// <summary>
     /// Set the fold level of a line.
     /// This encodes an integer level along with flags indicating whether the
     /// line is a header and whether it is effectively white space.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="level">
-    /// The level parameter
+    /// <param name="ALevel">
+    /// The ALevel parameter
     /// </param>
-    procedure SetFoldLevel(line: Integer; level: Integer);
+    procedure SetFoldLevel(ALine: TSciLine; ALevel: NativeInt);
     /// <summary>
     /// Retrieve the fold level of a line.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
     /// <returns>
     /// Returns the foldlevel
     /// </returns>
-    function GetFoldLevel(line: Integer): Integer;
+    function GetFoldLevel(ALine: TSciLine): NativeInt;
     /// <summary>
     /// Find the last child line of a header line.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="level">
-    /// The level parameter
+    /// <param name="ALevel">
+    /// The ALevel parameter
     /// </param>
     /// <returns>
     /// Returns the line number
     /// </returns>
-    function GetLastChild(line: Integer; level: Integer): Integer;
+    function GetLastChild(ALine: TSciLine; ALevel: NativeInt): TSciLine;
     /// <summary>
     /// Find the parent line of a child line.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
     /// <returns>
     /// Returns the line number
     /// </returns>
-    function GetFoldParent(line: Integer): Integer;
+    function GetFoldParent(ALine: TSciLine): TSciLine;
     /// <summary>
     /// Make a range of lines visible.
     /// </summary>
-    /// <param name="lineStart">
+    /// <param name="ALineStart">
     /// Line number
     /// </param>
-    /// <param name="lineEnd">
+    /// <param name="ALineEnd">
     /// Line number
     /// </param>
-    procedure ShowLines(lineStart: Integer; lineEnd: Integer);
+    procedure ShowLines(ALineStart: TSciLine; ALineEnd: TSciLine);
     /// <summary>
     /// Make a range of lines invisible.
     /// </summary>
-    /// <param name="lineStart">
+    /// <param name="ALineStart">
     /// Line number
     /// </param>
-    /// <param name="lineEnd">
+    /// <param name="ALineEnd">
     /// Line number
     /// </param>
-    procedure HideLines(lineStart: Integer; lineEnd: Integer);
+    procedure HideLines(ALineStart: TSciLine; ALineEnd: TSciLine);
     /// <summary>
     /// Is a line visible?
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
     /// <returns>
     /// Returns true if successful, false otherwise
     /// </returns>
-    function GetLineVisible(line: Integer): Boolean;
+    function GetLineVisible(ALine: TSciLine): Boolean;
     /// <summary>
     /// Are all lines visible?
     /// </summary>
@@ -3085,151 +3080,151 @@ uses
     /// <summary>
     /// Show the children of a header line.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="expanded">
+    /// <param name="AExpanded">
     /// Boolean value
     /// </param>
-    procedure SetFoldExpanded(line: Integer; expanded: Boolean);
+    procedure SetFoldExpanded(ALine: TSciLine; AExpanded: Boolean);
     /// <summary>
     /// Is a header line expanded?
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
     /// <returns>
     /// Returns true if successful, false otherwise
     /// </returns>
-    function GetFoldExpanded(line: Integer): Boolean;
+    function GetFoldExpanded(ALine: TSciLine): Boolean;
     /// <summary>
     /// Switch a header line between expanded and contracted.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    procedure ToggleFold(line: Integer);
+    procedure ToggleFold(ALine: TSciLine);
     /// <summary>
     /// Switch a header line between expanded and contracted and show some text after the line.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="text">
+    /// <param name="AText">
     /// Text string
     /// </param>
-    procedure ToggleFoldShowText(line: Integer; text: PAnsiChar);
+    procedure ToggleFoldShowText(ALine: TSciLine; AText: PAnsiChar);
     /// <summary>
     /// Set the style of fold display text.
     /// </summary>
-    /// <param name="style">
-    /// The style parameter
+    /// <param name="AStyle">
+    /// The AStyle parameter
     /// </param>
-    procedure FoldDisplayTextSetStyle(style: Integer);
+    procedure FoldDisplayTextSetStyle(AStyle: NativeInt);
     /// <summary>
     /// Get the style of fold display text.
     /// </summary>
     /// <returns>
     /// Returns the value
     /// </returns>
-    function FoldDisplayTextGetStyle(): Integer;
+    function FoldDisplayTextGetStyle(): NativeInt;
     /// <summary>
     /// Set the default fold display text.
     /// </summary>
-    /// <param name="text">
+    /// <param name="AText">
     /// Text string
     /// </param>
-    procedure SetDefaultFoldDisplayText(text: PAnsiChar);
+    procedure SetDefaultFoldDisplayText(AText: PAnsiChar);
     /// <summary>
     /// Get the default fold display text.
     /// </summary>
-    /// <param name="text">
+    /// <param name="AText">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function GetDefaultFoldDisplayText(text: PAnsiChar): Integer;
+    function GetDefaultFoldDisplayText(AText: PAnsiChar): Integer;
     /// <summary>
     /// Expand or contract a fold header.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="action">
-    /// The action parameter
+    /// <param name="AAction">
+    /// The AAction parameter
     /// </param>
-    procedure FoldLine(line: Integer; action: Integer);
+    procedure FoldLine(ALine: TSciLine; AAction: NativeInt);
     /// <summary>
     /// Expand or contract a fold header and its children.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="action">
-    /// The action parameter
+    /// <param name="AAction">
+    /// The AAction parameter
     /// </param>
-    procedure FoldChildren(line: Integer; action: Integer);
+    procedure FoldChildren(ALine: TSciLine; AAction: NativeInt);
     /// <summary>
     /// Expand a fold header and all children. Use the level argument instead of the line's current level.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="level">
-    /// The level parameter
+    /// <param name="ALevel">
+    /// The ALevel parameter
     /// </param>
-    procedure ExpandChildren(line: Integer; level: Integer);
+    procedure ExpandChildren(ALine: TSciLine; ALevel: NativeInt);
     /// <summary>
     /// Expand or contract all fold headers.
     /// </summary>
-    /// <param name="action">
-    /// The action parameter
+    /// <param name="AAction">
+    /// The AAction parameter
     /// </param>
-    procedure FoldAll(action: Integer);
+    procedure FoldAll(AAction: NativeInt);
     /// <summary>
     /// Ensure a particular line is visible by expanding any header line hiding it.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    procedure EnsureVisible(line: Integer);
+    procedure EnsureVisible(ALine: TSciLine);
     /// <summary>
     /// Set automatic folding behaviours.
     /// </summary>
-    /// <param name="automaticFold">
-    /// The automaticFold parameter
+    /// <param name="AAutomaticFold">
+    /// The AAutomaticFold parameter
     /// </param>
-    procedure SetAutomaticFold(automaticFold: Integer);
+    procedure SetAutomaticFold(AAutomaticFold: NativeInt);
     /// <summary>
     /// Get automatic folding behaviours.
     /// </summary>
     /// <returns>
     /// Returns the automaticfold
     /// </returns>
-    function GetAutomaticFold(): Integer;
+    function GetAutomaticFold(): NativeInt;
     /// <summary>
     /// Set some style options for folding.
     /// </summary>
-    /// <param name="flags">
-    /// The flags parameter
+    /// <param name="AFlags">
+    /// The AFlags parameter
     /// </param>
-    procedure SetFoldFlags(flags: Integer);
+    procedure SetFoldFlags(AFlags: NativeInt);
     /// <summary>
     /// Ensure a particular line is visible by expanding any header line hiding it.
     /// Use the currently set visibility policy to determine which range to display.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    procedure EnsureVisibleEnforcePolicy(line: Integer);
+    procedure EnsureVisibleEnforcePolicy(ALine: TSciLine);
     /// <summary>
     /// Sets whether a tab pressed when caret is within indentation indents.
     /// </summary>
-    /// <param name="tabIndents">
+    /// <param name="ATabIndents">
     /// Boolean value
     /// </param>
-    procedure SetTabIndents(tabIndents: Boolean);
+    procedure SetTabIndents(ATabIndents: Boolean);
     /// <summary>
     /// Does a tab pressed when caret is within indentation indent?
     /// </summary>
@@ -3240,10 +3235,10 @@ uses
     /// <summary>
     /// Sets whether a backspace pressed when caret is within indentation unindents.
     /// </summary>
-    /// <param name="bsUnIndents">
+    /// <param name="ABsUnIndents">
     /// Boolean value
     /// </param>
-    procedure SetBackSpaceUnIndents(bsUnIndents: Boolean);
+    procedure SetBackSpaceUnIndents(ABsUnIndents: Boolean);
     /// <summary>
     /// Does a backspace pressed when caret is within indentation unindent?
     /// </summary>
@@ -3254,10 +3249,10 @@ uses
     /// <summary>
     /// Sets the time the mouse must sit still to generate a mouse dwell event.
     /// </summary>
-    /// <param name="periodMilliseconds">
+    /// <param name="APeriodMilliseconds">
     /// Integer value
     /// </param>
-    procedure SetMouseDwellTime(periodMilliseconds: Integer);
+    procedure SetMouseDwellTime(APeriodMilliseconds: Integer);
     /// <summary>
     /// Retrieve the time the mouse must sit still to generate a mouse dwell event.
     /// </summary>
@@ -3268,105 +3263,105 @@ uses
     /// <summary>
     /// Get position of start of word.
     /// </summary>
-    /// <param name="pos">
+    /// <param name="APos">
     /// Position in the document
     /// </param>
-    /// <param name="onlyWordCharacters">
+    /// <param name="AOnlyWordCharacters">
     /// Boolean value
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function WordStartPosition(pos: Integer; onlyWordCharacters: Boolean): Integer;
+    function WordStartPosition(APos: TSciPosition; AOnlyWordCharacters: Boolean): TSciPosition;
     /// <summary>
     /// Get position of end of word.
     /// </summary>
-    /// <param name="pos">
+    /// <param name="APos">
     /// Position in the document
     /// </param>
-    /// <param name="onlyWordCharacters">
+    /// <param name="AOnlyWordCharacters">
     /// Boolean value
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function WordEndPosition(pos: Integer; onlyWordCharacters: Boolean): Integer;
+    function WordEndPosition(APos: TSciPosition; AOnlyWordCharacters: Boolean): TSciPosition;
     /// <summary>
     /// Is the range start..end considered a word?
     /// </summary>
-    /// <param name="start">
+    /// <param name="AStart">
     /// Position in the document
     /// </param>
-    /// <param name="end">
+    /// <param name="AEnd">
     /// Position in the document
     /// </param>
     /// <returns>
     /// Returns true if successful, false otherwise
     /// </returns>
-    function IsRangeWord(start: Integer; end: Integer): Boolean;
+    function IsRangeWord(AStart: TSciPosition; AEnd: TSciPosition): Boolean;
     /// <summary>
     /// Sets limits to idle styling.
     /// </summary>
-    /// <param name="idleStyling">
-    /// The idleStyling parameter
+    /// <param name="AIdleStyling">
+    /// The AIdleStyling parameter
     /// </param>
-    procedure SetIdleStyling(idleStyling: Integer);
+    procedure SetIdleStyling(AIdleStyling: NativeInt);
     /// <summary>
     /// Retrieve the limits to idle styling.
     /// </summary>
     /// <returns>
     /// Returns the idlestyling
     /// </returns>
-    function GetIdleStyling(): Integer;
+    function GetIdleStyling(): NativeInt;
     /// <summary>
     /// Sets whether text is word wrapped.
     /// </summary>
-    /// <param name="wrapMode">
-    /// The wrapMode parameter
+    /// <param name="AWrapMode">
+    /// The AWrapMode parameter
     /// </param>
-    procedure SetWrapMode(wrapMode: Integer);
+    procedure SetWrapMode(AWrapMode: NativeInt);
     /// <summary>
     /// Retrieve whether text is word wrapped.
     /// </summary>
     /// <returns>
     /// Returns the wrapmode
     /// </returns>
-    function GetWrapMode(): Integer;
+    function GetWrapMode(): NativeInt;
     /// <summary>
     /// Set the display mode of visual flags for wrapped lines.
     /// </summary>
-    /// <param name="wrapVisualFlags">
-    /// The wrapVisualFlags parameter
+    /// <param name="AWrapVisualFlags">
+    /// The AWrapVisualFlags parameter
     /// </param>
-    procedure SetWrapVisualFlags(wrapVisualFlags: Integer);
+    procedure SetWrapVisualFlags(AWrapVisualFlags: NativeInt);
     /// <summary>
     /// Retrive the display mode of visual flags for wrapped lines.
     /// </summary>
     /// <returns>
     /// Returns the wrapvisualflags
     /// </returns>
-    function GetWrapVisualFlags(): Integer;
+    function GetWrapVisualFlags(): NativeInt;
     /// <summary>
     /// Set the location of visual flags for wrapped lines.
     /// </summary>
-    /// <param name="wrapVisualFlagsLocation">
-    /// The wrapVisualFlagsLocation parameter
+    /// <param name="AWrapVisualFlagsLocation">
+    /// The AWrapVisualFlagsLocation parameter
     /// </param>
-    procedure SetWrapVisualFlagsLocation(wrapVisualFlagsLocation: Integer);
+    procedure SetWrapVisualFlagsLocation(AWrapVisualFlagsLocation: NativeInt);
     /// <summary>
     /// Retrive the location of visual flags for wrapped lines.
     /// </summary>
     /// <returns>
     /// Returns the wrapvisualflagslocation
     /// </returns>
-    function GetWrapVisualFlagsLocation(): Integer;
+    function GetWrapVisualFlagsLocation(): NativeInt;
     /// <summary>
     /// Set the start indent for wrapped lines.
     /// </summary>
-    /// <param name="indent">
+    /// <param name="AIndent">
     /// Integer value
     /// </param>
-    procedure SetWrapStartIndent(indent: Integer);
+    procedure SetWrapStartIndent(AIndent: Integer);
     /// <summary>
     /// Retrive the start indent for wrapped lines.
     /// </summary>
@@ -3377,38 +3372,38 @@ uses
     /// <summary>
     /// Sets how wrapped sublines are placed. Default is fixed.
     /// </summary>
-    /// <param name="wrapIndentMode">
-    /// The wrapIndentMode parameter
+    /// <param name="AWrapIndentMode">
+    /// The AWrapIndentMode parameter
     /// </param>
-    procedure SetWrapIndentMode(wrapIndentMode: Integer);
+    procedure SetWrapIndentMode(AWrapIndentMode: NativeInt);
     /// <summary>
     /// Retrieve how wrapped sublines are placed. Default is fixed.
     /// </summary>
     /// <returns>
     /// Returns the wrapindentmode
     /// </returns>
-    function GetWrapIndentMode(): Integer;
+    function GetWrapIndentMode(): NativeInt;
     /// <summary>
     /// Sets the degree of caching of layout information.
     /// </summary>
-    /// <param name="cacheMode">
-    /// The cacheMode parameter
+    /// <param name="ACacheMode">
+    /// The ACacheMode parameter
     /// </param>
-    procedure SetLayoutCache(cacheMode: Integer);
+    procedure SetLayoutCache(ACacheMode: NativeInt);
     /// <summary>
     /// Retrieve the degree of caching of layout information.
     /// </summary>
     /// <returns>
     /// Returns the layoutcache
     /// </returns>
-    function GetLayoutCache(): Integer;
+    function GetLayoutCache(): NativeInt;
     /// <summary>
     /// Sets the document width assumed for scrolling.
     /// </summary>
-    /// <param name="pixelWidth">
+    /// <param name="APixelWidth">
     /// Integer value
     /// </param>
-    procedure SetScrollWidth(pixelWidth: Integer);
+    procedure SetScrollWidth(APixelWidth: Integer);
     /// <summary>
     /// Retrieve the document width assumed for scrolling.
     /// </summary>
@@ -3419,10 +3414,10 @@ uses
     /// <summary>
     /// Sets whether the maximum width line displayed is used to set scroll width.
     /// </summary>
-    /// <param name="tracking">
+    /// <param name="ATracking">
     /// Boolean value
     /// </param>
-    procedure SetScrollWidthTracking(tracking: Boolean);
+    procedure SetScrollWidthTracking(ATracking: Boolean);
     /// <summary>
     /// Retrieve whether the scroll width tracks wide lines.
     /// </summary>
@@ -3435,25 +3430,25 @@ uses
     /// NUL terminated text argument.
     /// Does not handle tab or control characters.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    /// <param name="text">
+    /// <param name="AText">
     /// Text string
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function TextWidth(style: Integer; text: PAnsiChar): Integer;
+    function TextWidth(AStyle: Integer; AText: PAnsiChar): Integer;
     /// <summary>
     /// Sets the scroll range so that maximum scroll position has
     /// the last line at the bottom of the view (default).
     /// Setting this to false allows scrolling one page below the last line.
     /// </summary>
-    /// <param name="endAtLastLine">
+    /// <param name="AEndAtLastLine">
     /// Boolean value
     /// </param>
-    procedure SetEndAtLastLine(endAtLastLine: Boolean);
+    procedure SetEndAtLastLine(AEndAtLastLine: Boolean);
     /// <summary>
     /// Retrieve whether the maximum scroll position has the last
     /// line at the bottom of the view.
@@ -3465,20 +3460,20 @@ uses
     /// <summary>
     /// Retrieve the height of a particular line of text in pixels.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function TextHeight(line: Integer): Integer;
+    function TextHeight(ALine: TSciLine): Integer;
     /// <summary>
     /// Show or hide the vertical scroll bar.
     /// </summary>
-    /// <param name="visible">
+    /// <param name="AVisible">
     /// Boolean value
     /// </param>
-    procedure SetVScrollBar(visible: Boolean);
+    procedure SetVScrollBar(AVisible: Boolean);
     /// <summary>
     /// Is the vertical scroll bar visible?
     /// </summary>
@@ -3489,79 +3484,79 @@ uses
     /// <summary>
     /// Append a string to the end of the document without changing the selection.
     /// </summary>
-    /// <param name="length">
+    /// <param name="ALength">
     /// Position in the document
     /// </param>
-    /// <param name="text">
+    /// <param name="AText">
     /// Text string
     /// </param>
-    procedure AppendText(length: Integer; text: PAnsiChar);
+    procedure AppendText(ALength: TSciPosition; AText: PAnsiChar);
     /// <summary>
     /// How many phases is drawing done in?
     /// </summary>
     /// <returns>
     /// Returns the phasesdraw
     /// </returns>
-    function GetPhasesDraw(): Integer;
+    function GetPhasesDraw(): NativeInt;
     /// <summary>
     /// In one phase draw, text is drawn in a series of rectangular blocks with no overlap.
     /// In two phase draw, text is drawn in a series of lines allowing runs to overlap horizontally.
     /// In multiple phase draw, each element is drawn over the whole drawing area, allowing text
     /// to overlap from one line to the next.
     /// </summary>
-    /// <param name="phases">
-    /// The phases parameter
+    /// <param name="APhases">
+    /// The APhases parameter
     /// </param>
-    procedure SetPhasesDraw(phases: Integer);
+    procedure SetPhasesDraw(APhases: NativeInt);
     /// <summary>
     /// Choose the quality level for text from the FontQuality enumeration.
     /// </summary>
-    /// <param name="fontQuality">
-    /// The fontQuality parameter
+    /// <param name="AFontQuality">
+    /// The AFontQuality parameter
     /// </param>
-    procedure SetFontQuality(fontQuality: Integer);
+    procedure SetFontQuality(AFontQuality: NativeInt);
     /// <summary>
     /// Retrieve the quality level for text.
     /// </summary>
     /// <returns>
     /// Returns the fontquality
     /// </returns>
-    function GetFontQuality(): Integer;
+    function GetFontQuality(): NativeInt;
     /// <summary>
     /// Scroll so that a display line is at the top of the display.
     /// </summary>
-    /// <param name="displayLine">
+    /// <param name="ADisplayLine">
     /// Line number
     /// </param>
-    procedure SetFirstVisibleLine(displayLine: Integer);
+    procedure SetFirstVisibleLine(ADisplayLine: TSciLine);
     /// <summary>
     /// Change the effect of pasting when there are multiple selections.
     /// </summary>
-    /// <param name="multiPaste">
-    /// The multiPaste parameter
+    /// <param name="AMultiPaste">
+    /// The AMultiPaste parameter
     /// </param>
-    procedure SetMultiPaste(multiPaste: Integer);
+    procedure SetMultiPaste(AMultiPaste: NativeInt);
     /// <summary>
     /// Retrieve the effect of pasting when there are multiple selections.
     /// </summary>
     /// <returns>
     /// Returns the multipaste
     /// </returns>
-    function GetMultiPaste(): Integer;
+    function GetMultiPaste(): NativeInt;
     /// <summary>
     /// Retrieve the value of a tag from a regular expression search.
     /// Result is NUL-terminated.
     /// </summary>
-    /// <param name="tagNumber">
+    /// <param name="ATagNumber">
     /// Integer value
     /// </param>
-    /// <param name="tagValue">
+    /// <param name="ATagValue">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function GetTag(tagNumber: Integer; tagValue: PAnsiChar): Integer;
+    function GetTag(ATagNumber: Integer; ATagValue: PAnsiChar): Integer;
     /// <summary>
     /// Join the lines in the target.
     /// </summary>
@@ -3570,44 +3565,44 @@ uses
     /// Split the lines in the target into lines that are less wide than pixelWidth
     /// where possible.
     /// </summary>
-    /// <param name="pixelWidth">
+    /// <param name="APixelWidth">
     /// Integer value
     /// </param>
-    procedure LinesSplit(pixelWidth: Integer);
+    procedure LinesSplit(APixelWidth: Integer);
     /// <summary>
     /// Set one of the colours used as a chequerboard pattern in the fold margin
     /// </summary>
-    /// <param name="useSetting">
+    /// <param name="AUseSetting">
     /// Boolean value
     /// </param>
-    /// <param name="back">
+    /// <param name="ABack">
     /// Color value
     /// </param>
-    procedure SetFoldMarginColour(useSetting: Boolean; back: TColor);
+    procedure SetFoldMarginColour(AUseSetting: Boolean; ABack: TColor);
     /// <summary>
     /// Set the other colour used as a chequerboard pattern in the fold margin
     /// </summary>
-    /// <param name="useSetting">
+    /// <param name="AUseSetting">
     /// Boolean value
     /// </param>
-    /// <param name="fore">
+    /// <param name="AFore">
     /// Color value
     /// </param>
-    procedure SetFoldMarginHiColour(useSetting: Boolean; fore: TColor);
+    procedure SetFoldMarginHiColour(AUseSetting: Boolean; AFore: TColor);
     /// <summary>
     /// Enable or disable accessibility.
     /// </summary>
-    /// <param name="accessibility">
-    /// The accessibility parameter
+    /// <param name="AAccessibility">
+    /// The AAccessibility parameter
     /// </param>
-    procedure SetAccessibility(accessibility: Integer);
+    procedure SetAccessibility(AAccessibility: NativeInt);
     /// <summary>
     /// Report accessibility status.
     /// </summary>
     /// <returns>
     /// Returns the accessibility
     /// </returns>
-    function GetAccessibility(): Integer;
+    function GetAccessibility(): NativeInt;
     /// <summary>
     /// Move caret down one line.
     /// </summary>
@@ -3871,77 +3866,77 @@ uses
     /// <summary>
     /// How many characters are on a line, including end of line characters?
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function LineLength(line: Integer): Integer;
+    function LineLength(ALine: TSciLine): TSciPosition;
     /// <summary>
     /// Highlight the characters at two positions.
     /// </summary>
-    /// <param name="posA">
+    /// <param name="APosA">
     /// Position in the document
     /// </param>
-    /// <param name="posB">
+    /// <param name="APosB">
     /// Position in the document
     /// </param>
-    procedure BraceHighlight(posA: Integer; posB: Integer);
+    procedure BraceHighlight(APosA: TSciPosition; APosB: TSciPosition);
     /// <summary>
     /// Use specified indicator to highlight matching braces instead of changing their style.
     /// </summary>
-    /// <param name="useSetting">
+    /// <param name="AUseSetting">
     /// Boolean value
     /// </param>
-    /// <param name="indicator">
+    /// <param name="AIndicator">
     /// Integer value
     /// </param>
-    procedure BraceHighlightIndicator(useSetting: Boolean; indicator: Integer);
+    procedure BraceHighlightIndicator(AUseSetting: Boolean; AIndicator: Integer);
     /// <summary>
     /// Highlight the character at a position indicating there is no matching brace.
     /// </summary>
-    /// <param name="pos">
+    /// <param name="APos">
     /// Position in the document
     /// </param>
-    procedure BraceBadLight(pos: Integer);
+    procedure BraceBadLight(APos: TSciPosition);
     /// <summary>
     /// Use specified indicator to highlight non matching brace instead of changing its style.
     /// </summary>
-    /// <param name="useSetting">
+    /// <param name="AUseSetting">
     /// Boolean value
     /// </param>
-    /// <param name="indicator">
+    /// <param name="AIndicator">
     /// Integer value
     /// </param>
-    procedure BraceBadLightIndicator(useSetting: Boolean; indicator: Integer);
+    procedure BraceBadLightIndicator(AUseSetting: Boolean; AIndicator: Integer);
     /// <summary>
     /// Find the position of a matching brace or INVALID_POSITION if no match.
     /// The maxReStyle must be 0 for now. It may be defined in a future release.
     /// </summary>
-    /// <param name="pos">
+    /// <param name="APos">
     /// Position in the document
     /// </param>
-    /// <param name="maxReStyle">
+    /// <param name="AMaxReStyle">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function BraceMatch(pos: Integer; maxReStyle: Integer): Integer;
+    function BraceMatch(APos: TSciPosition; AMaxReStyle: Integer): TSciPosition;
     /// <summary>
     /// Similar to BraceMatch, but matching starts at the explicit start position.
     /// </summary>
-    /// <param name="pos">
+    /// <param name="APos">
     /// Position in the document
     /// </param>
-    /// <param name="startPos">
+    /// <param name="AStartPos">
     /// Position in the document
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function BraceMatchNext(pos: Integer; startPos: Integer): Integer;
+    function BraceMatchNext(APos: TSciPosition; AStartPos: TSciPosition): TSciPosition;
     /// <summary>
     /// Are the end of line characters visible?
     /// </summary>
@@ -3952,10 +3947,10 @@ uses
     /// <summary>
     /// Make the end of line characters visible or invisible.
     /// </summary>
-    /// <param name="visible">
+    /// <param name="AVisible">
     /// Boolean value
     /// </param>
-    procedure SetViewEOL(visible: Boolean);
+    procedure SetViewEOL(AVisible: Boolean);
     /// <summary>
     /// Retrieve a pointer to the document object.
     /// </summary>
@@ -3966,47 +3961,47 @@ uses
     /// <summary>
     /// Change the document object used.
     /// </summary>
-    /// <param name="doc">
-    /// The doc parameter
+    /// <param name="ADoc">
+    /// The ADoc parameter
     /// </param>
-    procedure SetDocPointer(doc: Pointer);
+    procedure SetDocPointer(ADoc: Pointer);
     /// <summary>
     /// Set which document modification events are sent to the container.
     /// </summary>
-    /// <param name="eventMask">
-    /// The eventMask parameter
+    /// <param name="AEventMask">
+    /// The AEventMask parameter
     /// </param>
-    procedure SetModEventMask(eventMask: Integer);
+    procedure SetModEventMask(AEventMask: NativeInt);
     /// <summary>
     /// Retrieve the column number which text should be kept within.
     /// </summary>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetEdgeColumn(): Integer;
+    function GetEdgeColumn(): TSciPosition;
     /// <summary>
     /// Set the column number of the edge.
     /// If text goes past the edge then it is highlighted.
     /// </summary>
-    /// <param name="column">
+    /// <param name="AColumn">
     /// Position in the document
     /// </param>
-    procedure SetEdgeColumn(column: Integer);
+    procedure SetEdgeColumn(AColumn: TSciPosition);
     /// <summary>
     /// Retrieve the edge highlight mode.
     /// </summary>
     /// <returns>
     /// Returns the edgemode
     /// </returns>
-    function GetEdgeMode(): Integer;
+    function GetEdgeMode(): NativeInt;
     /// <summary>
     /// The edge may be displayed by a line (EDGE_LINE/EDGE_MULTILINE) or by highlighting text that
     /// goes beyond it (EDGE_BACKGROUND) or not displayed at all (EDGE_NONE).
     /// </summary>
-    /// <param name="edgeMode">
-    /// The edgeMode parameter
+    /// <param name="AEdgeMode">
+    /// The AEdgeMode parameter
     /// </param>
-    procedure SetEdgeMode(edgeMode: Integer);
+    procedure SetEdgeMode(AEdgeMode: NativeInt);
     /// <summary>
     /// Retrieve the colour used in edge indication.
     /// </summary>
@@ -4017,20 +4012,20 @@ uses
     /// <summary>
     /// Change the colour used in edge indication.
     /// </summary>
-    /// <param name="edgeColour">
+    /// <param name="AEdgeColour">
     /// Color value
     /// </param>
-    procedure SetEdgeColour(edgeColour: TColor);
+    procedure SetEdgeColour(AEdgeColour: TColor);
     /// <summary>
     /// Add a new vertical edge to the view.
     /// </summary>
-    /// <param name="column">
+    /// <param name="AColumn">
     /// Position in the document
     /// </param>
-    /// <param name="edgeColour">
+    /// <param name="AEdgeColour">
     /// Color value
     /// </param>
-    procedure MultiEdgeAddLine(column: Integer; edgeColour: TColor);
+    procedure MultiEdgeAddLine(AColumn: TSciPosition; AEdgeColour: TColor);
     /// <summary>
     /// Clear all vertical edges.
     /// </summary>
@@ -4038,13 +4033,13 @@ uses
     /// <summary>
     /// Get multi edge positions.
     /// </summary>
-    /// <param name="which">
+    /// <param name="AWhich">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetMultiEdgeColumn(which: Integer): Integer;
+    function GetMultiEdgeColumn(AWhich: Integer): TSciPosition;
     /// <summary>
     /// Sets the current caret position to be the search anchor.
     /// </summary>
@@ -4053,45 +4048,45 @@ uses
     /// Find some text starting at the search anchor.
     /// Does not ensure the selection is visible.
     /// </summary>
-    /// <param name="searchFlags">
-    /// The searchFlags parameter
+    /// <param name="ASearchFlags">
+    /// The ASearchFlags parameter
     /// </param>
-    /// <param name="text">
+    /// <param name="AText">
     /// Text string
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function SearchNext(searchFlags: Integer; text: PAnsiChar): Integer;
+    function SearchNext(ASearchFlags: NativeInt; AText: PAnsiChar): TSciPosition;
     /// <summary>
     /// Find some text starting at the search anchor and moving backwards.
     /// Does not ensure the selection is visible.
     /// </summary>
-    /// <param name="searchFlags">
-    /// The searchFlags parameter
+    /// <param name="ASearchFlags">
+    /// The ASearchFlags parameter
     /// </param>
-    /// <param name="text">
+    /// <param name="AText">
     /// Text string
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function SearchPrev(searchFlags: Integer; text: PAnsiChar): Integer;
+    function SearchPrev(ASearchFlags: NativeInt; AText: PAnsiChar): TSciPosition;
     /// <summary>
     /// Retrieves the number of lines completely visible.
     /// </summary>
     /// <returns>
     /// Returns the line number
     /// </returns>
-    function LinesOnScreen(): Integer;
+    function LinesOnScreen(): TSciLine;
     /// <summary>
     /// Set whether a pop up menu is displayed automatically when the user presses
     /// the wrong mouse button on certain areas.
     /// </summary>
-    /// <param name="popUpMode">
-    /// The popUpMode parameter
+    /// <param name="APopUpMode">
+    /// The APopUpMode parameter
     /// </param>
-    procedure UsePopUp(popUpMode: Integer);
+    procedure UsePopUp(APopUpMode: NativeInt);
     /// <summary>
     /// Is the selection rectangular? The alternative is the more common stream selection.
     /// </summary>
@@ -4103,10 +4098,10 @@ uses
     /// Set the zoom level. This number of points is added to the size of all fonts.
     /// It may be positive to magnify or negative to reduce.
     /// </summary>
-    /// <param name="zoomInPoints">
+    /// <param name="AZoomInPoints">
     /// Integer value
     /// </param>
-    procedure SetZoom(zoomInPoints: Integer);
+    procedure SetZoom(AZoomInPoints: Integer);
     /// <summary>
     /// Retrieve the zoom level.
     /// </summary>
@@ -4118,51 +4113,51 @@ uses
     /// Create a new document object.
     /// Starts with reference count of 1 and not selected into editor.
     /// </summary>
-    /// <param name="bytes">
+    /// <param name="ABytes">
     /// Position in the document
     /// </param>
-    /// <param name="documentOptions">
-    /// The documentOptions parameter
+    /// <param name="ADocumentOptions">
+    /// The ADocumentOptions parameter
     /// </param>
     /// <returns>
     /// Returns the result
     /// </returns>
-    function CreateDocument(bytes: Integer; documentOptions: Integer): Pointer;
+    function CreateDocument(ABytes: TSciPosition; ADocumentOptions: NativeInt): Pointer;
     /// <summary>
     /// Extend life of document.
     /// </summary>
-    /// <param name="doc">
-    /// The doc parameter
+    /// <param name="ADoc">
+    /// The ADoc parameter
     /// </param>
-    procedure AddRefDocument(doc: Pointer);
+    procedure AddRefDocument(ADoc: Pointer);
     /// <summary>
     /// Release a reference to the document, deleting document if it fades to black.
     /// </summary>
-    /// <param name="doc">
-    /// The doc parameter
+    /// <param name="ADoc">
+    /// The ADoc parameter
     /// </param>
-    procedure ReleaseDocument(doc: Pointer);
+    procedure ReleaseDocument(ADoc: Pointer);
     /// <summary>
     /// Get which document options are set.
     /// </summary>
     /// <returns>
     /// Returns the documentoptions
     /// </returns>
-    function GetDocumentOptions(): Integer;
+    function GetDocumentOptions(): NativeInt;
     /// <summary>
     /// Get which document modification events are sent to the container.
     /// </summary>
     /// <returns>
     /// Returns the modeventmask
     /// </returns>
-    function GetModEventMask(): Integer;
+    function GetModEventMask(): NativeInt;
     /// <summary>
     /// Set whether command events are sent to the container.
     /// </summary>
-    /// <param name="commandEvents">
+    /// <param name="ACommandEvents">
     /// Boolean value
     /// </param>
-    procedure SetCommandEvents(commandEvents: Boolean);
+    procedure SetCommandEvents(ACommandEvents: Boolean);
     /// <summary>
     /// Get whether command events are sent to the container.
     /// </summary>
@@ -4173,10 +4168,10 @@ uses
     /// <summary>
     /// Change internal focus flag.
     /// </summary>
-    /// <param name="focus">
+    /// <param name="AFocus">
     /// Boolean value
     /// </param>
-    procedure SetFocus(focus: Boolean);
+    procedure SetFocus(AFocus: Boolean);
     /// <summary>
     /// Get internal focus flag.
     /// </summary>
@@ -4187,24 +4182,24 @@ uses
     /// <summary>
     /// Change error status - 0 = OK.
     /// </summary>
-    /// <param name="status">
-    /// The status parameter
+    /// <param name="AStatus">
+    /// The AStatus parameter
     /// </param>
-    procedure SetStatus(status: Integer);
+    procedure SetStatus(AStatus: NativeInt);
     /// <summary>
     /// Get error status.
     /// </summary>
     /// <returns>
     /// Returns the status
     /// </returns>
-    function GetStatus(): Integer;
+    function GetStatus(): NativeInt;
     /// <summary>
     /// Set whether the mouse is captured when its button is pressed.
     /// </summary>
-    /// <param name="captures">
+    /// <param name="ACaptures">
     /// Boolean value
     /// </param>
-    procedure SetMouseDownCaptures(captures: Boolean);
+    procedure SetMouseDownCaptures(ACaptures: Boolean);
     /// <summary>
     /// Get whether mouse gets captured.
     /// </summary>
@@ -4215,10 +4210,10 @@ uses
     /// <summary>
     /// Set whether the mouse wheel can be active outside the window.
     /// </summary>
-    /// <param name="captures">
+    /// <param name="ACaptures">
     /// Boolean value
     /// </param>
-    procedure SetMouseWheelCaptures(captures: Boolean);
+    procedure SetMouseWheelCaptures(ACaptures: Boolean);
     /// <summary>
     /// Get whether mouse wheel can be active outside the window.
     /// </summary>
@@ -4229,25 +4224,25 @@ uses
     /// <summary>
     /// Sets the cursor to one of the SC_CURSOR* values.
     /// </summary>
-    /// <param name="cursorType">
-    /// The cursorType parameter
+    /// <param name="ACursorType">
+    /// The ACursorType parameter
     /// </param>
-    procedure SetCursor(cursorType: Integer);
+    procedure SetCursor(ACursorType: NativeInt);
     /// <summary>
     /// Get cursor type.
     /// </summary>
     /// <returns>
     /// Returns the cursor
     /// </returns>
-    function GetCursor(): Integer;
+    function GetCursor(): NativeInt;
     /// <summary>
     /// Change the way control characters are displayed:
     /// If symbol is < 32, keep the drawn way, else, use the given character.
     /// </summary>
-    /// <param name="symbol">
+    /// <param name="ASymbol">
     /// Integer value
     /// </param>
-    procedure SetControlCharSymbol(symbol: Integer);
+    procedure SetControlCharSymbol(ASymbol: Integer);
     /// <summary>
     /// Get the way control characters are displayed.
     /// </summary>
@@ -4277,13 +4272,13 @@ uses
     /// Set the way the display area is determined when a particular line
     /// is to be moved to by Find, FindNext, GotoLine, etc.
     /// </summary>
-    /// <param name="visiblePolicy">
-    /// The visiblePolicy parameter
+    /// <param name="AVisiblePolicy">
+    /// The AVisiblePolicy parameter
     /// </param>
-    /// <param name="visibleSlop">
+    /// <param name="AVisibleSlop">
     /// Integer value
     /// </param>
-    procedure SetVisiblePolicy(visiblePolicy: Integer; visibleSlop: Integer);
+    procedure SetVisiblePolicy(AVisiblePolicy: NativeInt; AVisibleSlop: Integer);
     /// <summary>
     /// Delete back from the current position to the start of the line.
     /// </summary>
@@ -4295,10 +4290,10 @@ uses
     /// <summary>
     /// Set the xOffset (ie, horizontal scroll position).
     /// </summary>
-    /// <param name="xOffset">
+    /// <param name="AXOffset">
     /// Integer value
     /// </param>
-    procedure SetXOffset(xOffset: Integer);
+    procedure SetXOffset(AXOffset: Integer);
     /// <summary>
     /// Get the xOffset (ie, horizontal scroll position).
     /// </summary>
@@ -4318,48 +4313,48 @@ uses
     /// Set the way the caret is kept visible when going sideways.
     /// The exclusion zone is given in pixels.
     /// </summary>
-    /// <param name="caretPolicy">
-    /// The caretPolicy parameter
+    /// <param name="ACaretPolicy">
+    /// The ACaretPolicy parameter
     /// </param>
-    /// <param name="caretSlop">
+    /// <param name="ACaretSlop">
     /// Integer value
     /// </param>
-    procedure SetXCaretPolicy(caretPolicy: Integer; caretSlop: Integer);
+    procedure SetXCaretPolicy(ACaretPolicy: NativeInt; ACaretSlop: Integer);
     /// <summary>
     /// Set the way the line the caret is on is kept visible.
     /// The exclusion zone is given in lines.
     /// </summary>
-    /// <param name="caretPolicy">
-    /// The caretPolicy parameter
+    /// <param name="ACaretPolicy">
+    /// The ACaretPolicy parameter
     /// </param>
-    /// <param name="caretSlop">
+    /// <param name="ACaretSlop">
     /// Integer value
     /// </param>
-    procedure SetYCaretPolicy(caretPolicy: Integer; caretSlop: Integer);
+    procedure SetYCaretPolicy(ACaretPolicy: NativeInt; ACaretSlop: Integer);
     /// <summary>
     /// Set printing to line wrapped (SC_WRAP_WORD) or not line wrapped (SC_WRAP_NONE).
     /// </summary>
-    /// <param name="wrapMode">
-    /// The wrapMode parameter
+    /// <param name="AWrapMode">
+    /// The AWrapMode parameter
     /// </param>
-    procedure SetPrintWrapMode(wrapMode: Integer);
+    procedure SetPrintWrapMode(AWrapMode: NativeInt);
     /// <summary>
     /// Is printing line wrapped?
     /// </summary>
     /// <returns>
     /// Returns the printwrapmode
     /// </returns>
-    function GetPrintWrapMode(): Integer;
+    function GetPrintWrapMode(): NativeInt;
     /// <summary>
     /// Set a fore colour for active hotspots.
     /// </summary>
-    /// <param name="useSetting">
+    /// <param name="AUseSetting">
     /// Boolean value
     /// </param>
-    /// <param name="fore">
+    /// <param name="AFore">
     /// Color value
     /// </param>
-    procedure SetHotspotActiveFore(useSetting: Boolean; fore: TColor);
+    procedure SetHotspotActiveFore(AUseSetting: Boolean; AFore: TColor);
     /// <summary>
     /// Get the fore colour for active hotspots.
     /// </summary>
@@ -4370,13 +4365,13 @@ uses
     /// <summary>
     /// Set a back colour for active hotspots.
     /// </summary>
-    /// <param name="useSetting">
+    /// <param name="AUseSetting">
     /// Boolean value
     /// </param>
-    /// <param name="back">
+    /// <param name="ABack">
     /// Color value
     /// </param>
-    procedure SetHotspotActiveBack(useSetting: Boolean; back: TColor);
+    procedure SetHotspotActiveBack(AUseSetting: Boolean; ABack: TColor);
     /// <summary>
     /// Get the back colour for active hotspots.
     /// </summary>
@@ -4387,10 +4382,10 @@ uses
     /// <summary>
     /// Enable / Disable underlining active hotspots.
     /// </summary>
-    /// <param name="underline">
+    /// <param name="AUnderline">
     /// Boolean value
     /// </param>
-    procedure SetHotspotActiveUnderline(underline: Boolean);
+    procedure SetHotspotActiveUnderline(AUnderline: Boolean);
     /// <summary>
     /// Get whether underlining for active hotspots.
     /// </summary>
@@ -4401,10 +4396,10 @@ uses
     /// <summary>
     /// Limit hotspots to single line so hotspots on two lines don't merge.
     /// </summary>
-    /// <param name="singleLine">
+    /// <param name="ASingleLine">
     /// Boolean value
     /// </param>
-    procedure SetHotspotSingleLine(singleLine: Boolean);
+    procedure SetHotspotSingleLine(ASingleLine: Boolean);
     /// <summary>
     /// Get the HotspotSingleLine property
     /// </summary>
@@ -4432,103 +4427,103 @@ uses
     /// Given a valid document position, return the previous position taking code
     /// page into account. Returns 0 if passed 0.
     /// </summary>
-    /// <param name="pos">
+    /// <param name="APos">
     /// Position in the document
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function PositionBefore(pos: Integer): Integer;
+    function PositionBefore(APos: TSciPosition): TSciPosition;
     /// <summary>
     /// Given a valid document position, return the next position taking code
     /// page into account. Maximum value returned is the last position in the document.
     /// </summary>
-    /// <param name="pos">
+    /// <param name="APos">
     /// Position in the document
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function PositionAfter(pos: Integer): Integer;
+    function PositionAfter(APos: TSciPosition): TSciPosition;
     /// <summary>
     /// Given a valid document position, return a position that differs in a number
     /// of characters. Returned value is always between 0 and last position in document.
     /// </summary>
-    /// <param name="pos">
+    /// <param name="APos">
     /// Position in the document
     /// </param>
-    /// <param name="relative">
+    /// <param name="ARelative">
     /// Position in the document
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function PositionRelative(pos: Integer; relative: Integer): Integer;
+    function PositionRelative(APos: TSciPosition; ARelative: TSciPosition): TSciPosition;
     /// <summary>
     /// Given a valid document position, return a position that differs in a number
     /// of UTF-16 code units. Returned value is always between 0 and last position in document.
     /// The result may point half way (2 bytes) inside a non-BMP character.
     /// </summary>
-    /// <param name="pos">
+    /// <param name="APos">
     /// Position in the document
     /// </param>
-    /// <param name="relative">
+    /// <param name="ARelative">
     /// Position in the document
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function PositionRelativeCodeUnits(pos: Integer; relative: Integer): Integer;
+    function PositionRelativeCodeUnits(APos: TSciPosition; ARelative: TSciPosition): TSciPosition;
     /// <summary>
     /// Copy a range of text to the clipboard. Positions are clipped into the document.
     /// </summary>
-    /// <param name="start">
+    /// <param name="AStart">
     /// Position in the document
     /// </param>
-    /// <param name="end">
+    /// <param name="AEnd">
     /// Position in the document
     /// </param>
-    procedure CopyRange(start: Integer; end: Integer);
+    procedure CopyRange(AStart: TSciPosition; AEnd: TSciPosition);
     /// <summary>
     /// Copy argument text to the clipboard.
     /// </summary>
-    /// <param name="length">
+    /// <param name="ALength">
     /// Position in the document
     /// </param>
-    /// <param name="text">
+    /// <param name="AText">
     /// Text string
     /// </param>
-    procedure CopyText(length: Integer; text: PAnsiChar);
+    procedure CopyText(ALength: TSciPosition; AText: PAnsiChar);
     /// <summary>
     /// Set the selection mode to stream (SC_SEL_STREAM) or rectangular (SC_SEL_RECTANGLE/SC_SEL_THIN) or
     /// by lines (SC_SEL_LINES).
     /// </summary>
-    /// <param name="selectionMode">
-    /// The selectionMode parameter
+    /// <param name="ASelectionMode">
+    /// The ASelectionMode parameter
     /// </param>
-    procedure SetSelectionMode(selectionMode: Integer);
+    procedure SetSelectionMode(ASelectionMode: NativeInt);
     /// <summary>
     /// Set the selection mode to stream (SC_SEL_STREAM) or rectangular (SC_SEL_RECTANGLE/SC_SEL_THIN) or
     /// by lines (SC_SEL_LINES) without changing MoveExtendsSelection.
     /// </summary>
-    /// <param name="selectionMode">
-    /// The selectionMode parameter
+    /// <param name="ASelectionMode">
+    /// The ASelectionMode parameter
     /// </param>
-    procedure ChangeSelectionMode(selectionMode: Integer);
+    procedure ChangeSelectionMode(ASelectionMode: NativeInt);
     /// <summary>
     /// Get the mode of the current selection.
     /// </summary>
     /// <returns>
     /// Returns the selectionmode
     /// </returns>
-    function GetSelectionMode(): Integer;
+    function GetSelectionMode(): NativeInt;
     /// <summary>
     /// Set whether or not regular caret moves will extend or reduce the selection.
     /// </summary>
-    /// <param name="moveExtendsSelection">
+    /// <param name="AMoveExtendsSelection">
     /// Boolean value
     /// </param>
-    procedure SetMoveExtendsSelection(moveExtendsSelection: Boolean);
+    procedure SetMoveExtendsSelection(AMoveExtendsSelection: Boolean);
     /// <summary>
     /// Get whether or not regular caret moves will extend or reduce the selection.
     /// </summary>
@@ -4539,23 +4534,23 @@ uses
     /// <summary>
     /// Retrieve the position of the start of the selection at the given line (INVALID_POSITION if no selection on this line).
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetLineSelStartPosition(line: Integer): Integer;
+    function GetLineSelStartPosition(ALine: TSciLine): TSciPosition;
     /// <summary>
     /// Retrieve the position of the end of the selection at the given line (INVALID_POSITION if no selection on this line).
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetLineSelEndPosition(line: Integer): Integer;
+    function GetLineSelEndPosition(ALine: TSciLine): TSciPosition;
     /// <summary>
     /// Move caret down one line, extending rectangular selection to new caret position.
     /// </summary>
@@ -4630,38 +4625,38 @@ uses
     /// Set the set of characters making up whitespace for when moving or selecting by word.
     /// Should be called after SetWordChars.
     /// </summary>
-    /// <param name="characters">
+    /// <param name="ACharacters">
     /// Text string
     /// </param>
-    procedure SetWhitespaceChars(characters: PAnsiChar);
+    procedure SetWhitespaceChars(ACharacters: PAnsiChar);
     /// <summary>
     /// Get the set of characters making up whitespace for when moving or selecting by word.
     /// </summary>
-    /// <param name="characters">
+    /// <param name="ACharacters">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function GetWhitespaceChars(characters: PAnsiChar): Integer;
+    function GetWhitespaceChars(ACharacters: PAnsiChar): Integer;
     /// <summary>
     /// Set the set of characters making up punctuation characters
     /// Should be called after SetWordChars.
     /// </summary>
-    /// <param name="characters">
+    /// <param name="ACharacters">
     /// Text string
     /// </param>
-    procedure SetPunctuationChars(characters: PAnsiChar);
+    procedure SetPunctuationChars(ACharacters: PAnsiChar);
     /// <summary>
     /// Get the set of characters making up punctuation characters
     /// </summary>
-    /// <param name="characters">
+    /// <param name="ACharacters">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function GetPunctuationChars(characters: PAnsiChar): Integer;
+    function GetPunctuationChars(ACharacters: PAnsiChar): Integer;
     /// <summary>
     /// Reset the set of characters for whitespace and word characters to the defaults.
     /// </summary>
@@ -4678,124 +4673,124 @@ uses
     /// Returns the length of the item text
     /// Result is NUL-terminated.
     /// </summary>
-    /// <param name="text">
+    /// <param name="AText">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function AutoCGetCurrentText(text: PAnsiChar): Integer;
+    function AutoCGetCurrentText(AText: PAnsiChar): Integer;
     /// <summary>
     /// Set auto-completion case insensitive behaviour to either prefer case-sensitive matches or have no preference.
     /// </summary>
-    /// <param name="behaviour">
-    /// The behaviour parameter
+    /// <param name="ABehaviour">
+    /// The ABehaviour parameter
     /// </param>
-    procedure AutoCSetCaseInsensitiveBehaviour(behaviour: Integer);
+    procedure AutoCSetCaseInsensitiveBehaviour(ABehaviour: NativeInt);
     /// <summary>
     /// Get auto-completion case insensitive behaviour.
     /// </summary>
     /// <returns>
     /// Returns the value
     /// </returns>
-    function AutoCGetCaseInsensitiveBehaviour(): Integer;
+    function AutoCGetCaseInsensitiveBehaviour(): NativeInt;
     /// <summary>
     /// Change the effect of autocompleting when there are multiple selections.
     /// </summary>
-    /// <param name="multi">
-    /// The multi parameter
+    /// <param name="AMulti">
+    /// The AMulti parameter
     /// </param>
-    procedure AutoCSetMulti(multi: Integer);
+    procedure AutoCSetMulti(AMulti: NativeInt);
     /// <summary>
     /// Retrieve the effect of autocompleting when there are multiple selections.
     /// </summary>
     /// <returns>
     /// Returns the value
     /// </returns>
-    function AutoCGetMulti(): Integer;
+    function AutoCGetMulti(): NativeInt;
     /// <summary>
     /// Set the way autocompletion lists are ordered.
     /// </summary>
-    /// <param name="order">
-    /// The order parameter
+    /// <param name="AOrder">
+    /// The AOrder parameter
     /// </param>
-    procedure AutoCSetOrder(order: Integer);
+    procedure AutoCSetOrder(AOrder: NativeInt);
     /// <summary>
     /// Get the way autocompletion lists are ordered.
     /// </summary>
     /// <returns>
     /// Returns the value
     /// </returns>
-    function AutoCGetOrder(): Integer;
+    function AutoCGetOrder(): NativeInt;
     /// <summary>
     /// Enlarge the document to a particular size of text bytes.
     /// </summary>
-    /// <param name="bytes">
+    /// <param name="ABytes">
     /// Position in the document
     /// </param>
-    procedure Allocate(bytes: Integer);
+    procedure Allocate(ABytes: TSciPosition);
     /// <summary>
     /// Returns the target converted to UTF8.
     /// Return the length in bytes.
     /// </summary>
-    /// <param name="s">
+    /// <param name="S">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function TargetAsUTF8(s: PAnsiChar): Integer;
+    function TargetAsUTF8(S: PAnsiChar): TSciPosition;
     /// <summary>
     /// Set the length of the utf8 argument for calling EncodedFromUTF8.
     /// Set to -1 and the string will be measured to the first nul.
     /// </summary>
-    /// <param name="bytes">
+    /// <param name="ABytes">
     /// Position in the document
     /// </param>
-    procedure SetLengthForEncode(bytes: Integer);
+    procedure SetLengthForEncode(ABytes: TSciPosition);
     /// <summary>
     /// Translates a UTF8 string into the document encoding.
     /// Return the length of the result in bytes.
     /// On error return 0.
     /// </summary>
-    /// <param name="utf8">
+    /// <param name="AUtf8">
     /// Text string
     /// </param>
-    /// <param name="encoded">
+    /// <param name="AEncoded">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function EncodedFromUTF8(utf8: PAnsiChar; encoded: PAnsiChar): Integer;
+    function EncodedFromUTF8(AUtf8: PAnsiChar; AEncoded: PAnsiChar): TSciPosition;
     /// <summary>
     /// Find the position of a column on a line taking into account tabs and
     /// multi-byte characters. If beyond end of line, return line end position.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="column">
+    /// <param name="AColumn">
     /// Position in the document
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function FindColumn(line: Integer; column: Integer): Integer;
+    function FindColumn(ALine: TSciLine; AColumn: TSciPosition): TSciPosition;
     /// <summary>
     /// Can the caret preferred x position only be changed by explicit movement commands?
     /// </summary>
     /// <returns>
     /// Returns the caretsticky
     /// </returns>
-    function GetCaretSticky(): Integer;
+    function GetCaretSticky(): NativeInt;
     /// <summary>
     /// Stop the caret preferred x position changing when the user types.
     /// </summary>
-    /// <param name="useCaretStickyBehaviour">
-    /// The useCaretStickyBehaviour parameter
+    /// <param name="AUseCaretStickyBehaviour">
+    /// The AUseCaretStickyBehaviour parameter
     /// </param>
-    procedure SetCaretSticky(useCaretStickyBehaviour: Integer);
+    procedure SetCaretSticky(AUseCaretStickyBehaviour: NativeInt);
     /// <summary>
     /// Switch between sticky and non-sticky: meant to be bound to a key.
     /// </summary>
@@ -4803,10 +4798,10 @@ uses
     /// <summary>
     /// Enable/Disable convert-on-paste for line endings
     /// </summary>
-    /// <param name="convert">
+    /// <param name="AConvert">
     /// Boolean value
     /// </param>
-    procedure SetPasteConvertEndings(convert: Boolean);
+    procedure SetPasteConvertEndings(AConvert: Boolean);
     /// <summary>
     /// Get convert-on-paste setting
     /// </summary>
@@ -4817,13 +4812,13 @@ uses
     /// <summary>
     /// Replace the selection with text like a rectangular paste.
     /// </summary>
-    /// <param name="length">
+    /// <param name="ALength">
     /// Position in the document
     /// </param>
-    /// <param name="text">
+    /// <param name="AText">
     /// Text string
     /// </param>
-    procedure ReplaceRectangular(length: Integer; text: PAnsiChar);
+    procedure ReplaceRectangular(ALength: TSciPosition; AText: PAnsiChar);
     /// <summary>
     /// Duplicate the selection. If selection empty duplicate the line containing the caret.
     /// </summary>
@@ -4831,38 +4826,38 @@ uses
     /// <summary>
     /// Set background alpha of the caret line.
     /// </summary>
-    /// <param name="alpha">
-    /// The alpha parameter
+    /// <param name="AAlpha">
+    /// The AAlpha parameter
     /// </param>
-    procedure SetCaretLineBackAlpha(alpha: Integer);
+    procedure SetCaretLineBackAlpha(AAlpha: NativeInt);
     /// <summary>
     /// Get the background alpha of the caret line.
     /// </summary>
     /// <returns>
     /// Returns the caretlinebackalpha
     /// </returns>
-    function GetCaretLineBackAlpha(): Integer;
+    function GetCaretLineBackAlpha(): NativeInt;
     /// <summary>
     /// Set the style of the caret to be drawn.
     /// </summary>
-    /// <param name="caretStyle">
-    /// The caretStyle parameter
+    /// <param name="ACaretStyle">
+    /// The ACaretStyle parameter
     /// </param>
-    procedure SetCaretStyle(caretStyle: Integer);
+    procedure SetCaretStyle(ACaretStyle: NativeInt);
     /// <summary>
     /// Returns the current style of the caret.
     /// </summary>
     /// <returns>
     /// Returns the caretstyle
     /// </returns>
-    function GetCaretStyle(): Integer;
+    function GetCaretStyle(): NativeInt;
     /// <summary>
     /// Set the indicator used for IndicatorFillRange and IndicatorClearRange
     /// </summary>
-    /// <param name="indicator">
+    /// <param name="AIndicator">
     /// Integer value
     /// </param>
-    procedure SetIndicatorCurrent(indicator: Integer);
+    procedure SetIndicatorCurrent(AIndicator: Integer);
     /// <summary>
     /// Get the current indicator
     /// </summary>
@@ -4873,10 +4868,10 @@ uses
     /// <summary>
     /// Set the value used for IndicatorFillRange
     /// </summary>
-    /// <param name="value">
+    /// <param name="AValue">
     /// Integer value
     /// </param>
-    procedure SetIndicatorValue(value: Integer);
+    procedure SetIndicatorValue(AValue: Integer);
     /// <summary>
     /// Get the current indicator value
     /// </summary>
@@ -4887,79 +4882,79 @@ uses
     /// <summary>
     /// Turn a indicator on over a range.
     /// </summary>
-    /// <param name="start">
+    /// <param name="AStart">
     /// Position in the document
     /// </param>
-    /// <param name="lengthFill">
+    /// <param name="ALengthFill">
     /// Position in the document
     /// </param>
-    procedure IndicatorFillRange(start: Integer; lengthFill: Integer);
+    procedure IndicatorFillRange(AStart: TSciPosition; ALengthFill: TSciPosition);
     /// <summary>
     /// Turn a indicator off over a range.
     /// </summary>
-    /// <param name="start">
+    /// <param name="AStart">
     /// Position in the document
     /// </param>
-    /// <param name="lengthClear">
+    /// <param name="ALengthClear">
     /// Position in the document
     /// </param>
-    procedure IndicatorClearRange(start: Integer; lengthClear: Integer);
+    procedure IndicatorClearRange(AStart: TSciPosition; ALengthClear: TSciPosition);
     /// <summary>
     /// Are any indicators present at pos?
     /// </summary>
-    /// <param name="pos">
+    /// <param name="APos">
     /// Position in the document
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function IndicatorAllOnFor(pos: Integer): Integer;
+    function IndicatorAllOnFor(APos: TSciPosition): Integer;
     /// <summary>
     /// What value does a particular indicator have at a position?
     /// </summary>
-    /// <param name="indicator">
+    /// <param name="AIndicator">
     /// Integer value
     /// </param>
-    /// <param name="pos">
+    /// <param name="APos">
     /// Position in the document
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function IndicatorValueAt(indicator: Integer; pos: Integer): Integer;
+    function IndicatorValueAt(AIndicator: Integer; APos: TSciPosition): Integer;
     /// <summary>
     /// Where does a particular indicator start?
     /// </summary>
-    /// <param name="indicator">
+    /// <param name="AIndicator">
     /// Integer value
     /// </param>
-    /// <param name="pos">
+    /// <param name="APos">
     /// Position in the document
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function IndicatorStart(indicator: Integer; pos: Integer): Integer;
+    function IndicatorStart(AIndicator: Integer; APos: TSciPosition): TSciPosition;
     /// <summary>
     /// Where does a particular indicator end?
     /// </summary>
-    /// <param name="indicator">
+    /// <param name="AIndicator">
     /// Integer value
     /// </param>
-    /// <param name="pos">
+    /// <param name="APos">
     /// Position in the document
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function IndicatorEnd(indicator: Integer; pos: Integer): Integer;
+    function IndicatorEnd(AIndicator: Integer; APos: TSciPosition): TSciPosition;
     /// <summary>
     /// Set number of entries in position cache
     /// </summary>
-    /// <param name="size">
+    /// <param name="ASize">
     /// Integer value
     /// </param>
-    procedure SetPositionCache(size: Integer);
+    procedure SetPositionCache(ASize: Integer);
     /// <summary>
     /// How many entries are allocated to the position cache?
     /// </summary>
@@ -4970,10 +4965,10 @@ uses
     /// <summary>
     /// Set maximum number of threads used for layout
     /// </summary>
-    /// <param name="threads">
+    /// <param name="AThreads">
     /// Integer value
     /// </param>
-    procedure SetLayoutThreads(threads: Integer);
+    procedure SetLayoutThreads(AThreads: Integer);
     /// <summary>
     /// Get maximum number of threads used for layout
     /// </summary>
@@ -4992,20 +4987,20 @@ uses
     /// <summary>
     /// Set the string to separate parts when copying a multiple selection.
     /// </summary>
-    /// <param name="separator">
+    /// <param name="ASeparator">
     /// Text string
     /// </param>
-    procedure SetCopySeparator(separator: PAnsiChar);
+    procedure SetCopySeparator(ASeparator: PAnsiChar);
     /// <summary>
     /// Get the string to separate parts when copying a multiple selection.
     /// </summary>
-    /// <param name="separator">
+    /// <param name="ASeparator">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function GetCopySeparator(separator: PAnsiChar): Integer;
+    function GetCopySeparator(ASeparator: PAnsiChar): Integer;
     /// <summary>
     /// Compact the document buffer and return a read-only pointer to the
     /// characters in the document.
@@ -5019,16 +5014,16 @@ uses
     /// May move the gap so that the range is contiguous, but will only move up
     /// to lengthRange bytes.
     /// </summary>
-    /// <param name="start">
+    /// <param name="AStart">
     /// Position in the document
     /// </param>
-    /// <param name="lengthRange">
+    /// <param name="ALengthRange">
     /// Position in the document
     /// </param>
     /// <returns>
     /// Returns the rangepointer
     /// </returns>
-    function GetRangePointer(start: Integer; lengthRange: Integer): Pointer;
+    function GetRangePointer(AStart: TSciPosition; ALengthRange: TSciPosition): Pointer;
     /// <summary>
     /// Return a position which, to avoid performance costs, should not be within
     /// the range of a call to GetRangePointer.
@@ -5036,54 +5031,54 @@ uses
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetGapPosition(): Integer;
+    function GetGapPosition(): TSciPosition;
     /// <summary>
     /// Set the alpha fill colour of the given indicator.
     /// </summary>
-    /// <param name="indicator">
+    /// <param name="AIndicator">
     /// Integer value
     /// </param>
-    /// <param name="alpha">
-    /// The alpha parameter
+    /// <param name="AAlpha">
+    /// The AAlpha parameter
     /// </param>
-    procedure IndicSetAlpha(indicator: Integer; alpha: Integer);
+    procedure IndicSetAlpha(AIndicator: Integer; AAlpha: NativeInt);
     /// <summary>
     /// Get the alpha fill colour of the given indicator.
     /// </summary>
-    /// <param name="indicator">
+    /// <param name="AIndicator">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the value
     /// </returns>
-    function IndicGetAlpha(indicator: Integer): Integer;
+    function IndicGetAlpha(AIndicator: Integer): NativeInt;
     /// <summary>
     /// Set the alpha outline colour of the given indicator.
     /// </summary>
-    /// <param name="indicator">
+    /// <param name="AIndicator">
     /// Integer value
     /// </param>
-    /// <param name="alpha">
-    /// The alpha parameter
+    /// <param name="AAlpha">
+    /// The AAlpha parameter
     /// </param>
-    procedure IndicSetOutlineAlpha(indicator: Integer; alpha: Integer);
+    procedure IndicSetOutlineAlpha(AIndicator: Integer; AAlpha: NativeInt);
     /// <summary>
     /// Get the alpha outline colour of the given indicator.
     /// </summary>
-    /// <param name="indicator">
+    /// <param name="AIndicator">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the value
     /// </returns>
-    function IndicGetOutlineAlpha(indicator: Integer): Integer;
+    function IndicGetOutlineAlpha(AIndicator: Integer): NativeInt;
     /// <summary>
     /// Set extra ascent for each line
     /// </summary>
-    /// <param name="extraAscent">
+    /// <param name="AExtraAscent">
     /// Integer value
     /// </param>
-    procedure SetExtraAscent(extraAscent: Integer);
+    procedure SetExtraAscent(AExtraAscent: Integer);
     /// <summary>
     /// Get extra ascent for each line
     /// </summary>
@@ -5094,10 +5089,10 @@ uses
     /// <summary>
     /// Set extra descent for each line
     /// </summary>
-    /// <param name="extraDescent">
+    /// <param name="AExtraDescent">
     /// Integer value
     /// </param>
-    procedure SetExtraDescent(extraDescent: Integer);
+    procedure SetExtraDescent(AExtraDescent: Integer);
     /// <summary>
     /// Get extra descent for each line
     /// </summary>
@@ -5108,79 +5103,79 @@ uses
     /// <summary>
     /// Which symbol was defined for markerNumber with MarkerDefine
     /// </summary>
-    /// <param name="markerNumber">
+    /// <param name="AMarkerNumber">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the result
     /// </returns>
-    function MarkerSymbolDefined(markerNumber: Integer): Integer;
+    function MarkerSymbolDefined(AMarkerNumber: Integer): NativeInt;
     /// <summary>
     /// Set the text in the text margin for a line
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="text">
+    /// <param name="AText">
     /// Text string
     /// </param>
-    procedure MarginSetText(line: Integer; text: PAnsiChar);
+    procedure MarginSetText(ALine: TSciLine; AText: PAnsiChar);
     /// <summary>
     /// Get the text in the text margin for a line
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="text">
+    /// <param name="AText">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function MarginGetText(line: Integer; text: PAnsiChar): Integer;
+    function MarginGetText(ALine: TSciLine; AText: PAnsiChar): Integer;
     /// <summary>
     /// Set the style number for the text margin for a line
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    procedure MarginSetStyle(line: Integer; style: Integer);
+    procedure MarginSetStyle(ALine: TSciLine; AStyle: Integer);
     /// <summary>
     /// Get the style number for the text margin for a line
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function MarginGetStyle(line: Integer): Integer;
+    function MarginGetStyle(ALine: TSciLine): Integer;
     /// <summary>
     /// Set the style in the text margin for a line
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="styles">
+    /// <param name="AStyles">
     /// Text string
     /// </param>
-    procedure MarginSetStyles(line: Integer; styles: PAnsiChar);
+    procedure MarginSetStyles(ALine: TSciLine; AStyles: PAnsiChar);
     /// <summary>
     /// Get the styles in the text margin for a line
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="styles">
+    /// <param name="AStyles">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function MarginGetStyles(line: Integer; styles: PAnsiChar): Integer;
+    function MarginGetStyles(ALine: TSciLine; AStyles: PAnsiChar): Integer;
     /// <summary>
     /// Clear the margin text on all lines
     /// </summary>
@@ -5188,10 +5183,10 @@ uses
     /// <summary>
     /// Get the start of the range of style numbers used for margin text
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    procedure MarginSetStyleOffset(style: Integer);
+    procedure MarginSetStyleOffset(AStyle: Integer);
     /// <summary>
     /// Get the start of the range of style numbers used for margin text
     /// </summary>
@@ -5202,93 +5197,93 @@ uses
     /// <summary>
     /// Set the margin options.
     /// </summary>
-    /// <param name="marginOptions">
-    /// The marginOptions parameter
+    /// <param name="AMarginOptions">
+    /// The AMarginOptions parameter
     /// </param>
-    procedure SetMarginOptions(marginOptions: Integer);
+    procedure SetMarginOptions(AMarginOptions: NativeInt);
     /// <summary>
     /// Get the margin options.
     /// </summary>
     /// <returns>
     /// Returns the marginoptions
     /// </returns>
-    function GetMarginOptions(): Integer;
+    function GetMarginOptions(): NativeInt;
     /// <summary>
     /// Set the annotation text for a line
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="text">
+    /// <param name="AText">
     /// Text string
     /// </param>
-    procedure AnnotationSetText(line: Integer; text: PAnsiChar);
+    procedure AnnotationSetText(ALine: TSciLine; AText: PAnsiChar);
     /// <summary>
     /// Get the annotation text for a line
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="text">
+    /// <param name="AText">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function AnnotationGetText(line: Integer; text: PAnsiChar): Integer;
+    function AnnotationGetText(ALine: TSciLine; AText: PAnsiChar): Integer;
     /// <summary>
     /// Set the style number for the annotations for a line
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    procedure AnnotationSetStyle(line: Integer; style: Integer);
+    procedure AnnotationSetStyle(ALine: TSciLine; AStyle: Integer);
     /// <summary>
     /// Get the style number for the annotations for a line
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function AnnotationGetStyle(line: Integer): Integer;
+    function AnnotationGetStyle(ALine: TSciLine): Integer;
     /// <summary>
     /// Set the annotation styles for a line
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="styles">
+    /// <param name="AStyles">
     /// Text string
     /// </param>
-    procedure AnnotationSetStyles(line: Integer; styles: PAnsiChar);
+    procedure AnnotationSetStyles(ALine: TSciLine; AStyles: PAnsiChar);
     /// <summary>
     /// Get the annotation styles for a line
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="styles">
+    /// <param name="AStyles">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function AnnotationGetStyles(line: Integer; styles: PAnsiChar): Integer;
+    function AnnotationGetStyles(ALine: TSciLine; AStyles: PAnsiChar): Integer;
     /// <summary>
     /// Get the number of annotation lines for a line
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function AnnotationGetLines(line: Integer): Integer;
+    function AnnotationGetLines(ALine: TSciLine): Integer;
     /// <summary>
     /// Clear the annotations from all lines
     /// </summary>
@@ -5296,24 +5291,24 @@ uses
     /// <summary>
     /// Set the visibility for the annotations for a view
     /// </summary>
-    /// <param name="visible">
-    /// The visible parameter
+    /// <param name="AVisible">
+    /// The AVisible parameter
     /// </param>
-    procedure AnnotationSetVisible(visible: Integer);
+    procedure AnnotationSetVisible(AVisible: NativeInt);
     /// <summary>
     /// Get the visibility for the annotations for a view
     /// </summary>
     /// <returns>
     /// Returns the value
     /// </returns>
-    function AnnotationGetVisible(): Integer;
+    function AnnotationGetVisible(): NativeInt;
     /// <summary>
     /// Get the start of the range of style numbers used for annotations
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    procedure AnnotationSetStyleOffset(style: Integer);
+    procedure AnnotationSetStyleOffset(AStyle: Integer);
     /// <summary>
     /// Get the start of the range of style numbers used for annotations
     /// </summary>
@@ -5328,57 +5323,57 @@ uses
     /// <summary>
     /// Allocate some extended (>255) style numbers and return the start of the range
     /// </summary>
-    /// <param name="numberStyles">
+    /// <param name="ANumberStyles">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function AllocateExtendedStyles(numberStyles: Integer): Integer;
+    function AllocateExtendedStyles(ANumberStyles: Integer): Integer;
     /// <summary>
     /// Add a container action to the undo stack
     /// </summary>
-    /// <param name="token">
+    /// <param name="AToken">
     /// Integer value
     /// </param>
-    /// <param name="flags">
-    /// The flags parameter
+    /// <param name="AFlags">
+    /// The AFlags parameter
     /// </param>
-    procedure AddUndoAction(token: Integer; flags: Integer);
+    procedure AddUndoAction(AToken: Integer; AFlags: NativeInt);
     /// <summary>
     /// Find the position of a character from a point within the window.
     /// </summary>
-    /// <param name="x">
+    /// <param name="X">
     /// Integer value
     /// </param>
-    /// <param name="y">
+    /// <param name="Y">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function CharPositionFromPoint(x: Integer; y: Integer): Integer;
+    function CharPositionFromPoint(X: Integer; Y: Integer): TSciPosition;
     /// <summary>
     /// Find the position of a character from a point within the window.
     /// Return INVALID_POSITION if not close to text.
     /// </summary>
-    /// <param name="x">
+    /// <param name="X">
     /// Integer value
     /// </param>
-    /// <param name="y">
+    /// <param name="Y">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function CharPositionFromPointClose(x: Integer; y: Integer): Integer;
+    function CharPositionFromPointClose(X: Integer; Y: Integer): TSciPosition;
     /// <summary>
     /// Set whether switching to rectangular mode while selecting with the mouse is allowed.
     /// </summary>
-    /// <param name="mouseSelectionRectangularSwitch">
+    /// <param name="AMouseSelectionRectangularSwitch">
     /// Boolean value
     /// </param>
-    procedure SetMouseSelectionRectangularSwitch(mouseSelectionRectangularSwitch: Boolean);
+    procedure SetMouseSelectionRectangularSwitch(AMouseSelectionRectangularSwitch: Boolean);
     /// <summary>
     /// Whether switching to rectangular mode while selecting with the mouse is allowed.
     /// </summary>
@@ -5389,10 +5384,10 @@ uses
     /// <summary>
     /// Set whether multiple selections can be made
     /// </summary>
-    /// <param name="multipleSelection">
+    /// <param name="AMultipleSelection">
     /// Boolean value
     /// </param>
-    procedure SetMultipleSelection(multipleSelection: Boolean);
+    procedure SetMultipleSelection(AMultipleSelection: Boolean);
     /// <summary>
     /// Whether multiple selections can be made
     /// </summary>
@@ -5403,10 +5398,10 @@ uses
     /// <summary>
     /// Set whether typing can be performed into multiple selections
     /// </summary>
-    /// <param name="additionalSelectionTyping">
+    /// <param name="AAdditionalSelectionTyping">
     /// Boolean value
     /// </param>
-    procedure SetAdditionalSelectionTyping(additionalSelectionTyping: Boolean);
+    procedure SetAdditionalSelectionTyping(AAdditionalSelectionTyping: Boolean);
     /// <summary>
     /// Whether typing can be performed into multiple selections
     /// </summary>
@@ -5417,10 +5412,10 @@ uses
     /// <summary>
     /// Set whether additional carets will blink
     /// </summary>
-    /// <param name="additionalCaretsBlink">
+    /// <param name="AAdditionalCaretsBlink">
     /// Boolean value
     /// </param>
-    procedure SetAdditionalCaretsBlink(additionalCaretsBlink: Boolean);
+    procedure SetAdditionalCaretsBlink(AAdditionalCaretsBlink: Boolean);
     /// <summary>
     /// Whether additional carets will blink
     /// </summary>
@@ -5431,10 +5426,10 @@ uses
     /// <summary>
     /// Set whether additional carets are visible
     /// </summary>
-    /// <param name="additionalCaretsVisible">
+    /// <param name="AAdditionalCaretsVisible">
     /// Boolean value
     /// </param>
-    procedure SetAdditionalCaretsVisible(additionalCaretsVisible: Boolean);
+    procedure SetAdditionalCaretsVisible(AAdditionalCaretsVisible: Boolean);
     /// <summary>
     /// Whether additional carets are visible
     /// </summary>
@@ -5463,50 +5458,50 @@ uses
     /// <summary>
     /// Set a simple selection
     /// </summary>
-    /// <param name="caret">
+    /// <param name="ACaret">
     /// Position in the document
     /// </param>
-    /// <param name="anchor">
+    /// <param name="AAnchor">
     /// Position in the document
     /// </param>
-    procedure SetSelection(caret: Integer; anchor: Integer);
+    procedure SetSelection(ACaret: TSciPosition; AAnchor: TSciPosition);
     /// <summary>
     /// Add a selection
     /// </summary>
-    /// <param name="caret">
+    /// <param name="ACaret">
     /// Position in the document
     /// </param>
-    /// <param name="anchor">
+    /// <param name="AAnchor">
     /// Position in the document
     /// </param>
-    procedure AddSelection(caret: Integer; anchor: Integer);
+    procedure AddSelection(ACaret: TSciPosition; AAnchor: TSciPosition);
     /// <summary>
     /// Find the selection index for a point. -1 when not at a selection.
     /// </summary>
-    /// <param name="x">
+    /// <param name="X">
     /// Integer value
     /// </param>
-    /// <param name="y">
+    /// <param name="Y">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function SelectionFromPoint(x: Integer; y: Integer): Integer;
+    function SelectionFromPoint(X: Integer; Y: Integer): Integer;
     /// <summary>
     /// Drop one selection
     /// </summary>
-    /// <param name="selection">
+    /// <param name="ASelection">
     /// Integer value
     /// </param>
-    procedure DropSelectionN(selection: Integer);
+    procedure DropSelectionN(ASelection: Integer);
     /// <summary>
     /// Set the main selection
     /// </summary>
-    /// <param name="selection">
+    /// <param name="ASelection">
     /// Integer value
     /// </param>
-    procedure SetMainSelection(selection: Integer);
+    procedure SetMainSelection(ASelection: Integer);
     /// <summary>
     /// Which selection is the main selection
     /// </summary>
@@ -5517,223 +5512,223 @@ uses
     /// <summary>
     /// Set the caret position of the nth selection.
     /// </summary>
-    /// <param name="selection">
+    /// <param name="ASelection">
     /// Integer value
     /// </param>
-    /// <param name="caret">
+    /// <param name="ACaret">
     /// Position in the document
     /// </param>
-    procedure SetSelectionNCaret(selection: Integer; caret: Integer);
+    procedure SetSelectionNCaret(ASelection: Integer; ACaret: TSciPosition);
     /// <summary>
     /// Return the caret position of the nth selection.
     /// </summary>
-    /// <param name="selection">
+    /// <param name="ASelection">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetSelectionNCaret(selection: Integer): Integer;
+    function GetSelectionNCaret(ASelection: Integer): TSciPosition;
     /// <summary>
     /// Set the anchor position of the nth selection.
     /// </summary>
-    /// <param name="selection">
+    /// <param name="ASelection">
     /// Integer value
     /// </param>
-    /// <param name="anchor">
+    /// <param name="AAnchor">
     /// Position in the document
     /// </param>
-    procedure SetSelectionNAnchor(selection: Integer; anchor: Integer);
+    procedure SetSelectionNAnchor(ASelection: Integer; AAnchor: TSciPosition);
     /// <summary>
     /// Return the anchor position of the nth selection.
     /// </summary>
-    /// <param name="selection">
+    /// <param name="ASelection">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetSelectionNAnchor(selection: Integer): Integer;
+    function GetSelectionNAnchor(ASelection: Integer): TSciPosition;
     /// <summary>
     /// Set the virtual space of the caret of the nth selection.
     /// </summary>
-    /// <param name="selection">
+    /// <param name="ASelection">
     /// Integer value
     /// </param>
-    /// <param name="space">
+    /// <param name="ASpace">
     /// Position in the document
     /// </param>
-    procedure SetSelectionNCaretVirtualSpace(selection: Integer; space: Integer);
+    procedure SetSelectionNCaretVirtualSpace(ASelection: Integer; ASpace: TSciPosition);
     /// <summary>
     /// Return the virtual space of the caret of the nth selection.
     /// </summary>
-    /// <param name="selection">
+    /// <param name="ASelection">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetSelectionNCaretVirtualSpace(selection: Integer): Integer;
+    function GetSelectionNCaretVirtualSpace(ASelection: Integer): TSciPosition;
     /// <summary>
     /// Set the virtual space of the anchor of the nth selection.
     /// </summary>
-    /// <param name="selection">
+    /// <param name="ASelection">
     /// Integer value
     /// </param>
-    /// <param name="space">
+    /// <param name="ASpace">
     /// Position in the document
     /// </param>
-    procedure SetSelectionNAnchorVirtualSpace(selection: Integer; space: Integer);
+    procedure SetSelectionNAnchorVirtualSpace(ASelection: Integer; ASpace: TSciPosition);
     /// <summary>
     /// Return the virtual space of the anchor of the nth selection.
     /// </summary>
-    /// <param name="selection">
+    /// <param name="ASelection">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetSelectionNAnchorVirtualSpace(selection: Integer): Integer;
+    function GetSelectionNAnchorVirtualSpace(ASelection: Integer): TSciPosition;
     /// <summary>
     /// Sets the position that starts the selection - this becomes the anchor.
     /// </summary>
-    /// <param name="selection">
+    /// <param name="ASelection">
     /// Integer value
     /// </param>
-    /// <param name="anchor">
+    /// <param name="AAnchor">
     /// Position in the document
     /// </param>
-    procedure SetSelectionNStart(selection: Integer; anchor: Integer);
+    procedure SetSelectionNStart(ASelection: Integer; AAnchor: TSciPosition);
     /// <summary>
     /// Returns the position at the start of the selection.
     /// </summary>
-    /// <param name="selection">
+    /// <param name="ASelection">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetSelectionNStart(selection: Integer): Integer;
+    function GetSelectionNStart(ASelection: Integer): TSciPosition;
     /// <summary>
     /// Returns the virtual space at the start of the selection.
     /// </summary>
-    /// <param name="selection">
+    /// <param name="ASelection">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetSelectionNStartVirtualSpace(selection: Integer): Integer;
+    function GetSelectionNStartVirtualSpace(ASelection: Integer): TSciPosition;
     /// <summary>
     /// Sets the position that ends the selection - this becomes the currentPosition.
     /// </summary>
-    /// <param name="selection">
+    /// <param name="ASelection">
     /// Integer value
     /// </param>
-    /// <param name="caret">
+    /// <param name="ACaret">
     /// Position in the document
     /// </param>
-    procedure SetSelectionNEnd(selection: Integer; caret: Integer);
+    procedure SetSelectionNEnd(ASelection: Integer; ACaret: TSciPosition);
     /// <summary>
     /// Returns the virtual space at the end of the selection.
     /// </summary>
-    /// <param name="selection">
+    /// <param name="ASelection">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetSelectionNEndVirtualSpace(selection: Integer): Integer;
+    function GetSelectionNEndVirtualSpace(ASelection: Integer): TSciPosition;
     /// <summary>
     /// Returns the position at the end of the selection.
     /// </summary>
-    /// <param name="selection">
+    /// <param name="ASelection">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetSelectionNEnd(selection: Integer): Integer;
+    function GetSelectionNEnd(ASelection: Integer): TSciPosition;
     /// <summary>
     /// Set the caret position of the rectangular selection.
     /// </summary>
-    /// <param name="caret">
+    /// <param name="ACaret">
     /// Position in the document
     /// </param>
-    procedure SetRectangularSelectionCaret(caret: Integer);
+    procedure SetRectangularSelectionCaret(ACaret: TSciPosition);
     /// <summary>
     /// Return the caret position of the rectangular selection.
     /// </summary>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetRectangularSelectionCaret(): Integer;
+    function GetRectangularSelectionCaret(): TSciPosition;
     /// <summary>
     /// Set the anchor position of the rectangular selection.
     /// </summary>
-    /// <param name="anchor">
+    /// <param name="AAnchor">
     /// Position in the document
     /// </param>
-    procedure SetRectangularSelectionAnchor(anchor: Integer);
+    procedure SetRectangularSelectionAnchor(AAnchor: TSciPosition);
     /// <summary>
     /// Return the anchor position of the rectangular selection.
     /// </summary>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetRectangularSelectionAnchor(): Integer;
+    function GetRectangularSelectionAnchor(): TSciPosition;
     /// <summary>
     /// Set the virtual space of the caret of the rectangular selection.
     /// </summary>
-    /// <param name="space">
+    /// <param name="ASpace">
     /// Position in the document
     /// </param>
-    procedure SetRectangularSelectionCaretVirtualSpace(space: Integer);
+    procedure SetRectangularSelectionCaretVirtualSpace(ASpace: TSciPosition);
     /// <summary>
     /// Return the virtual space of the caret of the rectangular selection.
     /// </summary>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetRectangularSelectionCaretVirtualSpace(): Integer;
+    function GetRectangularSelectionCaretVirtualSpace(): TSciPosition;
     /// <summary>
     /// Set the virtual space of the anchor of the rectangular selection.
     /// </summary>
-    /// <param name="space">
+    /// <param name="ASpace">
     /// Position in the document
     /// </param>
-    procedure SetRectangularSelectionAnchorVirtualSpace(space: Integer);
+    procedure SetRectangularSelectionAnchorVirtualSpace(ASpace: TSciPosition);
     /// <summary>
     /// Return the virtual space of the anchor of the rectangular selection.
     /// </summary>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function GetRectangularSelectionAnchorVirtualSpace(): Integer;
+    function GetRectangularSelectionAnchorVirtualSpace(): TSciPosition;
     /// <summary>
     /// Set options for virtual space behaviour.
     /// </summary>
-    /// <param name="virtualSpaceOptions">
-    /// The virtualSpaceOptions parameter
+    /// <param name="AVirtualSpaceOptions">
+    /// The AVirtualSpaceOptions parameter
     /// </param>
-    procedure SetVirtualSpaceOptions(virtualSpaceOptions: Integer);
+    procedure SetVirtualSpaceOptions(AVirtualSpaceOptions: NativeInt);
     /// <summary>
     /// Return options for virtual space behaviour.
     /// </summary>
     /// <returns>
     /// Returns the virtualspaceoptions
     /// </returns>
-    function GetVirtualSpaceOptions(): Integer;
+    function GetVirtualSpaceOptions(): NativeInt;
     /// <summary>
     /// On GTK, allow selecting the modifier key to use for mouse-based
     /// rectangular selection. Often the window manager requires Alt+Mouse Drag
     /// for moving windows.
     /// Valid values are SCMOD_CTRL(default), SCMOD_ALT, or SCMOD_SUPER.
     /// </summary>
-    /// <param name="modifier">
+    /// <param name="AModifier">
     /// Integer value
     /// </param>
-    procedure SetRectangularSelectionModifier(modifier: Integer);
+    procedure SetRectangularSelectionModifier(AModifier: Integer);
     /// <summary>
     /// Get the modifier key used for rectangular selection.
     /// </summary>
@@ -5745,39 +5740,39 @@ uses
     /// Set the foreground colour of additional selections.
     /// Must have previously called SetSelFore with non-zero first argument for this to have an effect.
     /// </summary>
-    /// <param name="fore">
+    /// <param name="AFore">
     /// Color value
     /// </param>
-    procedure SetAdditionalSelFore(fore: TColor);
+    procedure SetAdditionalSelFore(AFore: TColor);
     /// <summary>
     /// Set the background colour of additional selections.
     /// Must have previously called SetSelBack with non-zero first argument for this to have an effect.
     /// </summary>
-    /// <param name="back">
+    /// <param name="ABack">
     /// Color value
     /// </param>
-    procedure SetAdditionalSelBack(back: TColor);
+    procedure SetAdditionalSelBack(ABack: TColor);
     /// <summary>
     /// Set the alpha of the selection.
     /// </summary>
-    /// <param name="alpha">
-    /// The alpha parameter
+    /// <param name="AAlpha">
+    /// The AAlpha parameter
     /// </param>
-    procedure SetAdditionalSelAlpha(alpha: Integer);
+    procedure SetAdditionalSelAlpha(AAlpha: NativeInt);
     /// <summary>
     /// Get the alpha of the selection.
     /// </summary>
     /// <returns>
     /// Returns the additionalselalpha
     /// </returns>
-    function GetAdditionalSelAlpha(): Integer;
+    function GetAdditionalSelAlpha(): NativeInt;
     /// <summary>
     /// Set the foreground colour of additional carets.
     /// </summary>
-    /// <param name="fore">
+    /// <param name="AFore">
     /// Color value
     /// </param>
-    procedure SetAdditionalCaretFore(fore: TColor);
+    procedure SetAdditionalCaretFore(AFore: TColor);
     /// <summary>
     /// Get the foreground colour of additional carets.
     /// </summary>
@@ -5807,27 +5802,27 @@ uses
     /// Indicate that the internal state of a lexer has changed over a range and therefore
     /// there may be a need to redraw.
     /// </summary>
-    /// <param name="start">
+    /// <param name="AStart">
     /// Position in the document
     /// </param>
-    /// <param name="end">
+    /// <param name="AEnd">
     /// Position in the document
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function ChangeLexerState(start: Integer; end: Integer): Integer;
+    function ChangeLexerState(AStart: TSciPosition; AEnd: TSciPosition): Integer;
     /// <summary>
     /// Find the next line at or after lineStart that is a contracted fold header line.
     /// Return -1 when no more lines.
     /// </summary>
-    /// <param name="lineStart">
+    /// <param name="ALineStart">
     /// Line number
     /// </param>
     /// <returns>
     /// Returns the line number
     /// </returns>
-    function ContractedFoldNext(lineStart: Integer): Integer;
+    function ContractedFoldNext(ALineStart: TSciLine): TSciLine;
     /// <summary>
     /// Centre current line in window.
     /// </summary>
@@ -5843,10 +5838,10 @@ uses
     /// <summary>
     /// Set the identifier reported as idFrom in notification messages.
     /// </summary>
-    /// <param name="identifier">
+    /// <param name="AIdentifier">
     /// Integer value
     /// </param>
-    procedure SetIdentifier(identifier: Integer);
+    procedure SetIdentifier(AIdentifier: Integer);
     /// <summary>
     /// Get the identifier.
     /// </summary>
@@ -5857,46 +5852,46 @@ uses
     /// <summary>
     /// Set the width for future RGBA image data.
     /// </summary>
-    /// <param name="width">
+    /// <param name="AWidth">
     /// Integer value
     /// </param>
-    procedure RGBAImageSetWidth(width: Integer);
+    procedure RGBAImageSetWidth(AWidth: Integer);
     /// <summary>
     /// Set the height for future RGBA image data.
     /// </summary>
-    /// <param name="height">
+    /// <param name="AHeight">
     /// Integer value
     /// </param>
-    procedure RGBAImageSetHeight(height: Integer);
+    procedure RGBAImageSetHeight(AHeight: Integer);
     /// <summary>
     /// Set the scale factor in percent for future RGBA image data.
     /// </summary>
-    /// <param name="scalePercent">
+    /// <param name="AScalePercent">
     /// Integer value
     /// </param>
-    procedure RGBAImageSetScale(scalePercent: Integer);
+    procedure RGBAImageSetScale(AScalePercent: Integer);
     /// <summary>
     /// Define a marker from RGBA data.
     /// It has the width and height from RGBAImageSetWidth/Height
     /// </summary>
-    /// <param name="markerNumber">
+    /// <param name="AMarkerNumber">
     /// Integer value
     /// </param>
-    /// <param name="pixels">
+    /// <param name="APixels">
     /// Text string
     /// </param>
-    procedure MarkerDefineRGBAImage(markerNumber: Integer; pixels: PAnsiChar);
+    procedure MarkerDefineRGBAImage(AMarkerNumber: Integer; APixels: PAnsiChar);
     /// <summary>
     /// Register an RGBA image for use in autocompletion lists.
     /// It has the width and height from RGBAImageSetWidth/Height
     /// </summary>
-    /// <param name="type">
+    /// <param name="AType">
     /// Integer value
     /// </param>
-    /// <param name="pixels">
+    /// <param name="APixels">
     /// Text string
     /// </param>
-    procedure RegisterRGBAImage(type: Integer; pixels: PAnsiChar);
+    procedure RegisterRGBAImage(AType: Integer; APixels: PAnsiChar);
     /// <summary>
     /// Scroll to start of document.
     /// </summary>
@@ -5908,50 +5903,50 @@ uses
     /// <summary>
     /// Set the technology used.
     /// </summary>
-    /// <param name="technology">
-    /// The technology parameter
+    /// <param name="ATechnology">
+    /// The ATechnology parameter
     /// </param>
-    procedure SetTechnology(technology: Integer);
+    procedure SetTechnology(ATechnology: NativeInt);
     /// <summary>
     /// Get the tech.
     /// </summary>
     /// <returns>
     /// Returns the technology
     /// </returns>
-    function GetTechnology(): Integer;
+    function GetTechnology(): NativeInt;
     /// <summary>
     /// Create an ILoader*.
     /// </summary>
-    /// <param name="bytes">
+    /// <param name="ABytes">
     /// Position in the document
     /// </param>
-    /// <param name="documentOptions">
-    /// The documentOptions parameter
+    /// <param name="ADocumentOptions">
+    /// The ADocumentOptions parameter
     /// </param>
     /// <returns>
     /// Returns the result
     /// </returns>
-    function CreateLoader(bytes: Integer; documentOptions: Integer): Pointer;
+    function CreateLoader(ABytes: TSciPosition; ADocumentOptions: NativeInt): Pointer;
     /// <summary>
     /// On macOS, show a find indicator.
     /// </summary>
-    /// <param name="start">
+    /// <param name="AStart">
     /// Position in the document
     /// </param>
-    /// <param name="end">
+    /// <param name="AEnd">
     /// Position in the document
     /// </param>
-    procedure FindIndicatorShow(start: Integer; end: Integer);
+    procedure FindIndicatorShow(AStart: TSciPosition; AEnd: TSciPosition);
     /// <summary>
     /// On macOS, flash a find indicator, then fade out.
     /// </summary>
-    /// <param name="start">
+    /// <param name="AStart">
     /// Position in the document
     /// </param>
-    /// <param name="end">
+    /// <param name="AEnd">
     /// Position in the document
     /// </param>
-    procedure FindIndicatorFlash(start: Integer; end: Integer);
+    procedure FindIndicatorFlash(AStart: TSciPosition; AEnd: TSciPosition);
     /// <summary>
     /// On macOS, hide the find indicator.
     /// </summary>
@@ -5975,62 +5970,62 @@ uses
     /// <summary>
     /// Sets the caret line to always visible.
     /// </summary>
-    /// <param name="alwaysVisible">
+    /// <param name="AAlwaysVisible">
     /// Boolean value
     /// </param>
-    procedure SetCaretLineVisibleAlways(alwaysVisible: Boolean);
+    procedure SetCaretLineVisibleAlways(AAlwaysVisible: Boolean);
     /// <summary>
     /// Set the line end types that the application wants to use. May not be used if incompatible with lexer or encoding.
     /// </summary>
-    /// <param name="lineEndBitSet">
-    /// The lineEndBitSet parameter
+    /// <param name="ALineEndBitSet">
+    /// The ALineEndBitSet parameter
     /// </param>
-    procedure SetLineEndTypesAllowed(lineEndBitSet: Integer);
+    procedure SetLineEndTypesAllowed(ALineEndBitSet: NativeInt);
     /// <summary>
     /// Get the line end types currently allowed.
     /// </summary>
     /// <returns>
     /// Returns the lineendtypesallowed
     /// </returns>
-    function GetLineEndTypesAllowed(): Integer;
+    function GetLineEndTypesAllowed(): NativeInt;
     /// <summary>
     /// Get the line end types currently recognised. May be a subset of the allowed types due to lexer limitation.
     /// </summary>
     /// <returns>
     /// Returns the lineendtypesactive
     /// </returns>
-    function GetLineEndTypesActive(): Integer;
+    function GetLineEndTypesActive(): NativeInt;
     /// <summary>
     /// Set the way a character is drawn.
     /// </summary>
-    /// <param name="encodedCharacter">
+    /// <param name="AEncodedCharacter">
     /// Text string
     /// </param>
-    /// <param name="representation">
+    /// <param name="ARepresentation">
     /// Text string
     /// </param>
-    procedure SetRepresentation(encodedCharacter: PAnsiChar; representation: PAnsiChar);
+    procedure SetRepresentation(AEncodedCharacter: PAnsiChar; ARepresentation: PAnsiChar);
     /// <summary>
     /// Get the way a character is drawn.
     /// Result is NUL-terminated.
     /// </summary>
-    /// <param name="encodedCharacter">
+    /// <param name="AEncodedCharacter">
     /// Text string
     /// </param>
-    /// <param name="representation">
+    /// <param name="ARepresentation">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function GetRepresentation(encodedCharacter: PAnsiChar; representation: PAnsiChar): Integer;
+    function GetRepresentation(AEncodedCharacter: PAnsiChar; ARepresentation: PAnsiChar): Integer;
     /// <summary>
     /// Remove a character representation.
     /// </summary>
-    /// <param name="encodedCharacter">
+    /// <param name="AEncodedCharacter">
     /// Text string
     /// </param>
-    procedure ClearRepresentation(encodedCharacter: PAnsiChar);
+    procedure ClearRepresentation(AEncodedCharacter: PAnsiChar);
     /// <summary>
     /// Clear representations to default.
     /// </summary>
@@ -6038,86 +6033,86 @@ uses
     /// <summary>
     /// Set the appearance of a representation.
     /// </summary>
-    /// <param name="encodedCharacter">
+    /// <param name="AEncodedCharacter">
     /// Text string
     /// </param>
-    /// <param name="appearance">
-    /// The appearance parameter
+    /// <param name="AAppearance">
+    /// The AAppearance parameter
     /// </param>
-    procedure SetRepresentationAppearance(encodedCharacter: PAnsiChar; appearance: Integer);
+    procedure SetRepresentationAppearance(AEncodedCharacter: PAnsiChar; AAppearance: NativeInt);
     /// <summary>
     /// Get the appearance of a representation.
     /// </summary>
-    /// <param name="encodedCharacter">
+    /// <param name="AEncodedCharacter">
     /// Text string
     /// </param>
     /// <returns>
     /// Returns the representationappearance
     /// </returns>
-    function GetRepresentationAppearance(encodedCharacter: PAnsiChar): Integer;
+    function GetRepresentationAppearance(AEncodedCharacter: PAnsiChar): NativeInt;
     /// <summary>
     /// Set the colour of a representation.
     /// </summary>
-    /// <param name="encodedCharacter">
+    /// <param name="AEncodedCharacter">
     /// Text string
     /// </param>
-    /// <param name="colour">
-    /// The colour parameter
+    /// <param name="AColour">
+    /// The AColour parameter
     /// </param>
-    procedure SetRepresentationColour(encodedCharacter: PAnsiChar; colour: TColorAlpha);
+    procedure SetRepresentationColour(AEncodedCharacter: PAnsiChar; AColour: TColorAlpha);
     /// <summary>
     /// Get the colour of a representation.
     /// </summary>
-    /// <param name="encodedCharacter">
+    /// <param name="AEncodedCharacter">
     /// Text string
     /// </param>
     /// <returns>
     /// Returns the representationcolour
     /// </returns>
-    function GetRepresentationColour(encodedCharacter: PAnsiChar): TColorAlpha;
+    function GetRepresentationColour(AEncodedCharacter: PAnsiChar): TColorAlpha;
     /// <summary>
     /// Set the end of line annotation text for a line
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="text">
+    /// <param name="AText">
     /// Text string
     /// </param>
-    procedure EOLAnnotationSetText(line: Integer; text: PAnsiChar);
+    procedure EOLAnnotationSetText(ALine: TSciLine; AText: PAnsiChar);
     /// <summary>
     /// Get the end of line annotation text for a line
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="text">
+    /// <param name="AText">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function EOLAnnotationGetText(line: Integer; text: PAnsiChar): Integer;
+    function EOLAnnotationGetText(ALine: TSciLine; AText: PAnsiChar): Integer;
     /// <summary>
     /// Set the style number for the end of line annotations for a line
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    procedure EOLAnnotationSetStyle(line: Integer; style: Integer);
+    procedure EOLAnnotationSetStyle(ALine: TSciLine; AStyle: Integer);
     /// <summary>
     /// Get the style number for the end of line annotations for a line
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function EOLAnnotationGetStyle(line: Integer): Integer;
+    function EOLAnnotationGetStyle(ALine: TSciLine): Integer;
     /// <summary>
     /// Clear the end of annotations from all lines
     /// </summary>
@@ -6125,24 +6120,24 @@ uses
     /// <summary>
     /// Set the visibility for the end of line annotations for a view
     /// </summary>
-    /// <param name="visible">
-    /// The visible parameter
+    /// <param name="AVisible">
+    /// The AVisible parameter
     /// </param>
-    procedure EOLAnnotationSetVisible(visible: Integer);
+    procedure EOLAnnotationSetVisible(AVisible: NativeInt);
     /// <summary>
     /// Get the visibility for the end of line annotations for a view
     /// </summary>
     /// <returns>
     /// Returns the value
     /// </returns>
-    function EOLAnnotationGetVisible(): Integer;
+    function EOLAnnotationGetVisible(): NativeInt;
     /// <summary>
     /// Get the start of the range of style numbers used for end of line annotations
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    procedure EOLAnnotationSetStyleOffset(style: Integer);
+    procedure EOLAnnotationSetStyleOffset(AStyle: Integer);
     /// <summary>
     /// Get the start of the range of style numbers used for end of line annotations
     /// </summary>
@@ -6153,60 +6148,60 @@ uses
     /// <summary>
     /// Get whether a feature is supported
     /// </summary>
-    /// <param name="feature">
-    /// The feature parameter
+    /// <param name="AFeature">
+    /// The AFeature parameter
     /// </param>
     /// <returns>
     /// Returns true if successful, false otherwise
     /// </returns>
-    function SupportsFeature(feature: Integer): Boolean;
+    function SupportsFeature(AFeature: NativeInt): Boolean;
     /// <summary>
     /// Retrieve line character index state.
     /// </summary>
     /// <returns>
     /// Returns the linecharacterindex
     /// </returns>
-    function GetLineCharacterIndex(): Integer;
+    function GetLineCharacterIndex(): NativeInt;
     /// <summary>
     /// Request line character index be created or its use count increased.
     /// </summary>
-    /// <param name="lineCharacterIndex">
-    /// The lineCharacterIndex parameter
+    /// <param name="ALineCharacterIndex">
+    /// The ALineCharacterIndex parameter
     /// </param>
-    procedure AllocateLineCharacterIndex(lineCharacterIndex: Integer);
+    procedure AllocateLineCharacterIndex(ALineCharacterIndex: NativeInt);
     /// <summary>
     /// Decrease use count of line character index and remove if 0.
     /// </summary>
-    /// <param name="lineCharacterIndex">
-    /// The lineCharacterIndex parameter
+    /// <param name="ALineCharacterIndex">
+    /// The ALineCharacterIndex parameter
     /// </param>
-    procedure ReleaseLineCharacterIndex(lineCharacterIndex: Integer);
+    procedure ReleaseLineCharacterIndex(ALineCharacterIndex: NativeInt);
     /// <summary>
     /// Retrieve the document line containing a position measured in index units.
     /// </summary>
-    /// <param name="pos">
+    /// <param name="APos">
     /// Position in the document
     /// </param>
-    /// <param name="lineCharacterIndex">
-    /// The lineCharacterIndex parameter
+    /// <param name="ALineCharacterIndex">
+    /// The ALineCharacterIndex parameter
     /// </param>
     /// <returns>
     /// Returns the line number
     /// </returns>
-    function LineFromIndexPosition(pos: Integer; lineCharacterIndex: Integer): Integer;
+    function LineFromIndexPosition(APos: TSciPosition; ALineCharacterIndex: NativeInt): TSciLine;
     /// <summary>
     /// Retrieve the position measured in index units at the start of a document line.
     /// </summary>
-    /// <param name="line">
+    /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="lineCharacterIndex">
-    /// The lineCharacterIndex parameter
+    /// <param name="ALineCharacterIndex">
+    /// The ALineCharacterIndex parameter
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function IndexPositionFromLine(line: Integer; lineCharacterIndex: Integer): Integer;
+    function IndexPositionFromLine(ALine: TSciLine; ALineCharacterIndex: NativeInt): TSciPosition;
     /// <summary>
     /// Start notifying the container of all key presses and commands.
     /// </summary>
@@ -6225,147 +6220,147 @@ uses
     /// <summary>
     /// Colourise a segment of the document using the current lexing language.
     /// </summary>
-    /// <param name="start">
+    /// <param name="AStart">
     /// Position in the document
     /// </param>
-    /// <param name="end">
+    /// <param name="AEnd">
     /// Position in the document
     /// </param>
-    procedure Colourise(start: Integer; end: Integer);
+    procedure Colourise(AStart: TSciPosition; AEnd: TSciPosition);
     /// <summary>
     /// Set up a value that may be used by a lexer for some optional feature.
     /// </summary>
-    /// <param name="key">
+    /// <param name="AKey">
     /// Text string
     /// </param>
-    /// <param name="value">
+    /// <param name="AValue">
     /// Text string
     /// </param>
-    procedure SetProperty(key: PAnsiChar; value: PAnsiChar);
+    procedure SetProperty(AKey: PAnsiChar; AValue: PAnsiChar);
     /// <summary>
     /// Set up the key words used by the lexer.
     /// </summary>
-    /// <param name="keyWordSet">
+    /// <param name="AKeyWordSet">
     /// Integer value
     /// </param>
-    /// <param name="keyWords">
+    /// <param name="AKeyWords">
     /// Text string
     /// </param>
-    procedure SetKeyWords(keyWordSet: Integer; keyWords: PAnsiChar);
+    procedure SetKeyWords(AKeyWordSet: Integer; AKeyWords: PAnsiChar);
     /// <summary>
     /// Retrieve a "property" value previously set with SetProperty.
     /// Result is NUL-terminated.
     /// </summary>
-    /// <param name="key">
+    /// <param name="AKey">
     /// Text string
     /// </param>
-    /// <param name="value">
+    /// <param name="AValue">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function GetProperty(key: PAnsiChar; value: PAnsiChar): Integer;
+    function GetProperty(AKey: PAnsiChar; AValue: PAnsiChar): Integer;
     /// <summary>
     /// Retrieve a "property" value previously set with SetProperty,
     /// with "$()" variable replacement on returned buffer.
     /// Result is NUL-terminated.
     /// </summary>
-    /// <param name="key">
+    /// <param name="AKey">
     /// Text string
     /// </param>
-    /// <param name="value">
+    /// <param name="AValue">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function GetPropertyExpanded(key: PAnsiChar; value: PAnsiChar): Integer;
+    function GetPropertyExpanded(AKey: PAnsiChar; AValue: PAnsiChar): Integer;
     /// <summary>
     /// Retrieve a "property" value previously set with SetProperty,
     /// interpreted as an int AFTER any "$()" variable replacement.
     /// </summary>
-    /// <param name="key">
+    /// <param name="AKey">
     /// Text string
     /// </param>
-    /// <param name="defaultValue">
+    /// <param name="ADefaultValue">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function GetPropertyInt(key: PAnsiChar; defaultValue: Integer): Integer;
+    function GetPropertyInt(AKey: PAnsiChar; ADefaultValue: Integer): Integer;
     /// <summary>
     /// Retrieve the name of the lexer.
     /// Return the length of the text.
     /// Result is NUL-terminated.
     /// </summary>
-    /// <param name="language">
+    /// <param name="ALanguage">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function GetLexerLanguage(language: PAnsiChar): Integer;
+    function GetLexerLanguage(ALanguage: PAnsiChar): Integer;
     /// <summary>
     /// For private communication between an application and a known lexer.
     /// </summary>
-    /// <param name="operation">
+    /// <param name="AOperation">
     /// Integer value
     /// </param>
-    /// <param name="pointer">
-    /// The pointer parameter
+    /// <param name="APointer">
+    /// The APointer parameter
     /// </param>
     /// <returns>
     /// Returns the result
     /// </returns>
-    function PrivateLexerCall(operation: Integer; pointer: Pointer): Pointer;
+    function PrivateLexerCall(AOperation: Integer; APointer: Pointer): Pointer;
     /// <summary>
     /// Retrieve a '\n' separated list of properties understood by the current lexer.
     /// Result is NUL-terminated.
     /// </summary>
-    /// <param name="names">
+    /// <param name="ANames">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function PropertyNames(names: PAnsiChar): Integer;
+    function PropertyNames(ANames: PAnsiChar): Integer;
     /// <summary>
     /// Retrieve the type of a property.
     /// </summary>
-    /// <param name="name">
+    /// <param name="AName">
     /// Text string
     /// </param>
     /// <returns>
     /// Returns the result
     /// </returns>
-    function PropertyType(name: PAnsiChar): Integer;
+    function PropertyType(AName: PAnsiChar): NativeInt;
     /// <summary>
     /// Describe a property.
     /// Result is NUL-terminated.
     /// </summary>
-    /// <param name="name">
+    /// <param name="AName">
     /// Text string
     /// </param>
-    /// <param name="description">
+    /// <param name="ADescription">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function DescribeProperty(name: PAnsiChar; description: PAnsiChar): Integer;
+    function DescribeProperty(AName: PAnsiChar; ADescription: PAnsiChar): Integer;
     /// <summary>
     /// Retrieve a '\n' separated list of descriptions of the keyword sets understood by the current lexer.
     /// Result is NUL-terminated.
     /// </summary>
-    /// <param name="descriptions">
+    /// <param name="ADescriptions">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function DescribeKeyWordSets(descriptions: PAnsiChar): Integer;
+    function DescribeKeyWordSets(ADescriptions: PAnsiChar): Integer;
     /// <summary>
     /// Bit set of LineEndType enumertion for which line ends beyond the standard
     /// LF, CR, and CRLF are supported by the lexer.
@@ -6373,60 +6368,60 @@ uses
     /// <returns>
     /// Returns the lineendtypessupported
     /// </returns>
-    function GetLineEndTypesSupported(): Integer;
+    function GetLineEndTypesSupported(): NativeInt;
     /// <summary>
     /// Allocate a set of sub styles for a particular base style, returning start of range
     /// </summary>
-    /// <param name="styleBase">
+    /// <param name="AStyleBase">
     /// Integer value
     /// </param>
-    /// <param name="numberStyles">
+    /// <param name="ANumberStyles">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function AllocateSubStyles(styleBase: Integer; numberStyles: Integer): Integer;
+    function AllocateSubStyles(AStyleBase: Integer; ANumberStyles: Integer): Integer;
     /// <summary>
     /// The starting style number for the sub styles associated with a base style
     /// </summary>
-    /// <param name="styleBase">
+    /// <param name="AStyleBase">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function GetSubStylesStart(styleBase: Integer): Integer;
+    function GetSubStylesStart(AStyleBase: Integer): Integer;
     /// <summary>
     /// The number of sub styles associated with a base style
     /// </summary>
-    /// <param name="styleBase">
+    /// <param name="AStyleBase">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function GetSubStylesLength(styleBase: Integer): Integer;
+    function GetSubStylesLength(AStyleBase: Integer): Integer;
     /// <summary>
     /// For a sub style, return the base style, else return the argument.
     /// </summary>
-    /// <param name="subStyle">
+    /// <param name="ASubStyle">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function GetStyleFromSubStyle(subStyle: Integer): Integer;
+    function GetStyleFromSubStyle(ASubStyle: Integer): Integer;
     /// <summary>
     /// For a secondary style, return the primary style, else return the argument.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function GetPrimaryStyleFromStyle(style: Integer): Integer;
+    function GetPrimaryStyleFromStyle(AStyle: Integer): Integer;
     /// <summary>
     /// Free allocated sub styles
     /// </summary>
@@ -6434,13 +6429,13 @@ uses
     /// <summary>
     /// Set the identifiers that are shown in a particular style
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    /// <param name="identifiers">
+    /// <param name="AIdentifiers">
     /// Text string
     /// </param>
-    procedure SetIdentifiers(style: Integer; identifiers: PAnsiChar);
+    procedure SetIdentifiers(AStyle: Integer; AIdentifiers: PAnsiChar);
     /// <summary>
     /// Where styles are duplicated by a feature such as active/inactive code
     /// return the distance between the two types.
@@ -6453,13 +6448,13 @@ uses
     /// Get the set of base styles that can be extended with sub styles
     /// Result is NUL-terminated.
     /// </summary>
-    /// <param name="styles">
+    /// <param name="AStyles">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function GetSubStyleBases(styles: PAnsiChar): Integer;
+    function GetSubStyleBases(AStyles: PAnsiChar): Integer;
     /// <summary>
     /// Retrieve the number of named styles for the lexer.
     /// </summary>
@@ -6471,51 +6466,51 @@ uses
     /// Retrieve the name of a style.
     /// Result is NUL-terminated.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    /// <param name="name">
+    /// <param name="AName">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function NameOfStyle(style: Integer; name: PAnsiChar): Integer;
+    function NameOfStyle(AStyle: Integer; AName: PAnsiChar): Integer;
     /// <summary>
     /// Retrieve a ' ' separated list of style tags like "literal quoted string".
     /// Result is NUL-terminated.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    /// <param name="tags">
+    /// <param name="ATags">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function TagsOfStyle(style: Integer; tags: PAnsiChar): Integer;
+    function TagsOfStyle(AStyle: Integer; ATags: PAnsiChar): Integer;
     /// <summary>
     /// Retrieve a description of a style.
     /// Result is NUL-terminated.
     /// </summary>
-    /// <param name="style">
+    /// <param name="AStyle">
     /// Integer value
     /// </param>
-    /// <param name="description">
+    /// <param name="ADescription">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function DescriptionOfStyle(style: Integer; description: PAnsiChar): Integer;
+    function DescriptionOfStyle(AStyle: Integer; ADescription: PAnsiChar): Integer;
     /// <summary>
     /// Set the lexer from an ILexer*.
     /// </summary>
-    /// <param name="ilexer">
-    /// The ilexer parameter
+    /// <param name="AIlexer">
+    /// The AIlexer parameter
     /// </param>
-    procedure SetILexer(ilexer: Pointer);
+    procedure SetILexer(AIlexer: Pointer);
 
     // Provisional
     /// <summary>
@@ -6524,26 +6519,26 @@ uses
     /// <returns>
     /// Returns the bidirectional
     /// </returns>
-    function GetBidirectional(): Integer;
+    function GetBidirectional(): NativeInt;
     /// <summary>
     /// Set bidirectional text display state.
     /// </summary>
-    /// <param name="bidirectional">
-    /// The bidirectional parameter
+    /// <param name="ABidirectional">
+    /// The ABidirectional parameter
     /// </param>
-    procedure SetBidirectional(bidirectional: Integer);
+    procedure SetBidirectional(ABidirectional: NativeInt);
 
-  published
+  strict protected
     // Auto-generated properties
     /// <summary>
     /// Retrieve the current tab draw mode.
     /// Returns one of SCTD_* constants.
     /// </summary>
-    property TabDrawMode: Integer read GetTabDrawMode write SetTabDrawMode;
+    property TabDrawMode: NativeInt read GetTabDrawMode write SetTabDrawMode;
     /// <summary>
     /// Is printing line wrapped?
     /// </summary>
-    property PrintWrapMode: Integer read GetPrintWrapMode write SetPrintWrapMode;
+    property PrintWrapMode: NativeInt read GetPrintWrapMode write SetPrintWrapMode;
     /// <summary>
     /// Retrieve the caret line frame width.
     /// Width = 0 means this option is disabled.
@@ -6556,7 +6551,7 @@ uses
     /// <summary>
     /// Returns the number of bytes in the document.
     /// </summary>
-    property Length: Integer read GetLength;
+    property Length: TSciPosition read GetLength;
     /// <summary>
     /// Get the size of the dots used to mark space characters.
     /// </summary>
@@ -6621,7 +6616,7 @@ uses
     /// <summary>
     /// Get the alpha of the selection.
     /// </summary>
-    property SelAlpha: Integer read GetSelAlpha write SetSelAlpha;
+    property SelAlpha: NativeInt read GetSelAlpha write SetSelAlpha;
     /// <summary>
     /// Get the identifier.
     /// </summary>
@@ -6637,7 +6632,7 @@ uses
     /// <summary>
     /// Is the IME displayed in a window or inline?
     /// </summary>
-    property IMEInteraction: Integer read GetIMEInteraction write SetIMEInteraction;
+    property IMEInteraction: NativeInt read GetIMEInteraction write SetIMEInteraction;
     /// <summary>
     /// Retrieve the time the mouse must sit still to generate a mouse dwell event.
     /// </summary>
@@ -6645,7 +6640,7 @@ uses
     /// <summary>
     /// Get the layer of the background of the line containing the caret.
     /// </summary>
-    property CaretLineLayer: Integer read GetCaretLineLayer write SetCaretLineLayer;
+    property CaretLineLayer: NativeInt read GetCaretLineLayer write SetCaretLineLayer;
     /// <summary>
     /// Is an undo sequence active?
     /// </summary>
@@ -6657,35 +6652,35 @@ uses
     /// <summary>
     /// Get cursor type.
     /// </summary>
-    property Cursor: Integer read GetCursor write SetCursor;
+    property Cursor: NativeInt read GetCursor write SetCursor;
     /// <summary>
     /// Get automatic folding behaviours.
     /// </summary>
-    property AutomaticFold: Integer read GetAutomaticFold write SetAutomaticFold;
+    property AutomaticFold: NativeInt read GetAutomaticFold write SetAutomaticFold;
     /// <summary>
     /// Retrieve the quality level for text.
     /// </summary>
-    property FontQuality: Integer read GetFontQuality write SetFontQuality;
+    property FontQuality: NativeInt read GetFontQuality write SetFontQuality;
     /// <summary>
     /// Return the virtual space of the anchor of the rectangular selection.
     /// </summary>
-    property RectangularSelectionAnchorVirtualSpace: Integer read GetRectangularSelectionAnchorVirtualSpace write SetRectangularSelectionAnchorVirtualSpace;
+    property RectangularSelectionAnchorVirtualSpace: TSciPosition read GetRectangularSelectionAnchorVirtualSpace write SetRectangularSelectionAnchorVirtualSpace;
     /// <summary>
     /// Get the tech.
     /// </summary>
-    property Technology: Integer read GetTechnology write SetTechnology;
+    property Technology: NativeInt read GetTechnology write SetTechnology;
     /// <summary>
     /// Report change history status.
     /// </summary>
-    property ChangeHistory: Integer read GetChangeHistory write SetChangeHistory;
+    property ChangeHistory: NativeInt read GetChangeHistory write SetChangeHistory;
     /// <summary>
     /// Retrieve the current end of line mode - one of CRLF, CR, or LF.
     /// </summary>
-    property EOLMode: Integer read GetEOLMode write SetEOLMode;
+    property EOLMode: NativeInt read GetEOLMode write SetEOLMode;
     /// <summary>
     /// Get the line end types currently recognised. May be a subset of the allowed types due to lexer limitation.
     /// </summary>
-    property LineEndTypesActive: Integer read GetLineEndTypesActive;
+    property LineEndTypesActive: NativeInt read GetLineEndTypesActive;
     /// <summary>
     /// Get convert-on-paste setting
     /// </summary>
@@ -6697,7 +6692,7 @@ uses
     /// <summary>
     /// Get the virtual space of the target start
     /// </summary>
-    property TargetStartVirtualSpace: Integer read GetTargetStartVirtualSpace write SetTargetStartVirtualSpace;
+    property TargetStartVirtualSpace: TSciPosition read GetTargetStartVirtualSpace write SetTargetStartVirtualSpace;
     /// <summary>
     /// Retrieve the lexing language of the document.
     /// </summary>
@@ -6709,7 +6704,7 @@ uses
     /// <summary>
     /// Retrieve the degree of caching of layout information.
     /// </summary>
-    property LayoutCache: Integer read GetLayoutCache write SetLayoutCache;
+    property LayoutCache: NativeInt read GetLayoutCache write SetLayoutCache;
     /// <summary>
     /// Are all lines visible?
     /// </summary>
@@ -6722,7 +6717,7 @@ uses
     /// Are white space characters currently visible?
     /// Returns one of SCWS_* constants.
     /// </summary>
-    property ViewWS: Integer read GetViewWS write SetViewWS;
+    property ViewWS: NativeInt read GetViewWS write SetViewWS;
     /// <summary>
     /// Retrieve the number of named styles for the lexer.
     /// </summary>
@@ -6734,7 +6729,7 @@ uses
     /// <summary>
     /// Retrieve the edge highlight mode.
     /// </summary>
-    property EdgeMode: Integer read GetEdgeMode write SetEdgeMode;
+    property EdgeMode: NativeInt read GetEdgeMode write SetEdgeMode;
     /// <summary>
     /// Which selection is the main selection
     /// </summary>
@@ -6742,7 +6737,7 @@ uses
     /// <summary>
     /// Return options for virtual space behaviour.
     /// </summary>
-    property VirtualSpaceOptions: Integer read GetVirtualSpaceOptions write SetVirtualSpaceOptions;
+    property VirtualSpaceOptions: NativeInt read GetVirtualSpaceOptions write SetVirtualSpaceOptions;
     /// <summary>
     /// Get the time in milliseconds that the caret is on and off.
     /// </summary>
@@ -6758,7 +6753,7 @@ uses
     /// <summary>
     /// Get the search flags used by SearchInTarget.
     /// </summary>
-    property SearchFlags: Integer read GetSearchFlags write SetSearchFlags;
+    property SearchFlags: NativeInt read GetSearchFlags write SetSearchFlags;
     /// <summary>
     /// Retrieve the last line number that has line state.
     /// </summary>
@@ -6770,7 +6765,7 @@ uses
     /// <summary>
     /// Returns the position at the end of the selection.
     /// </summary>
-    property SelectionEnd: Integer read GetSelectionEnd write SetSelectionEnd;
+    property SelectionEnd: TSciPosition read GetSelectionEnd write SetSelectionEnd;
     /// <summary>
     /// Whether typing can be performed into multiple selections
     /// </summary>
@@ -6778,11 +6773,11 @@ uses
     /// <summary>
     /// Get the layer for drawing selections
     /// </summary>
-    property SelectionLayer: Integer read GetSelectionLayer write SetSelectionLayer;
+    property SelectionLayer: NativeInt read GetSelectionLayer write SetSelectionLayer;
     /// <summary>
     /// Return the caret position of the rectangular selection.
     /// </summary>
-    property RectangularSelectionCaret: Integer read GetRectangularSelectionCaret write SetRectangularSelectionCaret;
+    property RectangularSelectionCaret: TSciPosition read GetRectangularSelectionCaret write SetRectangularSelectionCaret;
     /// <summary>
     /// Get only highlighting subline instead of whole line.
     /// </summary>
@@ -6790,15 +6785,15 @@ uses
     /// <summary>
     /// Get error status.
     /// </summary>
-    property Status: Integer read GetStatus write SetStatus;
+    property Status: NativeInt read GetStatus write SetStatus;
     /// <summary>
     /// Returns the position of the opposite end of the selection to the caret.
     /// </summary>
-    property Anchor: Integer read GetAnchor write SetAnchor;
+    property Anchor: TSciPosition read GetAnchor write SetAnchor;
     /// <summary>
     /// How many phases is drawing done in?
     /// </summary>
-    property PhasesDraw: Integer read GetPhasesDraw write SetPhasesDraw;
+    property PhasesDraw: NativeInt read GetPhasesDraw write SetPhasesDraw;
     /// <summary>
     /// Get whether or not regular caret moves will extend or reduce the selection.
     /// </summary>
@@ -6806,11 +6801,11 @@ uses
     /// <summary>
     /// Retrieve the limits to idle styling.
     /// </summary>
-    property IdleStyling: Integer read GetIdleStyling write SetIdleStyling;
+    property IdleStyling: NativeInt read GetIdleStyling write SetIdleStyling;
     /// <summary>
     /// Retrieve how wrapped sublines are placed. Default is fixed.
     /// </summary>
-    property WrapIndentMode: Integer read GetWrapIndentMode write SetWrapIndentMode;
+    property WrapIndentMode: NativeInt read GetWrapIndentMode write SetWrapIndentMode;
     /// <summary>
     /// Is the vertical scroll bar visible?
     /// </summary>
@@ -6822,24 +6817,24 @@ uses
     /// <summary>
     /// Returns the position at the start of the selection.
     /// </summary>
-    property SelectionStart: Integer read GetSelectionStart write SetSelectionStart;
+    property SelectionStart: TSciPosition read GetSelectionStart write SetSelectionStart;
     /// <summary>
     /// Report undo selection history status.
     /// </summary>
-    property UndoSelectionHistory: Integer read GetUndoSelectionHistory write SetUndoSelectionHistory;
+    property UndoSelectionHistory: NativeInt read GetUndoSelectionHistory write SetUndoSelectionHistory;
     /// <summary>
     /// Retrieve the display line at the top of the display.
     /// </summary>
-    property FirstVisibleLine: Integer read GetFirstVisibleLine write SetFirstVisibleLine;
+    property FirstVisibleLine: TSciLine read GetFirstVisibleLine write SetFirstVisibleLine;
     /// <summary>
     /// Retrieve whether text is word wrapped.
     /// </summary>
-    property WrapMode: Integer read GetWrapMode write SetWrapMode;
+    property WrapMode: NativeInt read GetWrapMode write SetWrapMode;
     /// <summary>
     /// Return a position which, to avoid performance costs, should not be within
     /// the range of a call to GetRangePointer.
     /// </summary>
-    property GapPosition: Integer read GetGapPosition;
+    property GapPosition: TSciPosition read GetGapPosition;
     /// <summary>
     /// Is the background of the line containing the caret in a different colour?
     /// </summary>
@@ -6856,7 +6851,7 @@ uses
     /// <summary>
     /// Get the background alpha of the caret line.
     /// </summary>
-    property CaretLineBackAlpha: Integer read GetCaretLineBackAlpha write SetCaretLineBackAlpha;
+    property CaretLineBackAlpha: NativeInt read GetCaretLineBackAlpha write SetCaretLineBackAlpha;
     /// <summary>
     /// Get whether mouse wheel can be active outside the window.
     /// </summary>
@@ -6868,7 +6863,7 @@ uses
     /// <summary>
     /// Returns the current style of the caret.
     /// </summary>
-    property CaretStyle: Integer read GetCaretStyle write SetCaretStyle;
+    property CaretStyle: NativeInt read GetCaretStyle write SetCaretStyle;
     /// <summary>
     /// Get maximum number of threads used for layout
     /// </summary>
@@ -6888,7 +6883,7 @@ uses
     /// <summary>
     /// Get the mode of the current selection.
     /// </summary>
-    property SelectionMode: Integer read GetSelectionMode write SetSelectionMode;
+    property SelectionMode: NativeInt read GetSelectionMode write SetSelectionMode;
     /// <summary>
     /// Retrieve the document width assumed for scrolling.
     /// </summary>
@@ -6900,7 +6895,7 @@ uses
     /// <summary>
     /// Retrieve the position of the last correctly styled character.
     /// </summary>
-    property EndStyled: Integer read GetEndStyled;
+    property EndStyled: TSciPosition read GetEndStyled;
     /// <summary>
     /// Is the selection end of line filled?
     /// </summary>
@@ -6913,7 +6908,7 @@ uses
     /// Bit set of LineEndType enumertion for which line ends beyond the standard
     /// LF, CR, and CRLF are supported by the lexer.
     /// </summary>
-    property LineEndTypesSupported: Integer read GetLineEndTypesSupported;
+    property LineEndTypesSupported: NativeInt read GetLineEndTypesSupported;
     /// <summary>
     /// Get whether command events are sent to the container.
     /// </summary>
@@ -6926,15 +6921,15 @@ uses
     /// <summary>
     /// Returns the number of lines in the document. There is always at least one.
     /// </summary>
-    property LineCount: Integer read GetLineCount;
+    property LineCount: TSciLine read GetLineCount;
     /// <summary>
     /// Retrieve the effect of pasting when there are multiple selections.
     /// </summary>
-    property MultiPaste: Integer read GetMultiPaste write SetMultiPaste;
+    property MultiPaste: NativeInt read GetMultiPaste write SetMultiPaste;
     /// <summary>
     /// Report accessibility status.
     /// </summary>
-    property Accessibility: Integer read GetAccessibility write SetAccessibility;
+    property Accessibility: NativeInt read GetAccessibility write SetAccessibility;
     /// <summary>
     /// Is undo history being collected?
     /// </summary>
@@ -6942,7 +6937,7 @@ uses
     /// <summary>
     /// Get the line end types currently allowed.
     /// </summary>
-    property LineEndTypesAllowed: Integer read GetLineEndTypesAllowed write SetLineEndTypesAllowed;
+    property LineEndTypesAllowed: NativeInt read GetLineEndTypesAllowed write SetLineEndTypesAllowed;
     /// <summary>
     /// Get the foreground colour of the caret.
     /// </summary>
@@ -6950,7 +6945,7 @@ uses
     /// <summary>
     /// Get the margin options.
     /// </summary>
-    property MarginOptions: Integer read GetMarginOptions write SetMarginOptions;
+    property MarginOptions: NativeInt read GetMarginOptions write SetMarginOptions;
     /// <summary>
     /// Whether switching to rectangular mode while selecting with the mouse is allowed.
     /// </summary>
@@ -6958,7 +6953,7 @@ uses
     /// <summary>
     /// Get which document modification events are sent to the container.
     /// </summary>
-    property ModEventMask: Integer read GetModEventMask write SetModEventMask;
+    property ModEventMask: NativeInt read GetModEventMask write SetModEventMask;
     /// <summary>
     /// Retrieve a pointer to the document object.
     /// </summary>
@@ -6974,15 +6969,15 @@ uses
     /// <summary>
     /// Retrieve the number of characters in the document.
     /// </summary>
-    property TextLength: Integer read GetTextLength;
+    property TextLength: TSciPosition read GetTextLength;
     /// <summary>
     /// Get the position that ends the target.
     /// </summary>
-    property TargetEnd: Integer read GetTargetEnd write SetTargetEnd;
+    property TargetEnd: TSciPosition read GetTargetEnd write SetTargetEnd;
     /// <summary>
     /// Get the virtual space of the target end
     /// </summary>
-    property TargetEndVirtualSpace: Integer read GetTargetEndVirtualSpace write SetTargetEndVirtualSpace;
+    property TargetEndVirtualSpace: TSciPosition read GetTargetEndVirtualSpace write SetTargetEndVirtualSpace;
     /// <summary>
     /// Does a backspace pressed when caret is within indentation unindent?
     /// </summary>
@@ -6990,7 +6985,7 @@ uses
     /// <summary>
     /// Returns the position of the caret.
     /// </summary>
-    property CurrentPos: Integer read GetCurrentPos write SetCurrentPos;
+    property CurrentPos: TSciPosition read GetCurrentPos write SetCurrentPos;
     /// <summary>
     /// Compact the document buffer and return a read-only pointer to the
     /// characters in the document.
@@ -7011,15 +7006,15 @@ uses
     /// <summary>
     /// Return the anchor position of the rectangular selection.
     /// </summary>
-    property RectangularSelectionAnchor: Integer read GetRectangularSelectionAnchor write SetRectangularSelectionAnchor;
+    property RectangularSelectionAnchor: TSciPosition read GetRectangularSelectionAnchor write SetRectangularSelectionAnchor;
     /// <summary>
     /// Returns the print colour mode.
     /// </summary>
-    property PrintColourMode: Integer read GetPrintColourMode write SetPrintColourMode;
+    property PrintColourMode: NativeInt read GetPrintColourMode write SetPrintColourMode;
     /// <summary>
     /// Get the position that starts the target.
     /// </summary>
-    property TargetStart: Integer read GetTargetStart write SetTargetStart;
+    property TargetStart: TSciPosition read GetTargetStart write SetTargetStart;
     /// <summary>
     /// Returns the size in pixels of the left margin.
     /// </summary>
@@ -7031,7 +7026,7 @@ uses
     /// <summary>
     /// Return the virtual space of the caret of the rectangular selection.
     /// </summary>
-    property RectangularSelectionCaretVirtualSpace: Integer read GetRectangularSelectionCaretVirtualSpace write SetRectangularSelectionCaretVirtualSpace;
+    property RectangularSelectionCaretVirtualSpace: TSciPosition read GetRectangularSelectionCaretVirtualSpace write SetRectangularSelectionCaretVirtualSpace;
     /// <summary>
     /// Whether additional carets will blink
     /// </summary>
@@ -7043,7 +7038,7 @@ uses
     /// <summary>
     /// Retrive the location of visual flags for wrapped lines.
     /// </summary>
-    property WrapVisualFlagsLocation: Integer read GetWrapVisualFlagsLocation write SetWrapVisualFlagsLocation;
+    property WrapVisualFlagsLocation: NativeInt read GetWrapVisualFlagsLocation write SetWrapVisualFlagsLocation;
     /// <summary>
     /// Returns the print magnification.
     /// </summary>
@@ -7055,7 +7050,7 @@ uses
     /// <summary>
     /// Retrieve bidirectional text display state.
     /// </summary>
-    property Bidirectional: Integer read GetBidirectional write SetBidirectional;
+    property Bidirectional: NativeInt read GetBidirectional write SetBidirectional;
     /// <summary>
     /// Is the caret line always visible?
     /// </summary>
@@ -7063,11 +7058,11 @@ uses
     /// <summary>
     /// Get the highlighted indentation guide column.
     /// </summary>
-    property HighlightGuide: Integer read GetHighlightGuide write SetHighlightGuide;
+    property HighlightGuide: TSciPosition read GetHighlightGuide write SetHighlightGuide;
     /// <summary>
     /// Can the caret preferred x position only be changed by explicit movement commands?
     /// </summary>
-    property CaretSticky: Integer read GetCaretSticky write SetCaretSticky;
+    property CaretSticky: NativeInt read GetCaretSticky write SetCaretSticky;
     /// <summary>
     /// Get whether underlining for active hotspots.
     /// </summary>
@@ -7075,7 +7070,7 @@ uses
     /// <summary>
     /// Retrive the display mode of visual flags for wrapped lines.
     /// </summary>
-    property WrapVisualFlags: Integer read GetWrapVisualFlags write SetWrapVisualFlags;
+    property WrapVisualFlags: NativeInt read GetWrapVisualFlags write SetWrapVisualFlags;
     /// <summary>
     /// Are the end of line characters visible?
     /// </summary>
@@ -7083,7 +7078,7 @@ uses
     /// <summary>
     /// Retrieve the column number which text should be kept within.
     /// </summary>
-    property EdgeColumn: Integer read GetEdgeColumn write SetEdgeColumn;
+    property EdgeColumn: TSciPosition read GetEdgeColumn write SetEdgeColumn;
     /// <summary>
     /// Is the horizontal scroll bar visible?
     /// </summary>
@@ -7091,15 +7086,15 @@ uses
     /// <summary>
     /// Get which document options are set.
     /// </summary>
-    property DocumentOptions: Integer read GetDocumentOptions;
+    property DocumentOptions: NativeInt read GetDocumentOptions;
     /// <summary>
     /// Get the alpha of the selection.
     /// </summary>
-    property AdditionalSelAlpha: Integer read GetAdditionalSelAlpha write SetAdditionalSelAlpha;
+    property AdditionalSelAlpha: NativeInt read GetAdditionalSelAlpha write SetAdditionalSelAlpha;
     /// <summary>
     /// Are the indentation guides visible?
     /// </summary>
-    property IndentationGuides: Integer read GetIndentationGuides write SetIndentationGuides;
+    property IndentationGuides: NativeInt read GetIndentationGuides write SetIndentationGuides;
     /// <summary>
     /// Retrieve whether the scroll width tracks wide lines.
     /// </summary>
@@ -7111,4138 +7106,4077 @@ uses
     /// <summary>
     /// Retrieve line character index state.
     /// </summary>
-    property LineCharacterIndex: Integer read GetLineCharacterIndex;
+    property LineCharacterIndex: NativeInt read GetLineCharacterIndex;
     /// <summary>
     /// Does a tab pressed when caret is within indentation indent?
     /// </summary>
     property TabIndents: Boolean read GetTabIndents write SetTabIndents;
   public
-    constructor Create(AOwner: TComponent); override;
-    destructor Destroy; override;
   end;
-
-procedure Register;
 
 implementation
 
-const
-  ScintillaClassName = 'Scintilla';
-  ScintillaDLL = 'SciLexer.dll';
-
-procedure Register;
-begin
-  RegisterComponents('Scintilla', [TCustomSciTextEditor]);
-end;
-
 { TCustomSciTextEditor }
 
-constructor TCustomSciTextEditor.Create(AOwner: TComponent);
+
+procedure TCustomSciTextEditor.AddText(ALength: TSciPosition; AText: PAnsiChar);
 begin
-  inherited Create(AOwner);
-  Width := 300;
-  Height := 200;
-  TabStop := True;
-  ControlStyle := ControlStyle + [csCaptureMouse, csClickEvents, csDoubleClicks, csOpaque];
+  SendScintillaEditorMessage(SCI_ADDTEXT, ALength, LPARAM(AText));
 end;
 
-destructor TCustomSciTextEditor.Destroy;
+procedure TCustomSciTextEditor.AddStyledText(ALength: TSciPosition; C: PAnsiChar);
 begin
-  inherited Destroy;
+  SendScintillaEditorMessage(SCI_ADDSTYLEDTEXT, ALength, C);
 end;
 
-procedure TCustomSciTextEditor.CreateWnd;
-var
-  LoadResult: THandle;
+procedure TCustomSciTextEditor.InsertText(APos: TSciPosition; AText: PAnsiChar);
 begin
-  LoadResult := LoadLibrary(ScintillaDLL);
-  if LoadResult = 0 then
-    raise Exception.Create('Failed to load ' + ScintillaDLL);
-
-  CreateWindowEx(0, ScintillaClassName, nil,
-    WS_CHILD or WS_VISIBLE or WS_TABSTOP or WS_CLIPCHILDREN,
-    0, 0, Width, Height, Handle, 0, HInstance, nil);
-
-  // Get direct access for better performance
-  FDirectPtr := Pointer(SendMessage(Handle, SCI_GETDIRECTPOINTER, 0, 0));
-  FDirectFunction := Pointer(SendMessage(Handle, SCI_GETDIRECTFUNCTION, 0, 0));
+  SendScintillaEditorMessage(SCI_INSERTTEXT, APos, LPARAM(AText));
 end;
 
-procedure TCustomSciTextEditor.DestroyWnd;
+procedure TCustomSciTextEditor.ChangeInsertion(ALength: TSciPosition; AText: PAnsiChar);
 begin
-  FDirectPtr := nil;
-  FDirectFunction := nil;
-  inherited DestroyWnd;
-end;
-
-procedure TCustomSciTextEditor.WMGetDlgCode(var Message: TWMGetDlgCode);
-begin
-  inherited;
-  Message.Result := Message.Result or DLGC_WANTARROWS or DLGC_WANTCHARS;
-end;
-
-procedure TCustomSciTextEditor.WMEraseBkgnd(var Message: TWMEraseBkgnd);
-begin
-  Message.Result := 1; // Prevent flicker
-end;
-
-procedure TCustomSciTextEditor.AddText(length: Integer; text: PAnsiChar);
-begin
-  SendMessage(Handle, SCI_ADDTEXT, length, LPARAM(text));
-end;
-
-procedure TCustomSciTextEditor.AddStyledText(length: Integer; c: PAnsiChar);
-begin
-  SendMessage(Handle, SCI_ADDSTYLEDTEXT, length, c);
-end;
-
-procedure TCustomSciTextEditor.InsertText(pos: Integer; text: PAnsiChar);
-begin
-  SendMessage(Handle, SCI_INSERTTEXT, pos, LPARAM(text));
-end;
-
-procedure TCustomSciTextEditor.ChangeInsertion(length: Integer; text: PAnsiChar);
-begin
-  SendMessage(Handle, SCI_CHANGEINSERTION, length, LPARAM(text));
+  SendScintillaEditorMessage(SCI_CHANGEINSERTION, ALength, LPARAM(AText));
 end;
 
 procedure TCustomSciTextEditor.ClearAll();
 begin
-  SendMessage(Handle, SCI_CLEARALL, 0, 0);
+  SendScintillaEditorMessage(SCI_CLEARALL, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.DeleteRange(start: Integer; lengthDelete: Integer);
+procedure TCustomSciTextEditor.DeleteRange(AStart: TSciPosition; ALengthDelete: TSciPosition);
 begin
-  SendMessage(Handle, SCI_DELETERANGE, start, lengthDelete);
+  SendScintillaEditorMessage(SCI_DELETERANGE, AStart, ALengthDelete);
 end;
 
 procedure TCustomSciTextEditor.ClearDocumentStyle();
 begin
-  SendMessage(Handle, SCI_CLEARDOCUMENTSTYLE, 0, 0);
+  SendScintillaEditorMessage(SCI_CLEARDOCUMENTSTYLE, 0, 0);
 end;
 
-function TCustomSciTextEditor.GetLength(): Integer;
+function TCustomSciTextEditor.GetLength(): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETLENGTH, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLENGTH, 0, 0);
 end;
 
-function TCustomSciTextEditor.GetCharAt(pos: Integer): Integer;
+function TCustomSciTextEditor.GetCharAt(APos: TSciPosition): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETCHARAT, pos, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCHARAT, APos, 0);
 end;
 
-function TCustomSciTextEditor.GetCurrentPos(): Integer;
+function TCustomSciTextEditor.GetCurrentPos(): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETCURRENTPOS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCURRENTPOS, 0, 0);
 end;
 
-function TCustomSciTextEditor.GetAnchor(): Integer;
+function TCustomSciTextEditor.GetAnchor(): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETANCHOR, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETANCHOR, 0, 0);
 end;
 
-function TCustomSciTextEditor.GetStyleAt(pos: Integer): Integer;
+function TCustomSciTextEditor.GetStyleAt(APos: TSciPosition): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETSTYLEAT, pos, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSTYLEAT, APos, 0);
 end;
 
-function TCustomSciTextEditor.GetStyleIndexAt(pos: Integer): Integer;
+function TCustomSciTextEditor.GetStyleIndexAt(APos: TSciPosition): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETSTYLEINDEXAT, pos, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSTYLEINDEXAT, APos, 0);
 end;
 
 procedure TCustomSciTextEditor.Redo();
 begin
-  SendMessage(Handle, SCI_REDO, 0, 0);
+  SendScintillaEditorMessage(SCI_REDO, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetUndoCollection(collectUndo: Boolean);
+procedure TCustomSciTextEditor.SetUndoCollection(ACollectUndo: Boolean);
 begin
-  SendMessage(Handle, SCI_SETUNDOCOLLECTION, collectUndo, 0);
+  SendScintillaEditorMessage(SCI_SETUNDOCOLLECTION, ACollectUndo, 0);
 end;
 
 procedure TCustomSciTextEditor.SelectAll();
 begin
-  SendMessage(Handle, SCI_SELECTALL, 0, 0);
+  SendScintillaEditorMessage(SCI_SELECTALL, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.SetSavePoint();
 begin
-  SendMessage(Handle, SCI_SETSAVEPOINT, 0, 0);
+  SendScintillaEditorMessage(SCI_SETSAVEPOINT, 0, 0);
 end;
 
-function TCustomSciTextEditor.GetStyledText(tr: PSciTextRange): Integer;
+function TCustomSciTextEditor.GetStyledText(ATr: PSciTextRange): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETSTYLEDTEXT, 0, tr);
+  Result := SendScintillaEditorMessage(SCI_GETSTYLEDTEXT, 0, ATr);
 end;
 
-function TCustomSciTextEditor.GetStyledTextFull(tr: PSciTextRangeFull): Integer;
+function TCustomSciTextEditor.GetStyledTextFull(ATr: PSciTextRangeFull): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETSTYLEDTEXTFULL, 0, tr);
+  Result := SendScintillaEditorMessage(SCI_GETSTYLEDTEXTFULL, 0, ATr);
 end;
 
 function TCustomSciTextEditor.CanRedo(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_CANREDO, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_CANREDO, 0, 0);
 end;
 
-function TCustomSciTextEditor.MarkerLineFromHandle(markerHandle: Integer): Integer;
+function TCustomSciTextEditor.MarkerLineFromHandle(AMarkerHandle: Integer): TSciLine;
 begin
-  Result := SendMessage(Handle, SCI_MARKERLINEFROMHANDLE, markerHandle, 0);
+  Result := SendScintillaEditorMessage(SCI_MARKERLINEFROMHANDLE, AMarkerHandle, 0);
 end;
 
-procedure TCustomSciTextEditor.MarkerDeleteHandle(markerHandle: Integer);
+procedure TCustomSciTextEditor.MarkerDeleteHandle(AMarkerHandle: Integer);
 begin
-  SendMessage(Handle, SCI_MARKERDELETEHANDLE, markerHandle, 0);
+  SendScintillaEditorMessage(SCI_MARKERDELETEHANDLE, AMarkerHandle, 0);
 end;
 
-function TCustomSciTextEditor.MarkerHandleFromLine(line: Integer; which: Integer): Integer;
+function TCustomSciTextEditor.MarkerHandleFromLine(ALine: TSciLine; AWhich: Integer): Integer;
 begin
-  Result := SendMessage(Handle, SCI_MARKERHANDLEFROMLINE, line, which);
+  Result := SendScintillaEditorMessage(SCI_MARKERHANDLEFROMLINE, ALine, AWhich);
 end;
 
-function TCustomSciTextEditor.MarkerNumberFromLine(line: Integer; which: Integer): Integer;
+function TCustomSciTextEditor.MarkerNumberFromLine(ALine: TSciLine; AWhich: Integer): Integer;
 begin
-  Result := SendMessage(Handle, SCI_MARKERNUMBERFROMLINE, line, which);
+  Result := SendScintillaEditorMessage(SCI_MARKERNUMBERFROMLINE, ALine, AWhich);
 end;
 
 function TCustomSciTextEditor.GetUndoCollection(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETUNDOCOLLECTION, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETUNDOCOLLECTION, 0, 0);
 end;
 
-function TCustomSciTextEditor.GetViewWS(): Integer;
+function TCustomSciTextEditor.GetViewWS(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETVIEWWS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETVIEWWS, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetViewWS(viewWS: Integer);
+procedure TCustomSciTextEditor.SetViewWS(AViewWS: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETVIEWWS, viewWS, 0);
+  SendScintillaEditorMessage(SCI_SETVIEWWS, AViewWS, 0);
 end;
 
-function TCustomSciTextEditor.GetTabDrawMode(): Integer;
+function TCustomSciTextEditor.GetTabDrawMode(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETTABDRAWMODE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETTABDRAWMODE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetTabDrawMode(tabDrawMode: Integer);
+procedure TCustomSciTextEditor.SetTabDrawMode(ATabDrawMode: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETTABDRAWMODE, tabDrawMode, 0);
+  SendScintillaEditorMessage(SCI_SETTABDRAWMODE, ATabDrawMode, 0);
 end;
 
-function TCustomSciTextEditor.PositionFromPoint(x: Integer; y: Integer): Integer;
+function TCustomSciTextEditor.PositionFromPoint(X: Integer; Y: Integer): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_POSITIONFROMPOINT, x, y);
+  Result := SendScintillaEditorMessage(SCI_POSITIONFROMPOINT, X, Y);
 end;
 
-function TCustomSciTextEditor.PositionFromPointClose(x: Integer; y: Integer): Integer;
+function TCustomSciTextEditor.PositionFromPointClose(X: Integer; Y: Integer): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_POSITIONFROMPOINTCLOSE, x, y);
+  Result := SendScintillaEditorMessage(SCI_POSITIONFROMPOINTCLOSE, X, Y);
 end;
 
-procedure TCustomSciTextEditor.GotoLine(line: Integer);
+procedure TCustomSciTextEditor.GotoLine(ALine: TSciLine);
 begin
-  SendMessage(Handle, SCI_GOTOLINE, line, 0);
+  SendScintillaEditorMessage(SCI_GOTOLINE, ALine, 0);
 end;
 
-procedure TCustomSciTextEditor.GotoPos(caret: Integer);
+procedure TCustomSciTextEditor.GotoPos(ACaret: TSciPosition);
 begin
-  SendMessage(Handle, SCI_GOTOPOS, caret, 0);
+  SendScintillaEditorMessage(SCI_GOTOPOS, ACaret, 0);
 end;
 
-procedure TCustomSciTextEditor.SetAnchor(anchor: Integer);
+procedure TCustomSciTextEditor.SetAnchor(AAnchor: TSciPosition);
 begin
-  SendMessage(Handle, SCI_SETANCHOR, anchor, 0);
+  SendScintillaEditorMessage(SCI_SETANCHOR, AAnchor, 0);
 end;
 
-function TCustomSciTextEditor.GetCurLine(length: Integer; text: PAnsiChar): Integer;
+function TCustomSciTextEditor.GetCurLine(ALength: TSciPosition; AText: PAnsiChar): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETCURLINE, length, LPARAM(text));
+  Result := SendScintillaEditorMessage(SCI_GETCURLINE, ALength, LPARAM(AText));
 end;
 
-function TCustomSciTextEditor.GetEndStyled(): Integer;
+function TCustomSciTextEditor.GetEndStyled(): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETENDSTYLED, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETENDSTYLED, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.ConvertEOLs(eolMode: Integer);
+procedure TCustomSciTextEditor.ConvertEOLs(AEolMode: NativeInt);
 begin
-  SendMessage(Handle, SCI_CONVERTEOLS, eolMode, 0);
+  SendScintillaEditorMessage(SCI_CONVERTEOLS, AEolMode, 0);
 end;
 
-function TCustomSciTextEditor.GetEOLMode(): Integer;
+function TCustomSciTextEditor.GetEOLMode(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETEOLMODE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETEOLMODE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetEOLMode(eolMode: Integer);
+procedure TCustomSciTextEditor.SetEOLMode(AEolMode: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETEOLMODE, eolMode, 0);
+  SendScintillaEditorMessage(SCI_SETEOLMODE, AEolMode, 0);
 end;
 
-procedure TCustomSciTextEditor.StartStyling(start: Integer; unused: Integer);
+procedure TCustomSciTextEditor.StartStyling(AStart: TSciPosition; AUnused: Integer);
 begin
-  SendMessage(Handle, SCI_STARTSTYLING, start, unused);
+  SendScintillaEditorMessage(SCI_STARTSTYLING, AStart, AUnused);
 end;
 
-procedure TCustomSciTextEditor.SetStyling(length: Integer; style: Integer);
+procedure TCustomSciTextEditor.SetStyling(ALength: TSciPosition; AStyle: Integer);
 begin
-  SendMessage(Handle, SCI_SETSTYLING, length, style);
+  SendScintillaEditorMessage(SCI_SETSTYLING, ALength, AStyle);
 end;
 
 function TCustomSciTextEditor.GetBufferedDraw(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETBUFFEREDDRAW, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETBUFFEREDDRAW, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetBufferedDraw(buffered: Boolean);
+procedure TCustomSciTextEditor.SetBufferedDraw(ABuffered: Boolean);
 begin
-  SendMessage(Handle, SCI_SETBUFFEREDDRAW, buffered, 0);
+  SendScintillaEditorMessage(SCI_SETBUFFEREDDRAW, ABuffered, 0);
 end;
 
-procedure TCustomSciTextEditor.SetTabWidth(tabWidth: Integer);
+procedure TCustomSciTextEditor.SetTabWidth(ATabWidth: Integer);
 begin
-  SendMessage(Handle, SCI_SETTABWIDTH, tabWidth, 0);
+  SendScintillaEditorMessage(SCI_SETTABWIDTH, ATabWidth, 0);
 end;
 
 function TCustomSciTextEditor.GetTabWidth(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETTABWIDTH, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETTABWIDTH, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetTabMinimumWidth(pixels: Integer);
+procedure TCustomSciTextEditor.SetTabMinimumWidth(APixels: Integer);
 begin
-  SendMessage(Handle, SCI_SETTABMINIMUMWIDTH, pixels, 0);
+  SendScintillaEditorMessage(SCI_SETTABMINIMUMWIDTH, APixels, 0);
 end;
 
 function TCustomSciTextEditor.GetTabMinimumWidth(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETTABMINIMUMWIDTH, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETTABMINIMUMWIDTH, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.ClearTabStops(line: Integer);
+procedure TCustomSciTextEditor.ClearTabStops(ALine: TSciLine);
 begin
-  SendMessage(Handle, SCI_CLEARTABSTOPS, line, 0);
+  SendScintillaEditorMessage(SCI_CLEARTABSTOPS, ALine, 0);
 end;
 
-procedure TCustomSciTextEditor.AddTabStop(line: Integer; x: Integer);
+procedure TCustomSciTextEditor.AddTabStop(ALine: TSciLine; X: Integer);
 begin
-  SendMessage(Handle, SCI_ADDTABSTOP, line, x);
+  SendScintillaEditorMessage(SCI_ADDTABSTOP, ALine, X);
 end;
 
-function TCustomSciTextEditor.GetNextTabStop(line: Integer; x: Integer): Integer;
+function TCustomSciTextEditor.GetNextTabStop(ALine: TSciLine; X: Integer): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETNEXTTABSTOP, line, x);
+  Result := SendScintillaEditorMessage(SCI_GETNEXTTABSTOP, ALine, X);
 end;
 
-procedure TCustomSciTextEditor.SetCodePage(codePage: Integer);
+procedure TCustomSciTextEditor.SetCodePage(ACodePage: Integer);
 begin
-  SendMessage(Handle, SCI_SETCODEPAGE, codePage, 0);
+  SendScintillaEditorMessage(SCI_SETCODEPAGE, ACodePage, 0);
 end;
 
-procedure TCustomSciTextEditor.SetFontLocale(localeName: PAnsiChar);
+procedure TCustomSciTextEditor.SetFontLocale(ALocaleName: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_SETFONTLOCALE, 0, LPARAM(localeName));
+  SendScintillaEditorMessage(SCI_SETFONTLOCALE, 0, LPARAM(ALocaleName));
 end;
 
-function TCustomSciTextEditor.GetFontLocale(localeName: PAnsiChar): Integer;
+function TCustomSciTextEditor.GetFontLocale(ALocaleName: PAnsiChar): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETFONTLOCALE, 0, LPARAM(localeName));
+  Result := SendScintillaEditorMessage(SCI_GETFONTLOCALE, 0, LPARAM(ALocaleName));
 end;
 
-function TCustomSciTextEditor.GetIMEInteraction(): Integer;
+function TCustomSciTextEditor.GetIMEInteraction(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETIMEINTERACTION, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETIMEINTERACTION, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetIMEInteraction(imeInteraction: Integer);
+procedure TCustomSciTextEditor.SetIMEInteraction(AImeInteraction: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETIMEINTERACTION, imeInteraction, 0);
+  SendScintillaEditorMessage(SCI_SETIMEINTERACTION, AImeInteraction, 0);
 end;
 
-procedure TCustomSciTextEditor.MarkerDefine(markerNumber: Integer; markerSymbol: Integer);
+procedure TCustomSciTextEditor.MarkerDefine(AMarkerNumber: Integer; AMarkerSymbol: NativeInt);
 begin
-  SendMessage(Handle, SCI_MARKERDEFINE, markerNumber, markerSymbol);
+  SendScintillaEditorMessage(SCI_MARKERDEFINE, AMarkerNumber, AMarkerSymbol);
 end;
 
-procedure TCustomSciTextEditor.MarkerSetFore(markerNumber: Integer; fore: TColor);
+procedure TCustomSciTextEditor.MarkerSetFore(AMarkerNumber: Integer; AFore: TColor);
 begin
-  SendMessage(Handle, SCI_MARKERSETFORE, markerNumber, fore);
+  SendScintillaEditorMessage(SCI_MARKERSETFORE, AMarkerNumber, AFore);
 end;
 
-procedure TCustomSciTextEditor.MarkerSetBack(markerNumber: Integer; back: TColor);
+procedure TCustomSciTextEditor.MarkerSetBack(AMarkerNumber: Integer; ABack: TColor);
 begin
-  SendMessage(Handle, SCI_MARKERSETBACK, markerNumber, back);
+  SendScintillaEditorMessage(SCI_MARKERSETBACK, AMarkerNumber, ABack);
 end;
 
-procedure TCustomSciTextEditor.MarkerSetBackSelected(markerNumber: Integer; back: TColor);
+procedure TCustomSciTextEditor.MarkerSetBackSelected(AMarkerNumber: Integer; ABack: TColor);
 begin
-  SendMessage(Handle, SCI_MARKERSETBACKSELECTED, markerNumber, back);
+  SendScintillaEditorMessage(SCI_MARKERSETBACKSELECTED, AMarkerNumber, ABack);
 end;
 
-procedure TCustomSciTextEditor.MarkerSetForeTranslucent(markerNumber: Integer; fore: TColorAlpha);
+procedure TCustomSciTextEditor.MarkerSetForeTranslucent(AMarkerNumber: Integer; AFore: TColorAlpha);
 begin
-  SendMessage(Handle, SCI_MARKERSETFORETRANSLUCENT, markerNumber, fore);
+  SendScintillaEditorMessage(SCI_MARKERSETFORETRANSLUCENT, AMarkerNumber, AFore);
 end;
 
-procedure TCustomSciTextEditor.MarkerSetBackTranslucent(markerNumber: Integer; back: TColorAlpha);
+procedure TCustomSciTextEditor.MarkerSetBackTranslucent(AMarkerNumber: Integer; ABack: TColorAlpha);
 begin
-  SendMessage(Handle, SCI_MARKERSETBACKTRANSLUCENT, markerNumber, back);
+  SendScintillaEditorMessage(SCI_MARKERSETBACKTRANSLUCENT, AMarkerNumber, ABack);
 end;
 
-procedure TCustomSciTextEditor.MarkerSetBackSelectedTranslucent(markerNumber: Integer; back: TColorAlpha);
+procedure TCustomSciTextEditor.MarkerSetBackSelectedTranslucent(AMarkerNumber: Integer; ABack: TColorAlpha);
 begin
-  SendMessage(Handle, SCI_MARKERSETBACKSELECTEDTRANSLUCENT, markerNumber, back);
+  SendScintillaEditorMessage(SCI_MARKERSETBACKSELECTEDTRANSLUCENT, AMarkerNumber, ABack);
 end;
 
-procedure TCustomSciTextEditor.MarkerSetStrokeWidth(markerNumber: Integer; hundredths: Integer);
+procedure TCustomSciTextEditor.MarkerSetStrokeWidth(AMarkerNumber: Integer; AHundredths: Integer);
 begin
-  SendMessage(Handle, SCI_MARKERSETSTROKEWIDTH, markerNumber, hundredths);
+  SendScintillaEditorMessage(SCI_MARKERSETSTROKEWIDTH, AMarkerNumber, AHundredths);
 end;
 
-procedure TCustomSciTextEditor.MarkerEnableHighlight(enabled: Boolean);
+procedure TCustomSciTextEditor.MarkerEnableHighlight(AEnabled: Boolean);
 begin
-  SendMessage(Handle, SCI_MARKERENABLEHIGHLIGHT, enabled, 0);
+  SendScintillaEditorMessage(SCI_MARKERENABLEHIGHLIGHT, AEnabled, 0);
 end;
 
-function TCustomSciTextEditor.MarkerAdd(line: Integer; markerNumber: Integer): Integer;
+function TCustomSciTextEditor.MarkerAdd(ALine: TSciLine; AMarkerNumber: Integer): Integer;
 begin
-  Result := SendMessage(Handle, SCI_MARKERADD, line, markerNumber);
+  Result := SendScintillaEditorMessage(SCI_MARKERADD, ALine, AMarkerNumber);
 end;
 
-procedure TCustomSciTextEditor.MarkerDelete(line: Integer; markerNumber: Integer);
+procedure TCustomSciTextEditor.MarkerDelete(ALine: TSciLine; AMarkerNumber: Integer);
 begin
-  SendMessage(Handle, SCI_MARKERDELETE, line, markerNumber);
+  SendScintillaEditorMessage(SCI_MARKERDELETE, ALine, AMarkerNumber);
 end;
 
-procedure TCustomSciTextEditor.MarkerDeleteAll(markerNumber: Integer);
+procedure TCustomSciTextEditor.MarkerDeleteAll(AMarkerNumber: Integer);
 begin
-  SendMessage(Handle, SCI_MARKERDELETEALL, markerNumber, 0);
+  SendScintillaEditorMessage(SCI_MARKERDELETEALL, AMarkerNumber, 0);
 end;
 
-function TCustomSciTextEditor.MarkerGet(line: Integer): Integer;
+function TCustomSciTextEditor.MarkerGet(ALine: TSciLine): Integer;
 begin
-  Result := SendMessage(Handle, SCI_MARKERGET, line, 0);
+  Result := SendScintillaEditorMessage(SCI_MARKERGET, ALine, 0);
 end;
 
-function TCustomSciTextEditor.MarkerNext(lineStart: Integer; markerMask: Integer): Integer;
+function TCustomSciTextEditor.MarkerNext(ALineStart: TSciLine; AMarkerMask: Integer): TSciLine;
 begin
-  Result := SendMessage(Handle, SCI_MARKERNEXT, lineStart, markerMask);
+  Result := SendScintillaEditorMessage(SCI_MARKERNEXT, ALineStart, AMarkerMask);
 end;
 
-function TCustomSciTextEditor.MarkerPrevious(lineStart: Integer; markerMask: Integer): Integer;
+function TCustomSciTextEditor.MarkerPrevious(ALineStart: TSciLine; AMarkerMask: Integer): TSciLine;
 begin
-  Result := SendMessage(Handle, SCI_MARKERPREVIOUS, lineStart, markerMask);
+  Result := SendScintillaEditorMessage(SCI_MARKERPREVIOUS, ALineStart, AMarkerMask);
 end;
 
-procedure TCustomSciTextEditor.MarkerDefinePixmap(markerNumber: Integer; pixmap: PAnsiChar);
+procedure TCustomSciTextEditor.MarkerDefinePixmap(AMarkerNumber: Integer; APixmap: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_MARKERDEFINEPIXMAP, markerNumber, LPARAM(pixmap));
+  SendScintillaEditorMessage(SCI_MARKERDEFINEPIXMAP, AMarkerNumber, LPARAM(APixmap));
 end;
 
-procedure TCustomSciTextEditor.MarkerAddSet(line: Integer; markerSet: Integer);
+procedure TCustomSciTextEditor.MarkerAddSet(ALine: TSciLine; AMarkerSet: Integer);
 begin
-  SendMessage(Handle, SCI_MARKERADDSET, line, markerSet);
+  SendScintillaEditorMessage(SCI_MARKERADDSET, ALine, AMarkerSet);
 end;
 
-procedure TCustomSciTextEditor.MarkerSetAlpha(markerNumber: Integer; alpha: Integer);
+procedure TCustomSciTextEditor.MarkerSetAlpha(AMarkerNumber: Integer; AAlpha: NativeInt);
 begin
-  SendMessage(Handle, SCI_MARKERSETALPHA, markerNumber, alpha);
+  SendScintillaEditorMessage(SCI_MARKERSETALPHA, AMarkerNumber, AAlpha);
 end;
 
-function TCustomSciTextEditor.MarkerGetLayer(markerNumber: Integer): Integer;
+function TCustomSciTextEditor.MarkerGetLayer(AMarkerNumber: Integer): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_MARKERGETLAYER, markerNumber, 0);
+  Result := SendScintillaEditorMessage(SCI_MARKERGETLAYER, AMarkerNumber, 0);
 end;
 
-procedure TCustomSciTextEditor.MarkerSetLayer(markerNumber: Integer; layer: Integer);
+procedure TCustomSciTextEditor.MarkerSetLayer(AMarkerNumber: Integer; ALayer: NativeInt);
 begin
-  SendMessage(Handle, SCI_MARKERSETLAYER, markerNumber, layer);
+  SendScintillaEditorMessage(SCI_MARKERSETLAYER, AMarkerNumber, ALayer);
 end;
 
-procedure TCustomSciTextEditor.SetMarginTypeN(margin: Integer; marginType: Integer);
+procedure TCustomSciTextEditor.SetMarginTypeN(AMargin: Integer; AMarginType: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETMARGINTYPEN, margin, marginType);
+  SendScintillaEditorMessage(SCI_SETMARGINTYPEN, AMargin, AMarginType);
 end;
 
-function TCustomSciTextEditor.GetMarginTypeN(margin: Integer): Integer;
+function TCustomSciTextEditor.GetMarginTypeN(AMargin: Integer): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETMARGINTYPEN, margin, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMARGINTYPEN, AMargin, 0);
 end;
 
-procedure TCustomSciTextEditor.SetMarginWidthN(margin: Integer; pixelWidth: Integer);
+procedure TCustomSciTextEditor.SetMarginWidthN(AMargin: Integer; APixelWidth: Integer);
 begin
-  SendMessage(Handle, SCI_SETMARGINWIDTHN, margin, pixelWidth);
+  SendScintillaEditorMessage(SCI_SETMARGINWIDTHN, AMargin, APixelWidth);
 end;
 
-function TCustomSciTextEditor.GetMarginWidthN(margin: Integer): Integer;
+function TCustomSciTextEditor.GetMarginWidthN(AMargin: Integer): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETMARGINWIDTHN, margin, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMARGINWIDTHN, AMargin, 0);
 end;
 
-procedure TCustomSciTextEditor.SetMarginMaskN(margin: Integer; mask: Integer);
+procedure TCustomSciTextEditor.SetMarginMaskN(AMargin: Integer; AMask: Integer);
 begin
-  SendMessage(Handle, SCI_SETMARGINMASKN, margin, mask);
+  SendScintillaEditorMessage(SCI_SETMARGINMASKN, AMargin, AMask);
 end;
 
-function TCustomSciTextEditor.GetMarginMaskN(margin: Integer): Integer;
+function TCustomSciTextEditor.GetMarginMaskN(AMargin: Integer): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETMARGINMASKN, margin, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMARGINMASKN, AMargin, 0);
 end;
 
-procedure TCustomSciTextEditor.SetMarginSensitiveN(margin: Integer; sensitive: Boolean);
+procedure TCustomSciTextEditor.SetMarginSensitiveN(AMargin: Integer; ASensitive: Boolean);
 begin
-  SendMessage(Handle, SCI_SETMARGINSENSITIVEN, margin, sensitive);
+  SendScintillaEditorMessage(SCI_SETMARGINSENSITIVEN, AMargin, ASensitive);
 end;
 
-function TCustomSciTextEditor.GetMarginSensitiveN(margin: Integer): Boolean;
+function TCustomSciTextEditor.GetMarginSensitiveN(AMargin: Integer): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETMARGINSENSITIVEN, margin, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMARGINSENSITIVEN, AMargin, 0);
 end;
 
-procedure TCustomSciTextEditor.SetMarginCursorN(margin: Integer; cursor: Integer);
+procedure TCustomSciTextEditor.SetMarginCursorN(AMargin: Integer; ACursor: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETMARGINCURSORN, margin, cursor);
+  SendScintillaEditorMessage(SCI_SETMARGINCURSORN, AMargin, ACursor);
 end;
 
-function TCustomSciTextEditor.GetMarginCursorN(margin: Integer): Integer;
+function TCustomSciTextEditor.GetMarginCursorN(AMargin: Integer): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETMARGINCURSORN, margin, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMARGINCURSORN, AMargin, 0);
 end;
 
-procedure TCustomSciTextEditor.SetMarginBackN(margin: Integer; back: TColor);
+procedure TCustomSciTextEditor.SetMarginBackN(AMargin: Integer; ABack: TColor);
 begin
-  SendMessage(Handle, SCI_SETMARGINBACKN, margin, back);
+  SendScintillaEditorMessage(SCI_SETMARGINBACKN, AMargin, ABack);
 end;
 
-function TCustomSciTextEditor.GetMarginBackN(margin: Integer): TColor;
+function TCustomSciTextEditor.GetMarginBackN(AMargin: Integer): TColor;
 begin
-  Result := SendMessage(Handle, SCI_GETMARGINBACKN, margin, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMARGINBACKN, AMargin, 0);
 end;
 
-procedure TCustomSciTextEditor.SetMargins(margins: Integer);
+procedure TCustomSciTextEditor.SetMargins(AMargins: Integer);
 begin
-  SendMessage(Handle, SCI_SETMARGINS, margins, 0);
+  SendScintillaEditorMessage(SCI_SETMARGINS, AMargins, 0);
 end;
 
 function TCustomSciTextEditor.GetMargins(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETMARGINS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMARGINS, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.StyleClearAll();
 begin
-  SendMessage(Handle, SCI_STYLECLEARALL, 0, 0);
+  SendScintillaEditorMessage(SCI_STYLECLEARALL, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.StyleSetFore(style: Integer; fore: TColor);
+procedure TCustomSciTextEditor.StyleSetFore(AStyle: Integer; AFore: TColor);
 begin
-  SendMessage(Handle, SCI_STYLESETFORE, style, fore);
+  SendScintillaEditorMessage(SCI_STYLESETFORE, AStyle, AFore);
 end;
 
-procedure TCustomSciTextEditor.StyleSetBack(style: Integer; back: TColor);
+procedure TCustomSciTextEditor.StyleSetBack(AStyle: Integer; ABack: TColor);
 begin
-  SendMessage(Handle, SCI_STYLESETBACK, style, back);
+  SendScintillaEditorMessage(SCI_STYLESETBACK, AStyle, ABack);
 end;
 
-procedure TCustomSciTextEditor.StyleSetBold(style: Integer; bold: Boolean);
+procedure TCustomSciTextEditor.StyleSetBold(AStyle: Integer; ABold: Boolean);
 begin
-  SendMessage(Handle, SCI_STYLESETBOLD, style, bold);
+  SendScintillaEditorMessage(SCI_STYLESETBOLD, AStyle, ABold);
 end;
 
-procedure TCustomSciTextEditor.StyleSetItalic(style: Integer; italic: Boolean);
+procedure TCustomSciTextEditor.StyleSetItalic(AStyle: Integer; AItalic: Boolean);
 begin
-  SendMessage(Handle, SCI_STYLESETITALIC, style, italic);
+  SendScintillaEditorMessage(SCI_STYLESETITALIC, AStyle, AItalic);
 end;
 
-procedure TCustomSciTextEditor.StyleSetSize(style: Integer; sizePoints: Integer);
+procedure TCustomSciTextEditor.StyleSetSize(AStyle: Integer; ASizePoints: Integer);
 begin
-  SendMessage(Handle, SCI_STYLESETSIZE, style, sizePoints);
+  SendScintillaEditorMessage(SCI_STYLESETSIZE, AStyle, ASizePoints);
 end;
 
-procedure TCustomSciTextEditor.StyleSetFont(style: Integer; fontName: PAnsiChar);
+procedure TCustomSciTextEditor.StyleSetFont(AStyle: Integer; AFontName: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_STYLESETFONT, style, LPARAM(fontName));
+  SendScintillaEditorMessage(SCI_STYLESETFONT, AStyle, LPARAM(AFontName));
 end;
 
-procedure TCustomSciTextEditor.StyleSetEOLFilled(style: Integer; eolFilled: Boolean);
+procedure TCustomSciTextEditor.StyleSetEOLFilled(AStyle: Integer; AEolFilled: Boolean);
 begin
-  SendMessage(Handle, SCI_STYLESETEOLFILLED, style, eolFilled);
+  SendScintillaEditorMessage(SCI_STYLESETEOLFILLED, AStyle, AEolFilled);
 end;
 
 procedure TCustomSciTextEditor.StyleResetDefault();
 begin
-  SendMessage(Handle, SCI_STYLERESETDEFAULT, 0, 0);
+  SendScintillaEditorMessage(SCI_STYLERESETDEFAULT, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.StyleSetUnderline(style: Integer; underline: Boolean);
+procedure TCustomSciTextEditor.StyleSetUnderline(AStyle: Integer; AUnderline: Boolean);
 begin
-  SendMessage(Handle, SCI_STYLESETUNDERLINE, style, underline);
+  SendScintillaEditorMessage(SCI_STYLESETUNDERLINE, AStyle, AUnderline);
 end;
 
-function TCustomSciTextEditor.StyleGetFore(style: Integer): TColor;
+function TCustomSciTextEditor.StyleGetFore(AStyle: Integer): TColor;
 begin
-  Result := SendMessage(Handle, SCI_STYLEGETFORE, style, 0);
+  Result := SendScintillaEditorMessage(SCI_STYLEGETFORE, AStyle, 0);
 end;
 
-function TCustomSciTextEditor.StyleGetBack(style: Integer): TColor;
+function TCustomSciTextEditor.StyleGetBack(AStyle: Integer): TColor;
 begin
-  Result := SendMessage(Handle, SCI_STYLEGETBACK, style, 0);
+  Result := SendScintillaEditorMessage(SCI_STYLEGETBACK, AStyle, 0);
 end;
 
-function TCustomSciTextEditor.StyleGetBold(style: Integer): Boolean;
+function TCustomSciTextEditor.StyleGetBold(AStyle: Integer): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_STYLEGETBOLD, style, 0);
+  Result := SendScintillaEditorMessage(SCI_STYLEGETBOLD, AStyle, 0);
 end;
 
-function TCustomSciTextEditor.StyleGetItalic(style: Integer): Boolean;
+function TCustomSciTextEditor.StyleGetItalic(AStyle: Integer): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_STYLEGETITALIC, style, 0);
+  Result := SendScintillaEditorMessage(SCI_STYLEGETITALIC, AStyle, 0);
 end;
 
-function TCustomSciTextEditor.StyleGetSize(style: Integer): Integer;
+function TCustomSciTextEditor.StyleGetSize(AStyle: Integer): Integer;
 begin
-  Result := SendMessage(Handle, SCI_STYLEGETSIZE, style, 0);
+  Result := SendScintillaEditorMessage(SCI_STYLEGETSIZE, AStyle, 0);
 end;
 
-function TCustomSciTextEditor.StyleGetFont(style: Integer; fontName: PAnsiChar): Integer;
+function TCustomSciTextEditor.StyleGetFont(AStyle: Integer; AFontName: PAnsiChar): Integer;
 begin
-  Result := SendMessage(Handle, SCI_STYLEGETFONT, style, LPARAM(fontName));
+  Result := SendScintillaEditorMessage(SCI_STYLEGETFONT, AStyle, LPARAM(AFontName));
 end;
 
-function TCustomSciTextEditor.StyleGetEOLFilled(style: Integer): Boolean;
+function TCustomSciTextEditor.StyleGetEOLFilled(AStyle: Integer): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_STYLEGETEOLFILLED, style, 0);
+  Result := SendScintillaEditorMessage(SCI_STYLEGETEOLFILLED, AStyle, 0);
 end;
 
-function TCustomSciTextEditor.StyleGetUnderline(style: Integer): Boolean;
+function TCustomSciTextEditor.StyleGetUnderline(AStyle: Integer): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_STYLEGETUNDERLINE, style, 0);
+  Result := SendScintillaEditorMessage(SCI_STYLEGETUNDERLINE, AStyle, 0);
 end;
 
-function TCustomSciTextEditor.StyleGetCase(style: Integer): Integer;
+function TCustomSciTextEditor.StyleGetCase(AStyle: Integer): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_STYLEGETCASE, style, 0);
+  Result := SendScintillaEditorMessage(SCI_STYLEGETCASE, AStyle, 0);
 end;
 
-function TCustomSciTextEditor.StyleGetCharacterSet(style: Integer): Integer;
+function TCustomSciTextEditor.StyleGetCharacterSet(AStyle: Integer): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_STYLEGETCHARACTERSET, style, 0);
+  Result := SendScintillaEditorMessage(SCI_STYLEGETCHARACTERSET, AStyle, 0);
 end;
 
-function TCustomSciTextEditor.StyleGetVisible(style: Integer): Boolean;
+function TCustomSciTextEditor.StyleGetVisible(AStyle: Integer): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_STYLEGETVISIBLE, style, 0);
+  Result := SendScintillaEditorMessage(SCI_STYLEGETVISIBLE, AStyle, 0);
 end;
 
-function TCustomSciTextEditor.StyleGetChangeable(style: Integer): Boolean;
+function TCustomSciTextEditor.StyleGetChangeable(AStyle: Integer): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_STYLEGETCHANGEABLE, style, 0);
+  Result := SendScintillaEditorMessage(SCI_STYLEGETCHANGEABLE, AStyle, 0);
 end;
 
-function TCustomSciTextEditor.StyleGetHotSpot(style: Integer): Boolean;
+function TCustomSciTextEditor.StyleGetHotSpot(AStyle: Integer): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_STYLEGETHOTSPOT, style, 0);
+  Result := SendScintillaEditorMessage(SCI_STYLEGETHOTSPOT, AStyle, 0);
 end;
 
-procedure TCustomSciTextEditor.StyleSetCase(style: Integer; caseVisible: Integer);
+procedure TCustomSciTextEditor.StyleSetCase(AStyle: Integer; ACaseVisible: NativeInt);
 begin
-  SendMessage(Handle, SCI_STYLESETCASE, style, caseVisible);
+  SendScintillaEditorMessage(SCI_STYLESETCASE, AStyle, ACaseVisible);
 end;
 
-procedure TCustomSciTextEditor.StyleSetSizeFractional(style: Integer; sizeHundredthPoints: Integer);
+procedure TCustomSciTextEditor.StyleSetSizeFractional(AStyle: Integer; ASizeHundredthPoints: Integer);
 begin
-  SendMessage(Handle, SCI_STYLESETSIZEFRACTIONAL, style, sizeHundredthPoints);
+  SendScintillaEditorMessage(SCI_STYLESETSIZEFRACTIONAL, AStyle, ASizeHundredthPoints);
 end;
 
-function TCustomSciTextEditor.StyleGetSizeFractional(style: Integer): Integer;
+function TCustomSciTextEditor.StyleGetSizeFractional(AStyle: Integer): Integer;
 begin
-  Result := SendMessage(Handle, SCI_STYLEGETSIZEFRACTIONAL, style, 0);
+  Result := SendScintillaEditorMessage(SCI_STYLEGETSIZEFRACTIONAL, AStyle, 0);
 end;
 
-procedure TCustomSciTextEditor.StyleSetWeight(style: Integer; weight: Integer);
+procedure TCustomSciTextEditor.StyleSetWeight(AStyle: Integer; AWeight: NativeInt);
 begin
-  SendMessage(Handle, SCI_STYLESETWEIGHT, style, weight);
+  SendScintillaEditorMessage(SCI_STYLESETWEIGHT, AStyle, AWeight);
 end;
 
-function TCustomSciTextEditor.StyleGetWeight(style: Integer): Integer;
+function TCustomSciTextEditor.StyleGetWeight(AStyle: Integer): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_STYLEGETWEIGHT, style, 0);
+  Result := SendScintillaEditorMessage(SCI_STYLEGETWEIGHT, AStyle, 0);
 end;
 
-procedure TCustomSciTextEditor.StyleSetCharacterSet(style: Integer; characterSet: Integer);
+procedure TCustomSciTextEditor.StyleSetCharacterSet(AStyle: Integer; ACharacterSet: NativeInt);
 begin
-  SendMessage(Handle, SCI_STYLESETCHARACTERSET, style, characterSet);
+  SendScintillaEditorMessage(SCI_STYLESETCHARACTERSET, AStyle, ACharacterSet);
 end;
 
-procedure TCustomSciTextEditor.StyleSetHotSpot(style: Integer; hotspot: Boolean);
+procedure TCustomSciTextEditor.StyleSetHotSpot(AStyle: Integer; AHotspot: Boolean);
 begin
-  SendMessage(Handle, SCI_STYLESETHOTSPOT, style, hotspot);
+  SendScintillaEditorMessage(SCI_STYLESETHOTSPOT, AStyle, AHotspot);
 end;
 
-procedure TCustomSciTextEditor.StyleSetCheckMonospaced(style: Integer; checkMonospaced: Boolean);
+procedure TCustomSciTextEditor.StyleSetCheckMonospaced(AStyle: Integer; ACheckMonospaced: Boolean);
 begin
-  SendMessage(Handle, SCI_STYLESETCHECKMONOSPACED, style, checkMonospaced);
+  SendScintillaEditorMessage(SCI_STYLESETCHECKMONOSPACED, AStyle, ACheckMonospaced);
 end;
 
-function TCustomSciTextEditor.StyleGetCheckMonospaced(style: Integer): Boolean;
+function TCustomSciTextEditor.StyleGetCheckMonospaced(AStyle: Integer): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_STYLEGETCHECKMONOSPACED, style, 0);
+  Result := SendScintillaEditorMessage(SCI_STYLEGETCHECKMONOSPACED, AStyle, 0);
 end;
 
-procedure TCustomSciTextEditor.StyleSetStretch(style: Integer; stretch: Integer);
+procedure TCustomSciTextEditor.StyleSetStretch(AStyle: Integer; AStretch: NativeInt);
 begin
-  SendMessage(Handle, SCI_STYLESETSTRETCH, style, stretch);
+  SendScintillaEditorMessage(SCI_STYLESETSTRETCH, AStyle, AStretch);
 end;
 
-function TCustomSciTextEditor.StyleGetStretch(style: Integer): Integer;
+function TCustomSciTextEditor.StyleGetStretch(AStyle: Integer): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_STYLEGETSTRETCH, style, 0);
+  Result := SendScintillaEditorMessage(SCI_STYLEGETSTRETCH, AStyle, 0);
 end;
 
-procedure TCustomSciTextEditor.StyleSetInvisibleRepresentation(style: Integer; representation: PAnsiChar);
+procedure TCustomSciTextEditor.StyleSetInvisibleRepresentation(AStyle: Integer; ARepresentation: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_STYLESETINVISIBLEREPRESENTATION, style, LPARAM(representation));
+  SendScintillaEditorMessage(SCI_STYLESETINVISIBLEREPRESENTATION, AStyle, LPARAM(ARepresentation));
 end;
 
-function TCustomSciTextEditor.StyleGetInvisibleRepresentation(style: Integer; representation: PAnsiChar): Integer;
+function TCustomSciTextEditor.StyleGetInvisibleRepresentation(AStyle: Integer; ARepresentation: PAnsiChar): Integer;
 begin
-  Result := SendMessage(Handle, SCI_STYLEGETINVISIBLEREPRESENTATION, style, LPARAM(representation));
+  Result := SendScintillaEditorMessage(SCI_STYLEGETINVISIBLEREPRESENTATION, AStyle, LPARAM(ARepresentation));
 end;
 
-procedure TCustomSciTextEditor.SetElementColour(element: Integer; colourElement: TColorAlpha);
+procedure TCustomSciTextEditor.SetElementColour(AElement: NativeInt; AColourElement: TColorAlpha);
 begin
-  SendMessage(Handle, SCI_SETELEMENTCOLOUR, element, colourElement);
+  SendScintillaEditorMessage(SCI_SETELEMENTCOLOUR, AElement, AColourElement);
 end;
 
-function TCustomSciTextEditor.GetElementColour(element: Integer): TColorAlpha;
+function TCustomSciTextEditor.GetElementColour(AElement: NativeInt): TColorAlpha;
 begin
-  Result := SendMessage(Handle, SCI_GETELEMENTCOLOUR, element, 0);
+  Result := SendScintillaEditorMessage(SCI_GETELEMENTCOLOUR, AElement, 0);
 end;
 
-procedure TCustomSciTextEditor.ResetElementColour(element: Integer);
+procedure TCustomSciTextEditor.ResetElementColour(AElement: NativeInt);
 begin
-  SendMessage(Handle, SCI_RESETELEMENTCOLOUR, element, 0);
+  SendScintillaEditorMessage(SCI_RESETELEMENTCOLOUR, AElement, 0);
 end;
 
-function TCustomSciTextEditor.GetElementIsSet(element: Integer): Boolean;
+function TCustomSciTextEditor.GetElementIsSet(AElement: NativeInt): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETELEMENTISSET, element, 0);
+  Result := SendScintillaEditorMessage(SCI_GETELEMENTISSET, AElement, 0);
 end;
 
-function TCustomSciTextEditor.GetElementAllowsTranslucent(element: Integer): Boolean;
+function TCustomSciTextEditor.GetElementAllowsTranslucent(AElement: NativeInt): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETELEMENTALLOWSTRANSLUCENT, element, 0);
+  Result := SendScintillaEditorMessage(SCI_GETELEMENTALLOWSTRANSLUCENT, AElement, 0);
 end;
 
-function TCustomSciTextEditor.GetElementBaseColour(element: Integer): TColorAlpha;
+function TCustomSciTextEditor.GetElementBaseColour(AElement: NativeInt): TColorAlpha;
 begin
-  Result := SendMessage(Handle, SCI_GETELEMENTBASECOLOUR, element, 0);
+  Result := SendScintillaEditorMessage(SCI_GETELEMENTBASECOLOUR, AElement, 0);
 end;
 
-procedure TCustomSciTextEditor.SetSelFore(useSetting: Boolean; fore: TColor);
+procedure TCustomSciTextEditor.SetSelFore(AUseSetting: Boolean; AFore: TColor);
 begin
-  SendMessage(Handle, SCI_SETSELFORE, useSetting, fore);
+  SendScintillaEditorMessage(SCI_SETSELFORE, AUseSetting, AFore);
 end;
 
-procedure TCustomSciTextEditor.SetSelBack(useSetting: Boolean; back: TColor);
+procedure TCustomSciTextEditor.SetSelBack(AUseSetting: Boolean; ABack: TColor);
 begin
-  SendMessage(Handle, SCI_SETSELBACK, useSetting, back);
+  SendScintillaEditorMessage(SCI_SETSELBACK, AUseSetting, ABack);
 end;
 
-function TCustomSciTextEditor.GetSelAlpha(): Integer;
+function TCustomSciTextEditor.GetSelAlpha(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETSELALPHA, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELALPHA, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetSelAlpha(alpha: Integer);
+procedure TCustomSciTextEditor.SetSelAlpha(AAlpha: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETSELALPHA, alpha, 0);
+  SendScintillaEditorMessage(SCI_SETSELALPHA, AAlpha, 0);
 end;
 
 function TCustomSciTextEditor.GetSelEOLFilled(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETSELEOLFILLED, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELEOLFILLED, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetSelEOLFilled(filled: Boolean);
+procedure TCustomSciTextEditor.SetSelEOLFilled(AFilled: Boolean);
 begin
-  SendMessage(Handle, SCI_SETSELEOLFILLED, filled, 0);
+  SendScintillaEditorMessage(SCI_SETSELEOLFILLED, AFilled, 0);
 end;
 
-function TCustomSciTextEditor.GetSelectionLayer(): Integer;
+function TCustomSciTextEditor.GetSelectionLayer(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETSELECTIONLAYER, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELECTIONLAYER, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetSelectionLayer(layer: Integer);
+procedure TCustomSciTextEditor.SetSelectionLayer(ALayer: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETSELECTIONLAYER, layer, 0);
+  SendScintillaEditorMessage(SCI_SETSELECTIONLAYER, ALayer, 0);
 end;
 
-function TCustomSciTextEditor.GetCaretLineLayer(): Integer;
+function TCustomSciTextEditor.GetCaretLineLayer(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETCARETLINELAYER, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCARETLINELAYER, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetCaretLineLayer(layer: Integer);
+procedure TCustomSciTextEditor.SetCaretLineLayer(ALayer: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETCARETLINELAYER, layer, 0);
+  SendScintillaEditorMessage(SCI_SETCARETLINELAYER, ALayer, 0);
 end;
 
 function TCustomSciTextEditor.GetCaretLineHighlightSubLine(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETCARETLINEHIGHLIGHTSUBLINE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCARETLINEHIGHLIGHTSUBLINE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetCaretLineHighlightSubLine(subLine: Boolean);
+procedure TCustomSciTextEditor.SetCaretLineHighlightSubLine(ASubLine: Boolean);
 begin
-  SendMessage(Handle, SCI_SETCARETLINEHIGHLIGHTSUBLINE, subLine, 0);
+  SendScintillaEditorMessage(SCI_SETCARETLINEHIGHLIGHTSUBLINE, ASubLine, 0);
 end;
 
-procedure TCustomSciTextEditor.SetCaretFore(fore: TColor);
+procedure TCustomSciTextEditor.SetCaretFore(AFore: TColor);
 begin
-  SendMessage(Handle, SCI_SETCARETFORE, fore, 0);
+  SendScintillaEditorMessage(SCI_SETCARETFORE, AFore, 0);
 end;
 
-procedure TCustomSciTextEditor.AssignCmdKey(keyDefinition: Integer; sciCommand: Integer);
+procedure TCustomSciTextEditor.AssignCmdKey(AKeyDefinition: TSciKeyModifies; ASciCommand: Integer);
 begin
-  SendMessage(Handle, SCI_ASSIGNCMDKEY, keyDefinition, sciCommand);
+  SendScintillaEditorMessage(SCI_ASSIGNCMDKEY, AKeyDefinition, ASciCommand);
 end;
 
-procedure TCustomSciTextEditor.ClearCmdKey(keyDefinition: Integer);
+procedure TCustomSciTextEditor.ClearCmdKey(AKeyDefinition: TSciKeyModifies);
 begin
-  SendMessage(Handle, SCI_CLEARCMDKEY, keyDefinition, 0);
+  SendScintillaEditorMessage(SCI_CLEARCMDKEY, AKeyDefinition, 0);
 end;
 
 procedure TCustomSciTextEditor.ClearAllCmdKeys();
 begin
-  SendMessage(Handle, SCI_CLEARALLCMDKEYS, 0, 0);
+  SendScintillaEditorMessage(SCI_CLEARALLCMDKEYS, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetStylingEx(length: Integer; styles: PAnsiChar);
+procedure TCustomSciTextEditor.SetStylingEx(ALength: TSciPosition; AStyles: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_SETSTYLINGEX, length, LPARAM(styles));
+  SendScintillaEditorMessage(SCI_SETSTYLINGEX, ALength, LPARAM(AStyles));
 end;
 
-procedure TCustomSciTextEditor.StyleSetVisible(style: Integer; visible: Boolean);
+procedure TCustomSciTextEditor.StyleSetVisible(AStyle: Integer; AVisible: Boolean);
 begin
-  SendMessage(Handle, SCI_STYLESETVISIBLE, style, visible);
+  SendScintillaEditorMessage(SCI_STYLESETVISIBLE, AStyle, AVisible);
 end;
 
 function TCustomSciTextEditor.GetCaretPeriod(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETCARETPERIOD, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCARETPERIOD, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetCaretPeriod(periodMilliseconds: Integer);
+procedure TCustomSciTextEditor.SetCaretPeriod(APeriodMilliseconds: Integer);
 begin
-  SendMessage(Handle, SCI_SETCARETPERIOD, periodMilliseconds, 0);
+  SendScintillaEditorMessage(SCI_SETCARETPERIOD, APeriodMilliseconds, 0);
 end;
 
-procedure TCustomSciTextEditor.SetWordChars(characters: PAnsiChar);
+procedure TCustomSciTextEditor.SetWordChars(ACharacters: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_SETWORDCHARS, 0, LPARAM(characters));
+  SendScintillaEditorMessage(SCI_SETWORDCHARS, 0, LPARAM(ACharacters));
 end;
 
-function TCustomSciTextEditor.GetWordChars(characters: PAnsiChar): Integer;
+function TCustomSciTextEditor.GetWordChars(ACharacters: PAnsiChar): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETWORDCHARS, 0, LPARAM(characters));
+  Result := SendScintillaEditorMessage(SCI_GETWORDCHARS, 0, LPARAM(ACharacters));
 end;
 
-procedure TCustomSciTextEditor.SetCharacterCategoryOptimization(countCharacters: Integer);
+procedure TCustomSciTextEditor.SetCharacterCategoryOptimization(ACountCharacters: Integer);
 begin
-  SendMessage(Handle, SCI_SETCHARACTERCATEGORYOPTIMIZATION, countCharacters, 0);
+  SendScintillaEditorMessage(SCI_SETCHARACTERCATEGORYOPTIMIZATION, ACountCharacters, 0);
 end;
 
 function TCustomSciTextEditor.GetCharacterCategoryOptimization(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETCHARACTERCATEGORYOPTIMIZATION, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCHARACTERCATEGORYOPTIMIZATION, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.BeginUndoAction();
 begin
-  SendMessage(Handle, SCI_BEGINUNDOACTION, 0, 0);
+  SendScintillaEditorMessage(SCI_BEGINUNDOACTION, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.EndUndoAction();
 begin
-  SendMessage(Handle, SCI_ENDUNDOACTION, 0, 0);
+  SendScintillaEditorMessage(SCI_ENDUNDOACTION, 0, 0);
 end;
 
 function TCustomSciTextEditor.GetUndoSequence(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETUNDOSEQUENCE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETUNDOSEQUENCE, 0, 0);
 end;
 
 function TCustomSciTextEditor.GetUndoActions(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETUNDOACTIONS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETUNDOACTIONS, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetUndoSavePoint(action: Integer);
+procedure TCustomSciTextEditor.SetUndoSavePoint(AAction: Integer);
 begin
-  SendMessage(Handle, SCI_SETUNDOSAVEPOINT, action, 0);
+  SendScintillaEditorMessage(SCI_SETUNDOSAVEPOINT, AAction, 0);
 end;
 
 function TCustomSciTextEditor.GetUndoSavePoint(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETUNDOSAVEPOINT, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETUNDOSAVEPOINT, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetUndoDetach(action: Integer);
+procedure TCustomSciTextEditor.SetUndoDetach(AAction: Integer);
 begin
-  SendMessage(Handle, SCI_SETUNDODETACH, action, 0);
+  SendScintillaEditorMessage(SCI_SETUNDODETACH, AAction, 0);
 end;
 
 function TCustomSciTextEditor.GetUndoDetach(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETUNDODETACH, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETUNDODETACH, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetUndoTentative(action: Integer);
+procedure TCustomSciTextEditor.SetUndoTentative(AAction: Integer);
 begin
-  SendMessage(Handle, SCI_SETUNDOTENTATIVE, action, 0);
+  SendScintillaEditorMessage(SCI_SETUNDOTENTATIVE, AAction, 0);
 end;
 
 function TCustomSciTextEditor.GetUndoTentative(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETUNDOTENTATIVE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETUNDOTENTATIVE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetUndoCurrent(action: Integer);
+procedure TCustomSciTextEditor.SetUndoCurrent(AAction: Integer);
 begin
-  SendMessage(Handle, SCI_SETUNDOCURRENT, action, 0);
+  SendScintillaEditorMessage(SCI_SETUNDOCURRENT, AAction, 0);
 end;
 
 function TCustomSciTextEditor.GetUndoCurrent(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETUNDOCURRENT, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETUNDOCURRENT, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.PushUndoActionType(type: Integer; pos: Integer);
+procedure TCustomSciTextEditor.PushUndoActionType(AType: Integer; APos: TSciPosition);
 begin
-  SendMessage(Handle, SCI_PUSHUNDOACTIONTYPE, type, pos);
+  SendScintillaEditorMessage(SCI_PUSHUNDOACTIONTYPE, AType, APos);
 end;
 
-procedure TCustomSciTextEditor.ChangeLastUndoActionText(length: Integer; text: PAnsiChar);
+procedure TCustomSciTextEditor.ChangeLastUndoActionText(ALength: TSciPosition; AText: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_CHANGELASTUNDOACTIONTEXT, length, LPARAM(text));
+  SendScintillaEditorMessage(SCI_CHANGELASTUNDOACTIONTEXT, ALength, LPARAM(AText));
 end;
 
-function TCustomSciTextEditor.GetUndoActionType(action: Integer): Integer;
+function TCustomSciTextEditor.GetUndoActionType(AAction: Integer): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETUNDOACTIONTYPE, action, 0);
+  Result := SendScintillaEditorMessage(SCI_GETUNDOACTIONTYPE, AAction, 0);
 end;
 
-function TCustomSciTextEditor.GetUndoActionPosition(action: Integer): Integer;
+function TCustomSciTextEditor.GetUndoActionPosition(AAction: Integer): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETUNDOACTIONPOSITION, action, 0);
+  Result := SendScintillaEditorMessage(SCI_GETUNDOACTIONPOSITION, AAction, 0);
 end;
 
-function TCustomSciTextEditor.GetUndoActionText(action: Integer; text: PAnsiChar): Integer;
+function TCustomSciTextEditor.GetUndoActionText(AAction: Integer; AText: PAnsiChar): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETUNDOACTIONTEXT, action, LPARAM(text));
+  Result := SendScintillaEditorMessage(SCI_GETUNDOACTIONTEXT, AAction, LPARAM(AText));
 end;
 
-procedure TCustomSciTextEditor.IndicSetStyle(indicator: Integer; indicatorStyle: Integer);
+procedure TCustomSciTextEditor.IndicSetStyle(AIndicator: Integer; AIndicatorStyle: NativeInt);
 begin
-  SendMessage(Handle, SCI_INDICSETSTYLE, indicator, indicatorStyle);
+  SendScintillaEditorMessage(SCI_INDICSETSTYLE, AIndicator, AIndicatorStyle);
 end;
 
-function TCustomSciTextEditor.IndicGetStyle(indicator: Integer): Integer;
+function TCustomSciTextEditor.IndicGetStyle(AIndicator: Integer): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_INDICGETSTYLE, indicator, 0);
+  Result := SendScintillaEditorMessage(SCI_INDICGETSTYLE, AIndicator, 0);
 end;
 
-procedure TCustomSciTextEditor.IndicSetFore(indicator: Integer; fore: TColor);
+procedure TCustomSciTextEditor.IndicSetFore(AIndicator: Integer; AFore: TColor);
 begin
-  SendMessage(Handle, SCI_INDICSETFORE, indicator, fore);
+  SendScintillaEditorMessage(SCI_INDICSETFORE, AIndicator, AFore);
 end;
 
-function TCustomSciTextEditor.IndicGetFore(indicator: Integer): TColor;
+function TCustomSciTextEditor.IndicGetFore(AIndicator: Integer): TColor;
 begin
-  Result := SendMessage(Handle, SCI_INDICGETFORE, indicator, 0);
+  Result := SendScintillaEditorMessage(SCI_INDICGETFORE, AIndicator, 0);
 end;
 
-procedure TCustomSciTextEditor.IndicSetUnder(indicator: Integer; under: Boolean);
+procedure TCustomSciTextEditor.IndicSetUnder(AIndicator: Integer; AUnder: Boolean);
 begin
-  SendMessage(Handle, SCI_INDICSETUNDER, indicator, under);
+  SendScintillaEditorMessage(SCI_INDICSETUNDER, AIndicator, AUnder);
 end;
 
-function TCustomSciTextEditor.IndicGetUnder(indicator: Integer): Boolean;
+function TCustomSciTextEditor.IndicGetUnder(AIndicator: Integer): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_INDICGETUNDER, indicator, 0);
+  Result := SendScintillaEditorMessage(SCI_INDICGETUNDER, AIndicator, 0);
 end;
 
-procedure TCustomSciTextEditor.IndicSetHoverStyle(indicator: Integer; indicatorStyle: Integer);
+procedure TCustomSciTextEditor.IndicSetHoverStyle(AIndicator: Integer; AIndicatorStyle: NativeInt);
 begin
-  SendMessage(Handle, SCI_INDICSETHOVERSTYLE, indicator, indicatorStyle);
+  SendScintillaEditorMessage(SCI_INDICSETHOVERSTYLE, AIndicator, AIndicatorStyle);
 end;
 
-function TCustomSciTextEditor.IndicGetHoverStyle(indicator: Integer): Integer;
+function TCustomSciTextEditor.IndicGetHoverStyle(AIndicator: Integer): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_INDICGETHOVERSTYLE, indicator, 0);
+  Result := SendScintillaEditorMessage(SCI_INDICGETHOVERSTYLE, AIndicator, 0);
 end;
 
-procedure TCustomSciTextEditor.IndicSetHoverFore(indicator: Integer; fore: TColor);
+procedure TCustomSciTextEditor.IndicSetHoverFore(AIndicator: Integer; AFore: TColor);
 begin
-  SendMessage(Handle, SCI_INDICSETHOVERFORE, indicator, fore);
+  SendScintillaEditorMessage(SCI_INDICSETHOVERFORE, AIndicator, AFore);
 end;
 
-function TCustomSciTextEditor.IndicGetHoverFore(indicator: Integer): TColor;
+function TCustomSciTextEditor.IndicGetHoverFore(AIndicator: Integer): TColor;
 begin
-  Result := SendMessage(Handle, SCI_INDICGETHOVERFORE, indicator, 0);
+  Result := SendScintillaEditorMessage(SCI_INDICGETHOVERFORE, AIndicator, 0);
 end;
 
-procedure TCustomSciTextEditor.IndicSetFlags(indicator: Integer; flags: Integer);
+procedure TCustomSciTextEditor.IndicSetFlags(AIndicator: Integer; AFlags: NativeInt);
 begin
-  SendMessage(Handle, SCI_INDICSETFLAGS, indicator, flags);
+  SendScintillaEditorMessage(SCI_INDICSETFLAGS, AIndicator, AFlags);
 end;
 
-function TCustomSciTextEditor.IndicGetFlags(indicator: Integer): Integer;
+function TCustomSciTextEditor.IndicGetFlags(AIndicator: Integer): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_INDICGETFLAGS, indicator, 0);
+  Result := SendScintillaEditorMessage(SCI_INDICGETFLAGS, AIndicator, 0);
 end;
 
-procedure TCustomSciTextEditor.IndicSetStrokeWidth(indicator: Integer; hundredths: Integer);
+procedure TCustomSciTextEditor.IndicSetStrokeWidth(AIndicator: Integer; AHundredths: Integer);
 begin
-  SendMessage(Handle, SCI_INDICSETSTROKEWIDTH, indicator, hundredths);
+  SendScintillaEditorMessage(SCI_INDICSETSTROKEWIDTH, AIndicator, AHundredths);
 end;
 
-function TCustomSciTextEditor.IndicGetStrokeWidth(indicator: Integer): Integer;
+function TCustomSciTextEditor.IndicGetStrokeWidth(AIndicator: Integer): Integer;
 begin
-  Result := SendMessage(Handle, SCI_INDICGETSTROKEWIDTH, indicator, 0);
+  Result := SendScintillaEditorMessage(SCI_INDICGETSTROKEWIDTH, AIndicator, 0);
 end;
 
-procedure TCustomSciTextEditor.SetWhitespaceFore(useSetting: Boolean; fore: TColor);
+procedure TCustomSciTextEditor.SetWhitespaceFore(AUseSetting: Boolean; AFore: TColor);
 begin
-  SendMessage(Handle, SCI_SETWHITESPACEFORE, useSetting, fore);
+  SendScintillaEditorMessage(SCI_SETWHITESPACEFORE, AUseSetting, AFore);
 end;
 
-procedure TCustomSciTextEditor.SetWhitespaceBack(useSetting: Boolean; back: TColor);
+procedure TCustomSciTextEditor.SetWhitespaceBack(AUseSetting: Boolean; ABack: TColor);
 begin
-  SendMessage(Handle, SCI_SETWHITESPACEBACK, useSetting, back);
+  SendScintillaEditorMessage(SCI_SETWHITESPACEBACK, AUseSetting, ABack);
 end;
 
-procedure TCustomSciTextEditor.SetWhitespaceSize(size: Integer);
+procedure TCustomSciTextEditor.SetWhitespaceSize(ASize: Integer);
 begin
-  SendMessage(Handle, SCI_SETWHITESPACESIZE, size, 0);
+  SendScintillaEditorMessage(SCI_SETWHITESPACESIZE, ASize, 0);
 end;
 
 function TCustomSciTextEditor.GetWhitespaceSize(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETWHITESPACESIZE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETWHITESPACESIZE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetLineState(line: Integer; state: Integer);
+procedure TCustomSciTextEditor.SetLineState(ALine: TSciLine; AState: Integer);
 begin
-  SendMessage(Handle, SCI_SETLINESTATE, line, state);
+  SendScintillaEditorMessage(SCI_SETLINESTATE, ALine, AState);
 end;
 
-function TCustomSciTextEditor.GetLineState(line: Integer): Integer;
+function TCustomSciTextEditor.GetLineState(ALine: TSciLine): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETLINESTATE, line, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLINESTATE, ALine, 0);
 end;
 
 function TCustomSciTextEditor.GetMaxLineState(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETMAXLINESTATE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMAXLINESTATE, 0, 0);
 end;
 
 function TCustomSciTextEditor.GetCaretLineVisible(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETCARETLINEVISIBLE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCARETLINEVISIBLE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetCaretLineVisible(show: Boolean);
+procedure TCustomSciTextEditor.SetCaretLineVisible(AShow: Boolean);
 begin
-  SendMessage(Handle, SCI_SETCARETLINEVISIBLE, show, 0);
+  SendScintillaEditorMessage(SCI_SETCARETLINEVISIBLE, AShow, 0);
 end;
 
 function TCustomSciTextEditor.GetCaretLineBack(): TColor;
 begin
-  Result := SendMessage(Handle, SCI_GETCARETLINEBACK, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCARETLINEBACK, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetCaretLineBack(back: TColor);
+procedure TCustomSciTextEditor.SetCaretLineBack(ABack: TColor);
 begin
-  SendMessage(Handle, SCI_SETCARETLINEBACK, back, 0);
+  SendScintillaEditorMessage(SCI_SETCARETLINEBACK, ABack, 0);
 end;
 
 function TCustomSciTextEditor.GetCaretLineFrame(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETCARETLINEFRAME, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCARETLINEFRAME, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetCaretLineFrame(width: Integer);
+procedure TCustomSciTextEditor.SetCaretLineFrame(AWidth: Integer);
 begin
-  SendMessage(Handle, SCI_SETCARETLINEFRAME, width, 0);
+  SendScintillaEditorMessage(SCI_SETCARETLINEFRAME, AWidth, 0);
 end;
 
-procedure TCustomSciTextEditor.StyleSetChangeable(style: Integer; changeable: Boolean);
+procedure TCustomSciTextEditor.StyleSetChangeable(AStyle: Integer; AChangeable: Boolean);
 begin
-  SendMessage(Handle, SCI_STYLESETCHANGEABLE, style, changeable);
+  SendScintillaEditorMessage(SCI_STYLESETCHANGEABLE, AStyle, AChangeable);
 end;
 
-procedure TCustomSciTextEditor.AutoCShow(lengthEntered: Integer; itemList: PAnsiChar);
+procedure TCustomSciTextEditor.AutoCShow(ALengthEntered: TSciPosition; AItemList: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_AUTOCSHOW, lengthEntered, LPARAM(itemList));
+  SendScintillaEditorMessage(SCI_AUTOCSHOW, ALengthEntered, LPARAM(AItemList));
 end;
 
 procedure TCustomSciTextEditor.AutoCCancel();
 begin
-  SendMessage(Handle, SCI_AUTOCCANCEL, 0, 0);
+  SendScintillaEditorMessage(SCI_AUTOCCANCEL, 0, 0);
 end;
 
 function TCustomSciTextEditor.AutoCActive(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_AUTOCACTIVE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_AUTOCACTIVE, 0, 0);
 end;
 
-function TCustomSciTextEditor.AutoCPosStart(): Integer;
+function TCustomSciTextEditor.AutoCPosStart(): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_AUTOCPOSSTART, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_AUTOCPOSSTART, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.AutoCComplete();
 begin
-  SendMessage(Handle, SCI_AUTOCCOMPLETE, 0, 0);
+  SendScintillaEditorMessage(SCI_AUTOCCOMPLETE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.AutoCStops(characterSet: PAnsiChar);
+procedure TCustomSciTextEditor.AutoCStops(ACharacterSet: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_AUTOCSTOPS, 0, LPARAM(characterSet));
+  SendScintillaEditorMessage(SCI_AUTOCSTOPS, 0, LPARAM(ACharacterSet));
 end;
 
-procedure TCustomSciTextEditor.AutoCSetSeparator(separatorCharacter: Integer);
+procedure TCustomSciTextEditor.AutoCSetSeparator(ASeparatorCharacter: Integer);
 begin
-  SendMessage(Handle, SCI_AUTOCSETSEPARATOR, separatorCharacter, 0);
+  SendScintillaEditorMessage(SCI_AUTOCSETSEPARATOR, ASeparatorCharacter, 0);
 end;
 
 function TCustomSciTextEditor.AutoCGetSeparator(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_AUTOCGETSEPARATOR, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_AUTOCGETSEPARATOR, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.AutoCSelect(select: PAnsiChar);
+procedure TCustomSciTextEditor.AutoCSelect(ASelect: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_AUTOCSELECT, 0, LPARAM(select));
+  SendScintillaEditorMessage(SCI_AUTOCSELECT, 0, LPARAM(ASelect));
 end;
 
-procedure TCustomSciTextEditor.AutoCSetCancelAtStart(cancel: Boolean);
+procedure TCustomSciTextEditor.AutoCSetCancelAtStart(ACancel: Boolean);
 begin
-  SendMessage(Handle, SCI_AUTOCSETCANCELATSTART, cancel, 0);
+  SendScintillaEditorMessage(SCI_AUTOCSETCANCELATSTART, ACancel, 0);
 end;
 
 function TCustomSciTextEditor.AutoCGetCancelAtStart(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_AUTOCGETCANCELATSTART, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_AUTOCGETCANCELATSTART, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.AutoCSetFillUps(characterSet: PAnsiChar);
+procedure TCustomSciTextEditor.AutoCSetFillUps(ACharacterSet: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_AUTOCSETFILLUPS, 0, LPARAM(characterSet));
+  SendScintillaEditorMessage(SCI_AUTOCSETFILLUPS, 0, LPARAM(ACharacterSet));
 end;
 
-procedure TCustomSciTextEditor.AutoCSetChooseSingle(chooseSingle: Boolean);
+procedure TCustomSciTextEditor.AutoCSetChooseSingle(AChooseSingle: Boolean);
 begin
-  SendMessage(Handle, SCI_AUTOCSETCHOOSESINGLE, chooseSingle, 0);
+  SendScintillaEditorMessage(SCI_AUTOCSETCHOOSESINGLE, AChooseSingle, 0);
 end;
 
 function TCustomSciTextEditor.AutoCGetChooseSingle(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_AUTOCGETCHOOSESINGLE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_AUTOCGETCHOOSESINGLE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.AutoCSetIgnoreCase(ignoreCase: Boolean);
+procedure TCustomSciTextEditor.AutoCSetIgnoreCase(AIgnoreCase: Boolean);
 begin
-  SendMessage(Handle, SCI_AUTOCSETIGNORECASE, ignoreCase, 0);
+  SendScintillaEditorMessage(SCI_AUTOCSETIGNORECASE, AIgnoreCase, 0);
 end;
 
 function TCustomSciTextEditor.AutoCGetIgnoreCase(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_AUTOCGETIGNORECASE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_AUTOCGETIGNORECASE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.UserListShow(listType: Integer; itemList: PAnsiChar);
+procedure TCustomSciTextEditor.UserListShow(AListType: Integer; AItemList: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_USERLISTSHOW, listType, LPARAM(itemList));
+  SendScintillaEditorMessage(SCI_USERLISTSHOW, AListType, LPARAM(AItemList));
 end;
 
-procedure TCustomSciTextEditor.AutoCSetAutoHide(autoHide: Boolean);
+procedure TCustomSciTextEditor.AutoCSetAutoHide(AAutoHide: Boolean);
 begin
-  SendMessage(Handle, SCI_AUTOCSETAUTOHIDE, autoHide, 0);
+  SendScintillaEditorMessage(SCI_AUTOCSETAUTOHIDE, AAutoHide, 0);
 end;
 
 function TCustomSciTextEditor.AutoCGetAutoHide(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_AUTOCGETAUTOHIDE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_AUTOCGETAUTOHIDE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.AutoCSetOptions(options: Integer);
+procedure TCustomSciTextEditor.AutoCSetOptions(AOptions: NativeInt);
 begin
-  SendMessage(Handle, SCI_AUTOCSETOPTIONS, options, 0);
+  SendScintillaEditorMessage(SCI_AUTOCSETOPTIONS, AOptions, 0);
 end;
 
-function TCustomSciTextEditor.AutoCGetOptions(): Integer;
+function TCustomSciTextEditor.AutoCGetOptions(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_AUTOCGETOPTIONS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_AUTOCGETOPTIONS, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.AutoCSetDropRestOfWord(dropRestOfWord: Boolean);
+procedure TCustomSciTextEditor.AutoCSetDropRestOfWord(ADropRestOfWord: Boolean);
 begin
-  SendMessage(Handle, SCI_AUTOCSETDROPRESTOFWORD, dropRestOfWord, 0);
+  SendScintillaEditorMessage(SCI_AUTOCSETDROPRESTOFWORD, ADropRestOfWord, 0);
 end;
 
 function TCustomSciTextEditor.AutoCGetDropRestOfWord(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_AUTOCGETDROPRESTOFWORD, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_AUTOCGETDROPRESTOFWORD, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.RegisterImage(type: Integer; xpmData: PAnsiChar);
+procedure TCustomSciTextEditor.RegisterImage(AType: Integer; AXpmData: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_REGISTERIMAGE, type, LPARAM(xpmData));
+  SendScintillaEditorMessage(SCI_REGISTERIMAGE, AType, LPARAM(AXpmData));
 end;
 
 procedure TCustomSciTextEditor.ClearRegisteredImages();
 begin
-  SendMessage(Handle, SCI_CLEARREGISTEREDIMAGES, 0, 0);
+  SendScintillaEditorMessage(SCI_CLEARREGISTEREDIMAGES, 0, 0);
 end;
 
 function TCustomSciTextEditor.AutoCGetTypeSeparator(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_AUTOCGETTYPESEPARATOR, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_AUTOCGETTYPESEPARATOR, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.AutoCSetTypeSeparator(separatorCharacter: Integer);
+procedure TCustomSciTextEditor.AutoCSetTypeSeparator(ASeparatorCharacter: Integer);
 begin
-  SendMessage(Handle, SCI_AUTOCSETTYPESEPARATOR, separatorCharacter, 0);
+  SendScintillaEditorMessage(SCI_AUTOCSETTYPESEPARATOR, ASeparatorCharacter, 0);
 end;
 
-procedure TCustomSciTextEditor.AutoCSetMaxWidth(characterCount: Integer);
+procedure TCustomSciTextEditor.AutoCSetMaxWidth(ACharacterCount: Integer);
 begin
-  SendMessage(Handle, SCI_AUTOCSETMAXWIDTH, characterCount, 0);
+  SendScintillaEditorMessage(SCI_AUTOCSETMAXWIDTH, ACharacterCount, 0);
 end;
 
 function TCustomSciTextEditor.AutoCGetMaxWidth(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_AUTOCGETMAXWIDTH, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_AUTOCGETMAXWIDTH, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.AutoCSetMaxHeight(rowCount: Integer);
+procedure TCustomSciTextEditor.AutoCSetMaxHeight(ARowCount: Integer);
 begin
-  SendMessage(Handle, SCI_AUTOCSETMAXHEIGHT, rowCount, 0);
+  SendScintillaEditorMessage(SCI_AUTOCSETMAXHEIGHT, ARowCount, 0);
 end;
 
 function TCustomSciTextEditor.AutoCGetMaxHeight(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_AUTOCGETMAXHEIGHT, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_AUTOCGETMAXHEIGHT, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.AutoCSetStyle(style: Integer);
+procedure TCustomSciTextEditor.AutoCSetStyle(AStyle: Integer);
 begin
-  SendMessage(Handle, SCI_AUTOCSETSTYLE, style, 0);
+  SendScintillaEditorMessage(SCI_AUTOCSETSTYLE, AStyle, 0);
 end;
 
 function TCustomSciTextEditor.AutoCGetStyle(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_AUTOCGETSTYLE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_AUTOCGETSTYLE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetIndent(indentSize: Integer);
+procedure TCustomSciTextEditor.SetIndent(AIndentSize: Integer);
 begin
-  SendMessage(Handle, SCI_SETINDENT, indentSize, 0);
+  SendScintillaEditorMessage(SCI_SETINDENT, AIndentSize, 0);
 end;
 
 function TCustomSciTextEditor.GetIndent(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETINDENT, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETINDENT, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetUseTabs(useTabs: Boolean);
+procedure TCustomSciTextEditor.SetUseTabs(AUseTabs: Boolean);
 begin
-  SendMessage(Handle, SCI_SETUSETABS, useTabs, 0);
+  SendScintillaEditorMessage(SCI_SETUSETABS, AUseTabs, 0);
 end;
 
 function TCustomSciTextEditor.GetUseTabs(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETUSETABS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETUSETABS, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetLineIndentation(line: Integer; indentation: Integer);
+procedure TCustomSciTextEditor.SetLineIndentation(ALine: TSciLine; AIndentation: Integer);
 begin
-  SendMessage(Handle, SCI_SETLINEINDENTATION, line, indentation);
+  SendScintillaEditorMessage(SCI_SETLINEINDENTATION, ALine, AIndentation);
 end;
 
-function TCustomSciTextEditor.GetLineIndentation(line: Integer): Integer;
+function TCustomSciTextEditor.GetLineIndentation(ALine: TSciLine): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETLINEINDENTATION, line, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLINEINDENTATION, ALine, 0);
 end;
 
-function TCustomSciTextEditor.GetLineIndentPosition(line: Integer): Integer;
+function TCustomSciTextEditor.GetLineIndentPosition(ALine: TSciLine): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETLINEINDENTPOSITION, line, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLINEINDENTPOSITION, ALine, 0);
 end;
 
-function TCustomSciTextEditor.GetColumn(pos: Integer): Integer;
+function TCustomSciTextEditor.GetColumn(APos: TSciPosition): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETCOLUMN, pos, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCOLUMN, APos, 0);
 end;
 
-function TCustomSciTextEditor.CountCharacters(start: Integer; end: Integer): Integer;
+function TCustomSciTextEditor.CountCharacters(AStart: TSciPosition; AEnd: TSciPosition): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_COUNTCHARACTERS, start, end);
+  Result := SendScintillaEditorMessage(SCI_COUNTCHARACTERS, AStart, AEnd);
 end;
 
-function TCustomSciTextEditor.CountCodeUnits(start: Integer; end: Integer): Integer;
+function TCustomSciTextEditor.CountCodeUnits(AStart: TSciPosition; AEnd: TSciPosition): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_COUNTCODEUNITS, start, end);
+  Result := SendScintillaEditorMessage(SCI_COUNTCODEUNITS, AStart, AEnd);
 end;
 
-procedure TCustomSciTextEditor.SetHScrollBar(visible: Boolean);
+procedure TCustomSciTextEditor.SetHScrollBar(AVisible: Boolean);
 begin
-  SendMessage(Handle, SCI_SETHSCROLLBAR, visible, 0);
+  SendScintillaEditorMessage(SCI_SETHSCROLLBAR, AVisible, 0);
 end;
 
 function TCustomSciTextEditor.GetHScrollBar(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETHSCROLLBAR, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETHSCROLLBAR, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetIndentationGuides(indentView: Integer);
+procedure TCustomSciTextEditor.SetIndentationGuides(AIndentView: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETINDENTATIONGUIDES, indentView, 0);
+  SendScintillaEditorMessage(SCI_SETINDENTATIONGUIDES, AIndentView, 0);
 end;
 
-function TCustomSciTextEditor.GetIndentationGuides(): Integer;
+function TCustomSciTextEditor.GetIndentationGuides(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETINDENTATIONGUIDES, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETINDENTATIONGUIDES, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetHighlightGuide(column: Integer);
+procedure TCustomSciTextEditor.SetHighlightGuide(AColumn: TSciPosition);
 begin
-  SendMessage(Handle, SCI_SETHIGHLIGHTGUIDE, column, 0);
+  SendScintillaEditorMessage(SCI_SETHIGHLIGHTGUIDE, AColumn, 0);
 end;
 
-function TCustomSciTextEditor.GetHighlightGuide(): Integer;
+function TCustomSciTextEditor.GetHighlightGuide(): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETHIGHLIGHTGUIDE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETHIGHLIGHTGUIDE, 0, 0);
 end;
 
-function TCustomSciTextEditor.GetLineEndPosition(line: Integer): Integer;
+function TCustomSciTextEditor.GetLineEndPosition(ALine: TSciLine): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETLINEENDPOSITION, line, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLINEENDPOSITION, ALine, 0);
 end;
 
 function TCustomSciTextEditor.GetCodePage(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETCODEPAGE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCODEPAGE, 0, 0);
 end;
 
 function TCustomSciTextEditor.GetCaretFore(): TColor;
 begin
-  Result := SendMessage(Handle, SCI_GETCARETFORE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCARETFORE, 0, 0);
 end;
 
 function TCustomSciTextEditor.GetReadOnly(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETREADONLY, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETREADONLY, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetCurrentPos(caret: Integer);
+procedure TCustomSciTextEditor.SetCurrentPos(ACaret: TSciPosition);
 begin
-  SendMessage(Handle, SCI_SETCURRENTPOS, caret, 0);
+  SendScintillaEditorMessage(SCI_SETCURRENTPOS, ACaret, 0);
 end;
 
-procedure TCustomSciTextEditor.SetSelectionStart(anchor: Integer);
+procedure TCustomSciTextEditor.SetSelectionStart(AAnchor: TSciPosition);
 begin
-  SendMessage(Handle, SCI_SETSELECTIONSTART, anchor, 0);
+  SendScintillaEditorMessage(SCI_SETSELECTIONSTART, AAnchor, 0);
 end;
 
-function TCustomSciTextEditor.GetSelectionStart(): Integer;
+function TCustomSciTextEditor.GetSelectionStart(): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETSELECTIONSTART, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELECTIONSTART, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetSelectionEnd(caret: Integer);
+procedure TCustomSciTextEditor.SetSelectionEnd(ACaret: TSciPosition);
 begin
-  SendMessage(Handle, SCI_SETSELECTIONEND, caret, 0);
+  SendScintillaEditorMessage(SCI_SETSELECTIONEND, ACaret, 0);
 end;
 
-function TCustomSciTextEditor.GetSelectionEnd(): Integer;
+function TCustomSciTextEditor.GetSelectionEnd(): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETSELECTIONEND, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELECTIONEND, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetEmptySelection(caret: Integer);
+procedure TCustomSciTextEditor.SetEmptySelection(ACaret: TSciPosition);
 begin
-  SendMessage(Handle, SCI_SETEMPTYSELECTION, caret, 0);
+  SendScintillaEditorMessage(SCI_SETEMPTYSELECTION, ACaret, 0);
 end;
 
-procedure TCustomSciTextEditor.SetPrintMagnification(magnification: Integer);
+procedure TCustomSciTextEditor.SetPrintMagnification(AMagnification: Integer);
 begin
-  SendMessage(Handle, SCI_SETPRINTMAGNIFICATION, magnification, 0);
+  SendScintillaEditorMessage(SCI_SETPRINTMAGNIFICATION, AMagnification, 0);
 end;
 
 function TCustomSciTextEditor.GetPrintMagnification(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETPRINTMAGNIFICATION, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETPRINTMAGNIFICATION, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetPrintColourMode(mode: Integer);
+procedure TCustomSciTextEditor.SetPrintColourMode(AMode: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETPRINTCOLOURMODE, mode, 0);
+  SendScintillaEditorMessage(SCI_SETPRINTCOLOURMODE, AMode, 0);
 end;
 
-function TCustomSciTextEditor.GetPrintColourMode(): Integer;
+function TCustomSciTextEditor.GetPrintColourMode(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETPRINTCOLOURMODE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETPRINTCOLOURMODE, 0, 0);
 end;
 
-function TCustomSciTextEditor.FindText(searchFlags: Integer; ft: PSciFindText): Integer;
+function TCustomSciTextEditor.FindText(ASearchFlags: NativeInt; AFt: PSciFindText): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_FINDTEXT, searchFlags, ft);
+  Result := SendScintillaEditorMessage(SCI_FINDTEXT, ASearchFlags, AFt);
 end;
 
-function TCustomSciTextEditor.FindTextFull(searchFlags: Integer; ft: PSciFindTextFull): Integer;
+function TCustomSciTextEditor.FindTextFull(ASearchFlags: NativeInt; AFt: PSciFindTextFull): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_FINDTEXTFULL, searchFlags, ft);
+  Result := SendScintillaEditorMessage(SCI_FINDTEXTFULL, ASearchFlags, AFt);
 end;
 
-function TCustomSciTextEditor.FormatRange(draw: Boolean; fr: PFormatRange): Integer;
+function TCustomSciTextEditor.FormatRange(ADraw: Boolean; AFr: PSciFormatRange): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_FORMATRANGE, draw, fr);
+  Result := SendScintillaEditorMessage(SCI_FORMATRANGE, ADraw, AFr);
 end;
 
-function TCustomSciTextEditor.FormatRangeFull(draw: Boolean; fr: PFormatRangeFull): Integer;
+function TCustomSciTextEditor.FormatRangeFull(ADraw: Boolean; AFr: PSciFormatRangeFull): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_FORMATRANGEFULL, draw, fr);
+  Result := SendScintillaEditorMessage(SCI_FORMATRANGEFULL, ADraw, AFr);
 end;
 
-procedure TCustomSciTextEditor.SetChangeHistory(changeHistory: Integer);
+procedure TCustomSciTextEditor.SetChangeHistory(AChangeHistory: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETCHANGEHISTORY, changeHistory, 0);
+  SendScintillaEditorMessage(SCI_SETCHANGEHISTORY, AChangeHistory, 0);
 end;
 
-function TCustomSciTextEditor.GetChangeHistory(): Integer;
+function TCustomSciTextEditor.GetChangeHistory(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETCHANGEHISTORY, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCHANGEHISTORY, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetUndoSelectionHistory(undoSelectionHistory: Integer);
+procedure TCustomSciTextEditor.SetUndoSelectionHistory(AUndoSelectionHistory: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETUNDOSELECTIONHISTORY, undoSelectionHistory, 0);
+  SendScintillaEditorMessage(SCI_SETUNDOSELECTIONHISTORY, AUndoSelectionHistory, 0);
 end;
 
-function TCustomSciTextEditor.GetUndoSelectionHistory(): Integer;
+function TCustomSciTextEditor.GetUndoSelectionHistory(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETUNDOSELECTIONHISTORY, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETUNDOSELECTIONHISTORY, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetSelectionSerialized(selectionString: PAnsiChar);
+procedure TCustomSciTextEditor.SetSelectionSerialized(ASelectionString: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_SETSELECTIONSERIALIZED, 0, LPARAM(selectionString));
+  SendScintillaEditorMessage(SCI_SETSELECTIONSERIALIZED, 0, LPARAM(ASelectionString));
 end;
 
-function TCustomSciTextEditor.GetSelectionSerialized(selectionString: PAnsiChar): Integer;
+function TCustomSciTextEditor.GetSelectionSerialized(ASelectionString: PAnsiChar): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETSELECTIONSERIALIZED, 0, LPARAM(selectionString));
+  Result := SendScintillaEditorMessage(SCI_GETSELECTIONSERIALIZED, 0, LPARAM(ASelectionString));
 end;
 
-function TCustomSciTextEditor.GetFirstVisibleLine(): Integer;
+function TCustomSciTextEditor.GetFirstVisibleLine(): TSciLine;
 begin
-  Result := SendMessage(Handle, SCI_GETFIRSTVISIBLELINE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETFIRSTVISIBLELINE, 0, 0);
 end;
 
-function TCustomSciTextEditor.GetLine(line: Integer; text: PAnsiChar): Integer;
+function TCustomSciTextEditor.GetLine(ALine: TSciLine; AText: PAnsiChar): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETLINE, line, LPARAM(text));
+  Result := SendScintillaEditorMessage(SCI_GETLINE, ALine, LPARAM(AText));
 end;
 
-function TCustomSciTextEditor.GetLineCount(): Integer;
+function TCustomSciTextEditor.GetLineCount(): TSciLine;
 begin
-  Result := SendMessage(Handle, SCI_GETLINECOUNT, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLINECOUNT, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.AllocateLines(lines: Integer);
+procedure TCustomSciTextEditor.AllocateLines(ALines: TSciLine);
 begin
-  SendMessage(Handle, SCI_ALLOCATELINES, lines, 0);
+  SendScintillaEditorMessage(SCI_ALLOCATELINES, ALines, 0);
 end;
 
-procedure TCustomSciTextEditor.SetMarginLeft(pixelWidth: Integer);
+procedure TCustomSciTextEditor.SetMarginLeft(APixelWidth: Integer);
 begin
-  SendMessage(Handle, SCI_SETMARGINLEFT, 0, pixelWidth);
+  SendScintillaEditorMessage(SCI_SETMARGINLEFT, 0, APixelWidth);
 end;
 
 function TCustomSciTextEditor.GetMarginLeft(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETMARGINLEFT, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMARGINLEFT, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetMarginRight(pixelWidth: Integer);
+procedure TCustomSciTextEditor.SetMarginRight(APixelWidth: Integer);
 begin
-  SendMessage(Handle, SCI_SETMARGINRIGHT, 0, pixelWidth);
+  SendScintillaEditorMessage(SCI_SETMARGINRIGHT, 0, APixelWidth);
 end;
 
 function TCustomSciTextEditor.GetMarginRight(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETMARGINRIGHT, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMARGINRIGHT, 0, 0);
 end;
 
 function TCustomSciTextEditor.GetModify(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETMODIFY, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMODIFY, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetSel(anchor: Integer; caret: Integer);
+procedure TCustomSciTextEditor.SetSel(AAnchor: TSciPosition; ACaret: TSciPosition);
 begin
-  SendMessage(Handle, SCI_SETSEL, anchor, caret);
+  SendScintillaEditorMessage(SCI_SETSEL, AAnchor, ACaret);
 end;
 
-function TCustomSciTextEditor.GetSelText(text: PAnsiChar): Integer;
+function TCustomSciTextEditor.GetSelText(AText: PAnsiChar): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETSELTEXT, 0, LPARAM(text));
+  Result := SendScintillaEditorMessage(SCI_GETSELTEXT, 0, LPARAM(AText));
 end;
 
-function TCustomSciTextEditor.GetTextRange(tr: PSciTextRange): Integer;
+function TCustomSciTextEditor.GetTextRange(ATr: PSciTextRange): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETTEXTRANGE, 0, tr);
+  Result := SendScintillaEditorMessage(SCI_GETTEXTRANGE, 0, ATr);
 end;
 
-function TCustomSciTextEditor.GetTextRangeFull(tr: PSciTextRangeFull): Integer;
+function TCustomSciTextEditor.GetTextRangeFull(ATr: PSciTextRangeFull): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETTEXTRANGEFULL, 0, tr);
+  Result := SendScintillaEditorMessage(SCI_GETTEXTRANGEFULL, 0, ATr);
 end;
 
-procedure TCustomSciTextEditor.HideSelection(hide: Boolean);
+procedure TCustomSciTextEditor.HideSelection(AHide: Boolean);
 begin
-  SendMessage(Handle, SCI_HIDESELECTION, hide, 0);
+  SendScintillaEditorMessage(SCI_HIDESELECTION, AHide, 0);
 end;
 
 function TCustomSciTextEditor.GetSelectionHidden(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETSELECTIONHIDDEN, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELECTIONHIDDEN, 0, 0);
 end;
 
-function TCustomSciTextEditor.PointXFromPosition(pos: Integer): Integer;
+function TCustomSciTextEditor.PointXFromPosition(APos: TSciPosition): Integer;
 begin
-  Result := SendMessage(Handle, SCI_POINTXFROMPOSITION, 0, pos);
+  Result := SendScintillaEditorMessage(SCI_POINTXFROMPOSITION, 0, APos);
 end;
 
-function TCustomSciTextEditor.PointYFromPosition(pos: Integer): Integer;
+function TCustomSciTextEditor.PointYFromPosition(APos: TSciPosition): Integer;
 begin
-  Result := SendMessage(Handle, SCI_POINTYFROMPOSITION, 0, pos);
+  Result := SendScintillaEditorMessage(SCI_POINTYFROMPOSITION, 0, APos);
 end;
 
-function TCustomSciTextEditor.LineFromPosition(pos: Integer): Integer;
+function TCustomSciTextEditor.LineFromPosition(APos: TSciPosition): TSciLine;
 begin
-  Result := SendMessage(Handle, SCI_LINEFROMPOSITION, pos, 0);
+  Result := SendScintillaEditorMessage(SCI_LINEFROMPOSITION, APos, 0);
 end;
 
-function TCustomSciTextEditor.PositionFromLine(line: Integer): Integer;
+function TCustomSciTextEditor.PositionFromLine(ALine: TSciLine): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_POSITIONFROMLINE, line, 0);
+  Result := SendScintillaEditorMessage(SCI_POSITIONFROMLINE, ALine, 0);
 end;
 
-procedure TCustomSciTextEditor.LineScroll(columns: Integer; lines: Integer);
+procedure TCustomSciTextEditor.LineScroll(AColumns: TSciPosition; ALines: TSciLine);
 begin
-  SendMessage(Handle, SCI_LINESCROLL, columns, lines);
+  SendScintillaEditorMessage(SCI_LINESCROLL, AColumns, ALines);
 end;
 
 procedure TCustomSciTextEditor.ScrollCaret();
 begin
-  SendMessage(Handle, SCI_SCROLLCARET, 0, 0);
+  SendScintillaEditorMessage(SCI_SCROLLCARET, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.ScrollRange(secondary: Integer; primary: Integer);
+procedure TCustomSciTextEditor.ScrollRange(ASecondary: TSciPosition; APrimary: TSciPosition);
 begin
-  SendMessage(Handle, SCI_SCROLLRANGE, secondary, primary);
+  SendScintillaEditorMessage(SCI_SCROLLRANGE, ASecondary, APrimary);
 end;
 
-procedure TCustomSciTextEditor.ReplaceSel(text: PAnsiChar);
+procedure TCustomSciTextEditor.ReplaceSel(AText: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_REPLACESEL, 0, LPARAM(text));
+  SendScintillaEditorMessage(SCI_REPLACESEL, 0, LPARAM(AText));
 end;
 
-procedure TCustomSciTextEditor.SetReadOnly(readOnly: Boolean);
+procedure TCustomSciTextEditor.SetReadOnly(AReadOnly: Boolean);
 begin
-  SendMessage(Handle, SCI_SETREADONLY, readOnly, 0);
+  SendScintillaEditorMessage(SCI_SETREADONLY, AReadOnly, 0);
 end;
 
 procedure TCustomSciTextEditor.Null();
 begin
-  SendMessage(Handle, SCI_NULL, 0, 0);
+  SendScintillaEditorMessage(SCI_NULL, 0, 0);
 end;
 
 function TCustomSciTextEditor.CanPaste(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_CANPASTE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_CANPASTE, 0, 0);
 end;
 
 function TCustomSciTextEditor.CanUndo(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_CANUNDO, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_CANUNDO, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.EmptyUndoBuffer();
 begin
-  SendMessage(Handle, SCI_EMPTYUNDOBUFFER, 0, 0);
+  SendScintillaEditorMessage(SCI_EMPTYUNDOBUFFER, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.Undo();
 begin
-  SendMessage(Handle, SCI_UNDO, 0, 0);
+  SendScintillaEditorMessage(SCI_UNDO, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.Cut();
 begin
-  SendMessage(Handle, SCI_CUT, 0, 0);
+  SendScintillaEditorMessage(SCI_CUT, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.Copy();
 begin
-  SendMessage(Handle, SCI_COPY, 0, 0);
+  SendScintillaEditorMessage(SCI_COPY, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.Paste();
 begin
-  SendMessage(Handle, SCI_PASTE, 0, 0);
+  SendScintillaEditorMessage(SCI_PASTE, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.Clear();
 begin
-  SendMessage(Handle, SCI_CLEAR, 0, 0);
+  SendScintillaEditorMessage(SCI_CLEAR, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetText(text: PAnsiChar);
+procedure TCustomSciTextEditor.SetText(AText: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_SETTEXT, 0, LPARAM(text));
+  SendScintillaEditorMessage(SCI_SETTEXT, 0, LPARAM(AText));
 end;
 
-function TCustomSciTextEditor.GetText(length: Integer; text: PAnsiChar): Integer;
+function TCustomSciTextEditor.GetText(ALength: TSciPosition; AText: PAnsiChar): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETTEXT, length, LPARAM(text));
+  Result := SendScintillaEditorMessage(SCI_GETTEXT, ALength, LPARAM(AText));
 end;
 
-function TCustomSciTextEditor.GetTextLength(): Integer;
+function TCustomSciTextEditor.GetTextLength(): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETTEXTLENGTH, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETTEXTLENGTH, 0, 0);
 end;
 
 function TCustomSciTextEditor.GetDirectFunction(): Pointer;
 begin
-  Result := SendMessage(Handle, SCI_GETDIRECTFUNCTION, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETDIRECTFUNCTION, 0, 0);
 end;
 
 function TCustomSciTextEditor.GetDirectStatusFunction(): Pointer;
 begin
-  Result := SendMessage(Handle, SCI_GETDIRECTSTATUSFUNCTION, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETDIRECTSTATUSFUNCTION, 0, 0);
 end;
 
 function TCustomSciTextEditor.GetDirectPointer(): Pointer;
 begin
-  Result := SendMessage(Handle, SCI_GETDIRECTPOINTER, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETDIRECTPOINTER, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetOvertype(overType: Boolean);
+procedure TCustomSciTextEditor.SetOvertype(AOverType: Boolean);
 begin
-  SendMessage(Handle, SCI_SETOVERTYPE, overType, 0);
+  SendScintillaEditorMessage(SCI_SETOVERTYPE, AOverType, 0);
 end;
 
 function TCustomSciTextEditor.GetOvertype(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETOVERTYPE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETOVERTYPE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetCaretWidth(pixelWidth: Integer);
+procedure TCustomSciTextEditor.SetCaretWidth(APixelWidth: Integer);
 begin
-  SendMessage(Handle, SCI_SETCARETWIDTH, pixelWidth, 0);
+  SendScintillaEditorMessage(SCI_SETCARETWIDTH, APixelWidth, 0);
 end;
 
 function TCustomSciTextEditor.GetCaretWidth(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETCARETWIDTH, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCARETWIDTH, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetTargetStart(start: Integer);
+procedure TCustomSciTextEditor.SetTargetStart(AStart: TSciPosition);
 begin
-  SendMessage(Handle, SCI_SETTARGETSTART, start, 0);
+  SendScintillaEditorMessage(SCI_SETTARGETSTART, AStart, 0);
 end;
 
-function TCustomSciTextEditor.GetTargetStart(): Integer;
+function TCustomSciTextEditor.GetTargetStart(): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETTARGETSTART, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETTARGETSTART, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetTargetStartVirtualSpace(space: Integer);
+procedure TCustomSciTextEditor.SetTargetStartVirtualSpace(ASpace: TSciPosition);
 begin
-  SendMessage(Handle, SCI_SETTARGETSTARTVIRTUALSPACE, space, 0);
+  SendScintillaEditorMessage(SCI_SETTARGETSTARTVIRTUALSPACE, ASpace, 0);
 end;
 
-function TCustomSciTextEditor.GetTargetStartVirtualSpace(): Integer;
+function TCustomSciTextEditor.GetTargetStartVirtualSpace(): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETTARGETSTARTVIRTUALSPACE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETTARGETSTARTVIRTUALSPACE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetTargetEnd(end: Integer);
+procedure TCustomSciTextEditor.SetTargetEnd(AEnd: TSciPosition);
 begin
-  SendMessage(Handle, SCI_SETTARGETEND, end, 0);
+  SendScintillaEditorMessage(SCI_SETTARGETEND, AEnd, 0);
 end;
 
-function TCustomSciTextEditor.GetTargetEnd(): Integer;
+function TCustomSciTextEditor.GetTargetEnd(): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETTARGETEND, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETTARGETEND, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetTargetEndVirtualSpace(space: Integer);
+procedure TCustomSciTextEditor.SetTargetEndVirtualSpace(ASpace: TSciPosition);
 begin
-  SendMessage(Handle, SCI_SETTARGETENDVIRTUALSPACE, space, 0);
+  SendScintillaEditorMessage(SCI_SETTARGETENDVIRTUALSPACE, ASpace, 0);
 end;
 
-function TCustomSciTextEditor.GetTargetEndVirtualSpace(): Integer;
+function TCustomSciTextEditor.GetTargetEndVirtualSpace(): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETTARGETENDVIRTUALSPACE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETTARGETENDVIRTUALSPACE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetTargetRange(start: Integer; end: Integer);
+procedure TCustomSciTextEditor.SetTargetRange(AStart: TSciPosition; AEnd: TSciPosition);
 begin
-  SendMessage(Handle, SCI_SETTARGETRANGE, start, end);
+  SendScintillaEditorMessage(SCI_SETTARGETRANGE, AStart, AEnd);
 end;
 
-function TCustomSciTextEditor.GetTargetText(text: PAnsiChar): Integer;
+function TCustomSciTextEditor.GetTargetText(AText: PAnsiChar): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETTARGETTEXT, 0, LPARAM(text));
+  Result := SendScintillaEditorMessage(SCI_GETTARGETTEXT, 0, LPARAM(AText));
 end;
 
 procedure TCustomSciTextEditor.TargetFromSelection();
 begin
-  SendMessage(Handle, SCI_TARGETFROMSELECTION, 0, 0);
+  SendScintillaEditorMessage(SCI_TARGETFROMSELECTION, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.TargetWholeDocument();
 begin
-  SendMessage(Handle, SCI_TARGETWHOLEDOCUMENT, 0, 0);
+  SendScintillaEditorMessage(SCI_TARGETWHOLEDOCUMENT, 0, 0);
 end;
 
-function TCustomSciTextEditor.ReplaceTarget(length: Integer; text: PAnsiChar): Integer;
+function TCustomSciTextEditor.ReplaceTarget(ALength: TSciPosition; AText: PAnsiChar): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_REPLACETARGET, length, LPARAM(text));
+  Result := SendScintillaEditorMessage(SCI_REPLACETARGET, ALength, LPARAM(AText));
 end;
 
-function TCustomSciTextEditor.ReplaceTargetRE(length: Integer; text: PAnsiChar): Integer;
+function TCustomSciTextEditor.ReplaceTargetRE(ALength: TSciPosition; AText: PAnsiChar): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_REPLACETARGETRE, length, LPARAM(text));
+  Result := SendScintillaEditorMessage(SCI_REPLACETARGETRE, ALength, LPARAM(AText));
 end;
 
-function TCustomSciTextEditor.ReplaceTargetMinimal(length: Integer; text: PAnsiChar): Integer;
+function TCustomSciTextEditor.ReplaceTargetMinimal(ALength: TSciPosition; AText: PAnsiChar): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_REPLACETARGETMINIMAL, length, LPARAM(text));
+  Result := SendScintillaEditorMessage(SCI_REPLACETARGETMINIMAL, ALength, LPARAM(AText));
 end;
 
-function TCustomSciTextEditor.SearchInTarget(length: Integer; text: PAnsiChar): Integer;
+function TCustomSciTextEditor.SearchInTarget(ALength: TSciPosition; AText: PAnsiChar): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_SEARCHINTARGET, length, LPARAM(text));
+  Result := SendScintillaEditorMessage(SCI_SEARCHINTARGET, ALength, LPARAM(AText));
 end;
 
-procedure TCustomSciTextEditor.SetSearchFlags(searchFlags: Integer);
+procedure TCustomSciTextEditor.SetSearchFlags(ASearchFlags: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETSEARCHFLAGS, searchFlags, 0);
+  SendScintillaEditorMessage(SCI_SETSEARCHFLAGS, ASearchFlags, 0);
 end;
 
-function TCustomSciTextEditor.GetSearchFlags(): Integer;
+function TCustomSciTextEditor.GetSearchFlags(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETSEARCHFLAGS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSEARCHFLAGS, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.CallTipShow(pos: Integer; definition: PAnsiChar);
+procedure TCustomSciTextEditor.CallTipShow(APos: TSciPosition; ADefinition: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_CALLTIPSHOW, pos, LPARAM(definition));
+  SendScintillaEditorMessage(SCI_CALLTIPSHOW, APos, LPARAM(ADefinition));
 end;
 
 procedure TCustomSciTextEditor.CallTipCancel();
 begin
-  SendMessage(Handle, SCI_CALLTIPCANCEL, 0, 0);
+  SendScintillaEditorMessage(SCI_CALLTIPCANCEL, 0, 0);
 end;
 
 function TCustomSciTextEditor.CallTipActive(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_CALLTIPACTIVE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_CALLTIPACTIVE, 0, 0);
 end;
 
-function TCustomSciTextEditor.CallTipPosStart(): Integer;
+function TCustomSciTextEditor.CallTipPosStart(): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_CALLTIPPOSSTART, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_CALLTIPPOSSTART, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.CallTipSetPosStart(posStart: Integer);
+procedure TCustomSciTextEditor.CallTipSetPosStart(APosStart: TSciPosition);
 begin
-  SendMessage(Handle, SCI_CALLTIPSETPOSSTART, posStart, 0);
+  SendScintillaEditorMessage(SCI_CALLTIPSETPOSSTART, APosStart, 0);
 end;
 
-procedure TCustomSciTextEditor.CallTipSetHlt(highlightStart: Integer; highlightEnd: Integer);
+procedure TCustomSciTextEditor.CallTipSetHlt(AHighlightStart: TSciPosition; AHighlightEnd: TSciPosition);
 begin
-  SendMessage(Handle, SCI_CALLTIPSETHLT, highlightStart, highlightEnd);
+  SendScintillaEditorMessage(SCI_CALLTIPSETHLT, AHighlightStart, AHighlightEnd);
 end;
 
-procedure TCustomSciTextEditor.CallTipSetBack(back: TColor);
+procedure TCustomSciTextEditor.CallTipSetBack(ABack: TColor);
 begin
-  SendMessage(Handle, SCI_CALLTIPSETBACK, back, 0);
+  SendScintillaEditorMessage(SCI_CALLTIPSETBACK, ABack, 0);
 end;
 
-procedure TCustomSciTextEditor.CallTipSetFore(fore: TColor);
+procedure TCustomSciTextEditor.CallTipSetFore(AFore: TColor);
 begin
-  SendMessage(Handle, SCI_CALLTIPSETFORE, fore, 0);
+  SendScintillaEditorMessage(SCI_CALLTIPSETFORE, AFore, 0);
 end;
 
-procedure TCustomSciTextEditor.CallTipSetForeHlt(fore: TColor);
+procedure TCustomSciTextEditor.CallTipSetForeHlt(AFore: TColor);
 begin
-  SendMessage(Handle, SCI_CALLTIPSETFOREHLT, fore, 0);
+  SendScintillaEditorMessage(SCI_CALLTIPSETFOREHLT, AFore, 0);
 end;
 
-procedure TCustomSciTextEditor.CallTipUseStyle(tabSize: Integer);
+procedure TCustomSciTextEditor.CallTipUseStyle(ATabSize: Integer);
 begin
-  SendMessage(Handle, SCI_CALLTIPUSESTYLE, tabSize, 0);
+  SendScintillaEditorMessage(SCI_CALLTIPUSESTYLE, ATabSize, 0);
 end;
 
-procedure TCustomSciTextEditor.CallTipSetPosition(above: Boolean);
+procedure TCustomSciTextEditor.CallTipSetPosition(AAbove: Boolean);
 begin
-  SendMessage(Handle, SCI_CALLTIPSETPOSITION, above, 0);
+  SendScintillaEditorMessage(SCI_CALLTIPSETPOSITION, AAbove, 0);
 end;
 
-function TCustomSciTextEditor.VisibleFromDocLine(docLine: Integer): Integer;
+function TCustomSciTextEditor.VisibleFromDocLine(ADocLine: TSciLine): TSciLine;
 begin
-  Result := SendMessage(Handle, SCI_VISIBLEFROMDOCLINE, docLine, 0);
+  Result := SendScintillaEditorMessage(SCI_VISIBLEFROMDOCLINE, ADocLine, 0);
 end;
 
-function TCustomSciTextEditor.DocLineFromVisible(displayLine: Integer): Integer;
+function TCustomSciTextEditor.DocLineFromVisible(ADisplayLine: TSciLine): TSciLine;
 begin
-  Result := SendMessage(Handle, SCI_DOCLINEFROMVISIBLE, displayLine, 0);
+  Result := SendScintillaEditorMessage(SCI_DOCLINEFROMVISIBLE, ADisplayLine, 0);
 end;
 
-function TCustomSciTextEditor.WrapCount(docLine: Integer): Integer;
+function TCustomSciTextEditor.WrapCount(ADocLine: TSciLine): TSciLine;
 begin
-  Result := SendMessage(Handle, SCI_WRAPCOUNT, docLine, 0);
+  Result := SendScintillaEditorMessage(SCI_WRAPCOUNT, ADocLine, 0);
 end;
 
-procedure TCustomSciTextEditor.SetFoldLevel(line: Integer; level: Integer);
+procedure TCustomSciTextEditor.SetFoldLevel(ALine: TSciLine; ALevel: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETFOLDLEVEL, line, level);
+  SendScintillaEditorMessage(SCI_SETFOLDLEVEL, ALine, ALevel);
 end;
 
-function TCustomSciTextEditor.GetFoldLevel(line: Integer): Integer;
+function TCustomSciTextEditor.GetFoldLevel(ALine: TSciLine): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETFOLDLEVEL, line, 0);
+  Result := SendScintillaEditorMessage(SCI_GETFOLDLEVEL, ALine, 0);
 end;
 
-function TCustomSciTextEditor.GetLastChild(line: Integer; level: Integer): Integer;
+function TCustomSciTextEditor.GetLastChild(ALine: TSciLine; ALevel: NativeInt): TSciLine;
 begin
-  Result := SendMessage(Handle, SCI_GETLASTCHILD, line, level);
+  Result := SendScintillaEditorMessage(SCI_GETLASTCHILD, ALine, ALevel);
 end;
 
-function TCustomSciTextEditor.GetFoldParent(line: Integer): Integer;
+function TCustomSciTextEditor.GetFoldParent(ALine: TSciLine): TSciLine;
 begin
-  Result := SendMessage(Handle, SCI_GETFOLDPARENT, line, 0);
+  Result := SendScintillaEditorMessage(SCI_GETFOLDPARENT, ALine, 0);
 end;
 
-procedure TCustomSciTextEditor.ShowLines(lineStart: Integer; lineEnd: Integer);
+procedure TCustomSciTextEditor.ShowLines(ALineStart: TSciLine; ALineEnd: TSciLine);
 begin
-  SendMessage(Handle, SCI_SHOWLINES, lineStart, lineEnd);
+  SendScintillaEditorMessage(SCI_SHOWLINES, ALineStart, ALineEnd);
 end;
 
-procedure TCustomSciTextEditor.HideLines(lineStart: Integer; lineEnd: Integer);
+procedure TCustomSciTextEditor.HideLines(ALineStart: TSciLine; ALineEnd: TSciLine);
 begin
-  SendMessage(Handle, SCI_HIDELINES, lineStart, lineEnd);
+  SendScintillaEditorMessage(SCI_HIDELINES, ALineStart, ALineEnd);
 end;
 
-function TCustomSciTextEditor.GetLineVisible(line: Integer): Boolean;
+function TCustomSciTextEditor.GetLineVisible(ALine: TSciLine): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETLINEVISIBLE, line, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLINEVISIBLE, ALine, 0);
 end;
 
 function TCustomSciTextEditor.GetAllLinesVisible(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETALLLINESVISIBLE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETALLLINESVISIBLE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetFoldExpanded(line: Integer; expanded: Boolean);
+procedure TCustomSciTextEditor.SetFoldExpanded(ALine: TSciLine; AExpanded: Boolean);
 begin
-  SendMessage(Handle, SCI_SETFOLDEXPANDED, line, expanded);
+  SendScintillaEditorMessage(SCI_SETFOLDEXPANDED, ALine, AExpanded);
 end;
 
-function TCustomSciTextEditor.GetFoldExpanded(line: Integer): Boolean;
+function TCustomSciTextEditor.GetFoldExpanded(ALine: TSciLine): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETFOLDEXPANDED, line, 0);
+  Result := SendScintillaEditorMessage(SCI_GETFOLDEXPANDED, ALine, 0);
 end;
 
-procedure TCustomSciTextEditor.ToggleFold(line: Integer);
+procedure TCustomSciTextEditor.ToggleFold(ALine: TSciLine);
 begin
-  SendMessage(Handle, SCI_TOGGLEFOLD, line, 0);
+  SendScintillaEditorMessage(SCI_TOGGLEFOLD, ALine, 0);
 end;
 
-procedure TCustomSciTextEditor.ToggleFoldShowText(line: Integer; text: PAnsiChar);
+procedure TCustomSciTextEditor.ToggleFoldShowText(ALine: TSciLine; AText: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_TOGGLEFOLDSHOWTEXT, line, LPARAM(text));
+  SendScintillaEditorMessage(SCI_TOGGLEFOLDSHOWTEXT, ALine, LPARAM(AText));
 end;
 
-procedure TCustomSciTextEditor.FoldDisplayTextSetStyle(style: Integer);
+procedure TCustomSciTextEditor.FoldDisplayTextSetStyle(AStyle: NativeInt);
 begin
-  SendMessage(Handle, SCI_FOLDDISPLAYTEXTSETSTYLE, style, 0);
+  SendScintillaEditorMessage(SCI_FOLDDISPLAYTEXTSETSTYLE, AStyle, 0);
 end;
 
-function TCustomSciTextEditor.FoldDisplayTextGetStyle(): Integer;
+function TCustomSciTextEditor.FoldDisplayTextGetStyle(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_FOLDDISPLAYTEXTGETSTYLE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_FOLDDISPLAYTEXTGETSTYLE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetDefaultFoldDisplayText(text: PAnsiChar);
+procedure TCustomSciTextEditor.SetDefaultFoldDisplayText(AText: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_SETDEFAULTFOLDDISPLAYTEXT, 0, LPARAM(text));
+  SendScintillaEditorMessage(SCI_SETDEFAULTFOLDDISPLAYTEXT, 0, LPARAM(AText));
 end;
 
-function TCustomSciTextEditor.GetDefaultFoldDisplayText(text: PAnsiChar): Integer;
+function TCustomSciTextEditor.GetDefaultFoldDisplayText(AText: PAnsiChar): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETDEFAULTFOLDDISPLAYTEXT, 0, LPARAM(text));
+  Result := SendScintillaEditorMessage(SCI_GETDEFAULTFOLDDISPLAYTEXT, 0, LPARAM(AText));
 end;
 
-procedure TCustomSciTextEditor.FoldLine(line: Integer; action: Integer);
+procedure TCustomSciTextEditor.FoldLine(ALine: TSciLine; AAction: NativeInt);
 begin
-  SendMessage(Handle, SCI_FOLDLINE, line, action);
+  SendScintillaEditorMessage(SCI_FOLDLINE, ALine, AAction);
 end;
 
-procedure TCustomSciTextEditor.FoldChildren(line: Integer; action: Integer);
+procedure TCustomSciTextEditor.FoldChildren(ALine: TSciLine; AAction: NativeInt);
 begin
-  SendMessage(Handle, SCI_FOLDCHILDREN, line, action);
+  SendScintillaEditorMessage(SCI_FOLDCHILDREN, ALine, AAction);
 end;
 
-procedure TCustomSciTextEditor.ExpandChildren(line: Integer; level: Integer);
+procedure TCustomSciTextEditor.ExpandChildren(ALine: TSciLine; ALevel: NativeInt);
 begin
-  SendMessage(Handle, SCI_EXPANDCHILDREN, line, level);
+  SendScintillaEditorMessage(SCI_EXPANDCHILDREN, ALine, ALevel);
 end;
 
-procedure TCustomSciTextEditor.FoldAll(action: Integer);
+procedure TCustomSciTextEditor.FoldAll(AAction: NativeInt);
 begin
-  SendMessage(Handle, SCI_FOLDALL, action, 0);
+  SendScintillaEditorMessage(SCI_FOLDALL, AAction, 0);
 end;
 
-procedure TCustomSciTextEditor.EnsureVisible(line: Integer);
+procedure TCustomSciTextEditor.EnsureVisible(ALine: TSciLine);
 begin
-  SendMessage(Handle, SCI_ENSUREVISIBLE, line, 0);
+  SendScintillaEditorMessage(SCI_ENSUREVISIBLE, ALine, 0);
 end;
 
-procedure TCustomSciTextEditor.SetAutomaticFold(automaticFold: Integer);
+procedure TCustomSciTextEditor.SetAutomaticFold(AAutomaticFold: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETAUTOMATICFOLD, automaticFold, 0);
+  SendScintillaEditorMessage(SCI_SETAUTOMATICFOLD, AAutomaticFold, 0);
 end;
 
-function TCustomSciTextEditor.GetAutomaticFold(): Integer;
+function TCustomSciTextEditor.GetAutomaticFold(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETAUTOMATICFOLD, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETAUTOMATICFOLD, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetFoldFlags(flags: Integer);
+procedure TCustomSciTextEditor.SetFoldFlags(AFlags: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETFOLDFLAGS, flags, 0);
+  SendScintillaEditorMessage(SCI_SETFOLDFLAGS, AFlags, 0);
 end;
 
-procedure TCustomSciTextEditor.EnsureVisibleEnforcePolicy(line: Integer);
+procedure TCustomSciTextEditor.EnsureVisibleEnforcePolicy(ALine: TSciLine);
 begin
-  SendMessage(Handle, SCI_ENSUREVISIBLEENFORCEPOLICY, line, 0);
+  SendScintillaEditorMessage(SCI_ENSUREVISIBLEENFORCEPOLICY, ALine, 0);
 end;
 
-procedure TCustomSciTextEditor.SetTabIndents(tabIndents: Boolean);
+procedure TCustomSciTextEditor.SetTabIndents(ATabIndents: Boolean);
 begin
-  SendMessage(Handle, SCI_SETTABINDENTS, tabIndents, 0);
+  SendScintillaEditorMessage(SCI_SETTABINDENTS, ATabIndents, 0);
 end;
 
 function TCustomSciTextEditor.GetTabIndents(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETTABINDENTS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETTABINDENTS, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetBackSpaceUnIndents(bsUnIndents: Boolean);
+procedure TCustomSciTextEditor.SetBackSpaceUnIndents(ABsUnIndents: Boolean);
 begin
-  SendMessage(Handle, SCI_SETBACKSPACEUNINDENTS, bsUnIndents, 0);
+  SendScintillaEditorMessage(SCI_SETBACKSPACEUNINDENTS, ABsUnIndents, 0);
 end;
 
 function TCustomSciTextEditor.GetBackSpaceUnIndents(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETBACKSPACEUNINDENTS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETBACKSPACEUNINDENTS, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetMouseDwellTime(periodMilliseconds: Integer);
+procedure TCustomSciTextEditor.SetMouseDwellTime(APeriodMilliseconds: Integer);
 begin
-  SendMessage(Handle, SCI_SETMOUSEDWELLTIME, periodMilliseconds, 0);
+  SendScintillaEditorMessage(SCI_SETMOUSEDWELLTIME, APeriodMilliseconds, 0);
 end;
 
 function TCustomSciTextEditor.GetMouseDwellTime(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETMOUSEDWELLTIME, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMOUSEDWELLTIME, 0, 0);
 end;
 
-function TCustomSciTextEditor.WordStartPosition(pos: Integer; onlyWordCharacters: Boolean): Integer;
+function TCustomSciTextEditor.WordStartPosition(APos: TSciPosition; AOnlyWordCharacters: Boolean): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_WORDSTARTPOSITION, pos, onlyWordCharacters);
+  Result := SendScintillaEditorMessage(SCI_WORDSTARTPOSITION, APos, AOnlyWordCharacters);
 end;
 
-function TCustomSciTextEditor.WordEndPosition(pos: Integer; onlyWordCharacters: Boolean): Integer;
+function TCustomSciTextEditor.WordEndPosition(APos: TSciPosition; AOnlyWordCharacters: Boolean): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_WORDENDPOSITION, pos, onlyWordCharacters);
+  Result := SendScintillaEditorMessage(SCI_WORDENDPOSITION, APos, AOnlyWordCharacters);
 end;
 
-function TCustomSciTextEditor.IsRangeWord(start: Integer; end: Integer): Boolean;
+function TCustomSciTextEditor.IsRangeWord(AStart: TSciPosition; AEnd: TSciPosition): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_ISRANGEWORD, start, end);
+  Result := SendScintillaEditorMessage(SCI_ISRANGEWORD, AStart, AEnd);
 end;
 
-procedure TCustomSciTextEditor.SetIdleStyling(idleStyling: Integer);
+procedure TCustomSciTextEditor.SetIdleStyling(AIdleStyling: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETIDLESTYLING, idleStyling, 0);
+  SendScintillaEditorMessage(SCI_SETIDLESTYLING, AIdleStyling, 0);
 end;
 
-function TCustomSciTextEditor.GetIdleStyling(): Integer;
+function TCustomSciTextEditor.GetIdleStyling(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETIDLESTYLING, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETIDLESTYLING, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetWrapMode(wrapMode: Integer);
+procedure TCustomSciTextEditor.SetWrapMode(AWrapMode: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETWRAPMODE, wrapMode, 0);
+  SendScintillaEditorMessage(SCI_SETWRAPMODE, AWrapMode, 0);
 end;
 
-function TCustomSciTextEditor.GetWrapMode(): Integer;
+function TCustomSciTextEditor.GetWrapMode(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETWRAPMODE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETWRAPMODE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetWrapVisualFlags(wrapVisualFlags: Integer);
+procedure TCustomSciTextEditor.SetWrapVisualFlags(AWrapVisualFlags: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETWRAPVISUALFLAGS, wrapVisualFlags, 0);
+  SendScintillaEditorMessage(SCI_SETWRAPVISUALFLAGS, AWrapVisualFlags, 0);
 end;
 
-function TCustomSciTextEditor.GetWrapVisualFlags(): Integer;
+function TCustomSciTextEditor.GetWrapVisualFlags(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETWRAPVISUALFLAGS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETWRAPVISUALFLAGS, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetWrapVisualFlagsLocation(wrapVisualFlagsLocation: Integer);
+procedure TCustomSciTextEditor.SetWrapVisualFlagsLocation(AWrapVisualFlagsLocation: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETWRAPVISUALFLAGSLOCATION, wrapVisualFlagsLocation, 0);
+  SendScintillaEditorMessage(SCI_SETWRAPVISUALFLAGSLOCATION, AWrapVisualFlagsLocation, 0);
 end;
 
-function TCustomSciTextEditor.GetWrapVisualFlagsLocation(): Integer;
+function TCustomSciTextEditor.GetWrapVisualFlagsLocation(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETWRAPVISUALFLAGSLOCATION, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETWRAPVISUALFLAGSLOCATION, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetWrapStartIndent(indent: Integer);
+procedure TCustomSciTextEditor.SetWrapStartIndent(AIndent: Integer);
 begin
-  SendMessage(Handle, SCI_SETWRAPSTARTINDENT, indent, 0);
+  SendScintillaEditorMessage(SCI_SETWRAPSTARTINDENT, AIndent, 0);
 end;
 
 function TCustomSciTextEditor.GetWrapStartIndent(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETWRAPSTARTINDENT, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETWRAPSTARTINDENT, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetWrapIndentMode(wrapIndentMode: Integer);
+procedure TCustomSciTextEditor.SetWrapIndentMode(AWrapIndentMode: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETWRAPINDENTMODE, wrapIndentMode, 0);
+  SendScintillaEditorMessage(SCI_SETWRAPINDENTMODE, AWrapIndentMode, 0);
 end;
 
-function TCustomSciTextEditor.GetWrapIndentMode(): Integer;
+function TCustomSciTextEditor.GetWrapIndentMode(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETWRAPINDENTMODE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETWRAPINDENTMODE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetLayoutCache(cacheMode: Integer);
+procedure TCustomSciTextEditor.SetLayoutCache(ACacheMode: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETLAYOUTCACHE, cacheMode, 0);
+  SendScintillaEditorMessage(SCI_SETLAYOUTCACHE, ACacheMode, 0);
 end;
 
-function TCustomSciTextEditor.GetLayoutCache(): Integer;
+function TCustomSciTextEditor.GetLayoutCache(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETLAYOUTCACHE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLAYOUTCACHE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetScrollWidth(pixelWidth: Integer);
+procedure TCustomSciTextEditor.SetScrollWidth(APixelWidth: Integer);
 begin
-  SendMessage(Handle, SCI_SETSCROLLWIDTH, pixelWidth, 0);
+  SendScintillaEditorMessage(SCI_SETSCROLLWIDTH, APixelWidth, 0);
 end;
 
 function TCustomSciTextEditor.GetScrollWidth(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETSCROLLWIDTH, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSCROLLWIDTH, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetScrollWidthTracking(tracking: Boolean);
+procedure TCustomSciTextEditor.SetScrollWidthTracking(ATracking: Boolean);
 begin
-  SendMessage(Handle, SCI_SETSCROLLWIDTHTRACKING, tracking, 0);
+  SendScintillaEditorMessage(SCI_SETSCROLLWIDTHTRACKING, ATracking, 0);
 end;
 
 function TCustomSciTextEditor.GetScrollWidthTracking(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETSCROLLWIDTHTRACKING, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSCROLLWIDTHTRACKING, 0, 0);
 end;
 
-function TCustomSciTextEditor.TextWidth(style: Integer; text: PAnsiChar): Integer;
+function TCustomSciTextEditor.TextWidth(AStyle: Integer; AText: PAnsiChar): Integer;
 begin
-  Result := SendMessage(Handle, SCI_TEXTWIDTH, style, LPARAM(text));
+  Result := SendScintillaEditorMessage(SCI_TEXTWIDTH, AStyle, LPARAM(AText));
 end;
 
-procedure TCustomSciTextEditor.SetEndAtLastLine(endAtLastLine: Boolean);
+procedure TCustomSciTextEditor.SetEndAtLastLine(AEndAtLastLine: Boolean);
 begin
-  SendMessage(Handle, SCI_SETENDATLASTLINE, endAtLastLine, 0);
+  SendScintillaEditorMessage(SCI_SETENDATLASTLINE, AEndAtLastLine, 0);
 end;
 
 function TCustomSciTextEditor.GetEndAtLastLine(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETENDATLASTLINE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETENDATLASTLINE, 0, 0);
 end;
 
-function TCustomSciTextEditor.TextHeight(line: Integer): Integer;
+function TCustomSciTextEditor.TextHeight(ALine: TSciLine): Integer;
 begin
-  Result := SendMessage(Handle, SCI_TEXTHEIGHT, line, 0);
+  Result := SendScintillaEditorMessage(SCI_TEXTHEIGHT, ALine, 0);
 end;
 
-procedure TCustomSciTextEditor.SetVScrollBar(visible: Boolean);
+procedure TCustomSciTextEditor.SetVScrollBar(AVisible: Boolean);
 begin
-  SendMessage(Handle, SCI_SETVSCROLLBAR, visible, 0);
+  SendScintillaEditorMessage(SCI_SETVSCROLLBAR, AVisible, 0);
 end;
 
 function TCustomSciTextEditor.GetVScrollBar(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETVSCROLLBAR, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETVSCROLLBAR, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.AppendText(length: Integer; text: PAnsiChar);
+procedure TCustomSciTextEditor.AppendText(ALength: TSciPosition; AText: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_APPENDTEXT, length, LPARAM(text));
+  SendScintillaEditorMessage(SCI_APPENDTEXT, ALength, LPARAM(AText));
 end;
 
-function TCustomSciTextEditor.GetPhasesDraw(): Integer;
+function TCustomSciTextEditor.GetPhasesDraw(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETPHASESDRAW, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETPHASESDRAW, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetPhasesDraw(phases: Integer);
+procedure TCustomSciTextEditor.SetPhasesDraw(APhases: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETPHASESDRAW, phases, 0);
+  SendScintillaEditorMessage(SCI_SETPHASESDRAW, APhases, 0);
 end;
 
-procedure TCustomSciTextEditor.SetFontQuality(fontQuality: Integer);
+procedure TCustomSciTextEditor.SetFontQuality(AFontQuality: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETFONTQUALITY, fontQuality, 0);
+  SendScintillaEditorMessage(SCI_SETFONTQUALITY, AFontQuality, 0);
 end;
 
-function TCustomSciTextEditor.GetFontQuality(): Integer;
+function TCustomSciTextEditor.GetFontQuality(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETFONTQUALITY, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETFONTQUALITY, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetFirstVisibleLine(displayLine: Integer);
+procedure TCustomSciTextEditor.SetFirstVisibleLine(ADisplayLine: TSciLine);
 begin
-  SendMessage(Handle, SCI_SETFIRSTVISIBLELINE, displayLine, 0);
+  SendScintillaEditorMessage(SCI_SETFIRSTVISIBLELINE, ADisplayLine, 0);
 end;
 
-procedure TCustomSciTextEditor.SetMultiPaste(multiPaste: Integer);
+procedure TCustomSciTextEditor.SetMultiPaste(AMultiPaste: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETMULTIPASTE, multiPaste, 0);
+  SendScintillaEditorMessage(SCI_SETMULTIPASTE, AMultiPaste, 0);
 end;
 
-function TCustomSciTextEditor.GetMultiPaste(): Integer;
+function TCustomSciTextEditor.GetMultiPaste(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETMULTIPASTE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMULTIPASTE, 0, 0);
 end;
 
-function TCustomSciTextEditor.GetTag(tagNumber: Integer; tagValue: PAnsiChar): Integer;
+function TCustomSciTextEditor.GetTag(ATagNumber: Integer; ATagValue: PAnsiChar): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETTAG, tagNumber, LPARAM(tagValue));
+  Result := SendScintillaEditorMessage(SCI_GETTAG, ATagNumber, LPARAM(ATagValue));
 end;
 
 procedure TCustomSciTextEditor.LinesJoin();
 begin
-  SendMessage(Handle, SCI_LINESJOIN, 0, 0);
+  SendScintillaEditorMessage(SCI_LINESJOIN, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.LinesSplit(pixelWidth: Integer);
+procedure TCustomSciTextEditor.LinesSplit(APixelWidth: Integer);
 begin
-  SendMessage(Handle, SCI_LINESSPLIT, pixelWidth, 0);
+  SendScintillaEditorMessage(SCI_LINESSPLIT, APixelWidth, 0);
 end;
 
-procedure TCustomSciTextEditor.SetFoldMarginColour(useSetting: Boolean; back: TColor);
+procedure TCustomSciTextEditor.SetFoldMarginColour(AUseSetting: Boolean; ABack: TColor);
 begin
-  SendMessage(Handle, SCI_SETFOLDMARGINCOLOUR, useSetting, back);
+  SendScintillaEditorMessage(SCI_SETFOLDMARGINCOLOUR, AUseSetting, ABack);
 end;
 
-procedure TCustomSciTextEditor.SetFoldMarginHiColour(useSetting: Boolean; fore: TColor);
+procedure TCustomSciTextEditor.SetFoldMarginHiColour(AUseSetting: Boolean; AFore: TColor);
 begin
-  SendMessage(Handle, SCI_SETFOLDMARGINHICOLOUR, useSetting, fore);
+  SendScintillaEditorMessage(SCI_SETFOLDMARGINHICOLOUR, AUseSetting, AFore);
 end;
 
-procedure TCustomSciTextEditor.SetAccessibility(accessibility: Integer);
+procedure TCustomSciTextEditor.SetAccessibility(AAccessibility: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETACCESSIBILITY, accessibility, 0);
+  SendScintillaEditorMessage(SCI_SETACCESSIBILITY, AAccessibility, 0);
 end;
 
-function TCustomSciTextEditor.GetAccessibility(): Integer;
+function TCustomSciTextEditor.GetAccessibility(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETACCESSIBILITY, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETACCESSIBILITY, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.LineDown();
 begin
-  SendMessage(Handle, SCI_LINEDOWN, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEDOWN, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.LineDownExtend();
 begin
-  SendMessage(Handle, SCI_LINEDOWNEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEDOWNEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.LineUp();
 begin
-  SendMessage(Handle, SCI_LINEUP, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEUP, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.LineUpExtend();
 begin
-  SendMessage(Handle, SCI_LINEUPEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEUPEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.CharLeft();
 begin
-  SendMessage(Handle, SCI_CHARLEFT, 0, 0);
+  SendScintillaEditorMessage(SCI_CHARLEFT, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.CharLeftExtend();
 begin
-  SendMessage(Handle, SCI_CHARLEFTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_CHARLEFTEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.CharRight();
 begin
-  SendMessage(Handle, SCI_CHARRIGHT, 0, 0);
+  SendScintillaEditorMessage(SCI_CHARRIGHT, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.CharRightExtend();
 begin
-  SendMessage(Handle, SCI_CHARRIGHTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_CHARRIGHTEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.WordLeft();
 begin
-  SendMessage(Handle, SCI_WORDLEFT, 0, 0);
+  SendScintillaEditorMessage(SCI_WORDLEFT, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.WordLeftExtend();
 begin
-  SendMessage(Handle, SCI_WORDLEFTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_WORDLEFTEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.WordRight();
 begin
-  SendMessage(Handle, SCI_WORDRIGHT, 0, 0);
+  SendScintillaEditorMessage(SCI_WORDRIGHT, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.WordRightExtend();
 begin
-  SendMessage(Handle, SCI_WORDRIGHTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_WORDRIGHTEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.Home();
 begin
-  SendMessage(Handle, SCI_HOME, 0, 0);
+  SendScintillaEditorMessage(SCI_HOME, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.HomeExtend();
 begin
-  SendMessage(Handle, SCI_HOMEEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_HOMEEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.LineEnd();
 begin
-  SendMessage(Handle, SCI_LINEEND, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.LineEndExtend();
 begin
-  SendMessage(Handle, SCI_LINEENDEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEENDEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.DocumentStart();
 begin
-  SendMessage(Handle, SCI_DOCUMENTSTART, 0, 0);
+  SendScintillaEditorMessage(SCI_DOCUMENTSTART, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.DocumentStartExtend();
 begin
-  SendMessage(Handle, SCI_DOCUMENTSTARTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_DOCUMENTSTARTEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.DocumentEnd();
 begin
-  SendMessage(Handle, SCI_DOCUMENTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_DOCUMENTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.DocumentEndExtend();
 begin
-  SendMessage(Handle, SCI_DOCUMENTENDEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_DOCUMENTENDEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.PageUp();
 begin
-  SendMessage(Handle, SCI_PAGEUP, 0, 0);
+  SendScintillaEditorMessage(SCI_PAGEUP, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.PageUpExtend();
 begin
-  SendMessage(Handle, SCI_PAGEUPEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_PAGEUPEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.PageDown();
 begin
-  SendMessage(Handle, SCI_PAGEDOWN, 0, 0);
+  SendScintillaEditorMessage(SCI_PAGEDOWN, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.PageDownExtend();
 begin
-  SendMessage(Handle, SCI_PAGEDOWNEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_PAGEDOWNEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.EditToggleOvertype();
 begin
-  SendMessage(Handle, SCI_EDITTOGGLEOVERTYPE, 0, 0);
+  SendScintillaEditorMessage(SCI_EDITTOGGLEOVERTYPE, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.Cancel();
 begin
-  SendMessage(Handle, SCI_CANCEL, 0, 0);
+  SendScintillaEditorMessage(SCI_CANCEL, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.DeleteBack();
 begin
-  SendMessage(Handle, SCI_DELETEBACK, 0, 0);
+  SendScintillaEditorMessage(SCI_DELETEBACK, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.Tab();
 begin
-  SendMessage(Handle, SCI_TAB, 0, 0);
+  SendScintillaEditorMessage(SCI_TAB, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.LineIndent();
 begin
-  SendMessage(Handle, SCI_LINEINDENT, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEINDENT, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.BackTab();
 begin
-  SendMessage(Handle, SCI_BACKTAB, 0, 0);
+  SendScintillaEditorMessage(SCI_BACKTAB, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.LineDedent();
 begin
-  SendMessage(Handle, SCI_LINEDEDENT, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEDEDENT, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.NewLine();
 begin
-  SendMessage(Handle, SCI_NEWLINE, 0, 0);
+  SendScintillaEditorMessage(SCI_NEWLINE, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.FormFeed();
 begin
-  SendMessage(Handle, SCI_FORMFEED, 0, 0);
+  SendScintillaEditorMessage(SCI_FORMFEED, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.VCHome();
 begin
-  SendMessage(Handle, SCI_VCHOME, 0, 0);
+  SendScintillaEditorMessage(SCI_VCHOME, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.VCHomeExtend();
 begin
-  SendMessage(Handle, SCI_VCHOMEEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_VCHOMEEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.ZoomIn();
 begin
-  SendMessage(Handle, SCI_ZOOMIN, 0, 0);
+  SendScintillaEditorMessage(SCI_ZOOMIN, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.ZoomOut();
 begin
-  SendMessage(Handle, SCI_ZOOMOUT, 0, 0);
+  SendScintillaEditorMessage(SCI_ZOOMOUT, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.DelWordLeft();
 begin
-  SendMessage(Handle, SCI_DELWORDLEFT, 0, 0);
+  SendScintillaEditorMessage(SCI_DELWORDLEFT, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.DelWordRight();
 begin
-  SendMessage(Handle, SCI_DELWORDRIGHT, 0, 0);
+  SendScintillaEditorMessage(SCI_DELWORDRIGHT, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.DelWordRightEnd();
 begin
-  SendMessage(Handle, SCI_DELWORDRIGHTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_DELWORDRIGHTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.LineCut();
 begin
-  SendMessage(Handle, SCI_LINECUT, 0, 0);
+  SendScintillaEditorMessage(SCI_LINECUT, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.LineDelete();
 begin
-  SendMessage(Handle, SCI_LINEDELETE, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEDELETE, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.LineTranspose();
 begin
-  SendMessage(Handle, SCI_LINETRANSPOSE, 0, 0);
+  SendScintillaEditorMessage(SCI_LINETRANSPOSE, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.LineReverse();
 begin
-  SendMessage(Handle, SCI_LINEREVERSE, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEREVERSE, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.LineDuplicate();
 begin
-  SendMessage(Handle, SCI_LINEDUPLICATE, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEDUPLICATE, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.LowerCase();
 begin
-  SendMessage(Handle, SCI_LOWERCASE, 0, 0);
+  SendScintillaEditorMessage(SCI_LOWERCASE, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.UpperCase();
 begin
-  SendMessage(Handle, SCI_UPPERCASE, 0, 0);
+  SendScintillaEditorMessage(SCI_UPPERCASE, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.LineScrollDown();
 begin
-  SendMessage(Handle, SCI_LINESCROLLDOWN, 0, 0);
+  SendScintillaEditorMessage(SCI_LINESCROLLDOWN, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.LineScrollUp();
 begin
-  SendMessage(Handle, SCI_LINESCROLLUP, 0, 0);
+  SendScintillaEditorMessage(SCI_LINESCROLLUP, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.DeleteBackNotLine();
 begin
-  SendMessage(Handle, SCI_DELETEBACKNOTLINE, 0, 0);
+  SendScintillaEditorMessage(SCI_DELETEBACKNOTLINE, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.HomeDisplay();
 begin
-  SendMessage(Handle, SCI_HOMEDISPLAY, 0, 0);
+  SendScintillaEditorMessage(SCI_HOMEDISPLAY, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.HomeDisplayExtend();
 begin
-  SendMessage(Handle, SCI_HOMEDISPLAYEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_HOMEDISPLAYEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.LineEndDisplay();
 begin
-  SendMessage(Handle, SCI_LINEENDDISPLAY, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEENDDISPLAY, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.LineEndDisplayExtend();
 begin
-  SendMessage(Handle, SCI_LINEENDDISPLAYEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEENDDISPLAYEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.HomeWrap();
 begin
-  SendMessage(Handle, SCI_HOMEWRAP, 0, 0);
+  SendScintillaEditorMessage(SCI_HOMEWRAP, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.HomeWrapExtend();
 begin
-  SendMessage(Handle, SCI_HOMEWRAPEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_HOMEWRAPEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.LineEndWrap();
 begin
-  SendMessage(Handle, SCI_LINEENDWRAP, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEENDWRAP, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.LineEndWrapExtend();
 begin
-  SendMessage(Handle, SCI_LINEENDWRAPEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEENDWRAPEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.VCHomeWrap();
 begin
-  SendMessage(Handle, SCI_VCHOMEWRAP, 0, 0);
+  SendScintillaEditorMessage(SCI_VCHOMEWRAP, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.VCHomeWrapExtend();
 begin
-  SendMessage(Handle, SCI_VCHOMEWRAPEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_VCHOMEWRAPEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.LineCopy();
 begin
-  SendMessage(Handle, SCI_LINECOPY, 0, 0);
+  SendScintillaEditorMessage(SCI_LINECOPY, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.MoveCaretInsideView();
 begin
-  SendMessage(Handle, SCI_MOVECARETINSIDEVIEW, 0, 0);
+  SendScintillaEditorMessage(SCI_MOVECARETINSIDEVIEW, 0, 0);
 end;
 
-function TCustomSciTextEditor.LineLength(line: Integer): Integer;
+function TCustomSciTextEditor.LineLength(ALine: TSciLine): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_LINELENGTH, line, 0);
+  Result := SendScintillaEditorMessage(SCI_LINELENGTH, ALine, 0);
 end;
 
-procedure TCustomSciTextEditor.BraceHighlight(posA: Integer; posB: Integer);
+procedure TCustomSciTextEditor.BraceHighlight(APosA: TSciPosition; APosB: TSciPosition);
 begin
-  SendMessage(Handle, SCI_BRACEHIGHLIGHT, posA, posB);
+  SendScintillaEditorMessage(SCI_BRACEHIGHLIGHT, APosA, APosB);
 end;
 
-procedure TCustomSciTextEditor.BraceHighlightIndicator(useSetting: Boolean; indicator: Integer);
+procedure TCustomSciTextEditor.BraceHighlightIndicator(AUseSetting: Boolean; AIndicator: Integer);
 begin
-  SendMessage(Handle, SCI_BRACEHIGHLIGHTINDICATOR, useSetting, indicator);
+  SendScintillaEditorMessage(SCI_BRACEHIGHLIGHTINDICATOR, AUseSetting, AIndicator);
 end;
 
-procedure TCustomSciTextEditor.BraceBadLight(pos: Integer);
+procedure TCustomSciTextEditor.BraceBadLight(APos: TSciPosition);
 begin
-  SendMessage(Handle, SCI_BRACEBADLIGHT, pos, 0);
+  SendScintillaEditorMessage(SCI_BRACEBADLIGHT, APos, 0);
 end;
 
-procedure TCustomSciTextEditor.BraceBadLightIndicator(useSetting: Boolean; indicator: Integer);
+procedure TCustomSciTextEditor.BraceBadLightIndicator(AUseSetting: Boolean; AIndicator: Integer);
 begin
-  SendMessage(Handle, SCI_BRACEBADLIGHTINDICATOR, useSetting, indicator);
+  SendScintillaEditorMessage(SCI_BRACEBADLIGHTINDICATOR, AUseSetting, AIndicator);
 end;
 
-function TCustomSciTextEditor.BraceMatch(pos: Integer; maxReStyle: Integer): Integer;
+function TCustomSciTextEditor.BraceMatch(APos: TSciPosition; AMaxReStyle: Integer): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_BRACEMATCH, pos, maxReStyle);
+  Result := SendScintillaEditorMessage(SCI_BRACEMATCH, APos, AMaxReStyle);
 end;
 
-function TCustomSciTextEditor.BraceMatchNext(pos: Integer; startPos: Integer): Integer;
+function TCustomSciTextEditor.BraceMatchNext(APos: TSciPosition; AStartPos: TSciPosition): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_BRACEMATCHNEXT, pos, startPos);
+  Result := SendScintillaEditorMessage(SCI_BRACEMATCHNEXT, APos, AStartPos);
 end;
 
 function TCustomSciTextEditor.GetViewEOL(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETVIEWEOL, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETVIEWEOL, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetViewEOL(visible: Boolean);
+procedure TCustomSciTextEditor.SetViewEOL(AVisible: Boolean);
 begin
-  SendMessage(Handle, SCI_SETVIEWEOL, visible, 0);
+  SendScintillaEditorMessage(SCI_SETVIEWEOL, AVisible, 0);
 end;
 
 function TCustomSciTextEditor.GetDocPointer(): Pointer;
 begin
-  Result := SendMessage(Handle, SCI_GETDOCPOINTER, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETDOCPOINTER, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetDocPointer(doc: Pointer);
+procedure TCustomSciTextEditor.SetDocPointer(ADoc: Pointer);
 begin
-  SendMessage(Handle, SCI_SETDOCPOINTER, 0, LPARAM(doc));
+  SendScintillaEditorMessage(SCI_SETDOCPOINTER, 0, LPARAM(ADoc));
 end;
 
-procedure TCustomSciTextEditor.SetModEventMask(eventMask: Integer);
+procedure TCustomSciTextEditor.SetModEventMask(AEventMask: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETMODEVENTMASK, eventMask, 0);
+  SendScintillaEditorMessage(SCI_SETMODEVENTMASK, AEventMask, 0);
 end;
 
-function TCustomSciTextEditor.GetEdgeColumn(): Integer;
+function TCustomSciTextEditor.GetEdgeColumn(): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETEDGECOLUMN, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETEDGECOLUMN, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetEdgeColumn(column: Integer);
+procedure TCustomSciTextEditor.SetEdgeColumn(AColumn: TSciPosition);
 begin
-  SendMessage(Handle, SCI_SETEDGECOLUMN, column, 0);
+  SendScintillaEditorMessage(SCI_SETEDGECOLUMN, AColumn, 0);
 end;
 
-function TCustomSciTextEditor.GetEdgeMode(): Integer;
+function TCustomSciTextEditor.GetEdgeMode(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETEDGEMODE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETEDGEMODE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetEdgeMode(edgeMode: Integer);
+procedure TCustomSciTextEditor.SetEdgeMode(AEdgeMode: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETEDGEMODE, edgeMode, 0);
+  SendScintillaEditorMessage(SCI_SETEDGEMODE, AEdgeMode, 0);
 end;
 
 function TCustomSciTextEditor.GetEdgeColour(): TColor;
 begin
-  Result := SendMessage(Handle, SCI_GETEDGECOLOUR, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETEDGECOLOUR, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetEdgeColour(edgeColour: TColor);
+procedure TCustomSciTextEditor.SetEdgeColour(AEdgeColour: TColor);
 begin
-  SendMessage(Handle, SCI_SETEDGECOLOUR, edgeColour, 0);
+  SendScintillaEditorMessage(SCI_SETEDGECOLOUR, AEdgeColour, 0);
 end;
 
-procedure TCustomSciTextEditor.MultiEdgeAddLine(column: Integer; edgeColour: TColor);
+procedure TCustomSciTextEditor.MultiEdgeAddLine(AColumn: TSciPosition; AEdgeColour: TColor);
 begin
-  SendMessage(Handle, SCI_MULTIEDGEADDLINE, column, edgeColour);
+  SendScintillaEditorMessage(SCI_MULTIEDGEADDLINE, AColumn, AEdgeColour);
 end;
 
 procedure TCustomSciTextEditor.MultiEdgeClearAll();
 begin
-  SendMessage(Handle, SCI_MULTIEDGECLEARALL, 0, 0);
+  SendScintillaEditorMessage(SCI_MULTIEDGECLEARALL, 0, 0);
 end;
 
-function TCustomSciTextEditor.GetMultiEdgeColumn(which: Integer): Integer;
+function TCustomSciTextEditor.GetMultiEdgeColumn(AWhich: Integer): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETMULTIEDGECOLUMN, which, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMULTIEDGECOLUMN, AWhich, 0);
 end;
 
 procedure TCustomSciTextEditor.SearchAnchor();
 begin
-  SendMessage(Handle, SCI_SEARCHANCHOR, 0, 0);
+  SendScintillaEditorMessage(SCI_SEARCHANCHOR, 0, 0);
 end;
 
-function TCustomSciTextEditor.SearchNext(searchFlags: Integer; text: PAnsiChar): Integer;
+function TCustomSciTextEditor.SearchNext(ASearchFlags: NativeInt; AText: PAnsiChar): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_SEARCHNEXT, searchFlags, LPARAM(text));
+  Result := SendScintillaEditorMessage(SCI_SEARCHNEXT, ASearchFlags, LPARAM(AText));
 end;
 
-function TCustomSciTextEditor.SearchPrev(searchFlags: Integer; text: PAnsiChar): Integer;
+function TCustomSciTextEditor.SearchPrev(ASearchFlags: NativeInt; AText: PAnsiChar): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_SEARCHPREV, searchFlags, LPARAM(text));
+  Result := SendScintillaEditorMessage(SCI_SEARCHPREV, ASearchFlags, LPARAM(AText));
 end;
 
-function TCustomSciTextEditor.LinesOnScreen(): Integer;
+function TCustomSciTextEditor.LinesOnScreen(): TSciLine;
 begin
-  Result := SendMessage(Handle, SCI_LINESONSCREEN, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_LINESONSCREEN, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.UsePopUp(popUpMode: Integer);
+procedure TCustomSciTextEditor.UsePopUp(APopUpMode: NativeInt);
 begin
-  SendMessage(Handle, SCI_USEPOPUP, popUpMode, 0);
+  SendScintillaEditorMessage(SCI_USEPOPUP, APopUpMode, 0);
 end;
 
 function TCustomSciTextEditor.SelectionIsRectangle(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_SELECTIONISRECTANGLE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_SELECTIONISRECTANGLE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetZoom(zoomInPoints: Integer);
+procedure TCustomSciTextEditor.SetZoom(AZoomInPoints: Integer);
 begin
-  SendMessage(Handle, SCI_SETZOOM, zoomInPoints, 0);
+  SendScintillaEditorMessage(SCI_SETZOOM, AZoomInPoints, 0);
 end;
 
 function TCustomSciTextEditor.GetZoom(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETZOOM, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETZOOM, 0, 0);
 end;
 
-function TCustomSciTextEditor.CreateDocument(bytes: Integer; documentOptions: Integer): Pointer;
+function TCustomSciTextEditor.CreateDocument(ABytes: TSciPosition; ADocumentOptions: NativeInt): Pointer;
 begin
-  Result := SendMessage(Handle, SCI_CREATEDOCUMENT, bytes, documentOptions);
+  Result := SendScintillaEditorMessage(SCI_CREATEDOCUMENT, ABytes, ADocumentOptions);
 end;
 
-procedure TCustomSciTextEditor.AddRefDocument(doc: Pointer);
+procedure TCustomSciTextEditor.AddRefDocument(ADoc: Pointer);
 begin
-  SendMessage(Handle, SCI_ADDREFDOCUMENT, 0, LPARAM(doc));
+  SendScintillaEditorMessage(SCI_ADDREFDOCUMENT, 0, LPARAM(ADoc));
 end;
 
-procedure TCustomSciTextEditor.ReleaseDocument(doc: Pointer);
+procedure TCustomSciTextEditor.ReleaseDocument(ADoc: Pointer);
 begin
-  SendMessage(Handle, SCI_RELEASEDOCUMENT, 0, LPARAM(doc));
+  SendScintillaEditorMessage(SCI_RELEASEDOCUMENT, 0, LPARAM(ADoc));
 end;
 
-function TCustomSciTextEditor.GetDocumentOptions(): Integer;
+function TCustomSciTextEditor.GetDocumentOptions(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETDOCUMENTOPTIONS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETDOCUMENTOPTIONS, 0, 0);
 end;
 
-function TCustomSciTextEditor.GetModEventMask(): Integer;
+function TCustomSciTextEditor.GetModEventMask(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETMODEVENTMASK, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMODEVENTMASK, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetCommandEvents(commandEvents: Boolean);
+procedure TCustomSciTextEditor.SetCommandEvents(ACommandEvents: Boolean);
 begin
-  SendMessage(Handle, SCI_SETCOMMANDEVENTS, commandEvents, 0);
+  SendScintillaEditorMessage(SCI_SETCOMMANDEVENTS, ACommandEvents, 0);
 end;
 
 function TCustomSciTextEditor.GetCommandEvents(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETCOMMANDEVENTS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCOMMANDEVENTS, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetFocus(focus: Boolean);
+procedure TCustomSciTextEditor.SetFocus(AFocus: Boolean);
 begin
-  SendMessage(Handle, SCI_SETFOCUS, focus, 0);
+  SendScintillaEditorMessage(SCI_SETFOCUS, AFocus, 0);
 end;
 
 function TCustomSciTextEditor.GetFocus(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETFOCUS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETFOCUS, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetStatus(status: Integer);
+procedure TCustomSciTextEditor.SetStatus(AStatus: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETSTATUS, status, 0);
+  SendScintillaEditorMessage(SCI_SETSTATUS, AStatus, 0);
 end;
 
-function TCustomSciTextEditor.GetStatus(): Integer;
+function TCustomSciTextEditor.GetStatus(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETSTATUS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSTATUS, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetMouseDownCaptures(captures: Boolean);
+procedure TCustomSciTextEditor.SetMouseDownCaptures(ACaptures: Boolean);
 begin
-  SendMessage(Handle, SCI_SETMOUSEDOWNCAPTURES, captures, 0);
+  SendScintillaEditorMessage(SCI_SETMOUSEDOWNCAPTURES, ACaptures, 0);
 end;
 
 function TCustomSciTextEditor.GetMouseDownCaptures(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETMOUSEDOWNCAPTURES, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMOUSEDOWNCAPTURES, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetMouseWheelCaptures(captures: Boolean);
+procedure TCustomSciTextEditor.SetMouseWheelCaptures(ACaptures: Boolean);
 begin
-  SendMessage(Handle, SCI_SETMOUSEWHEELCAPTURES, captures, 0);
+  SendScintillaEditorMessage(SCI_SETMOUSEWHEELCAPTURES, ACaptures, 0);
 end;
 
 function TCustomSciTextEditor.GetMouseWheelCaptures(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETMOUSEWHEELCAPTURES, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMOUSEWHEELCAPTURES, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetCursor(cursorType: Integer);
+procedure TCustomSciTextEditor.SetCursor(ACursorType: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETCURSOR, cursorType, 0);
+  SendScintillaEditorMessage(SCI_SETCURSOR, ACursorType, 0);
 end;
 
-function TCustomSciTextEditor.GetCursor(): Integer;
+function TCustomSciTextEditor.GetCursor(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETCURSOR, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCURSOR, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetControlCharSymbol(symbol: Integer);
+procedure TCustomSciTextEditor.SetControlCharSymbol(ASymbol: Integer);
 begin
-  SendMessage(Handle, SCI_SETCONTROLCHARSYMBOL, symbol, 0);
+  SendScintillaEditorMessage(SCI_SETCONTROLCHARSYMBOL, ASymbol, 0);
 end;
 
 function TCustomSciTextEditor.GetControlCharSymbol(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETCONTROLCHARSYMBOL, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCONTROLCHARSYMBOL, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.WordPartLeft();
 begin
-  SendMessage(Handle, SCI_WORDPARTLEFT, 0, 0);
+  SendScintillaEditorMessage(SCI_WORDPARTLEFT, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.WordPartLeftExtend();
 begin
-  SendMessage(Handle, SCI_WORDPARTLEFTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_WORDPARTLEFTEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.WordPartRight();
 begin
-  SendMessage(Handle, SCI_WORDPARTRIGHT, 0, 0);
+  SendScintillaEditorMessage(SCI_WORDPARTRIGHT, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.WordPartRightExtend();
 begin
-  SendMessage(Handle, SCI_WORDPARTRIGHTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_WORDPARTRIGHTEXTEND, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetVisiblePolicy(visiblePolicy: Integer; visibleSlop: Integer);
+procedure TCustomSciTextEditor.SetVisiblePolicy(AVisiblePolicy: NativeInt; AVisibleSlop: Integer);
 begin
-  SendMessage(Handle, SCI_SETVISIBLEPOLICY, visiblePolicy, visibleSlop);
+  SendScintillaEditorMessage(SCI_SETVISIBLEPOLICY, AVisiblePolicy, AVisibleSlop);
 end;
 
 procedure TCustomSciTextEditor.DelLineLeft();
 begin
-  SendMessage(Handle, SCI_DELLINELEFT, 0, 0);
+  SendScintillaEditorMessage(SCI_DELLINELEFT, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.DelLineRight();
 begin
-  SendMessage(Handle, SCI_DELLINERIGHT, 0, 0);
+  SendScintillaEditorMessage(SCI_DELLINERIGHT, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetXOffset(xOffset: Integer);
+procedure TCustomSciTextEditor.SetXOffset(AXOffset: Integer);
 begin
-  SendMessage(Handle, SCI_SETXOFFSET, xOffset, 0);
+  SendScintillaEditorMessage(SCI_SETXOFFSET, AXOffset, 0);
 end;
 
 function TCustomSciTextEditor.GetXOffset(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETXOFFSET, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETXOFFSET, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.ChooseCaretX();
 begin
-  SendMessage(Handle, SCI_CHOOSECARETX, 0, 0);
+  SendScintillaEditorMessage(SCI_CHOOSECARETX, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.GrabFocus();
 begin
-  SendMessage(Handle, SCI_GRABFOCUS, 0, 0);
+  SendScintillaEditorMessage(SCI_GRABFOCUS, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetXCaretPolicy(caretPolicy: Integer; caretSlop: Integer);
+procedure TCustomSciTextEditor.SetXCaretPolicy(ACaretPolicy: NativeInt; ACaretSlop: Integer);
 begin
-  SendMessage(Handle, SCI_SETXCARETPOLICY, caretPolicy, caretSlop);
+  SendScintillaEditorMessage(SCI_SETXCARETPOLICY, ACaretPolicy, ACaretSlop);
 end;
 
-procedure TCustomSciTextEditor.SetYCaretPolicy(caretPolicy: Integer; caretSlop: Integer);
+procedure TCustomSciTextEditor.SetYCaretPolicy(ACaretPolicy: NativeInt; ACaretSlop: Integer);
 begin
-  SendMessage(Handle, SCI_SETYCARETPOLICY, caretPolicy, caretSlop);
+  SendScintillaEditorMessage(SCI_SETYCARETPOLICY, ACaretPolicy, ACaretSlop);
 end;
 
-procedure TCustomSciTextEditor.SetPrintWrapMode(wrapMode: Integer);
+procedure TCustomSciTextEditor.SetPrintWrapMode(AWrapMode: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETPRINTWRAPMODE, wrapMode, 0);
+  SendScintillaEditorMessage(SCI_SETPRINTWRAPMODE, AWrapMode, 0);
 end;
 
-function TCustomSciTextEditor.GetPrintWrapMode(): Integer;
+function TCustomSciTextEditor.GetPrintWrapMode(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETPRINTWRAPMODE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETPRINTWRAPMODE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetHotspotActiveFore(useSetting: Boolean; fore: TColor);
+procedure TCustomSciTextEditor.SetHotspotActiveFore(AUseSetting: Boolean; AFore: TColor);
 begin
-  SendMessage(Handle, SCI_SETHOTSPOTACTIVEFORE, useSetting, fore);
+  SendScintillaEditorMessage(SCI_SETHOTSPOTACTIVEFORE, AUseSetting, AFore);
 end;
 
 function TCustomSciTextEditor.GetHotspotActiveFore(): TColor;
 begin
-  Result := SendMessage(Handle, SCI_GETHOTSPOTACTIVEFORE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETHOTSPOTACTIVEFORE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetHotspotActiveBack(useSetting: Boolean; back: TColor);
+procedure TCustomSciTextEditor.SetHotspotActiveBack(AUseSetting: Boolean; ABack: TColor);
 begin
-  SendMessage(Handle, SCI_SETHOTSPOTACTIVEBACK, useSetting, back);
+  SendScintillaEditorMessage(SCI_SETHOTSPOTACTIVEBACK, AUseSetting, ABack);
 end;
 
 function TCustomSciTextEditor.GetHotspotActiveBack(): TColor;
 begin
-  Result := SendMessage(Handle, SCI_GETHOTSPOTACTIVEBACK, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETHOTSPOTACTIVEBACK, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetHotspotActiveUnderline(underline: Boolean);
+procedure TCustomSciTextEditor.SetHotspotActiveUnderline(AUnderline: Boolean);
 begin
-  SendMessage(Handle, SCI_SETHOTSPOTACTIVEUNDERLINE, underline, 0);
+  SendScintillaEditorMessage(SCI_SETHOTSPOTACTIVEUNDERLINE, AUnderline, 0);
 end;
 
 function TCustomSciTextEditor.GetHotspotActiveUnderline(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETHOTSPOTACTIVEUNDERLINE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETHOTSPOTACTIVEUNDERLINE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetHotspotSingleLine(singleLine: Boolean);
+procedure TCustomSciTextEditor.SetHotspotSingleLine(ASingleLine: Boolean);
 begin
-  SendMessage(Handle, SCI_SETHOTSPOTSINGLELINE, singleLine, 0);
+  SendScintillaEditorMessage(SCI_SETHOTSPOTSINGLELINE, ASingleLine, 0);
 end;
 
 function TCustomSciTextEditor.GetHotspotSingleLine(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETHOTSPOTSINGLELINE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETHOTSPOTSINGLELINE, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.ParaDown();
 begin
-  SendMessage(Handle, SCI_PARADOWN, 0, 0);
+  SendScintillaEditorMessage(SCI_PARADOWN, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.ParaDownExtend();
 begin
-  SendMessage(Handle, SCI_PARADOWNEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_PARADOWNEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.ParaUp();
 begin
-  SendMessage(Handle, SCI_PARAUP, 0, 0);
+  SendScintillaEditorMessage(SCI_PARAUP, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.ParaUpExtend();
 begin
-  SendMessage(Handle, SCI_PARAUPEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_PARAUPEXTEND, 0, 0);
 end;
 
-function TCustomSciTextEditor.PositionBefore(pos: Integer): Integer;
+function TCustomSciTextEditor.PositionBefore(APos: TSciPosition): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_POSITIONBEFORE, pos, 0);
+  Result := SendScintillaEditorMessage(SCI_POSITIONBEFORE, APos, 0);
 end;
 
-function TCustomSciTextEditor.PositionAfter(pos: Integer): Integer;
+function TCustomSciTextEditor.PositionAfter(APos: TSciPosition): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_POSITIONAFTER, pos, 0);
+  Result := SendScintillaEditorMessage(SCI_POSITIONAFTER, APos, 0);
 end;
 
-function TCustomSciTextEditor.PositionRelative(pos: Integer; relative: Integer): Integer;
+function TCustomSciTextEditor.PositionRelative(APos: TSciPosition; ARelative: TSciPosition): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_POSITIONRELATIVE, pos, relative);
+  Result := SendScintillaEditorMessage(SCI_POSITIONRELATIVE, APos, ARelative);
 end;
 
-function TCustomSciTextEditor.PositionRelativeCodeUnits(pos: Integer; relative: Integer): Integer;
+function TCustomSciTextEditor.PositionRelativeCodeUnits(APos: TSciPosition; ARelative: TSciPosition): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_POSITIONRELATIVECODEUNITS, pos, relative);
+  Result := SendScintillaEditorMessage(SCI_POSITIONRELATIVECODEUNITS, APos, ARelative);
 end;
 
-procedure TCustomSciTextEditor.CopyRange(start: Integer; end: Integer);
+procedure TCustomSciTextEditor.CopyRange(AStart: TSciPosition; AEnd: TSciPosition);
 begin
-  SendMessage(Handle, SCI_COPYRANGE, start, end);
+  SendScintillaEditorMessage(SCI_COPYRANGE, AStart, AEnd);
 end;
 
-procedure TCustomSciTextEditor.CopyText(length: Integer; text: PAnsiChar);
+procedure TCustomSciTextEditor.CopyText(ALength: TSciPosition; AText: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_COPYTEXT, length, LPARAM(text));
+  SendScintillaEditorMessage(SCI_COPYTEXT, ALength, LPARAM(AText));
 end;
 
-procedure TCustomSciTextEditor.SetSelectionMode(selectionMode: Integer);
+procedure TCustomSciTextEditor.SetSelectionMode(ASelectionMode: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETSELECTIONMODE, selectionMode, 0);
+  SendScintillaEditorMessage(SCI_SETSELECTIONMODE, ASelectionMode, 0);
 end;
 
-procedure TCustomSciTextEditor.ChangeSelectionMode(selectionMode: Integer);
+procedure TCustomSciTextEditor.ChangeSelectionMode(ASelectionMode: NativeInt);
 begin
-  SendMessage(Handle, SCI_CHANGESELECTIONMODE, selectionMode, 0);
+  SendScintillaEditorMessage(SCI_CHANGESELECTIONMODE, ASelectionMode, 0);
 end;
 
-function TCustomSciTextEditor.GetSelectionMode(): Integer;
+function TCustomSciTextEditor.GetSelectionMode(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETSELECTIONMODE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELECTIONMODE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetMoveExtendsSelection(moveExtendsSelection: Boolean);
+procedure TCustomSciTextEditor.SetMoveExtendsSelection(AMoveExtendsSelection: Boolean);
 begin
-  SendMessage(Handle, SCI_SETMOVEEXTENDSSELECTION, moveExtendsSelection, 0);
+  SendScintillaEditorMessage(SCI_SETMOVEEXTENDSSELECTION, AMoveExtendsSelection, 0);
 end;
 
 function TCustomSciTextEditor.GetMoveExtendsSelection(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETMOVEEXTENDSSELECTION, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMOVEEXTENDSSELECTION, 0, 0);
 end;
 
-function TCustomSciTextEditor.GetLineSelStartPosition(line: Integer): Integer;
+function TCustomSciTextEditor.GetLineSelStartPosition(ALine: TSciLine): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETLINESELSTARTPOSITION, line, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLINESELSTARTPOSITION, ALine, 0);
 end;
 
-function TCustomSciTextEditor.GetLineSelEndPosition(line: Integer): Integer;
+function TCustomSciTextEditor.GetLineSelEndPosition(ALine: TSciLine): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETLINESELENDPOSITION, line, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLINESELENDPOSITION, ALine, 0);
 end;
 
 procedure TCustomSciTextEditor.LineDownRectExtend();
 begin
-  SendMessage(Handle, SCI_LINEDOWNRECTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEDOWNRECTEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.LineUpRectExtend();
 begin
-  SendMessage(Handle, SCI_LINEUPRECTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEUPRECTEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.CharLeftRectExtend();
 begin
-  SendMessage(Handle, SCI_CHARLEFTRECTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_CHARLEFTRECTEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.CharRightRectExtend();
 begin
-  SendMessage(Handle, SCI_CHARRIGHTRECTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_CHARRIGHTRECTEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.HomeRectExtend();
 begin
-  SendMessage(Handle, SCI_HOMERECTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_HOMERECTEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.VCHomeRectExtend();
 begin
-  SendMessage(Handle, SCI_VCHOMERECTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_VCHOMERECTEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.LineEndRectExtend();
 begin
-  SendMessage(Handle, SCI_LINEENDRECTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEENDRECTEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.PageUpRectExtend();
 begin
-  SendMessage(Handle, SCI_PAGEUPRECTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_PAGEUPRECTEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.PageDownRectExtend();
 begin
-  SendMessage(Handle, SCI_PAGEDOWNRECTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_PAGEDOWNRECTEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.StutteredPageUp();
 begin
-  SendMessage(Handle, SCI_STUTTEREDPAGEUP, 0, 0);
+  SendScintillaEditorMessage(SCI_STUTTEREDPAGEUP, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.StutteredPageUpExtend();
 begin
-  SendMessage(Handle, SCI_STUTTEREDPAGEUPEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_STUTTEREDPAGEUPEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.StutteredPageDown();
 begin
-  SendMessage(Handle, SCI_STUTTEREDPAGEDOWN, 0, 0);
+  SendScintillaEditorMessage(SCI_STUTTEREDPAGEDOWN, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.StutteredPageDownExtend();
 begin
-  SendMessage(Handle, SCI_STUTTEREDPAGEDOWNEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_STUTTEREDPAGEDOWNEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.WordLeftEnd();
 begin
-  SendMessage(Handle, SCI_WORDLEFTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_WORDLEFTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.WordLeftEndExtend();
 begin
-  SendMessage(Handle, SCI_WORDLEFTENDEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_WORDLEFTENDEXTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.WordRightEnd();
 begin
-  SendMessage(Handle, SCI_WORDRIGHTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_WORDRIGHTEND, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.WordRightEndExtend();
 begin
-  SendMessage(Handle, SCI_WORDRIGHTENDEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_WORDRIGHTENDEXTEND, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetWhitespaceChars(characters: PAnsiChar);
+procedure TCustomSciTextEditor.SetWhitespaceChars(ACharacters: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_SETWHITESPACECHARS, 0, LPARAM(characters));
+  SendScintillaEditorMessage(SCI_SETWHITESPACECHARS, 0, LPARAM(ACharacters));
 end;
 
-function TCustomSciTextEditor.GetWhitespaceChars(characters: PAnsiChar): Integer;
+function TCustomSciTextEditor.GetWhitespaceChars(ACharacters: PAnsiChar): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETWHITESPACECHARS, 0, LPARAM(characters));
+  Result := SendScintillaEditorMessage(SCI_GETWHITESPACECHARS, 0, LPARAM(ACharacters));
 end;
 
-procedure TCustomSciTextEditor.SetPunctuationChars(characters: PAnsiChar);
+procedure TCustomSciTextEditor.SetPunctuationChars(ACharacters: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_SETPUNCTUATIONCHARS, 0, LPARAM(characters));
+  SendScintillaEditorMessage(SCI_SETPUNCTUATIONCHARS, 0, LPARAM(ACharacters));
 end;
 
-function TCustomSciTextEditor.GetPunctuationChars(characters: PAnsiChar): Integer;
+function TCustomSciTextEditor.GetPunctuationChars(ACharacters: PAnsiChar): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETPUNCTUATIONCHARS, 0, LPARAM(characters));
+  Result := SendScintillaEditorMessage(SCI_GETPUNCTUATIONCHARS, 0, LPARAM(ACharacters));
 end;
 
 procedure TCustomSciTextEditor.SetCharsDefault();
 begin
-  SendMessage(Handle, SCI_SETCHARSDEFAULT, 0, 0);
+  SendScintillaEditorMessage(SCI_SETCHARSDEFAULT, 0, 0);
 end;
 
 function TCustomSciTextEditor.AutoCGetCurrent(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_AUTOCGETCURRENT, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_AUTOCGETCURRENT, 0, 0);
 end;
 
-function TCustomSciTextEditor.AutoCGetCurrentText(text: PAnsiChar): Integer;
+function TCustomSciTextEditor.AutoCGetCurrentText(AText: PAnsiChar): Integer;
 begin
-  Result := SendMessage(Handle, SCI_AUTOCGETCURRENTTEXT, 0, LPARAM(text));
+  Result := SendScintillaEditorMessage(SCI_AUTOCGETCURRENTTEXT, 0, LPARAM(AText));
 end;
 
-procedure TCustomSciTextEditor.AutoCSetCaseInsensitiveBehaviour(behaviour: Integer);
+procedure TCustomSciTextEditor.AutoCSetCaseInsensitiveBehaviour(ABehaviour: NativeInt);
 begin
-  SendMessage(Handle, SCI_AUTOCSETCASEINSENSITIVEBEHAVIOUR, behaviour, 0);
+  SendScintillaEditorMessage(SCI_AUTOCSETCASEINSENSITIVEBEHAVIOUR, ABehaviour, 0);
 end;
 
-function TCustomSciTextEditor.AutoCGetCaseInsensitiveBehaviour(): Integer;
+function TCustomSciTextEditor.AutoCGetCaseInsensitiveBehaviour(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_AUTOCGETCASEINSENSITIVEBEHAVIOUR, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_AUTOCGETCASEINSENSITIVEBEHAVIOUR, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.AutoCSetMulti(multi: Integer);
+procedure TCustomSciTextEditor.AutoCSetMulti(AMulti: NativeInt);
 begin
-  SendMessage(Handle, SCI_AUTOCSETMULTI, multi, 0);
+  SendScintillaEditorMessage(SCI_AUTOCSETMULTI, AMulti, 0);
 end;
 
-function TCustomSciTextEditor.AutoCGetMulti(): Integer;
+function TCustomSciTextEditor.AutoCGetMulti(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_AUTOCGETMULTI, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_AUTOCGETMULTI, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.AutoCSetOrder(order: Integer);
+procedure TCustomSciTextEditor.AutoCSetOrder(AOrder: NativeInt);
 begin
-  SendMessage(Handle, SCI_AUTOCSETORDER, order, 0);
+  SendScintillaEditorMessage(SCI_AUTOCSETORDER, AOrder, 0);
 end;
 
-function TCustomSciTextEditor.AutoCGetOrder(): Integer;
+function TCustomSciTextEditor.AutoCGetOrder(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_AUTOCGETORDER, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_AUTOCGETORDER, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.Allocate(bytes: Integer);
+procedure TCustomSciTextEditor.Allocate(ABytes: TSciPosition);
 begin
-  SendMessage(Handle, SCI_ALLOCATE, bytes, 0);
+  SendScintillaEditorMessage(SCI_ALLOCATE, ABytes, 0);
 end;
 
-function TCustomSciTextEditor.TargetAsUTF8(s: PAnsiChar): Integer;
+function TCustomSciTextEditor.TargetAsUTF8(S: PAnsiChar): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_TARGETASUTF8, 0, LPARAM(s));
+  Result := SendScintillaEditorMessage(SCI_TARGETASUTF8, 0, LPARAM(S));
 end;
 
-procedure TCustomSciTextEditor.SetLengthForEncode(bytes: Integer);
+procedure TCustomSciTextEditor.SetLengthForEncode(ABytes: TSciPosition);
 begin
-  SendMessage(Handle, SCI_SETLENGTHFORENCODE, bytes, 0);
+  SendScintillaEditorMessage(SCI_SETLENGTHFORENCODE, ABytes, 0);
 end;
 
-function TCustomSciTextEditor.EncodedFromUTF8(utf8: PAnsiChar; encoded: PAnsiChar): Integer;
+function TCustomSciTextEditor.EncodedFromUTF8(AUtf8: PAnsiChar; AEncoded: PAnsiChar): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_ENCODEDFROMUTF8, utf8, LPARAM(encoded));
+  Result := SendScintillaEditorMessage(SCI_ENCODEDFROMUTF8, AUtf8, LPARAM(AEncoded));
 end;
 
-function TCustomSciTextEditor.FindColumn(line: Integer; column: Integer): Integer;
+function TCustomSciTextEditor.FindColumn(ALine: TSciLine; AColumn: TSciPosition): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_FINDCOLUMN, line, column);
+  Result := SendScintillaEditorMessage(SCI_FINDCOLUMN, ALine, AColumn);
 end;
 
-function TCustomSciTextEditor.GetCaretSticky(): Integer;
+function TCustomSciTextEditor.GetCaretSticky(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETCARETSTICKY, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCARETSTICKY, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetCaretSticky(useCaretStickyBehaviour: Integer);
+procedure TCustomSciTextEditor.SetCaretSticky(AUseCaretStickyBehaviour: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETCARETSTICKY, useCaretStickyBehaviour, 0);
+  SendScintillaEditorMessage(SCI_SETCARETSTICKY, AUseCaretStickyBehaviour, 0);
 end;
 
 procedure TCustomSciTextEditor.ToggleCaretSticky();
 begin
-  SendMessage(Handle, SCI_TOGGLECARETSTICKY, 0, 0);
+  SendScintillaEditorMessage(SCI_TOGGLECARETSTICKY, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetPasteConvertEndings(convert: Boolean);
+procedure TCustomSciTextEditor.SetPasteConvertEndings(AConvert: Boolean);
 begin
-  SendMessage(Handle, SCI_SETPASTECONVERTENDINGS, convert, 0);
+  SendScintillaEditorMessage(SCI_SETPASTECONVERTENDINGS, AConvert, 0);
 end;
 
 function TCustomSciTextEditor.GetPasteConvertEndings(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETPASTECONVERTENDINGS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETPASTECONVERTENDINGS, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.ReplaceRectangular(length: Integer; text: PAnsiChar);
+procedure TCustomSciTextEditor.ReplaceRectangular(ALength: TSciPosition; AText: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_REPLACERECTANGULAR, length, LPARAM(text));
+  SendScintillaEditorMessage(SCI_REPLACERECTANGULAR, ALength, LPARAM(AText));
 end;
 
 procedure TCustomSciTextEditor.SelectionDuplicate();
 begin
-  SendMessage(Handle, SCI_SELECTIONDUPLICATE, 0, 0);
+  SendScintillaEditorMessage(SCI_SELECTIONDUPLICATE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetCaretLineBackAlpha(alpha: Integer);
+procedure TCustomSciTextEditor.SetCaretLineBackAlpha(AAlpha: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETCARETLINEBACKALPHA, alpha, 0);
+  SendScintillaEditorMessage(SCI_SETCARETLINEBACKALPHA, AAlpha, 0);
 end;
 
-function TCustomSciTextEditor.GetCaretLineBackAlpha(): Integer;
+function TCustomSciTextEditor.GetCaretLineBackAlpha(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETCARETLINEBACKALPHA, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCARETLINEBACKALPHA, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetCaretStyle(caretStyle: Integer);
+procedure TCustomSciTextEditor.SetCaretStyle(ACaretStyle: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETCARETSTYLE, caretStyle, 0);
+  SendScintillaEditorMessage(SCI_SETCARETSTYLE, ACaretStyle, 0);
 end;
 
-function TCustomSciTextEditor.GetCaretStyle(): Integer;
+function TCustomSciTextEditor.GetCaretStyle(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETCARETSTYLE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCARETSTYLE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetIndicatorCurrent(indicator: Integer);
+procedure TCustomSciTextEditor.SetIndicatorCurrent(AIndicator: Integer);
 begin
-  SendMessage(Handle, SCI_SETINDICATORCURRENT, indicator, 0);
+  SendScintillaEditorMessage(SCI_SETINDICATORCURRENT, AIndicator, 0);
 end;
 
 function TCustomSciTextEditor.GetIndicatorCurrent(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETINDICATORCURRENT, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETINDICATORCURRENT, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetIndicatorValue(value: Integer);
+procedure TCustomSciTextEditor.SetIndicatorValue(AValue: Integer);
 begin
-  SendMessage(Handle, SCI_SETINDICATORVALUE, value, 0);
+  SendScintillaEditorMessage(SCI_SETINDICATORVALUE, AValue, 0);
 end;
 
 function TCustomSciTextEditor.GetIndicatorValue(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETINDICATORVALUE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETINDICATORVALUE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.IndicatorFillRange(start: Integer; lengthFill: Integer);
+procedure TCustomSciTextEditor.IndicatorFillRange(AStart: TSciPosition; ALengthFill: TSciPosition);
 begin
-  SendMessage(Handle, SCI_INDICATORFILLRANGE, start, lengthFill);
+  SendScintillaEditorMessage(SCI_INDICATORFILLRANGE, AStart, ALengthFill);
 end;
 
-procedure TCustomSciTextEditor.IndicatorClearRange(start: Integer; lengthClear: Integer);
+procedure TCustomSciTextEditor.IndicatorClearRange(AStart: TSciPosition; ALengthClear: TSciPosition);
 begin
-  SendMessage(Handle, SCI_INDICATORCLEARRANGE, start, lengthClear);
+  SendScintillaEditorMessage(SCI_INDICATORCLEARRANGE, AStart, ALengthClear);
 end;
 
-function TCustomSciTextEditor.IndicatorAllOnFor(pos: Integer): Integer;
+function TCustomSciTextEditor.IndicatorAllOnFor(APos: TSciPosition): Integer;
 begin
-  Result := SendMessage(Handle, SCI_INDICATORALLONFOR, pos, 0);
+  Result := SendScintillaEditorMessage(SCI_INDICATORALLONFOR, APos, 0);
 end;
 
-function TCustomSciTextEditor.IndicatorValueAt(indicator: Integer; pos: Integer): Integer;
+function TCustomSciTextEditor.IndicatorValueAt(AIndicator: Integer; APos: TSciPosition): Integer;
 begin
-  Result := SendMessage(Handle, SCI_INDICATORVALUEAT, indicator, pos);
+  Result := SendScintillaEditorMessage(SCI_INDICATORVALUEAT, AIndicator, APos);
 end;
 
-function TCustomSciTextEditor.IndicatorStart(indicator: Integer; pos: Integer): Integer;
+function TCustomSciTextEditor.IndicatorStart(AIndicator: Integer; APos: TSciPosition): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_INDICATORSTART, indicator, pos);
+  Result := SendScintillaEditorMessage(SCI_INDICATORSTART, AIndicator, APos);
 end;
 
-function TCustomSciTextEditor.IndicatorEnd(indicator: Integer; pos: Integer): Integer;
+function TCustomSciTextEditor.IndicatorEnd(AIndicator: Integer; APos: TSciPosition): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_INDICATOREND, indicator, pos);
+  Result := SendScintillaEditorMessage(SCI_INDICATOREND, AIndicator, APos);
 end;
 
-procedure TCustomSciTextEditor.SetPositionCache(size: Integer);
+procedure TCustomSciTextEditor.SetPositionCache(ASize: Integer);
 begin
-  SendMessage(Handle, SCI_SETPOSITIONCACHE, size, 0);
+  SendScintillaEditorMessage(SCI_SETPOSITIONCACHE, ASize, 0);
 end;
 
 function TCustomSciTextEditor.GetPositionCache(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETPOSITIONCACHE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETPOSITIONCACHE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetLayoutThreads(threads: Integer);
+procedure TCustomSciTextEditor.SetLayoutThreads(AThreads: Integer);
 begin
-  SendMessage(Handle, SCI_SETLAYOUTTHREADS, threads, 0);
+  SendScintillaEditorMessage(SCI_SETLAYOUTTHREADS, AThreads, 0);
 end;
 
 function TCustomSciTextEditor.GetLayoutThreads(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETLAYOUTTHREADS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLAYOUTTHREADS, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.CopyAllowLine();
 begin
-  SendMessage(Handle, SCI_COPYALLOWLINE, 0, 0);
+  SendScintillaEditorMessage(SCI_COPYALLOWLINE, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.CutAllowLine();
 begin
-  SendMessage(Handle, SCI_CUTALLOWLINE, 0, 0);
+  SendScintillaEditorMessage(SCI_CUTALLOWLINE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetCopySeparator(separator: PAnsiChar);
+procedure TCustomSciTextEditor.SetCopySeparator(ASeparator: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_SETCOPYSEPARATOR, 0, LPARAM(separator));
+  SendScintillaEditorMessage(SCI_SETCOPYSEPARATOR, 0, LPARAM(ASeparator));
 end;
 
-function TCustomSciTextEditor.GetCopySeparator(separator: PAnsiChar): Integer;
+function TCustomSciTextEditor.GetCopySeparator(ASeparator: PAnsiChar): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETCOPYSEPARATOR, 0, LPARAM(separator));
+  Result := SendScintillaEditorMessage(SCI_GETCOPYSEPARATOR, 0, LPARAM(ASeparator));
 end;
 
 function TCustomSciTextEditor.GetCharacterPointer(): Pointer;
 begin
-  Result := SendMessage(Handle, SCI_GETCHARACTERPOINTER, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCHARACTERPOINTER, 0, 0);
 end;
 
-function TCustomSciTextEditor.GetRangePointer(start: Integer; lengthRange: Integer): Pointer;
+function TCustomSciTextEditor.GetRangePointer(AStart: TSciPosition; ALengthRange: TSciPosition): Pointer;
 begin
-  Result := SendMessage(Handle, SCI_GETRANGEPOINTER, start, lengthRange);
+  Result := SendScintillaEditorMessage(SCI_GETRANGEPOINTER, AStart, ALengthRange);
 end;
 
-function TCustomSciTextEditor.GetGapPosition(): Integer;
+function TCustomSciTextEditor.GetGapPosition(): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETGAPPOSITION, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETGAPPOSITION, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.IndicSetAlpha(indicator: Integer; alpha: Integer);
+procedure TCustomSciTextEditor.IndicSetAlpha(AIndicator: Integer; AAlpha: NativeInt);
 begin
-  SendMessage(Handle, SCI_INDICSETALPHA, indicator, alpha);
+  SendScintillaEditorMessage(SCI_INDICSETALPHA, AIndicator, AAlpha);
 end;
 
-function TCustomSciTextEditor.IndicGetAlpha(indicator: Integer): Integer;
+function TCustomSciTextEditor.IndicGetAlpha(AIndicator: Integer): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_INDICGETALPHA, indicator, 0);
+  Result := SendScintillaEditorMessage(SCI_INDICGETALPHA, AIndicator, 0);
 end;
 
-procedure TCustomSciTextEditor.IndicSetOutlineAlpha(indicator: Integer; alpha: Integer);
+procedure TCustomSciTextEditor.IndicSetOutlineAlpha(AIndicator: Integer; AAlpha: NativeInt);
 begin
-  SendMessage(Handle, SCI_INDICSETOUTLINEALPHA, indicator, alpha);
+  SendScintillaEditorMessage(SCI_INDICSETOUTLINEALPHA, AIndicator, AAlpha);
 end;
 
-function TCustomSciTextEditor.IndicGetOutlineAlpha(indicator: Integer): Integer;
+function TCustomSciTextEditor.IndicGetOutlineAlpha(AIndicator: Integer): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_INDICGETOUTLINEALPHA, indicator, 0);
+  Result := SendScintillaEditorMessage(SCI_INDICGETOUTLINEALPHA, AIndicator, 0);
 end;
 
-procedure TCustomSciTextEditor.SetExtraAscent(extraAscent: Integer);
+procedure TCustomSciTextEditor.SetExtraAscent(AExtraAscent: Integer);
 begin
-  SendMessage(Handle, SCI_SETEXTRAASCENT, extraAscent, 0);
+  SendScintillaEditorMessage(SCI_SETEXTRAASCENT, AExtraAscent, 0);
 end;
 
 function TCustomSciTextEditor.GetExtraAscent(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETEXTRAASCENT, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETEXTRAASCENT, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetExtraDescent(extraDescent: Integer);
+procedure TCustomSciTextEditor.SetExtraDescent(AExtraDescent: Integer);
 begin
-  SendMessage(Handle, SCI_SETEXTRADESCENT, extraDescent, 0);
+  SendScintillaEditorMessage(SCI_SETEXTRADESCENT, AExtraDescent, 0);
 end;
 
 function TCustomSciTextEditor.GetExtraDescent(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETEXTRADESCENT, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETEXTRADESCENT, 0, 0);
 end;
 
-function TCustomSciTextEditor.MarkerSymbolDefined(markerNumber: Integer): Integer;
+function TCustomSciTextEditor.MarkerSymbolDefined(AMarkerNumber: Integer): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_MARKERSYMBOLDEFINED, markerNumber, 0);
+  Result := SendScintillaEditorMessage(SCI_MARKERSYMBOLDEFINED, AMarkerNumber, 0);
 end;
 
-procedure TCustomSciTextEditor.MarginSetText(line: Integer; text: PAnsiChar);
+procedure TCustomSciTextEditor.MarginSetText(ALine: TSciLine; AText: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_MARGINSETTEXT, line, LPARAM(text));
+  SendScintillaEditorMessage(SCI_MARGINSETTEXT, ALine, LPARAM(AText));
 end;
 
-function TCustomSciTextEditor.MarginGetText(line: Integer; text: PAnsiChar): Integer;
+function TCustomSciTextEditor.MarginGetText(ALine: TSciLine; AText: PAnsiChar): Integer;
 begin
-  Result := SendMessage(Handle, SCI_MARGINGETTEXT, line, LPARAM(text));
+  Result := SendScintillaEditorMessage(SCI_MARGINGETTEXT, ALine, LPARAM(AText));
 end;
 
-procedure TCustomSciTextEditor.MarginSetStyle(line: Integer; style: Integer);
+procedure TCustomSciTextEditor.MarginSetStyle(ALine: TSciLine; AStyle: Integer);
 begin
-  SendMessage(Handle, SCI_MARGINSETSTYLE, line, style);
+  SendScintillaEditorMessage(SCI_MARGINSETSTYLE, ALine, AStyle);
 end;
 
-function TCustomSciTextEditor.MarginGetStyle(line: Integer): Integer;
+function TCustomSciTextEditor.MarginGetStyle(ALine: TSciLine): Integer;
 begin
-  Result := SendMessage(Handle, SCI_MARGINGETSTYLE, line, 0);
+  Result := SendScintillaEditorMessage(SCI_MARGINGETSTYLE, ALine, 0);
 end;
 
-procedure TCustomSciTextEditor.MarginSetStyles(line: Integer; styles: PAnsiChar);
+procedure TCustomSciTextEditor.MarginSetStyles(ALine: TSciLine; AStyles: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_MARGINSETSTYLES, line, LPARAM(styles));
+  SendScintillaEditorMessage(SCI_MARGINSETSTYLES, ALine, LPARAM(AStyles));
 end;
 
-function TCustomSciTextEditor.MarginGetStyles(line: Integer; styles: PAnsiChar): Integer;
+function TCustomSciTextEditor.MarginGetStyles(ALine: TSciLine; AStyles: PAnsiChar): Integer;
 begin
-  Result := SendMessage(Handle, SCI_MARGINGETSTYLES, line, LPARAM(styles));
+  Result := SendScintillaEditorMessage(SCI_MARGINGETSTYLES, ALine, LPARAM(AStyles));
 end;
 
 procedure TCustomSciTextEditor.MarginTextClearAll();
 begin
-  SendMessage(Handle, SCI_MARGINTEXTCLEARALL, 0, 0);
+  SendScintillaEditorMessage(SCI_MARGINTEXTCLEARALL, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.MarginSetStyleOffset(style: Integer);
+procedure TCustomSciTextEditor.MarginSetStyleOffset(AStyle: Integer);
 begin
-  SendMessage(Handle, SCI_MARGINSETSTYLEOFFSET, style, 0);
+  SendScintillaEditorMessage(SCI_MARGINSETSTYLEOFFSET, AStyle, 0);
 end;
 
 function TCustomSciTextEditor.MarginGetStyleOffset(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_MARGINGETSTYLEOFFSET, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_MARGINGETSTYLEOFFSET, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetMarginOptions(marginOptions: Integer);
+procedure TCustomSciTextEditor.SetMarginOptions(AMarginOptions: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETMARGINOPTIONS, marginOptions, 0);
+  SendScintillaEditorMessage(SCI_SETMARGINOPTIONS, AMarginOptions, 0);
 end;
 
-function TCustomSciTextEditor.GetMarginOptions(): Integer;
+function TCustomSciTextEditor.GetMarginOptions(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETMARGINOPTIONS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMARGINOPTIONS, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.AnnotationSetText(line: Integer; text: PAnsiChar);
+procedure TCustomSciTextEditor.AnnotationSetText(ALine: TSciLine; AText: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_ANNOTATIONSETTEXT, line, LPARAM(text));
+  SendScintillaEditorMessage(SCI_ANNOTATIONSETTEXT, ALine, LPARAM(AText));
 end;
 
-function TCustomSciTextEditor.AnnotationGetText(line: Integer; text: PAnsiChar): Integer;
+function TCustomSciTextEditor.AnnotationGetText(ALine: TSciLine; AText: PAnsiChar): Integer;
 begin
-  Result := SendMessage(Handle, SCI_ANNOTATIONGETTEXT, line, LPARAM(text));
+  Result := SendScintillaEditorMessage(SCI_ANNOTATIONGETTEXT, ALine, LPARAM(AText));
 end;
 
-procedure TCustomSciTextEditor.AnnotationSetStyle(line: Integer; style: Integer);
+procedure TCustomSciTextEditor.AnnotationSetStyle(ALine: TSciLine; AStyle: Integer);
 begin
-  SendMessage(Handle, SCI_ANNOTATIONSETSTYLE, line, style);
+  SendScintillaEditorMessage(SCI_ANNOTATIONSETSTYLE, ALine, AStyle);
 end;
 
-function TCustomSciTextEditor.AnnotationGetStyle(line: Integer): Integer;
+function TCustomSciTextEditor.AnnotationGetStyle(ALine: TSciLine): Integer;
 begin
-  Result := SendMessage(Handle, SCI_ANNOTATIONGETSTYLE, line, 0);
+  Result := SendScintillaEditorMessage(SCI_ANNOTATIONGETSTYLE, ALine, 0);
 end;
 
-procedure TCustomSciTextEditor.AnnotationSetStyles(line: Integer; styles: PAnsiChar);
+procedure TCustomSciTextEditor.AnnotationSetStyles(ALine: TSciLine; AStyles: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_ANNOTATIONSETSTYLES, line, LPARAM(styles));
+  SendScintillaEditorMessage(SCI_ANNOTATIONSETSTYLES, ALine, LPARAM(AStyles));
 end;
 
-function TCustomSciTextEditor.AnnotationGetStyles(line: Integer; styles: PAnsiChar): Integer;
+function TCustomSciTextEditor.AnnotationGetStyles(ALine: TSciLine; AStyles: PAnsiChar): Integer;
 begin
-  Result := SendMessage(Handle, SCI_ANNOTATIONGETSTYLES, line, LPARAM(styles));
+  Result := SendScintillaEditorMessage(SCI_ANNOTATIONGETSTYLES, ALine, LPARAM(AStyles));
 end;
 
-function TCustomSciTextEditor.AnnotationGetLines(line: Integer): Integer;
+function TCustomSciTextEditor.AnnotationGetLines(ALine: TSciLine): Integer;
 begin
-  Result := SendMessage(Handle, SCI_ANNOTATIONGETLINES, line, 0);
+  Result := SendScintillaEditorMessage(SCI_ANNOTATIONGETLINES, ALine, 0);
 end;
 
 procedure TCustomSciTextEditor.AnnotationClearAll();
 begin
-  SendMessage(Handle, SCI_ANNOTATIONCLEARALL, 0, 0);
+  SendScintillaEditorMessage(SCI_ANNOTATIONCLEARALL, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.AnnotationSetVisible(visible: Integer);
+procedure TCustomSciTextEditor.AnnotationSetVisible(AVisible: NativeInt);
 begin
-  SendMessage(Handle, SCI_ANNOTATIONSETVISIBLE, visible, 0);
+  SendScintillaEditorMessage(SCI_ANNOTATIONSETVISIBLE, AVisible, 0);
 end;
 
-function TCustomSciTextEditor.AnnotationGetVisible(): Integer;
+function TCustomSciTextEditor.AnnotationGetVisible(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_ANNOTATIONGETVISIBLE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_ANNOTATIONGETVISIBLE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.AnnotationSetStyleOffset(style: Integer);
+procedure TCustomSciTextEditor.AnnotationSetStyleOffset(AStyle: Integer);
 begin
-  SendMessage(Handle, SCI_ANNOTATIONSETSTYLEOFFSET, style, 0);
+  SendScintillaEditorMessage(SCI_ANNOTATIONSETSTYLEOFFSET, AStyle, 0);
 end;
 
 function TCustomSciTextEditor.AnnotationGetStyleOffset(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_ANNOTATIONGETSTYLEOFFSET, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_ANNOTATIONGETSTYLEOFFSET, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.ReleaseAllExtendedStyles();
 begin
-  SendMessage(Handle, SCI_RELEASEALLEXTENDEDSTYLES, 0, 0);
+  SendScintillaEditorMessage(SCI_RELEASEALLEXTENDEDSTYLES, 0, 0);
 end;
 
-function TCustomSciTextEditor.AllocateExtendedStyles(numberStyles: Integer): Integer;
+function TCustomSciTextEditor.AllocateExtendedStyles(ANumberStyles: Integer): Integer;
 begin
-  Result := SendMessage(Handle, SCI_ALLOCATEEXTENDEDSTYLES, numberStyles, 0);
+  Result := SendScintillaEditorMessage(SCI_ALLOCATEEXTENDEDSTYLES, ANumberStyles, 0);
 end;
 
-procedure TCustomSciTextEditor.AddUndoAction(token: Integer; flags: Integer);
+procedure TCustomSciTextEditor.AddUndoAction(AToken: Integer; AFlags: NativeInt);
 begin
-  SendMessage(Handle, SCI_ADDUNDOACTION, token, flags);
+  SendScintillaEditorMessage(SCI_ADDUNDOACTION, AToken, AFlags);
 end;
 
-function TCustomSciTextEditor.CharPositionFromPoint(x: Integer; y: Integer): Integer;
+function TCustomSciTextEditor.CharPositionFromPoint(X: Integer; Y: Integer): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_CHARPOSITIONFROMPOINT, x, y);
+  Result := SendScintillaEditorMessage(SCI_CHARPOSITIONFROMPOINT, X, Y);
 end;
 
-function TCustomSciTextEditor.CharPositionFromPointClose(x: Integer; y: Integer): Integer;
+function TCustomSciTextEditor.CharPositionFromPointClose(X: Integer; Y: Integer): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_CHARPOSITIONFROMPOINTCLOSE, x, y);
+  Result := SendScintillaEditorMessage(SCI_CHARPOSITIONFROMPOINTCLOSE, X, Y);
 end;
 
-procedure TCustomSciTextEditor.SetMouseSelectionRectangularSwitch(mouseSelectionRectangularSwitch: Boolean);
+procedure TCustomSciTextEditor.SetMouseSelectionRectangularSwitch(AMouseSelectionRectangularSwitch: Boolean);
 begin
-  SendMessage(Handle, SCI_SETMOUSESELECTIONRECTANGULARSWITCH, mouseSelectionRectangularSwitch, 0);
+  SendScintillaEditorMessage(SCI_SETMOUSESELECTIONRECTANGULARSWITCH, AMouseSelectionRectangularSwitch, 0);
 end;
 
 function TCustomSciTextEditor.GetMouseSelectionRectangularSwitch(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETMOUSESELECTIONRECTANGULARSWITCH, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMOUSESELECTIONRECTANGULARSWITCH, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetMultipleSelection(multipleSelection: Boolean);
+procedure TCustomSciTextEditor.SetMultipleSelection(AMultipleSelection: Boolean);
 begin
-  SendMessage(Handle, SCI_SETMULTIPLESELECTION, multipleSelection, 0);
+  SendScintillaEditorMessage(SCI_SETMULTIPLESELECTION, AMultipleSelection, 0);
 end;
 
 function TCustomSciTextEditor.GetMultipleSelection(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETMULTIPLESELECTION, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMULTIPLESELECTION, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetAdditionalSelectionTyping(additionalSelectionTyping: Boolean);
+procedure TCustomSciTextEditor.SetAdditionalSelectionTyping(AAdditionalSelectionTyping: Boolean);
 begin
-  SendMessage(Handle, SCI_SETADDITIONALSELECTIONTYPING, additionalSelectionTyping, 0);
+  SendScintillaEditorMessage(SCI_SETADDITIONALSELECTIONTYPING, AAdditionalSelectionTyping, 0);
 end;
 
 function TCustomSciTextEditor.GetAdditionalSelectionTyping(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETADDITIONALSELECTIONTYPING, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETADDITIONALSELECTIONTYPING, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetAdditionalCaretsBlink(additionalCaretsBlink: Boolean);
+procedure TCustomSciTextEditor.SetAdditionalCaretsBlink(AAdditionalCaretsBlink: Boolean);
 begin
-  SendMessage(Handle, SCI_SETADDITIONALCARETSBLINK, additionalCaretsBlink, 0);
+  SendScintillaEditorMessage(SCI_SETADDITIONALCARETSBLINK, AAdditionalCaretsBlink, 0);
 end;
 
 function TCustomSciTextEditor.GetAdditionalCaretsBlink(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETADDITIONALCARETSBLINK, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETADDITIONALCARETSBLINK, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetAdditionalCaretsVisible(additionalCaretsVisible: Boolean);
+procedure TCustomSciTextEditor.SetAdditionalCaretsVisible(AAdditionalCaretsVisible: Boolean);
 begin
-  SendMessage(Handle, SCI_SETADDITIONALCARETSVISIBLE, additionalCaretsVisible, 0);
+  SendScintillaEditorMessage(SCI_SETADDITIONALCARETSVISIBLE, AAdditionalCaretsVisible, 0);
 end;
 
 function TCustomSciTextEditor.GetAdditionalCaretsVisible(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETADDITIONALCARETSVISIBLE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETADDITIONALCARETSVISIBLE, 0, 0);
 end;
 
 function TCustomSciTextEditor.GetSelections(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETSELECTIONS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELECTIONS, 0, 0);
 end;
 
 function TCustomSciTextEditor.GetSelectionEmpty(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETSELECTIONEMPTY, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELECTIONEMPTY, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.ClearSelections();
 begin
-  SendMessage(Handle, SCI_CLEARSELECTIONS, 0, 0);
+  SendScintillaEditorMessage(SCI_CLEARSELECTIONS, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetSelection(caret: Integer; anchor: Integer);
+procedure TCustomSciTextEditor.SetSelection(ACaret: TSciPosition; AAnchor: TSciPosition);
 begin
-  SendMessage(Handle, SCI_SETSELECTION, caret, anchor);
+  SendScintillaEditorMessage(SCI_SETSELECTION, ACaret, AAnchor);
 end;
 
-procedure TCustomSciTextEditor.AddSelection(caret: Integer; anchor: Integer);
+procedure TCustomSciTextEditor.AddSelection(ACaret: TSciPosition; AAnchor: TSciPosition);
 begin
-  SendMessage(Handle, SCI_ADDSELECTION, caret, anchor);
+  SendScintillaEditorMessage(SCI_ADDSELECTION, ACaret, AAnchor);
 end;
 
-function TCustomSciTextEditor.SelectionFromPoint(x: Integer; y: Integer): Integer;
+function TCustomSciTextEditor.SelectionFromPoint(X: Integer; Y: Integer): Integer;
 begin
-  Result := SendMessage(Handle, SCI_SELECTIONFROMPOINT, x, y);
+  Result := SendScintillaEditorMessage(SCI_SELECTIONFROMPOINT, X, Y);
 end;
 
-procedure TCustomSciTextEditor.DropSelectionN(selection: Integer);
+procedure TCustomSciTextEditor.DropSelectionN(ASelection: Integer);
 begin
-  SendMessage(Handle, SCI_DROPSELECTIONN, selection, 0);
+  SendScintillaEditorMessage(SCI_DROPSELECTIONN, ASelection, 0);
 end;
 
-procedure TCustomSciTextEditor.SetMainSelection(selection: Integer);
+procedure TCustomSciTextEditor.SetMainSelection(ASelection: Integer);
 begin
-  SendMessage(Handle, SCI_SETMAINSELECTION, selection, 0);
+  SendScintillaEditorMessage(SCI_SETMAINSELECTION, ASelection, 0);
 end;
 
 function TCustomSciTextEditor.GetMainSelection(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETMAINSELECTION, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMAINSELECTION, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetSelectionNCaret(selection: Integer; caret: Integer);
+procedure TCustomSciTextEditor.SetSelectionNCaret(ASelection: Integer; ACaret: TSciPosition);
 begin
-  SendMessage(Handle, SCI_SETSELECTIONNCARET, selection, caret);
+  SendScintillaEditorMessage(SCI_SETSELECTIONNCARET, ASelection, ACaret);
 end;
 
-function TCustomSciTextEditor.GetSelectionNCaret(selection: Integer): Integer;
+function TCustomSciTextEditor.GetSelectionNCaret(ASelection: Integer): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETSELECTIONNCARET, selection, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELECTIONNCARET, ASelection, 0);
 end;
 
-procedure TCustomSciTextEditor.SetSelectionNAnchor(selection: Integer; anchor: Integer);
+procedure TCustomSciTextEditor.SetSelectionNAnchor(ASelection: Integer; AAnchor: TSciPosition);
 begin
-  SendMessage(Handle, SCI_SETSELECTIONNANCHOR, selection, anchor);
+  SendScintillaEditorMessage(SCI_SETSELECTIONNANCHOR, ASelection, AAnchor);
 end;
 
-function TCustomSciTextEditor.GetSelectionNAnchor(selection: Integer): Integer;
+function TCustomSciTextEditor.GetSelectionNAnchor(ASelection: Integer): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETSELECTIONNANCHOR, selection, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELECTIONNANCHOR, ASelection, 0);
 end;
 
-procedure TCustomSciTextEditor.SetSelectionNCaretVirtualSpace(selection: Integer; space: Integer);
+procedure TCustomSciTextEditor.SetSelectionNCaretVirtualSpace(ASelection: Integer; ASpace: TSciPosition);
 begin
-  SendMessage(Handle, SCI_SETSELECTIONNCARETVIRTUALSPACE, selection, space);
+  SendScintillaEditorMessage(SCI_SETSELECTIONNCARETVIRTUALSPACE, ASelection, ASpace);
 end;
 
-function TCustomSciTextEditor.GetSelectionNCaretVirtualSpace(selection: Integer): Integer;
+function TCustomSciTextEditor.GetSelectionNCaretVirtualSpace(ASelection: Integer): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETSELECTIONNCARETVIRTUALSPACE, selection, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELECTIONNCARETVIRTUALSPACE, ASelection, 0);
 end;
 
-procedure TCustomSciTextEditor.SetSelectionNAnchorVirtualSpace(selection: Integer; space: Integer);
+procedure TCustomSciTextEditor.SetSelectionNAnchorVirtualSpace(ASelection: Integer; ASpace: TSciPosition);
 begin
-  SendMessage(Handle, SCI_SETSELECTIONNANCHORVIRTUALSPACE, selection, space);
+  SendScintillaEditorMessage(SCI_SETSELECTIONNANCHORVIRTUALSPACE, ASelection, ASpace);
 end;
 
-function TCustomSciTextEditor.GetSelectionNAnchorVirtualSpace(selection: Integer): Integer;
+function TCustomSciTextEditor.GetSelectionNAnchorVirtualSpace(ASelection: Integer): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETSELECTIONNANCHORVIRTUALSPACE, selection, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELECTIONNANCHORVIRTUALSPACE, ASelection, 0);
 end;
 
-procedure TCustomSciTextEditor.SetSelectionNStart(selection: Integer; anchor: Integer);
+procedure TCustomSciTextEditor.SetSelectionNStart(ASelection: Integer; AAnchor: TSciPosition);
 begin
-  SendMessage(Handle, SCI_SETSELECTIONNSTART, selection, anchor);
+  SendScintillaEditorMessage(SCI_SETSELECTIONNSTART, ASelection, AAnchor);
 end;
 
-function TCustomSciTextEditor.GetSelectionNStart(selection: Integer): Integer;
+function TCustomSciTextEditor.GetSelectionNStart(ASelection: Integer): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETSELECTIONNSTART, selection, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELECTIONNSTART, ASelection, 0);
 end;
 
-function TCustomSciTextEditor.GetSelectionNStartVirtualSpace(selection: Integer): Integer;
+function TCustomSciTextEditor.GetSelectionNStartVirtualSpace(ASelection: Integer): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETSELECTIONNSTARTVIRTUALSPACE, selection, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELECTIONNSTARTVIRTUALSPACE, ASelection, 0);
 end;
 
-procedure TCustomSciTextEditor.SetSelectionNEnd(selection: Integer; caret: Integer);
+procedure TCustomSciTextEditor.SetSelectionNEnd(ASelection: Integer; ACaret: TSciPosition);
 begin
-  SendMessage(Handle, SCI_SETSELECTIONNEND, selection, caret);
+  SendScintillaEditorMessage(SCI_SETSELECTIONNEND, ASelection, ACaret);
 end;
 
-function TCustomSciTextEditor.GetSelectionNEndVirtualSpace(selection: Integer): Integer;
+function TCustomSciTextEditor.GetSelectionNEndVirtualSpace(ASelection: Integer): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETSELECTIONNENDVIRTUALSPACE, selection, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELECTIONNENDVIRTUALSPACE, ASelection, 0);
 end;
 
-function TCustomSciTextEditor.GetSelectionNEnd(selection: Integer): Integer;
+function TCustomSciTextEditor.GetSelectionNEnd(ASelection: Integer): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETSELECTIONNEND, selection, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELECTIONNEND, ASelection, 0);
 end;
 
-procedure TCustomSciTextEditor.SetRectangularSelectionCaret(caret: Integer);
+procedure TCustomSciTextEditor.SetRectangularSelectionCaret(ACaret: TSciPosition);
 begin
-  SendMessage(Handle, SCI_SETRECTANGULARSELECTIONCARET, caret, 0);
+  SendScintillaEditorMessage(SCI_SETRECTANGULARSELECTIONCARET, ACaret, 0);
 end;
 
-function TCustomSciTextEditor.GetRectangularSelectionCaret(): Integer;
+function TCustomSciTextEditor.GetRectangularSelectionCaret(): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETRECTANGULARSELECTIONCARET, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETRECTANGULARSELECTIONCARET, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetRectangularSelectionAnchor(anchor: Integer);
+procedure TCustomSciTextEditor.SetRectangularSelectionAnchor(AAnchor: TSciPosition);
 begin
-  SendMessage(Handle, SCI_SETRECTANGULARSELECTIONANCHOR, anchor, 0);
+  SendScintillaEditorMessage(SCI_SETRECTANGULARSELECTIONANCHOR, AAnchor, 0);
 end;
 
-function TCustomSciTextEditor.GetRectangularSelectionAnchor(): Integer;
+function TCustomSciTextEditor.GetRectangularSelectionAnchor(): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETRECTANGULARSELECTIONANCHOR, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETRECTANGULARSELECTIONANCHOR, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetRectangularSelectionCaretVirtualSpace(space: Integer);
+procedure TCustomSciTextEditor.SetRectangularSelectionCaretVirtualSpace(ASpace: TSciPosition);
 begin
-  SendMessage(Handle, SCI_SETRECTANGULARSELECTIONCARETVIRTUALSPACE, space, 0);
+  SendScintillaEditorMessage(SCI_SETRECTANGULARSELECTIONCARETVIRTUALSPACE, ASpace, 0);
 end;
 
-function TCustomSciTextEditor.GetRectangularSelectionCaretVirtualSpace(): Integer;
+function TCustomSciTextEditor.GetRectangularSelectionCaretVirtualSpace(): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETRECTANGULARSELECTIONCARETVIRTUALSPACE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETRECTANGULARSELECTIONCARETVIRTUALSPACE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetRectangularSelectionAnchorVirtualSpace(space: Integer);
+procedure TCustomSciTextEditor.SetRectangularSelectionAnchorVirtualSpace(ASpace: TSciPosition);
 begin
-  SendMessage(Handle, SCI_SETRECTANGULARSELECTIONANCHORVIRTUALSPACE, space, 0);
+  SendScintillaEditorMessage(SCI_SETRECTANGULARSELECTIONANCHORVIRTUALSPACE, ASpace, 0);
 end;
 
-function TCustomSciTextEditor.GetRectangularSelectionAnchorVirtualSpace(): Integer;
+function TCustomSciTextEditor.GetRectangularSelectionAnchorVirtualSpace(): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_GETRECTANGULARSELECTIONANCHORVIRTUALSPACE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETRECTANGULARSELECTIONANCHORVIRTUALSPACE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetVirtualSpaceOptions(virtualSpaceOptions: Integer);
+procedure TCustomSciTextEditor.SetVirtualSpaceOptions(AVirtualSpaceOptions: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETVIRTUALSPACEOPTIONS, virtualSpaceOptions, 0);
+  SendScintillaEditorMessage(SCI_SETVIRTUALSPACEOPTIONS, AVirtualSpaceOptions, 0);
 end;
 
-function TCustomSciTextEditor.GetVirtualSpaceOptions(): Integer;
+function TCustomSciTextEditor.GetVirtualSpaceOptions(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETVIRTUALSPACEOPTIONS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETVIRTUALSPACEOPTIONS, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetRectangularSelectionModifier(modifier: Integer);
+procedure TCustomSciTextEditor.SetRectangularSelectionModifier(AModifier: Integer);
 begin
-  SendMessage(Handle, SCI_SETRECTANGULARSELECTIONMODIFIER, modifier, 0);
+  SendScintillaEditorMessage(SCI_SETRECTANGULARSELECTIONMODIFIER, AModifier, 0);
 end;
 
 function TCustomSciTextEditor.GetRectangularSelectionModifier(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETRECTANGULARSELECTIONMODIFIER, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETRECTANGULARSELECTIONMODIFIER, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetAdditionalSelFore(fore: TColor);
+procedure TCustomSciTextEditor.SetAdditionalSelFore(AFore: TColor);
 begin
-  SendMessage(Handle, SCI_SETADDITIONALSELFORE, fore, 0);
+  SendScintillaEditorMessage(SCI_SETADDITIONALSELFORE, AFore, 0);
 end;
 
-procedure TCustomSciTextEditor.SetAdditionalSelBack(back: TColor);
+procedure TCustomSciTextEditor.SetAdditionalSelBack(ABack: TColor);
 begin
-  SendMessage(Handle, SCI_SETADDITIONALSELBACK, back, 0);
+  SendScintillaEditorMessage(SCI_SETADDITIONALSELBACK, ABack, 0);
 end;
 
-procedure TCustomSciTextEditor.SetAdditionalSelAlpha(alpha: Integer);
+procedure TCustomSciTextEditor.SetAdditionalSelAlpha(AAlpha: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETADDITIONALSELALPHA, alpha, 0);
+  SendScintillaEditorMessage(SCI_SETADDITIONALSELALPHA, AAlpha, 0);
 end;
 
-function TCustomSciTextEditor.GetAdditionalSelAlpha(): Integer;
+function TCustomSciTextEditor.GetAdditionalSelAlpha(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETADDITIONALSELALPHA, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETADDITIONALSELALPHA, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetAdditionalCaretFore(fore: TColor);
+procedure TCustomSciTextEditor.SetAdditionalCaretFore(AFore: TColor);
 begin
-  SendMessage(Handle, SCI_SETADDITIONALCARETFORE, fore, 0);
+  SendScintillaEditorMessage(SCI_SETADDITIONALCARETFORE, AFore, 0);
 end;
 
 function TCustomSciTextEditor.GetAdditionalCaretFore(): TColor;
 begin
-  Result := SendMessage(Handle, SCI_GETADDITIONALCARETFORE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETADDITIONALCARETFORE, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.RotateSelection();
 begin
-  SendMessage(Handle, SCI_ROTATESELECTION, 0, 0);
+  SendScintillaEditorMessage(SCI_ROTATESELECTION, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.SwapMainAnchorCaret();
 begin
-  SendMessage(Handle, SCI_SWAPMAINANCHORCARET, 0, 0);
+  SendScintillaEditorMessage(SCI_SWAPMAINANCHORCARET, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.MultipleSelectAddNext();
 begin
-  SendMessage(Handle, SCI_MULTIPLESELECTADDNEXT, 0, 0);
+  SendScintillaEditorMessage(SCI_MULTIPLESELECTADDNEXT, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.MultipleSelectAddEach();
 begin
-  SendMessage(Handle, SCI_MULTIPLESELECTADDEACH, 0, 0);
+  SendScintillaEditorMessage(SCI_MULTIPLESELECTADDEACH, 0, 0);
 end;
 
-function TCustomSciTextEditor.ChangeLexerState(start: Integer; end: Integer): Integer;
+function TCustomSciTextEditor.ChangeLexerState(AStart: TSciPosition; AEnd: TSciPosition): Integer;
 begin
-  Result := SendMessage(Handle, SCI_CHANGELEXERSTATE, start, end);
+  Result := SendScintillaEditorMessage(SCI_CHANGELEXERSTATE, AStart, AEnd);
 end;
 
-function TCustomSciTextEditor.ContractedFoldNext(lineStart: Integer): Integer;
+function TCustomSciTextEditor.ContractedFoldNext(ALineStart: TSciLine): TSciLine;
 begin
-  Result := SendMessage(Handle, SCI_CONTRACTEDFOLDNEXT, lineStart, 0);
+  Result := SendScintillaEditorMessage(SCI_CONTRACTEDFOLDNEXT, ALineStart, 0);
 end;
 
 procedure TCustomSciTextEditor.VerticalCentreCaret();
 begin
-  SendMessage(Handle, SCI_VERTICALCENTRECARET, 0, 0);
+  SendScintillaEditorMessage(SCI_VERTICALCENTRECARET, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.MoveSelectedLinesUp();
 begin
-  SendMessage(Handle, SCI_MOVESELECTEDLINESUP, 0, 0);
+  SendScintillaEditorMessage(SCI_MOVESELECTEDLINESUP, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.MoveSelectedLinesDown();
 begin
-  SendMessage(Handle, SCI_MOVESELECTEDLINESDOWN, 0, 0);
+  SendScintillaEditorMessage(SCI_MOVESELECTEDLINESDOWN, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetIdentifier(identifier: Integer);
+procedure TCustomSciTextEditor.SetIdentifier(AIdentifier: Integer);
 begin
-  SendMessage(Handle, SCI_SETIDENTIFIER, identifier, 0);
+  SendScintillaEditorMessage(SCI_SETIDENTIFIER, AIdentifier, 0);
 end;
 
 function TCustomSciTextEditor.GetIdentifier(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETIDENTIFIER, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETIDENTIFIER, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.RGBAImageSetWidth(width: Integer);
+procedure TCustomSciTextEditor.RGBAImageSetWidth(AWidth: Integer);
 begin
-  SendMessage(Handle, SCI_RGBAIMAGESETWIDTH, width, 0);
+  SendScintillaEditorMessage(SCI_RGBAIMAGESETWIDTH, AWidth, 0);
 end;
 
-procedure TCustomSciTextEditor.RGBAImageSetHeight(height: Integer);
+procedure TCustomSciTextEditor.RGBAImageSetHeight(AHeight: Integer);
 begin
-  SendMessage(Handle, SCI_RGBAIMAGESETHEIGHT, height, 0);
+  SendScintillaEditorMessage(SCI_RGBAIMAGESETHEIGHT, AHeight, 0);
 end;
 
-procedure TCustomSciTextEditor.RGBAImageSetScale(scalePercent: Integer);
+procedure TCustomSciTextEditor.RGBAImageSetScale(AScalePercent: Integer);
 begin
-  SendMessage(Handle, SCI_RGBAIMAGESETSCALE, scalePercent, 0);
+  SendScintillaEditorMessage(SCI_RGBAIMAGESETSCALE, AScalePercent, 0);
 end;
 
-procedure TCustomSciTextEditor.MarkerDefineRGBAImage(markerNumber: Integer; pixels: PAnsiChar);
+procedure TCustomSciTextEditor.MarkerDefineRGBAImage(AMarkerNumber: Integer; APixels: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_MARKERDEFINERGBAIMAGE, markerNumber, LPARAM(pixels));
+  SendScintillaEditorMessage(SCI_MARKERDEFINERGBAIMAGE, AMarkerNumber, LPARAM(APixels));
 end;
 
-procedure TCustomSciTextEditor.RegisterRGBAImage(type: Integer; pixels: PAnsiChar);
+procedure TCustomSciTextEditor.RegisterRGBAImage(AType: Integer; APixels: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_REGISTERRGBAIMAGE, type, LPARAM(pixels));
+  SendScintillaEditorMessage(SCI_REGISTERRGBAIMAGE, AType, LPARAM(APixels));
 end;
 
 procedure TCustomSciTextEditor.ScrollToStart();
 begin
-  SendMessage(Handle, SCI_SCROLLTOSTART, 0, 0);
+  SendScintillaEditorMessage(SCI_SCROLLTOSTART, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.ScrollToEnd();
 begin
-  SendMessage(Handle, SCI_SCROLLTOEND, 0, 0);
+  SendScintillaEditorMessage(SCI_SCROLLTOEND, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetTechnology(technology: Integer);
+procedure TCustomSciTextEditor.SetTechnology(ATechnology: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETTECHNOLOGY, technology, 0);
+  SendScintillaEditorMessage(SCI_SETTECHNOLOGY, ATechnology, 0);
 end;
 
-function TCustomSciTextEditor.GetTechnology(): Integer;
+function TCustomSciTextEditor.GetTechnology(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETTECHNOLOGY, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETTECHNOLOGY, 0, 0);
 end;
 
-function TCustomSciTextEditor.CreateLoader(bytes: Integer; documentOptions: Integer): Pointer;
+function TCustomSciTextEditor.CreateLoader(ABytes: TSciPosition; ADocumentOptions: NativeInt): Pointer;
 begin
-  Result := SendMessage(Handle, SCI_CREATELOADER, bytes, documentOptions);
+  Result := SendScintillaEditorMessage(SCI_CREATELOADER, ABytes, ADocumentOptions);
 end;
 
-procedure TCustomSciTextEditor.FindIndicatorShow(start: Integer; end: Integer);
+procedure TCustomSciTextEditor.FindIndicatorShow(AStart: TSciPosition; AEnd: TSciPosition);
 begin
-  SendMessage(Handle, SCI_FINDINDICATORSHOW, start, end);
+  SendScintillaEditorMessage(SCI_FINDINDICATORSHOW, AStart, AEnd);
 end;
 
-procedure TCustomSciTextEditor.FindIndicatorFlash(start: Integer; end: Integer);
+procedure TCustomSciTextEditor.FindIndicatorFlash(AStart: TSciPosition; AEnd: TSciPosition);
 begin
-  SendMessage(Handle, SCI_FINDINDICATORFLASH, start, end);
+  SendScintillaEditorMessage(SCI_FINDINDICATORFLASH, AStart, AEnd);
 end;
 
 procedure TCustomSciTextEditor.FindIndicatorHide();
 begin
-  SendMessage(Handle, SCI_FINDINDICATORHIDE, 0, 0);
+  SendScintillaEditorMessage(SCI_FINDINDICATORHIDE, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.VCHomeDisplay();
 begin
-  SendMessage(Handle, SCI_VCHOMEDISPLAY, 0, 0);
+  SendScintillaEditorMessage(SCI_VCHOMEDISPLAY, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.VCHomeDisplayExtend();
 begin
-  SendMessage(Handle, SCI_VCHOMEDISPLAYEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_VCHOMEDISPLAYEXTEND, 0, 0);
 end;
 
 function TCustomSciTextEditor.GetCaretLineVisibleAlways(): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_GETCARETLINEVISIBLEALWAYS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCARETLINEVISIBLEALWAYS, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetCaretLineVisibleAlways(alwaysVisible: Boolean);
+procedure TCustomSciTextEditor.SetCaretLineVisibleAlways(AAlwaysVisible: Boolean);
 begin
-  SendMessage(Handle, SCI_SETCARETLINEVISIBLEALWAYS, alwaysVisible, 0);
+  SendScintillaEditorMessage(SCI_SETCARETLINEVISIBLEALWAYS, AAlwaysVisible, 0);
 end;
 
-procedure TCustomSciTextEditor.SetLineEndTypesAllowed(lineEndBitSet: Integer);
+procedure TCustomSciTextEditor.SetLineEndTypesAllowed(ALineEndBitSet: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETLINEENDTYPESALLOWED, lineEndBitSet, 0);
+  SendScintillaEditorMessage(SCI_SETLINEENDTYPESALLOWED, ALineEndBitSet, 0);
 end;
 
-function TCustomSciTextEditor.GetLineEndTypesAllowed(): Integer;
+function TCustomSciTextEditor.GetLineEndTypesAllowed(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETLINEENDTYPESALLOWED, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLINEENDTYPESALLOWED, 0, 0);
 end;
 
-function TCustomSciTextEditor.GetLineEndTypesActive(): Integer;
+function TCustomSciTextEditor.GetLineEndTypesActive(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETLINEENDTYPESACTIVE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLINEENDTYPESACTIVE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetRepresentation(encodedCharacter: PAnsiChar; representation: PAnsiChar);
+procedure TCustomSciTextEditor.SetRepresentation(AEncodedCharacter: PAnsiChar; ARepresentation: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_SETREPRESENTATION, encodedCharacter, LPARAM(representation));
+  SendScintillaEditorMessage(SCI_SETREPRESENTATION, AEncodedCharacter, LPARAM(ARepresentation));
 end;
 
-function TCustomSciTextEditor.GetRepresentation(encodedCharacter: PAnsiChar; representation: PAnsiChar): Integer;
+function TCustomSciTextEditor.GetRepresentation(AEncodedCharacter: PAnsiChar; ARepresentation: PAnsiChar): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETREPRESENTATION, encodedCharacter, LPARAM(representation));
+  Result := SendScintillaEditorMessage(SCI_GETREPRESENTATION, AEncodedCharacter, LPARAM(ARepresentation));
 end;
 
-procedure TCustomSciTextEditor.ClearRepresentation(encodedCharacter: PAnsiChar);
+procedure TCustomSciTextEditor.ClearRepresentation(AEncodedCharacter: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_CLEARREPRESENTATION, encodedCharacter, 0);
+  SendScintillaEditorMessage(SCI_CLEARREPRESENTATION, AEncodedCharacter, 0);
 end;
 
 procedure TCustomSciTextEditor.ClearAllRepresentations();
 begin
-  SendMessage(Handle, SCI_CLEARALLREPRESENTATIONS, 0, 0);
+  SendScintillaEditorMessage(SCI_CLEARALLREPRESENTATIONS, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetRepresentationAppearance(encodedCharacter: PAnsiChar; appearance: Integer);
+procedure TCustomSciTextEditor.SetRepresentationAppearance(AEncodedCharacter: PAnsiChar; AAppearance: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETREPRESENTATIONAPPEARANCE, encodedCharacter, appearance);
+  SendScintillaEditorMessage(SCI_SETREPRESENTATIONAPPEARANCE, AEncodedCharacter, AAppearance);
 end;
 
-function TCustomSciTextEditor.GetRepresentationAppearance(encodedCharacter: PAnsiChar): Integer;
+function TCustomSciTextEditor.GetRepresentationAppearance(AEncodedCharacter: PAnsiChar): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETREPRESENTATIONAPPEARANCE, encodedCharacter, 0);
+  Result := SendScintillaEditorMessage(SCI_GETREPRESENTATIONAPPEARANCE, AEncodedCharacter, 0);
 end;
 
-procedure TCustomSciTextEditor.SetRepresentationColour(encodedCharacter: PAnsiChar; colour: TColorAlpha);
+procedure TCustomSciTextEditor.SetRepresentationColour(AEncodedCharacter: PAnsiChar; AColour: TColorAlpha);
 begin
-  SendMessage(Handle, SCI_SETREPRESENTATIONCOLOUR, encodedCharacter, colour);
+  SendScintillaEditorMessage(SCI_SETREPRESENTATIONCOLOUR, AEncodedCharacter, AColour);
 end;
 
-function TCustomSciTextEditor.GetRepresentationColour(encodedCharacter: PAnsiChar): TColorAlpha;
+function TCustomSciTextEditor.GetRepresentationColour(AEncodedCharacter: PAnsiChar): TColorAlpha;
 begin
-  Result := SendMessage(Handle, SCI_GETREPRESENTATIONCOLOUR, encodedCharacter, 0);
+  Result := SendScintillaEditorMessage(SCI_GETREPRESENTATIONCOLOUR, AEncodedCharacter, 0);
 end;
 
-procedure TCustomSciTextEditor.EOLAnnotationSetText(line: Integer; text: PAnsiChar);
+procedure TCustomSciTextEditor.EOLAnnotationSetText(ALine: TSciLine; AText: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_EOLANNOTATIONSETTEXT, line, LPARAM(text));
+  SendScintillaEditorMessage(SCI_EOLANNOTATIONSETTEXT, ALine, LPARAM(AText));
 end;
 
-function TCustomSciTextEditor.EOLAnnotationGetText(line: Integer; text: PAnsiChar): Integer;
+function TCustomSciTextEditor.EOLAnnotationGetText(ALine: TSciLine; AText: PAnsiChar): Integer;
 begin
-  Result := SendMessage(Handle, SCI_EOLANNOTATIONGETTEXT, line, LPARAM(text));
+  Result := SendScintillaEditorMessage(SCI_EOLANNOTATIONGETTEXT, ALine, LPARAM(AText));
 end;
 
-procedure TCustomSciTextEditor.EOLAnnotationSetStyle(line: Integer; style: Integer);
+procedure TCustomSciTextEditor.EOLAnnotationSetStyle(ALine: TSciLine; AStyle: Integer);
 begin
-  SendMessage(Handle, SCI_EOLANNOTATIONSETSTYLE, line, style);
+  SendScintillaEditorMessage(SCI_EOLANNOTATIONSETSTYLE, ALine, AStyle);
 end;
 
-function TCustomSciTextEditor.EOLAnnotationGetStyle(line: Integer): Integer;
+function TCustomSciTextEditor.EOLAnnotationGetStyle(ALine: TSciLine): Integer;
 begin
-  Result := SendMessage(Handle, SCI_EOLANNOTATIONGETSTYLE, line, 0);
+  Result := SendScintillaEditorMessage(SCI_EOLANNOTATIONGETSTYLE, ALine, 0);
 end;
 
 procedure TCustomSciTextEditor.EOLAnnotationClearAll();
 begin
-  SendMessage(Handle, SCI_EOLANNOTATIONCLEARALL, 0, 0);
+  SendScintillaEditorMessage(SCI_EOLANNOTATIONCLEARALL, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.EOLAnnotationSetVisible(visible: Integer);
+procedure TCustomSciTextEditor.EOLAnnotationSetVisible(AVisible: NativeInt);
 begin
-  SendMessage(Handle, SCI_EOLANNOTATIONSETVISIBLE, visible, 0);
+  SendScintillaEditorMessage(SCI_EOLANNOTATIONSETVISIBLE, AVisible, 0);
 end;
 
-function TCustomSciTextEditor.EOLAnnotationGetVisible(): Integer;
+function TCustomSciTextEditor.EOLAnnotationGetVisible(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_EOLANNOTATIONGETVISIBLE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_EOLANNOTATIONGETVISIBLE, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.EOLAnnotationSetStyleOffset(style: Integer);
+procedure TCustomSciTextEditor.EOLAnnotationSetStyleOffset(AStyle: Integer);
 begin
-  SendMessage(Handle, SCI_EOLANNOTATIONSETSTYLEOFFSET, style, 0);
+  SendScintillaEditorMessage(SCI_EOLANNOTATIONSETSTYLEOFFSET, AStyle, 0);
 end;
 
 function TCustomSciTextEditor.EOLAnnotationGetStyleOffset(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_EOLANNOTATIONGETSTYLEOFFSET, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_EOLANNOTATIONGETSTYLEOFFSET, 0, 0);
 end;
 
-function TCustomSciTextEditor.SupportsFeature(feature: Integer): Boolean;
+function TCustomSciTextEditor.SupportsFeature(AFeature: NativeInt): Boolean;
 begin
-  Result := SendMessage(Handle, SCI_SUPPORTSFEATURE, feature, 0);
+  Result := SendScintillaEditorMessage(SCI_SUPPORTSFEATURE, AFeature, 0);
 end;
 
-function TCustomSciTextEditor.GetLineCharacterIndex(): Integer;
+function TCustomSciTextEditor.GetLineCharacterIndex(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETLINECHARACTERINDEX, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLINECHARACTERINDEX, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.AllocateLineCharacterIndex(lineCharacterIndex: Integer);
+procedure TCustomSciTextEditor.AllocateLineCharacterIndex(ALineCharacterIndex: NativeInt);
 begin
-  SendMessage(Handle, SCI_ALLOCATELINECHARACTERINDEX, lineCharacterIndex, 0);
+  SendScintillaEditorMessage(SCI_ALLOCATELINECHARACTERINDEX, ALineCharacterIndex, 0);
 end;
 
-procedure TCustomSciTextEditor.ReleaseLineCharacterIndex(lineCharacterIndex: Integer);
+procedure TCustomSciTextEditor.ReleaseLineCharacterIndex(ALineCharacterIndex: NativeInt);
 begin
-  SendMessage(Handle, SCI_RELEASELINECHARACTERINDEX, lineCharacterIndex, 0);
+  SendScintillaEditorMessage(SCI_RELEASELINECHARACTERINDEX, ALineCharacterIndex, 0);
 end;
 
-function TCustomSciTextEditor.LineFromIndexPosition(pos: Integer; lineCharacterIndex: Integer): Integer;
+function TCustomSciTextEditor.LineFromIndexPosition(APos: TSciPosition; ALineCharacterIndex: NativeInt): TSciLine;
 begin
-  Result := SendMessage(Handle, SCI_LINEFROMINDEXPOSITION, pos, lineCharacterIndex);
+  Result := SendScintillaEditorMessage(SCI_LINEFROMINDEXPOSITION, APos, ALineCharacterIndex);
 end;
 
-function TCustomSciTextEditor.IndexPositionFromLine(line: Integer; lineCharacterIndex: Integer): Integer;
+function TCustomSciTextEditor.IndexPositionFromLine(ALine: TSciLine; ALineCharacterIndex: NativeInt): TSciPosition;
 begin
-  Result := SendMessage(Handle, SCI_INDEXPOSITIONFROMLINE, line, lineCharacterIndex);
+  Result := SendScintillaEditorMessage(SCI_INDEXPOSITIONFROMLINE, ALine, ALineCharacterIndex);
 end;
 
 procedure TCustomSciTextEditor.StartRecord();
 begin
-  SendMessage(Handle, SCI_STARTRECORD, 0, 0);
+  SendScintillaEditorMessage(SCI_STARTRECORD, 0, 0);
 end;
 
 procedure TCustomSciTextEditor.StopRecord();
 begin
-  SendMessage(Handle, SCI_STOPRECORD, 0, 0);
+  SendScintillaEditorMessage(SCI_STOPRECORD, 0, 0);
 end;
 
 function TCustomSciTextEditor.GetLexer(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETLEXER, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLEXER, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.Colourise(start: Integer; end: Integer);
+procedure TCustomSciTextEditor.Colourise(AStart: TSciPosition; AEnd: TSciPosition);
 begin
-  SendMessage(Handle, SCI_COLOURISE, start, end);
+  SendScintillaEditorMessage(SCI_COLOURISE, AStart, AEnd);
 end;
 
-procedure TCustomSciTextEditor.SetProperty(key: PAnsiChar; value: PAnsiChar);
+procedure TCustomSciTextEditor.SetProperty(AKey: PAnsiChar; AValue: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_SETPROPERTY, key, LPARAM(value));
+  SendScintillaEditorMessage(SCI_SETPROPERTY, AKey, LPARAM(AValue));
 end;
 
-procedure TCustomSciTextEditor.SetKeyWords(keyWordSet: Integer; keyWords: PAnsiChar);
+procedure TCustomSciTextEditor.SetKeyWords(AKeyWordSet: Integer; AKeyWords: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_SETKEYWORDS, keyWordSet, LPARAM(keyWords));
+  SendScintillaEditorMessage(SCI_SETKEYWORDS, AKeyWordSet, LPARAM(AKeyWords));
 end;
 
-function TCustomSciTextEditor.GetProperty(key: PAnsiChar; value: PAnsiChar): Integer;
+function TCustomSciTextEditor.GetProperty(AKey: PAnsiChar; AValue: PAnsiChar): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETPROPERTY, key, LPARAM(value));
+  Result := SendScintillaEditorMessage(SCI_GETPROPERTY, AKey, LPARAM(AValue));
 end;
 
-function TCustomSciTextEditor.GetPropertyExpanded(key: PAnsiChar; value: PAnsiChar): Integer;
+function TCustomSciTextEditor.GetPropertyExpanded(AKey: PAnsiChar; AValue: PAnsiChar): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETPROPERTYEXPANDED, key, LPARAM(value));
+  Result := SendScintillaEditorMessage(SCI_GETPROPERTYEXPANDED, AKey, LPARAM(AValue));
 end;
 
-function TCustomSciTextEditor.GetPropertyInt(key: PAnsiChar; defaultValue: Integer): Integer;
+function TCustomSciTextEditor.GetPropertyInt(AKey: PAnsiChar; ADefaultValue: Integer): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETPROPERTYINT, key, defaultValue);
+  Result := SendScintillaEditorMessage(SCI_GETPROPERTYINT, AKey, ADefaultValue);
 end;
 
-function TCustomSciTextEditor.GetLexerLanguage(language: PAnsiChar): Integer;
+function TCustomSciTextEditor.GetLexerLanguage(ALanguage: PAnsiChar): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETLEXERLANGUAGE, 0, LPARAM(language));
+  Result := SendScintillaEditorMessage(SCI_GETLEXERLANGUAGE, 0, LPARAM(ALanguage));
 end;
 
-function TCustomSciTextEditor.PrivateLexerCall(operation: Integer; pointer: Pointer): Pointer;
+function TCustomSciTextEditor.PrivateLexerCall(AOperation: Integer; APointer: Pointer): Pointer;
 begin
-  Result := SendMessage(Handle, SCI_PRIVATELEXERCALL, operation, LPARAM(pointer));
+  Result := SendScintillaEditorMessage(SCI_PRIVATELEXERCALL, AOperation, LPARAM(APointer));
 end;
 
-function TCustomSciTextEditor.PropertyNames(names: PAnsiChar): Integer;
+function TCustomSciTextEditor.PropertyNames(ANames: PAnsiChar): Integer;
 begin
-  Result := SendMessage(Handle, SCI_PROPERTYNAMES, 0, LPARAM(names));
+  Result := SendScintillaEditorMessage(SCI_PROPERTYNAMES, 0, LPARAM(ANames));
 end;
 
-function TCustomSciTextEditor.PropertyType(name: PAnsiChar): Integer;
+function TCustomSciTextEditor.PropertyType(AName: PAnsiChar): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_PROPERTYTYPE, name, 0);
+  Result := SendScintillaEditorMessage(SCI_PROPERTYTYPE, AName, 0);
 end;
 
-function TCustomSciTextEditor.DescribeProperty(name: PAnsiChar; description: PAnsiChar): Integer;
+function TCustomSciTextEditor.DescribeProperty(AName: PAnsiChar; ADescription: PAnsiChar): Integer;
 begin
-  Result := SendMessage(Handle, SCI_DESCRIBEPROPERTY, name, LPARAM(description));
+  Result := SendScintillaEditorMessage(SCI_DESCRIBEPROPERTY, AName, LPARAM(ADescription));
 end;
 
-function TCustomSciTextEditor.DescribeKeyWordSets(descriptions: PAnsiChar): Integer;
+function TCustomSciTextEditor.DescribeKeyWordSets(ADescriptions: PAnsiChar): Integer;
 begin
-  Result := SendMessage(Handle, SCI_DESCRIBEKEYWORDSETS, 0, LPARAM(descriptions));
+  Result := SendScintillaEditorMessage(SCI_DESCRIBEKEYWORDSETS, 0, LPARAM(ADescriptions));
 end;
 
-function TCustomSciTextEditor.GetLineEndTypesSupported(): Integer;
+function TCustomSciTextEditor.GetLineEndTypesSupported(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETLINEENDTYPESSUPPORTED, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLINEENDTYPESSUPPORTED, 0, 0);
 end;
 
-function TCustomSciTextEditor.AllocateSubStyles(styleBase: Integer; numberStyles: Integer): Integer;
+function TCustomSciTextEditor.AllocateSubStyles(AStyleBase: Integer; ANumberStyles: Integer): Integer;
 begin
-  Result := SendMessage(Handle, SCI_ALLOCATESUBSTYLES, styleBase, numberStyles);
+  Result := SendScintillaEditorMessage(SCI_ALLOCATESUBSTYLES, AStyleBase, ANumberStyles);
 end;
 
-function TCustomSciTextEditor.GetSubStylesStart(styleBase: Integer): Integer;
+function TCustomSciTextEditor.GetSubStylesStart(AStyleBase: Integer): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETSUBSTYLESSTART, styleBase, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSUBSTYLESSTART, AStyleBase, 0);
 end;
 
-function TCustomSciTextEditor.GetSubStylesLength(styleBase: Integer): Integer;
+function TCustomSciTextEditor.GetSubStylesLength(AStyleBase: Integer): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETSUBSTYLESLENGTH, styleBase, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSUBSTYLESLENGTH, AStyleBase, 0);
 end;
 
-function TCustomSciTextEditor.GetStyleFromSubStyle(subStyle: Integer): Integer;
+function TCustomSciTextEditor.GetStyleFromSubStyle(ASubStyle: Integer): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETSTYLEFROMSUBSTYLE, subStyle, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSTYLEFROMSUBSTYLE, ASubStyle, 0);
 end;
 
-function TCustomSciTextEditor.GetPrimaryStyleFromStyle(style: Integer): Integer;
+function TCustomSciTextEditor.GetPrimaryStyleFromStyle(AStyle: Integer): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETPRIMARYSTYLEFROMSTYLE, style, 0);
+  Result := SendScintillaEditorMessage(SCI_GETPRIMARYSTYLEFROMSTYLE, AStyle, 0);
 end;
 
 procedure TCustomSciTextEditor.FreeSubStyles();
 begin
-  SendMessage(Handle, SCI_FREESUBSTYLES, 0, 0);
+  SendScintillaEditorMessage(SCI_FREESUBSTYLES, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetIdentifiers(style: Integer; identifiers: PAnsiChar);
+procedure TCustomSciTextEditor.SetIdentifiers(AStyle: Integer; AIdentifiers: PAnsiChar);
 begin
-  SendMessage(Handle, SCI_SETIDENTIFIERS, style, LPARAM(identifiers));
+  SendScintillaEditorMessage(SCI_SETIDENTIFIERS, AStyle, LPARAM(AIdentifiers));
 end;
 
 function TCustomSciTextEditor.DistanceToSecondaryStyles(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_DISTANCETOSECONDARYSTYLES, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_DISTANCETOSECONDARYSTYLES, 0, 0);
 end;
 
-function TCustomSciTextEditor.GetSubStyleBases(styles: PAnsiChar): Integer;
+function TCustomSciTextEditor.GetSubStyleBases(AStyles: PAnsiChar): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETSUBSTYLEBASES, 0, LPARAM(styles));
+  Result := SendScintillaEditorMessage(SCI_GETSUBSTYLEBASES, 0, LPARAM(AStyles));
 end;
 
 function TCustomSciTextEditor.GetNamedStyles(): Integer;
 begin
-  Result := SendMessage(Handle, SCI_GETNAMEDSTYLES, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETNAMEDSTYLES, 0, 0);
 end;
 
-function TCustomSciTextEditor.NameOfStyle(style: Integer; name: PAnsiChar): Integer;
+function TCustomSciTextEditor.NameOfStyle(AStyle: Integer; AName: PAnsiChar): Integer;
 begin
-  Result := SendMessage(Handle, SCI_NAMEOFSTYLE, style, LPARAM(name));
+  Result := SendScintillaEditorMessage(SCI_NAMEOFSTYLE, AStyle, LPARAM(AName));
 end;
 
-function TCustomSciTextEditor.TagsOfStyle(style: Integer; tags: PAnsiChar): Integer;
+function TCustomSciTextEditor.TagsOfStyle(AStyle: Integer; ATags: PAnsiChar): Integer;
 begin
-  Result := SendMessage(Handle, SCI_TAGSOFSTYLE, style, LPARAM(tags));
+  Result := SendScintillaEditorMessage(SCI_TAGSOFSTYLE, AStyle, LPARAM(ATags));
 end;
 
-function TCustomSciTextEditor.DescriptionOfStyle(style: Integer; description: PAnsiChar): Integer;
+function TCustomSciTextEditor.DescriptionOfStyle(AStyle: Integer; ADescription: PAnsiChar): Integer;
 begin
-  Result := SendMessage(Handle, SCI_DESCRIPTIONOFSTYLE, style, LPARAM(description));
+  Result := SendScintillaEditorMessage(SCI_DESCRIPTIONOFSTYLE, AStyle, LPARAM(ADescription));
 end;
 
-procedure TCustomSciTextEditor.SetILexer(ilexer: Pointer);
+procedure TCustomSciTextEditor.SetILexer(AIlexer: Pointer);
 begin
-  SendMessage(Handle, SCI_SETILEXER, 0, LPARAM(ilexer));
+  SendScintillaEditorMessage(SCI_SETILEXER, 0, LPARAM(AIlexer));
 end;
 
-function TCustomSciTextEditor.GetBidirectional(): Integer;
+function TCustomSciTextEditor.GetBidirectional(): NativeInt;
 begin
-  Result := SendMessage(Handle, SCI_GETBIDIRECTIONAL, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETBIDIRECTIONAL, 0, 0);
 end;
 
-procedure TCustomSciTextEditor.SetBidirectional(bidirectional: Integer);
+procedure TCustomSciTextEditor.SetBidirectional(ABidirectional: NativeInt);
 begin
-  SendMessage(Handle, SCI_SETBIDIRECTIONAL, bidirectional, 0);
+  SendScintillaEditorMessage(SCI_SETBIDIRECTIONAL, ABidirectional, 0);
 end;
 
 end.

@@ -122,7 +122,6 @@ begin
 
   Width := 320;
   Height := 240;
-  TabStop := True;;
 end;
 
 destructor TBaseSciTextEditor.Destroy;
