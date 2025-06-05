@@ -89,7 +89,7 @@ var
 begin
   Copying := True;
   Generated := False;
-  ListId := 0;
+//  ListId := 0;
   Output := TStringList.Create;
   try
     for I := 0 to Input.Count - 1 do
@@ -123,7 +123,7 @@ begin
             Definition := StringReplace(Definition, ' -->', '', []);
             
           ListId := 0;
-          if (Length(Definition) > 0) and (Definition[1] in ['0'..'9']) then
+          if (Length(Definition) > 0) and CharInSet(Definition[1], ['0'..'9']) then
           begin
             ListId := StrToInt(Definition[1]);
             Definition := Copy(Definition, 3, MaxInt);

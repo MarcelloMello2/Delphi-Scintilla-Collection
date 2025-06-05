@@ -1,4 +1,4 @@
-﻿unit ScintillaFacerGenerator.DelphiGenerator;
+﻿unit ScintillaFacerGenerator.PascalGenerator;
 
 {$IFDEF FPC}
   {$MODE DELPHI}
@@ -118,7 +118,7 @@ var
   LastEnum: string;
   AllEnumPrefixes: TStringList;
   Prefix: string;
-  HasPrefix: Boolean;
+//  HasPrefix: Boolean;
 begin
   AllEnumPrefixes := TStringList.Create;
   try
@@ -154,13 +154,13 @@ begin
           if Feature.FeatureType = ftVal then
           begin
             // Verifica se pertence a alguma enumeração
-            HasPrefix := False;
+//            HasPrefix := False;
             for Prefix in AllEnumPrefixes do
             begin
               if StartsStr(Prefix, Name) then
               begin
-                HasPrefix := True;
-                
+//                HasPrefix := True;
+
                 // Adiciona comentário para nova enumeração se necessário
                 if (Prefix <> LastEnum) and (Prefix <> 'SCI_') and (Prefix <> 'SCE_') and (Prefix <> 'SCEN_') then
                 begin
@@ -577,16 +577,16 @@ var
   InputFile, OutputFile: string;
   RootPath: string;
 begin
-  WriteLn('Scintilla Delphi Wrapper Generator');
+  WriteLn('Scintilla Wrapper Generator v3.0');
   WriteLn('===================================');
   WriteLn('');
   
   if ParamCount < 1 then
   begin
-    WriteLn('Usage: ScintillaDelphiGenerator <Scintilla.iface> [output.pas]');
+    WriteLn('Usage: ' + ExtractFileName(ParamStr(0)) + ' <Scintilla.iface> [output.pas]');
     WriteLn('');
     WriteLn('Or to regenerate all files like the Python scripts:');
-    WriteLn('Usage: ScintillaDelphiGenerator --regenerate-all <root-path>');
+    WriteLn('Usage: ' + ExtractFileName(ParamStr(0)) + ' --regenerate-all <root-path>');
     Exit;
   end;
   

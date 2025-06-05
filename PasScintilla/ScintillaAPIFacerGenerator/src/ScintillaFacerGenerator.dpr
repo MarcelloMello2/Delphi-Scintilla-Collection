@@ -15,7 +15,7 @@ uses
   ScintillaFacerGenerator.FileGenerator in 'ScintillaFacerGenerator.FileGenerator.pas',
   ScintillaFacerGenerator.HFacer in 'ScintillaFacerGenerator.HFacer.pas',
   ScintillaFacerGenerator.ScintillaAPIFacer in 'ScintillaFacerGenerator.ScintillaAPIFacer.pas',
-  ScintillaFacerGenerator.DelphiGenerator in 'ScintillaFacerGenerator.DelphiGenerator.pas';
+  ScintillaFacerGenerator.PascalGenerator in 'ScintillaFacerGenerator.PascalGenerator.pas';
 
 begin
   try

@@ -70,7 +70,7 @@ function IsEnumeration(const T: string): Boolean;
 begin
   if T = '' then
     Exit(False);
-  Result := T[1] in ['A'..'Z'];
+  Result := CharInSet(T[1], ['A'..'Z']);
 end;
 
 function PascalCase(const S: string): string;
@@ -99,7 +99,7 @@ begin
     CharNext := Capitalized[I + 1];
     
     if (Character <> '_') or 
-       (CharPrevious in ['0'..'9']) and (CharNext in ['0'..'9']) then
+       CharInSet(CharPrevious, ['0'..'9']) and CharInSet(CharNext, ['0'..'9']) then
     begin
       Result := Result + Character;
     end;

@@ -182,7 +182,7 @@
         <DCCReference Include="ScintillaFacerGenerator.FileGenerator.pas"/>
         <DCCReference Include="ScintillaFacerGenerator.HFacer.pas"/>
         <DCCReference Include="ScintillaFacerGenerator.ScintillaAPIFacer.pas"/>
-        <DCCReference Include="ScintillaFacerGenerator.DelphiGenerator.pas"/>
+        <DCCReference Include="ScintillaFacerGenerator.PascalGenerator.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

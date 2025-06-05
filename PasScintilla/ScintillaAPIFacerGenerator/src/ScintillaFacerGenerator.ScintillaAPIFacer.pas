@@ -96,7 +96,7 @@ begin
     Exit(False);
   if S = '' then
     Exit(False);
-  Result := S[1] in ['A'..'Z'];
+  Result := CharInSet(S[1], ['A'..'Z']);
 end;
 
 function JoinTypeAndIdentifier(const TypeName, Identifier: string): string;
