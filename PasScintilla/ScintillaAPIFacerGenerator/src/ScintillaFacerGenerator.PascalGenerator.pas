@@ -17,7 +17,7 @@ uses
   ScintillaFacerGenerator.ScintillaAPIFacer;
 
 type
-  TDelphiGenerator = class
+  TPascalGenerator = class
   private
     FFace: TFace;
     FConstants: TStringList;
@@ -52,7 +52,7 @@ procedure RunGenerator;
 
 implementation
 
-constructor TDelphiGenerator.Create;
+constructor TPascalGenerator.Create;
 begin
   inherited;
   FFace := TFace.Create;
@@ -64,7 +64,7 @@ begin
   FProperties := TStringList.Create;
 end;
 
-destructor TDelphiGenerator.Destroy;
+destructor TPascalGenerator.Destroy;
 begin
   FFace.Free;
   FConstants.Free;
@@ -76,7 +76,7 @@ begin
   inherited;
 end;
 
-function TDelphiGenerator.ConvertCppTypeToDelphi(const CppType: string): string;
+function TPascalGenerator.ConvertCppTypeToDelphi(const CppType: string): string;
 begin
   if CppType = 'void' then Result := ''
   else if CppType = 'int' then Result := 'Integer'
@@ -99,7 +99,7 @@ begin
   else Result := 'Integer';
 end;
 
-procedure TDelphiGenerator.LoadIfaceFile(const FileName: string);
+procedure TPascalGenerator.LoadIfaceFile(const FileName: string);
 begin
   FFace.ReadFromFile(FileName);
   
@@ -110,7 +110,7 @@ begin
   GenerateProperties;
 end;
 
-procedure TDelphiGenerator.GenerateConstants;
+procedure TPascalGenerator.GenerateConstants;
 var
   I: Integer;
   Name: string;
@@ -182,7 +182,7 @@ begin
   end;
 end;
 
-procedure TDelphiGenerator.GenerateTypes;
+procedure TPascalGenerator.GenerateTypes;
 begin
   FTypes.Add('type');
   FTypes.Add('  TSciPosition = Integer;');
@@ -219,7 +219,7 @@ begin
   FTypes.Add('  end;');
 end;
 
-procedure TDelphiGenerator.GenerateMessages;
+procedure TPascalGenerator.GenerateMessages;
 var
   I: Integer;
   Name: string;
@@ -256,7 +256,7 @@ begin
   end;
 end;
 
-function TDelphiGenerator.GenerateWParam(const Feature: TFeature): string;
+function TPascalGenerator.GenerateWParam(const Feature: TFeature): string;
 begin
   if Feature.Param1.Name <> '' then
     Result := Feature.Param1.Name
@@ -264,7 +264,7 @@ begin
     Result := '0';
 end;
 
-function TDelphiGenerator.GenerateLParam(const Feature: TFeature): string;
+function TPascalGenerator.GenerateLParam(const Feature: TFeature): string;
 begin
   if Feature.Param2.Name <> '' then
   begin
@@ -280,7 +280,7 @@ begin
     Result := '0';
 end;
 
-procedure TDelphiGenerator.GenerateMethods;
+procedure TPascalGenerator.GenerateMethods;
 var
   I: Integer;
   Name: string;
@@ -358,7 +358,7 @@ begin
   end;
 end;
 
-procedure TDelphiGenerator.GenerateProperties;
+procedure TPascalGenerator.GenerateProperties;
 var
   GetterSetterPairs: TDictionary<string, TPair<string, string>>;
   I: Integer;
@@ -429,7 +429,7 @@ begin
   end;
 end;
 
-procedure TDelphiGenerator.GenerateDelphiUnit(const OutputFile: string);
+procedure TPascalGenerator.GenerateDelphiUnit(const OutputFile: string);
 var
   Output: TStringList;
 begin
@@ -573,7 +573,7 @@ end;
 // Procedure principal que é chamada pelo programa
 procedure RunGenerator;
 var
-  Generator: TDelphiGenerator;
+  Generator: TPascalGenerator;
   InputFile, OutputFile: string;
   RootPath: string;
 begin
@@ -606,7 +606,7 @@ begin
     ScintillaFacerGenerator.ScintillaAPIFacer.RegenerateAll(RootPath);
     
     // Agora gera o wrapper Delphi
-    Generator := TDelphiGenerator.Create;
+    Generator := TPascalGenerator.Create;
     try
       InputFile := IncludeTrailingPathDelimiter(RootPath) + 'include' + PathDelim + 'Scintilla.iface';
       OutputFile := IncludeTrailingPathDelimiter(RootPath) + 'DScintilla.pas';
@@ -638,7 +638,7 @@ begin
       Exit;
     end;
     
-    Generator := TDelphiGenerator.Create;
+    Generator := TPascalGenerator.Create;
     try
       WriteLn('Loading: ' + InputFile);
       Generator.LoadIfaceFile(InputFile);
