@@ -1,11 +1,15 @@
 ﻿unit Seven.Scintilla.BaseTextEditor;
 
+{$IFDEF FPC}
+  {$MODE DELPHI}
+{$ENDIF}
+
 interface
 
 {$SCOPEDENUMS ON}
 
 uses
-  Seven.Scintilla.SciTypes,
+  Seven.Scintilla.Types,
 
   Winapi.Windows,
   Winapi.Messages,
@@ -32,7 +36,7 @@ type
   TSciDirectStatusFunction = function(APointer: Pointer; AMessage: Integer; WParam: WPARAM; LParam: LPARAM; var AStatus: Integer): LRESULT; cdecl;
 
   TBaseSciTextEditor = class(TWinControl)
-  private
+  strict private
     FSciDllHandle: HMODULE;
     FSciDllModule: String;
 
@@ -52,7 +56,7 @@ type
     procedure DoStoreWnd;
     procedure DoRestoreWnd(const Params: TCreateParams);
 
-  protected
+  strict protected
     procedure CreateWnd; override;
     procedure CreateParams(var Params: TCreateParams); override;
 
@@ -65,22 +69,13 @@ type
 
     procedure WMEraseBkgnd(var AMessage: TWmEraseBkgnd); message WM_ERASEBKGND;
     procedure WMGetDlgCode(var AMessage: TWMGetDlgCode); message WM_GETDLGCODE;
-  public
-    constructor Create(AOwner: TComponent); override;
-    destructor Destroy; override;
 
-    // Workaround bugs
-    procedure DefaultHandler(var AMessage); override;
-    procedure MouseWheelHandler(var AMessage: TMessage); override;
-
-  public
     /// <summary>
     ///   Envia mensagem para o controle Scintilla.
     ///   Para a lista de comandos, consulte Seven.Scintilla.SciTypes.pas e a documentação em:
     ///   http://www.scintilla.org/ScintillaDoc.html
     // </summary>
     function SendScintillaEditorMessage(AMessage: UINT; WParam: WPARAM = 0; LParam: LPARAM = 0): LRESULT; virtual;
-  published
 
     /// <summary>
     ///   Nome da DLL Scintilla que será usada.
@@ -98,47 +93,12 @@ type
     /// Por padrão, o aqui é utilizar o  modo TSciAccessMethod.Direct
     /// </summary>
     property AccessMethod: TSciAccessMethod read FAccessMethod write FAccessMethod default TSciAccessMethod.Direct;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
 
-  published
-    // TControl properties
-    property Anchors;
-    property PopupMenu;
-
-    // TWinControl properties
-    property Align;
-    property BevelEdges;
-    property BevelInner;
-    property BevelOuter;
-    property BevelKind;
-    property BevelWidth;
-    property BorderWidth;
-    property Ctl3D;
-    property ParentCtl3D;
-
-    // TControl events
-    property OnClick;
-    property OnContextPopup;
-    property OnDblClick;
-    property OnDragOver;
-    property OnDragDrop;
-    property OnMouseDown;
-
-    // OnMouseEnter/OnMouseLeave
-    property OnMouseEnter;
-    property OnMouseLeave;
-    property OnMouseMove;
-    property OnMouseUp;
-    property OnMouseWheel;
-    property OnMouseWheelDown;
-    property OnMouseWheelUp;
-    property OnResize;
-
-    // TWinControl events
-    property OnEnter;
-    property OnExit;
-    property OnKeyDown;
-    property OnKeyPress;
-    property OnKeyUp;
+    procedure DefaultHandler(var AMessage); override;
+    procedure MouseWheelHandler(var AMessage: TMessage); override;
   end;
 
 implementation

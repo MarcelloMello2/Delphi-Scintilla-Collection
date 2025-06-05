@@ -3,7 +3,7 @@
 uses
   Vcl.Forms,
   Seven.Scintilla.Tests.MainForm in 'Seven.Scintilla.Tests.MainForm.pas' {Form1},
-  Seven.Scintilla.SciTypes in 'Seven.Scintilla.SciTypes.pas',
+  Seven.Scintilla.Types in 'Seven.Scintilla.Types.pas',
   Seven.Scintilla.BaseTextEditor in 'Seven.Scintilla.BaseTextEditor.pas',
   Seven.Scintilla.CustomTextEditor in 'Seven.Scintilla.CustomTextEditor.pas';
 

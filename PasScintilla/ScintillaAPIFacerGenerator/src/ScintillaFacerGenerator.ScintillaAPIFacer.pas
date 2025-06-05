@@ -288,8 +288,8 @@ begin
   end;
 end;
 
-// Para Delphi, vamos gerar as declarações e implementações
-function GenerateDelphiDeclarations(F: TFace): TStringList;
+// Para Pascal, vamos gerar as declarações e implementações
+function GeneratePascalDeclarations(F: TFace): TStringList;
 var
   I: Integer;
   Name: string;
@@ -310,8 +310,8 @@ begin
           Name := Copy(Name, 4, MaxInt);
           
         RetType := ActualTypeName(V.ReturnType, Name);
-        
-        // Converte tipos C++ para Delphi
+
+        // Converte tipos C++ para Pascal
         RetType := StringReplace(RetType, 'const char *', 'PAnsiChar', [rfReplaceAll]);
         RetType := StringReplace(RetType, 'char *', 'PAnsiChar', [rfReplaceAll]);
         RetType := StringReplace(RetType, 'void *', 'Pointer', [rfReplaceAll]);
@@ -359,7 +359,7 @@ var
   F: TFace;
   IncludePath: string;
   MessagesContent, EnumerationsContent, ConstantsContent: TStringList;
-  DelphiDeclarations: TStringList;
+  PascalDeclarations: TStringList;
 begin
   InitializeGlobals;
   try
@@ -371,7 +371,7 @@ begin
     MessagesContent := nil;
     EnumerationsContent := nil;
     ConstantsContent := nil;
-    DelphiDeclarations := nil;
+    PascalDeclarations := nil;
     try
       IncludePath := IncludeTrailingPathDelimiter(RootPath) + 'include' + PathDelim;
       F.ReadFromFile(IncludePath + 'Scintilla.iface');
@@ -385,21 +385,21 @@ begin
       ConstantsContent := HConstants(F);
       ScintillaFacerGenerator.FileGenerator.Regenerate(IncludePath + 'ScintillaTypes.h', '//',
         [EnumerationsContent, ConstantsContent]);
-      
-      // Para Delphi, vamos gerar um arquivo único com declarações
-      DelphiDeclarations := GenerateDelphiDeclarations(F);
+
+      // Para Pascal, vamos gerar um arquivo único com declarações
+      PascalDeclarations := GeneratePascalDeclarations(F);
       
       WriteLn('Generated:');
       WriteLn('  - ScintillaMessages.h');
       WriteLn('  - ScintillaTypes.h');
-      WriteLn('  - Ready to generate Delphi wrapper');
+      WriteLn('  - Ready to generate Pascal wrapper');
       
     finally
       F.Free;
       MessagesContent.Free;
       EnumerationsContent.Free;
       ConstantsContent.Free;
-      DelphiDeclarations.Free;
+      PascalDeclarations.Free;
     end;
   finally
     FinalizeGlobals;

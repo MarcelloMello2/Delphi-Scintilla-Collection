@@ -514,7 +514,7 @@ begin
     SL.Add('  System.Classes,');
     SL.Add('  Vcl.Graphics,');
     SL.Add('  Vcl.Controls,');
-    SL.Add('  Seven.Scintilla.SciTypes,');
+    SL.Add('  Seven.Scintilla.Types,');
     SL.Add('  Seven.Scintilla.BaseTextEditor;');
     SL.Add('');
 

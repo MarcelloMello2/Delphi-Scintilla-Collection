@@ -10,6 +10,7 @@ uses
   System.SysUtils,
   System.Classes,
   System.StrUtils,
+  System.IOUtils,
   System.Generics.Collections,
   ScintillaFacerGenerator.Face,
   ScintillaFacerGenerator.FileGenerator,
@@ -33,7 +34,7 @@ type
     procedure GenerateMethods;
     procedure GenerateProperties;
 
-    function ConvertCppTypeToDelphi(const CppType: string): string;
+    function ConvertCppTypeToPascal(const CppType: string): string;
     function GenerateWParam(const Feature: TFeature): string;
     function GenerateLParam(const Feature: TFeature): string;
     function GetParamDescription(const Param: TParam; const Comments: TStringList): string;
@@ -45,7 +46,7 @@ type
     destructor Destroy; override;
 
     procedure LoadIfaceFile(const FileName: string);
-    procedure GenerateDelphiUnit(const OutputFile: string);
+    procedure GeneratePascalUnit(const OutputFile: string);
 
     property Constants: TStringList read FConstants;
     property Declarations: TStringList read FDeclarations;
@@ -80,7 +81,7 @@ begin
   inherited;
 end;
 
-function TPascalGenerator.ConvertCppTypeToDelphi(const CppType: string): string;
+function TPascalGenerator.ConvertCppTypeToPascal(const CppType: string): string;
 begin
   if CppType = 'void' then Result := ''
   else if CppType = 'int' then Result := 'Integer'
@@ -93,10 +94,10 @@ begin
   else if CppType = 'stringresult' then Result := 'PAnsiChar'
   else if CppType = 'cells' then Result := 'PAnsiChar'
   else if CppType = 'pointer' then Result := 'Pointer'
-  else if CppType = 'textrange' then Result := 'PTextRange'
-  else if CppType = 'textrangefull' then Result := 'PTextRangeFull'
-  else if CppType = 'findtext' then Result := 'PFindText'
-  else if CppType = 'findtextfull' then Result := 'PFindTextFull'
+  else if CppType = 'textrange' then Result := 'PSciTextRange'
+  else if CppType = 'textrangefull' then Result := 'PSciTextRangeFull'
+  else if CppType = 'findtext' then Result := 'PSciFindText'
+  else if CppType = 'findtextfull' then Result := 'PSciFindTextFull'
   else if CppType = 'keymod' then Result := 'Integer'
   else if CppType = 'formatrange' then Result := 'PFormatRange'
   else if CppType = 'formatrangefull' then Result := 'PFormatRangeFull'
@@ -202,28 +203,33 @@ begin
   FTypes.Add('  TSciLine = Integer;');
   FTypes.Add('  TColorAlpha = Cardinal;');
   FTypes.Add('');
-  FTypes.Add('  PTextRange = ^TTextRange;');
-  FTypes.Add('  TTextRange = record');
-  FTypes.Add('    chrg: TCharRange;');
+  FTypes.Add('  TSciCharRange = Record');
+  FTypes.Add('    cpMin : Longint;');
+  FTypes.Add('	  cpMax : Longint;');
+  FTypes.Add('  end;');
+  FTypes.Add('');
+  FTypes.Add('  PSciTextRange = ^TSciTextRange;');
+  FTypes.Add('  TSciTextRange = record');
+  FTypes.Add('    chrg: TSciCharRange;');
   FTypes.Add('    lpstrText: PAnsiChar;');
   FTypes.Add('  end;');
   FTypes.Add('');
-  FTypes.Add('  PTextRangeFull = ^TTextRangeFull;');
-  FTypes.Add('  TTextRangeFull = record');
+  FTypes.Add('  PSciTextRangeFull = ^TSciTextRangeFull;');
+  FTypes.Add('  TSciTextRangeFull = record');
   FTypes.Add('    cpMin: Int64;');
   FTypes.Add('    cpMax: Int64;');
   FTypes.Add('    lpstrText: PAnsiChar;');
   FTypes.Add('  end;');
   FTypes.Add('');
-  FTypes.Add('  PFindText = ^TFindText;');
-  FTypes.Add('  TFindText = record');
-  FTypes.Add('    chrg: TCharRange;');
+  FTypes.Add('  PSciFindText = ^TSciFindText;');
+  FTypes.Add('  TSciFindText = record');
+  FTypes.Add('    chrg: TSciCharRange;');
   FTypes.Add('    lpstrText: PAnsiChar;');
-  FTypes.Add('    chrgText: TCharRange;');
+  FTypes.Add('    chrgText: TSciCharRange;');
   FTypes.Add('  end;');
   FTypes.Add('');
-  FTypes.Add('  PFindTextFull = ^TFindTextFull;');
-  FTypes.Add('  TFindTextFull = record');
+  FTypes.Add('  PSciFindTextFull = ^TSciFindTextFull;');
+  FTypes.Add('  TSciFindTextFull = record');
   FTypes.Add('    cpMin: Int64;');
   FTypes.Add('    cpMax: Int64;');
   FTypes.Add('    lpstrText: PAnsiChar;');
@@ -400,7 +406,7 @@ var
   I, J: Integer;
   Name: string;
   Feature: TFeature;
-  DelphiRetType: string;
+  PascalRetType: string;
   ParamStr: string;
   LastCategory: string;
 begin
@@ -422,14 +428,14 @@ begin
           LastCategory := Feature.Category;
         end;
 
-        DelphiRetType := ConvertCppTypeToDelphi(Feature.ReturnType);
+        PascalRetType := ConvertCppTypeToPascal(Feature.ReturnType);
 
         // Monta string de parâmetros
         ParamStr := '';
         if Feature.Param1.Name <> '' then
         begin
           ParamStr := Feature.Param1.Name + ': ' +
-            ConvertCppTypeToDelphi(Feature.Param1.ParamType);
+            ConvertCppTypeToPascal(Feature.Param1.ParamType);
         end;
 
         if Feature.Param2.Name <> '' then
@@ -437,7 +443,7 @@ begin
           if ParamStr <> '' then
             ParamStr := ParamStr + '; ';
           ParamStr := ParamStr + Feature.Param2.Name + ': ' +
-            ConvertCppTypeToDelphi(Feature.Param2.ParamType);
+            ConvertCppTypeToPascal(Feature.Param2.ParamType);
         end;
 
         // Adiciona documentação XML se houver comentários
@@ -464,7 +470,7 @@ begin
           end;
 
           // Documenta retorno
-          if DelphiRetType <> '' then
+          if PascalRetType <> '' then
           begin
             FDeclarations.Add('    /// <returns>');
             FDeclarations.Add('    /// ' + GetReturnDescription(Feature));
@@ -473,9 +479,9 @@ begin
         end;
 
         // Gera declaração
-        if DelphiRetType <> '' then
+        if PascalRetType <> '' then
         begin
-          FDeclarations.Add('    function ' + Name + '(' + ParamStr + '): ' + DelphiRetType + ';');
+          FDeclarations.Add('    function ' + Name + '(' + ParamStr + '): ' + PascalRetType + ';');
         end
         else
         begin
@@ -484,9 +490,9 @@ begin
 
         // Gera implementação
         FImplementations.Add('');
-        if DelphiRetType <> '' then
+        if PascalRetType <> '' then
         begin
-          FImplementations.Add('function TScintilla.' + Name + '(' + ParamStr + '): ' + DelphiRetType + ';');
+          FImplementations.Add('function TCustomSciTextEditor.' + Name + '(' + ParamStr + '): ' + PascalRetType + ';');
           FImplementations.Add('begin');
           FImplementations.Add('  Result := SendMessage(Handle, SCI_' + UpperCase(Name) + ', ' +
             GenerateWParam(Feature) + ', ' + GenerateLParam(Feature) + ');');
@@ -494,7 +500,7 @@ begin
         end
         else
         begin
-          FImplementations.Add('procedure TScintilla.' + Name + '(' + ParamStr + ');');
+          FImplementations.Add('procedure TCustomSciTextEditor.' + Name + '(' + ParamStr + ');');
           FImplementations.Add('begin');
           FImplementations.Add('  SendMessage(Handle, SCI_' + UpperCase(Name) + ', ' +
             GenerateWParam(Feature) + ', ' + GenerateLParam(Feature) + ');');
@@ -566,11 +572,11 @@ begin
 
           if SetterName <> '' then
             FProperties.Add('    property ' + PropName + ': ' +
-              ConvertCppTypeToDelphi(Feature.ReturnType) +
+              ConvertCppTypeToPascal(Feature.ReturnType) +
               ' read ' + GetterName + ' write ' + SetterName + ';')
           else
             FProperties.Add('    property ' + PropName + ': ' +
-              ConvertCppTypeToDelphi(Feature.ReturnType) +
+              ConvertCppTypeToPascal(Feature.ReturnType) +
               ' read ' + GetterName + ';');
         end;
       end;
@@ -580,25 +586,36 @@ begin
   end;
 end;
 
-procedure TPascalGenerator.GenerateDelphiUnit(const OutputFile: string);
+procedure TPascalGenerator.GeneratePascalUnit(const OutputFile: string);
+const
+  SCINTILLA_TYPES_FILENAME = 'Seven.Scintilla.Types';
 var
   Output: TStringList;
 begin
   Output := TStringList.Create;
   try
     // Cabeçalho
-    Output.Add('unit DScintilla;');
+    Output.Add(Format('unit %s;', [SCINTILLA_TYPES_FILENAME]));
     Output.Add('');
     Output.Add('{');
-    Output.Add('  Delphi wrapper for Scintilla editor');
-    Output.Add('  Auto-generated from Scintilla.iface');
-    Output.Add('  Generation date: ' + DateTimeToStr(Now));
+    Output.Add('  Wrapper Pascal para Scintilla');
+    Output.Add('  Gerado automaticamente por ' + ExtractFileName(ParamStr(0)));
+    Output.Add('  Data: ' + DateTimeToStr(Now));
     Output.Add('}');
+    Output.Add('');
+    Output.Add('{$IFDEF FPC}');
+    Output.Add('  {$MODE DELPHI}');
+    Output.Add('{$ENDIF}');
     Output.Add('');
     Output.Add('interface');
     Output.Add('');
+    Output.Add('{$SCOPEDENUMS ON}');
+    Output.Add('');
     Output.Add('uses');
-    Output.Add('  Windows, Messages, SysUtils, Classes, Graphics, Controls;');
+    Output.Add('  Winapi.Windows,');
+    Output.Add('  Winapi.Messages,');
+    Output.Add('  System.SysUtils,');
+    Output.Add('  System.Classes;');
     Output.Add('');
 
     // Adiciona constantes
@@ -612,20 +629,59 @@ begin
     // Adiciona tipos
     Output.AddStrings(FTypes);
     Output.Add('');
+    Output.Add('implementation');
+    Output.Add('');
+    Output.Add('end.');
+    begin
+      var ScintillaTypesFilename := TPath.Combine(ExtractFilePath(OutputFile), SCINTILLA_TYPES_FILENAME + '.pas');
+      // Salva o arquivo de types
 
-    // Classe TScintilla
-    Output.Add('  TScintilla = class(TWinControl)');
-    Output.Add('  private');
+      Output.SaveToFile(ScintillaTypesFilename, TEncoding.UTF8);
+      WriteLn('Types Generated: ' + ScintillaTypesFilename);
+    end;
+    Output.Clear();
+
+
+    // Cabeçalho
+    Output.Add(Format('unit %s;', [TPath.GetFileNameWithoutExtension(OutputFile)]));
+    Output.Add('');
+    Output.Add('{');
+    Output.Add('  Wrapper Pascal para Scintilla');
+    Output.Add('  Gerado automaticamente por ' + ExtractFileName(ParamStr(0)));
+    Output.Add('  Data: ' + DateTimeToStr(Now));
+    Output.Add('}');
+    Output.Add('');
+    Output.Add('');
+    Output.Add('{$IFDEF FPC}');
+    Output.Add('  {$MODE DELPHI}');
+    Output.Add('{$ENDIF}');
+
+    Output.Add('');
+    Output.Add('interface');
+    Output.Add('');
+    Output.Add('{$SCOPEDENUMS ON}');
+    Output.Add('');
+    Output.Add('uses');
+    Output.Add('  Winapi.Windows,');
+    Output.Add('  Winapi.Messages,');
+    Output.Add('  System.SysUtils,');
+    Output.Add('  System.Classes,');
+    Output.Add('  Vcl.Graphics,');
+    Output.Add('  Vcl.Controls,');
+    Output.Add(Format('  %s,', [SCINTILLA_TYPES_FILENAME]));
+    Output.Add('  Seven.Scintilla.BaseTextEditor;');
+    Output.Add('');
+
+    // Classe TCustomSciTextEditor
+    Output.Add('  TCustomSciTextEditor = class(TBaseSciTextEditor)');
+    Output.Add('  strict private');
     Output.Add('    FDirectPtr: Pointer;');
     Output.Add('    FDirectFunction: Pointer;');
-    Output.Add('  protected');
+    Output.Add('  strict protected');
     Output.Add('    procedure CreateWnd; override;');
     Output.Add('    procedure DestroyWnd; override;');
     Output.Add('    procedure WMGetDlgCode(var Message: TWMGetDlgCode); message WM_GETDLGCODE;');
     Output.Add('    procedure WMEraseBkgnd(var Message: TWMEraseBkgnd); message WM_ERASEBKGND;');
-    Output.Add('  public');
-    Output.Add('    constructor Create(AOwner: TComponent); override;');
-    Output.Add('    destructor Destroy; override;');
 
     // Adiciona declarações de métodos
     Output.AddStrings(FDeclarations);
@@ -637,6 +693,9 @@ begin
       Output.AddStrings(FProperties);
     end;
 
+    Output.Add('  public');
+    Output.Add('    constructor Create(AOwner: TComponent); override;');
+    Output.Add('    destructor Destroy; override;');
     Output.Add('  end;');
     Output.Add('');
     Output.Add('procedure Register;');
@@ -651,14 +710,14 @@ begin
     // Registro do componente
     Output.Add('procedure Register;');
     Output.Add('begin');
-    Output.Add('  RegisterComponents(''Scintilla'', [TScintilla]);');
+    Output.Add('  RegisterComponents(''Scintilla'', [TCustomSciTextEditor]);');
     Output.Add('end;');
     Output.Add('');
 
     // Implementações básicas
-    Output.Add('{ TScintilla }');
+    Output.Add('{ TCustomSciTextEditor }');
     Output.Add('');
-    Output.Add('constructor TScintilla.Create(AOwner: TComponent);');
+    Output.Add('constructor TCustomSciTextEditor.Create(AOwner: TComponent);');
     Output.Add('begin');
     Output.Add('  inherited Create(AOwner);');
     Output.Add('  Width := 300;');
@@ -667,12 +726,12 @@ begin
     Output.Add('  ControlStyle := ControlStyle + [csCaptureMouse, csClickEvents, csDoubleClicks, csOpaque];');
     Output.Add('end;');
     Output.Add('');
-    Output.Add('destructor TScintilla.Destroy;');
+    Output.Add('destructor TCustomSciTextEditor.Destroy;');
     Output.Add('begin');
     Output.Add('  inherited Destroy;');
     Output.Add('end;');
     Output.Add('');
-    Output.Add('procedure TScintilla.CreateWnd;');
+    Output.Add('procedure TCustomSciTextEditor.CreateWnd;');
     Output.Add('var');
     Output.Add('  LoadResult: THandle;');
     Output.Add('begin');
@@ -689,20 +748,20 @@ begin
     Output.Add('  FDirectFunction := Pointer(SendMessage(Handle, SCI_GETDIRECTFUNCTION, 0, 0));');
     Output.Add('end;');
     Output.Add('');
-    Output.Add('procedure TScintilla.DestroyWnd;');
+    Output.Add('procedure TCustomSciTextEditor.DestroyWnd;');
     Output.Add('begin');
     Output.Add('  FDirectPtr := nil;');
     Output.Add('  FDirectFunction := nil;');
     Output.Add('  inherited DestroyWnd;');
     Output.Add('end;');
     Output.Add('');
-    Output.Add('procedure TScintilla.WMGetDlgCode(var Message: TWMGetDlgCode);');
+    Output.Add('procedure TCustomSciTextEditor.WMGetDlgCode(var Message: TWMGetDlgCode);');
     Output.Add('begin');
     Output.Add('  inherited;');
     Output.Add('  Message.Result := Message.Result or DLGC_WANTARROWS or DLGC_WANTCHARS;');
     Output.Add('end;');
     Output.Add('');
-    Output.Add('procedure TScintilla.WMEraseBkgnd(var Message: TWMEraseBkgnd);');
+    Output.Add('procedure TCustomSciTextEditor.WMEraseBkgnd(var Message: TWMEraseBkgnd);');
     Output.Add('begin');
     Output.Add('  Message.Result := 1; // Prevent flicker');
     Output.Add('end;');
@@ -714,7 +773,7 @@ begin
     Output.Add('end.');
 
     // Salva o arquivo
-    Output.SaveToFile(OutputFile);
+    Output.SaveToFile(OutputFile, TEncoding.UTF8);
     WriteLn('Generated: ' + OutputFile);
   finally
     Output.Free;
@@ -756,16 +815,16 @@ begin
     // Chama o regenerador que simula o comportamento dos scripts Python
     ScintillaFacerGenerator.ScintillaAPIFacer.RegenerateAll(RootPath);
 
-    // Agora gera o wrapper Delphi
+    // Agora gera o wrapper Pascal
     Generator := TPascalGenerator.Create;
     try
       InputFile := IncludeTrailingPathDelimiter(RootPath) + 'include' + PathDelim + 'Scintilla.iface';
-      OutputFile := IncludeTrailingPathDelimiter(RootPath) + 'DScintilla.pas';
+      OutputFile := IncludeTrailingPathDelimiter(RootPath) + 'Seven.Scintilla.CustomTextEditor.pas';
 
       WriteLn('');
-      WriteLn('Generating Delphi wrapper...');
+      WriteLn('Generating Pascal wrapper...');
       Generator.LoadIfaceFile(InputFile);
-      Generator.GenerateDelphiUnit(OutputFile);
+      Generator.GeneratePascalUnit(OutputFile);
 
       WriteLn('');
       WriteLn('Generation complete!');
@@ -775,13 +834,13 @@ begin
   end
   else
   begin
-    // Modo simples - apenas gera o wrapper Delphi
+    // Modo simples - apenas gera o wrapper Pascal
     InputFile := ParamStr(1);
 
     if ParamCount >= 2 then
       OutputFile := ParamStr(2)
     else
-      OutputFile := 'DScintilla.pas';
+      OutputFile := 'Seven.Scintilla.CustomTextEditor.pas';
 
     if not FileExists(InputFile) then
     begin
@@ -795,7 +854,7 @@ begin
       Generator.LoadIfaceFile(InputFile);
 
       WriteLn('Generating: ' + OutputFile);
-      Generator.GenerateDelphiUnit(OutputFile);
+      Generator.GeneratePascalUnit(OutputFile);
 
       WriteLn('');
       WriteLn('Statistics:');

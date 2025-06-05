@@ -1,6 +1,12 @@
-﻿unit Seven.Scintilla.SciTypes;
+﻿unit Seven.Scintilla.Types;
+
+{$IFDEF FPC}
+  {$MODE DELPHI}
+{$ENDIF}
 
 interface
+
+{$SCOPEDENUMS ON}
 
 const
   /// <summary>

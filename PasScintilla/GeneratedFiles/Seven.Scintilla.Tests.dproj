@@ -131,7 +131,7 @@
             <Form>Form1</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="Seven.Scintilla.SciTypes.pas"/>
+        <DCCReference Include="Seven.Scintilla.Types.pas"/>
         <DCCReference Include="Seven.Scintilla.BaseTextEditor.pas"/>
         <DCCReference Include="Seven.Scintilla.CustomTextEditor.pas"/>
         <BuildConfiguration Include="Base">

@@ -15,7 +15,7 @@ uses
   System.Classes,
   Vcl.Graphics,
   Vcl.Controls,
-  Seven.Scintilla.SciTypes,
+  Seven.Scintilla.Types,
   Seven.Scintilla.BaseTextEditor;
 
 const
