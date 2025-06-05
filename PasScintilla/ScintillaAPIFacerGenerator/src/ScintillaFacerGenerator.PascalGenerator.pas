@@ -26,23 +26,27 @@ type
     FDeclarations: TStringList;
     FImplementations: TStringList;
     FProperties: TStringList;
-    
+
     procedure GenerateConstants;
     procedure GenerateTypes;
     procedure GenerateMessages;
     procedure GenerateMethods;
     procedure GenerateProperties;
-    
+
     function ConvertCppTypeToDelphi(const CppType: string): string;
     function GenerateWParam(const Feature: TFeature): string;
     function GenerateLParam(const Feature: TFeature): string;
+    function GetParamDescription(const Param: TParam; const Comments: TStringList): string;
+    function GetReturnDescription(const Feature: TFeature): string;
+    procedure AddXMLDocumentation(Output: TStringList; const Feature: TFeature;
+      const MethodName: string; IsProperty: Boolean = False);
   public
     constructor Create;
     destructor Destroy; override;
-    
+
     procedure LoadIfaceFile(const FileName: string);
     procedure GenerateDelphiUnit(const OutputFile: string);
-    
+
     property Constants: TStringList read FConstants;
     property Declarations: TStringList read FDeclarations;
     property Properties: TStringList read FProperties;
@@ -102,7 +106,7 @@ end;
 procedure TPascalGenerator.LoadIfaceFile(const FileName: string);
 begin
   FFace.ReadFromFile(FileName);
-  
+
   GenerateConstants;
   GenerateTypes;
   GenerateMessages;
@@ -112,7 +116,7 @@ end;
 
 procedure TPascalGenerator.GenerateConstants;
 var
-  I: Integer;
+  I, J: Integer;
   Name: string;
   Feature: TFeature;
   LastEnum: string;
@@ -126,7 +130,7 @@ begin
     AllEnumPrefixes.Add('SCE_');
     AllEnumPrefixes.Add('SCI_');
     AllEnumPrefixes.Add('SCEN_');
-    
+
     // Coleta prefixos de enumerações
     for Name in FFace.Features.Keys do
     begin
@@ -140,9 +144,9 @@ begin
         end;
       end;
     end;
-    
+
     FConstants.Add('const');
-    
+
     LastEnum := '';
     for I := 0 to FFace.Order.Count - 1 do
     begin
@@ -171,8 +175,17 @@ begin
                 Break;
               end;
             end;
-            
-            FConstants.Add('  ' + Name + ' = ' + Feature.Value + ';');
+
+            // Adiciona documentação XML se houver
+            if Feature.Comment.Count > 0 then
+            begin
+              FConstants.Add('  /// <summary>');
+              for J := 0 to Feature.Comment.Count - 1 do
+                FConstants.Add('  /// ' + Feature.Comment[J]);
+              FConstants.Add('  /// </summary>');
+            end;
+
+            FConstants.Add('  ' + Name + ' = ' + Feature.Value.Replace('0x', '$') + ';');
           end;
         end;
       end;
@@ -226,23 +239,23 @@ var
   Feature: TFeature;
 begin
   FMessages.Add('  // Scintilla messages');
-  
+
   for I := 0 to FFace.Order.Count - 1 do
   begin
     Name := FFace.Order[I];
     if FFace.Features.TryGetValue(Name, Feature) then
     begin
-      if (Feature.Category <> 'Deprecated') and 
+      if (Feature.Category <> 'Deprecated') and
          (Feature.FeatureType in [ftFun, ftGet, ftSet]) then
       begin
-        FMessages.Add('  SCI_' + UpperCase(Name) + ' = ' + Feature.Value + ';');
+        FMessages.Add('  SCI_' + UpperCase(Name) + ' = ' + Feature.Value.Replace('0x', '$') + ';');
       end;
     end;
   end;
-  
+
   FMessages.Add('');
   FMessages.Add('  // Scintilla notifications');
-  
+
   for I := 0 to FFace.Order.Count - 1 do
   begin
     Name := FFace.Order[I];
@@ -250,7 +263,7 @@ begin
     begin
       if (Feature.Category <> 'Deprecated') and (Feature.FeatureType = ftEvt) then
       begin
-        FMessages.Add('  SCN_' + UpperCase(Name) + ' = ' + Feature.Value + ';');
+        FMessages.Add('  SCN_' + UpperCase(Name) + ' = ' + Feature.Value.Replace('0x', '$') + ';');
       end;
     end;
   end;
@@ -268,7 +281,7 @@ function TPascalGenerator.GenerateLParam(const Feature: TFeature): string;
 begin
   if Feature.Param2.Name <> '' then
   begin
-    if (Feature.Param2.ParamType = 'string') or 
+    if (Feature.Param2.ParamType = 'string') or
        (Feature.Param2.ParamType = 'stringresult') then
       Result := 'LPARAM(' + Feature.Param2.Name + ')'
     else if Feature.Param2.ParamType = 'pointer' then
@@ -280,9 +293,111 @@ begin
     Result := '0';
 end;
 
-procedure TPascalGenerator.GenerateMethods;
+function TPascalGenerator.GetParamDescription(const Param: TParam; const Comments: TStringList): string;
+begin
+  // Tenta extrair descrição do parâmetro dos comentários
+  Result := 'The ' + Param.Name + ' parameter';
+
+  // Adiciona informações sobre o tipo
+  if Param.ParamType = 'position' then
+    Result := 'Position in the document'
+  else if Param.ParamType = 'line' then
+    Result := 'Line number'
+  else if Param.ParamType = 'string' then
+    Result := 'Text string'
+  else if Param.ParamType = 'stringresult' then
+    Result := 'Buffer to receive the result'
+  else if Param.ParamType = 'colour' then
+    Result := 'Color value'
+  else if Param.ParamType = 'bool' then
+    Result := 'Boolean value'
+  else if Param.ParamType = 'int' then
+    Result := 'Integer value';
+
+end;
+
+function TPascalGenerator.GetReturnDescription(const Feature: TFeature): string;
+begin
+  Result := 'Returns ';
+
+  // Descrição baseada no tipo de retorno
+  if Feature.ReturnType = 'position' then
+    Result := Result + 'the position in the document'
+  else if Feature.ReturnType = 'line' then
+    Result := Result + 'the line number'
+  else if Feature.ReturnType = 'bool' then
+    Result := Result + 'true if successful, false otherwise'
+  else if Feature.ReturnType = 'int' then
+    Result := Result + 'the requested value'
+  else if Feature.ReturnType = 'colour' then
+    Result := Result + 'the color value'
+  else
+  begin
+    // Para getters, tenta deduzir da função
+    if Feature.FeatureType = ftGet then
+    begin
+      if StartsStr('Get', Feature.Name) then
+        Result := Result + 'the ' + LowerCase(Copy(Feature.Name, 4, MaxInt))
+      else
+        Result := Result + 'the value';
+    end
+    else
+      Result := Result + 'the result';
+  end;
+end;
+
+procedure TPascalGenerator.AddXMLDocumentation(Output: TStringList;
+  const Feature: TFeature; const MethodName: string; IsProperty: Boolean);
 var
   I: Integer;
+begin
+  if Feature.Comment.Count = 0 then
+    Exit;
+
+  if IsProperty then
+  begin
+    // Documentação simplificada para properties
+    Output.Add('    /// <summary>');
+    for I := 0 to Feature.Comment.Count - 1 do
+      Output.Add('    /// ' + Feature.Comment[I]);
+    Output.Add('    /// </summary>');
+  end
+  else
+  begin
+    // Documentação completa para métodos
+    Output.Add('    /// <summary>');
+    for I := 0 to Feature.Comment.Count - 1 do
+      Output.Add('    /// ' + Feature.Comment[I]);
+    Output.Add('    /// </summary>');
+
+    // Documenta parâmetros
+    if Feature.Param1.Name <> '' then
+    begin
+      Output.Add('    /// <param name="' + Feature.Param1.Name + '">');
+      Output.Add('    /// ' + GetParamDescription(Feature.Param1, Feature.Comment));
+      Output.Add('    /// </param>');
+    end;
+
+    if Feature.Param2.Name <> '' then
+    begin
+      Output.Add('    /// <param name="' + Feature.Param2.Name + '">');
+      Output.Add('    /// ' + GetParamDescription(Feature.Param2, Feature.Comment));
+      Output.Add('    /// </param>');
+    end;
+
+    // Documenta retorno
+    if (Feature.ReturnType <> '') and (Feature.ReturnType <> 'void') then
+    begin
+      Output.Add('    /// <returns>');
+      Output.Add('    /// ' + GetReturnDescription(Feature));
+      Output.Add('    /// </returns>');
+    end;
+  end;
+end;
+
+procedure TPascalGenerator.GenerateMethods;
+var
+  I, J: Integer;
   Name: string;
   Feature: TFeature;
   DelphiRetType: string;
@@ -290,13 +405,13 @@ var
   LastCategory: string;
 begin
   LastCategory := '';
-  
+
   for I := 0 to FFace.Order.Count - 1 do
   begin
     Name := FFace.Order[I];
     if FFace.Features.TryGetValue(Name, Feature) then
     begin
-      if (Feature.Category <> 'Deprecated') and 
+      if (Feature.Category <> 'Deprecated') and
          (Feature.FeatureType in [ftFun, ftGet, ftSet]) then
       begin
         // Adiciona comentário de categoria
@@ -306,25 +421,57 @@ begin
           FDeclarations.Add('    // ' + Feature.Category);
           LastCategory := Feature.Category;
         end;
-        
+
         DelphiRetType := ConvertCppTypeToDelphi(Feature.ReturnType);
-        
+
         // Monta string de parâmetros
         ParamStr := '';
         if Feature.Param1.Name <> '' then
         begin
-          ParamStr := Feature.Param1.Name + ': ' + 
+          ParamStr := Feature.Param1.Name + ': ' +
             ConvertCppTypeToDelphi(Feature.Param1.ParamType);
         end;
-        
+
         if Feature.Param2.Name <> '' then
         begin
           if ParamStr <> '' then
             ParamStr := ParamStr + '; ';
-          ParamStr := ParamStr + Feature.Param2.Name + ': ' + 
+          ParamStr := ParamStr + Feature.Param2.Name + ': ' +
             ConvertCppTypeToDelphi(Feature.Param2.ParamType);
         end;
-        
+
+        // Adiciona documentação XML se houver comentários
+        if Feature.Comment.Count > 0 then
+        begin
+          FDeclarations.Add('    /// <summary>');
+          for J := 0 to Feature.Comment.Count - 1 do
+            FDeclarations.Add('    /// ' + Feature.Comment[J]);
+          FDeclarations.Add('    /// </summary>');
+
+          // Documenta parâmetros
+          if Feature.Param1.Name <> '' then
+          begin
+            FDeclarations.Add('    /// <param name="' + Feature.Param1.Name + '">');
+            FDeclarations.Add('    /// ' + GetParamDescription(Feature.Param1, Feature.Comment));
+            FDeclarations.Add('    /// </param>');
+          end;
+
+          if Feature.Param2.Name <> '' then
+          begin
+            FDeclarations.Add('    /// <param name="' + Feature.Param2.Name + '">');
+            FDeclarations.Add('    /// ' + GetParamDescription(Feature.Param2, Feature.Comment));
+            FDeclarations.Add('    /// </param>');
+          end;
+
+          // Documenta retorno
+          if DelphiRetType <> '' then
+          begin
+            FDeclarations.Add('    /// <returns>');
+            FDeclarations.Add('    /// ' + GetReturnDescription(Feature));
+            FDeclarations.Add('    /// </returns>');
+          end;
+        end;
+
         // Gera declaração
         if DelphiRetType <> '' then
         begin
@@ -334,7 +481,7 @@ begin
         begin
           FDeclarations.Add('    procedure ' + Name + '(' + ParamStr + ');');
         end;
-        
+
         // Gera implementação
         FImplementations.Add('');
         if DelphiRetType <> '' then
@@ -375,15 +522,15 @@ begin
       Name := FFace.Order[I];
       if FFace.Features.TryGetValue(Name, Feature) then
       begin
-        if (Feature.Category <> 'Deprecated') and 
-           (Feature.FeatureType = ftGet) and 
+        if (Feature.Category <> 'Deprecated') and
+           (Feature.FeatureType = ftGet) and
            StartsStr('Get', Name) and
            (Feature.Param1.Name = '') and
            (Feature.Param2.Name = '') then
         begin
           PropName := Copy(Name, 4, MaxInt);
           GetterName := Name;
-          
+
           // Procura setter correspondente
           SetterName := 'Set' + PropName;
           if FFace.Features.ContainsKey(SetterName) then
@@ -398,28 +545,32 @@ begin
         end;
       end;
     end;
-    
+
     // Gera properties
     if GetterSetterPairs.Count > 0 then
     begin
       FProperties.Add('  published');
       FProperties.Add('    // Auto-generated properties');
-      
+
       for PropName in GetterSetterPairs.Keys do
       begin
         Pair := GetterSetterPairs[PropName];
         GetterName := Pair.Key;
         SetterName := Pair.Value;
-        
+
         if FFace.Features.TryGetValue(GetterName, Feature) then
         begin
+          // Adiciona documentação XML
+          if Feature.Comment.Count > 0 then
+            AddXMLDocumentation(FProperties, Feature, PropName, True);
+
           if SetterName <> '' then
-            FProperties.Add('    property ' + PropName + ': ' + 
-              ConvertCppTypeToDelphi(Feature.ReturnType) + 
+            FProperties.Add('    property ' + PropName + ': ' +
+              ConvertCppTypeToDelphi(Feature.ReturnType) +
               ' read ' + GetterName + ' write ' + SetterName + ';')
           else
-            FProperties.Add('    property ' + PropName + ': ' + 
-              ConvertCppTypeToDelphi(Feature.ReturnType) + 
+            FProperties.Add('    property ' + PropName + ': ' +
+              ConvertCppTypeToDelphi(Feature.ReturnType) +
               ' read ' + GetterName + ';');
         end;
       end;
@@ -449,19 +600,19 @@ begin
     Output.Add('uses');
     Output.Add('  Windows, Messages, SysUtils, Classes, Graphics, Controls;');
     Output.Add('');
-    
+
     // Adiciona constantes
     Output.AddStrings(FConstants);
     Output.Add('');
-    
+
     // Adiciona mensagens
     Output.AddStrings(FMessages);
     Output.Add('');
-    
+
     // Adiciona tipos
     Output.AddStrings(FTypes);
     Output.Add('');
-    
+
     // Classe TScintilla
     Output.Add('  TScintilla = class(TWinControl)');
     Output.Add('  private');
@@ -475,17 +626,17 @@ begin
     Output.Add('  public');
     Output.Add('    constructor Create(AOwner: TComponent); override;');
     Output.Add('    destructor Destroy; override;');
-    
+
     // Adiciona declarações de métodos
     Output.AddStrings(FDeclarations);
-    
+
     // Adiciona properties
     if FProperties.Count > 0 then
     begin
       Output.Add('');
       Output.AddStrings(FProperties);
     end;
-    
+
     Output.Add('  end;');
     Output.Add('');
     Output.Add('procedure Register;');
@@ -496,14 +647,14 @@ begin
     Output.Add('  ScintillaClassName = ''Scintilla'';');
     Output.Add('  ScintillaDLL = ''SciLexer.dll'';');
     Output.Add('');
-    
+
     // Registro do componente
     Output.Add('procedure Register;');
     Output.Add('begin');
     Output.Add('  RegisterComponents(''Scintilla'', [TScintilla]);');
     Output.Add('end;');
     Output.Add('');
-    
+
     // Implementações básicas
     Output.Add('{ TScintilla }');
     Output.Add('');
@@ -555,13 +706,13 @@ begin
     Output.Add('begin');
     Output.Add('  Message.Result := 1; // Prevent flicker');
     Output.Add('end;');
-    
+
     // Adiciona implementações dos métodos
     Output.AddStrings(FImplementations);
-    
+
     Output.Add('');
     Output.Add('end.');
-    
+
     // Salva o arquivo
     Output.SaveToFile(OutputFile);
     WriteLn('Generated: ' + OutputFile);
@@ -580,7 +731,7 @@ begin
   WriteLn('Scintilla Wrapper Generator v3.0');
   WriteLn('===================================');
   WriteLn('');
-  
+
   if ParamCount < 1 then
   begin
     WriteLn('Usage: ' + ExtractFileName(ParamStr(0)) + ' <Scintilla.iface> [output.pas]');
@@ -589,7 +740,7 @@ begin
     WriteLn('Usage: ' + ExtractFileName(ParamStr(0)) + ' --regenerate-all <root-path>');
     Exit;
   end;
-  
+
   if ParamStr(1) = '--regenerate-all' then
   begin
     // Modo compatível com os scripts Python
@@ -598,24 +749,24 @@ begin
       WriteLn('Error: root path required');
       Exit;
     end;
-    
+
     RootPath := ParamStr(2);
     WriteLn('Regenerating all files from: ' + RootPath);
-    
+
     // Chama o regenerador que simula o comportamento dos scripts Python
     ScintillaFacerGenerator.ScintillaAPIFacer.RegenerateAll(RootPath);
-    
+
     // Agora gera o wrapper Delphi
     Generator := TPascalGenerator.Create;
     try
       InputFile := IncludeTrailingPathDelimiter(RootPath) + 'include' + PathDelim + 'Scintilla.iface';
       OutputFile := IncludeTrailingPathDelimiter(RootPath) + 'DScintilla.pas';
-      
+
       WriteLn('');
       WriteLn('Generating Delphi wrapper...');
       Generator.LoadIfaceFile(InputFile);
       Generator.GenerateDelphiUnit(OutputFile);
-      
+
       WriteLn('');
       WriteLn('Generation complete!');
     finally
@@ -626,39 +777,39 @@ begin
   begin
     // Modo simples - apenas gera o wrapper Delphi
     InputFile := ParamStr(1);
-    
+
     if ParamCount >= 2 then
       OutputFile := ParamStr(2)
     else
       OutputFile := 'DScintilla.pas';
-    
+
     if not FileExists(InputFile) then
     begin
       WriteLn('Error: File not found: ' + InputFile);
       Exit;
     end;
-    
+
     Generator := TPascalGenerator.Create;
     try
       WriteLn('Loading: ' + InputFile);
       Generator.LoadIfaceFile(InputFile);
-      
+
       WriteLn('Generating: ' + OutputFile);
       Generator.GenerateDelphiUnit(OutputFile);
-      
+
       WriteLn('');
       WriteLn('Statistics:');
       WriteLn('  Constants: ' + IntToStr(Generator.Constants.Count));
       WriteLn('  Functions: ' + IntToStr(Generator.Declarations.Count));
       WriteLn('  Properties: ' + IntToStr(Generator.Properties.Count));
-      
+
       WriteLn('');
       WriteLn('Generation complete!');
     finally
       Generator.Free;
     end;
   end;
-  
+
   WriteLn('');
   WriteLn('Press ENTER to exit...');
   ReadLn;
