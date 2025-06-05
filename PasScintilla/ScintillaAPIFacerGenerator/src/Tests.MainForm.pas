@@ -15,6 +15,8 @@ type
     property ViewWS;
     property TabDrawMode;
     property ControlCharSymbol;
+    property PrintWrapMode;
+    property WrapMode;
   end;
 
   TForm2 = class(TForm)
@@ -45,7 +47,9 @@ begin
   FScintillaTextEditor.Visible := True;
   FScintillaTextEditor.Parent := Self;
   FScintillaTextEditor.ViewEOL := True;
-  FScintillaTextEditor.ControlCharSymbol := 1;
+  FScintillaTextEditor.ViewWS := 1;
+  FScintillaTextEditor.PrintWrapMode := 1;
+  FScintillaTextEditor.WrapMode := 1;
 end;
 
 { TCustomSciTextEditor }
