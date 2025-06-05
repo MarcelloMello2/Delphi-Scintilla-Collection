@@ -1,0 +1,275 @@
+// ===== build.bat =====
+@echo off
+echo Building Scintilla Delphi Generator...
+fpc -O3 -Mdelphi ScintillaDelphiGenerator.dpr -oScintillaDelphiGenerator.exe
+
+if %errorlevel% neq 0 (
+    echo Build failed!
+    pause
+    exit /b 1
+)
+
+echo.
+echo Build successful!
+echo.
+echo Usage:
+echo   ScintillaDelphiGenerator.exe Scintilla.iface [output.pas]
+echo.
+echo Example:
+echo   ScintillaDelphiGenerator.exe Scintilla.iface DScintilla.pas
+echo.
+pause
+
+// ===== ScintillaDelphiGenerator.dpr =====
+program ScintillaDelphiGenerator;
+
+{$APPTYPE CONSOLE}
+
+uses
+  Face in 'Face.pas',
+  FileGenerator in 'FileGenerator.pas',
+  HFacer in 'HFacer.pas',
+  ScintillaAPIFacer in 'ScintillaAPIFacer.pas';
+
+{$I ScintillaDelphiGenerator.pas}
+
+// ===== ExampleUsage.pas =====
+unit ExampleUsage;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  StdCtrls, DScintilla;
+
+type
+  TFormExample = class(TForm)
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+  private
+    FScintilla: TScintilla;
+    procedure ConfigureEditor;
+  public
+  end;
+
+var
+  FormExample: TFormExample;
+
+implementation
+
+{$R *.dfm}
+
+procedure TFormExample.FormCreate(Sender: TObject);
+begin
+  // Cria o editor Scintilla
+  FScintilla := TScintilla.Create(Self);
+  FScintilla.Parent := Self;
+  FScintilla.Align := alClient;
+  
+  // Configura o editor
+  ConfigureEditor;
+  
+  // Adiciona texto de exemplo
+  FScintilla.SetText('program HelloWorld;' + #13#10 +
+                     '' + #13#10 +
+                     'begin' + #13#10 +
+                     '  WriteLn(''Hello, Scintilla!'');' + #13#10 +
+                     'end.');
+end;
+
+procedure TFormExample.FormDestroy(Sender: TObject);
+begin
+  // O componente será destruído automaticamente
+end;
+
+procedure TFormExample.ConfigureEditor;
+begin
+  with FScintilla do
+  begin
+    // Define o lexer para Pascal
+    SetLexer(SCLEX_PASCAL);
+    
+    // Configura estilo padrão
+    StyleSetFont(STYLE_DEFAULT, 'Consolas');
+    StyleSetSize(STYLE_DEFAULT, 10);
+    StyleSetFore(STYLE_DEFAULT, clBlack);
+    StyleSetBack(STYLE_DEFAULT, clWhite);
+    
+    // Aplica estilo padrão a todos
+    StyleClearAll;
+    
+    // Configura cores para Pascal
+    StyleSetFore(SCE_PAS_DEFAULT, clBlack);
+    StyleSetFore(SCE_PAS_COMMENT, clGreen);
+    StyleSetFore(SCE_PAS_COMMENT2, clGreen);
+    StyleSetFore(SCE_PAS_COMMENTLINE, clGreen);
+    StyleSetFore(SCE_PAS_PREPROCESSOR, clBlue);
+    StyleSetFore(SCE_PAS_PREPROCESSOR2, clBlue);
+    StyleSetFore(SCE_PAS_NUMBER, clMaroon);
+    StyleSetFore(SCE_PAS_HEXNUMBER, clMaroon);
+    StyleSetFore(SCE_PAS_WORD, clNavy);
+    StyleSetBold(SCE_PAS_WORD, True);
+    StyleSetFore(SCE_PAS_STRING, clRed);
+    StyleSetFore(SCE_PAS_STRINGEOL, clRed);
+    StyleSetFore(SCE_PAS_CHARACTER, clRed);
+    StyleSetFore(SCE_PAS_OPERATOR, clBlack);
+    StyleSetFore(SCE_PAS_ASM, clPurple);
+    
+    // Define palavras-chave do Pascal
+    SetKeyWords(0, 'and array as asm begin case class const constructor ' +
+                   'destructor dispinterface div do downto else end except ' +
+                   'exports file finalization finally for function goto if ' +
+                   'implementation in inherited initialization inline interface ' +
+                   'is label library mod nil not object of or out packed ' +
+                   'procedure program property raise record repeat resourcestring ' +
+                   'set shl shr string then threadvar to try type unit until ' +
+                   'uses var while with xor');
+    
+    // Configura margem de números de linha
+    SetMarginTypeN(0, SC_MARGIN_NUMBER);
+    SetMarginWidthN(0, 40);
+    StyleSetFore(STYLE_LINENUMBER, clGray);
+    StyleSetBack(STYLE_LINENUMBER, RGB(240, 240, 240));
+    
+    // Configura margem de folding
+    SetMarginTypeN(1, SC_MARGIN_SYMBOL);
+    SetMarginWidthN(1, 16);
+    SetMarginSensitiveN(1, True);
+    SetMarginMaskN(1, SC_MASK_FOLDERS);
+    
+    // Define marcadores de folding
+    MarkerDefine(SC_MARKNUM_FOLDER, SC_MARK_BOXPLUS);
+    MarkerDefine(SC_MARKNUM_FOLDEROPEN, SC_MARK_BOXMINUS);
+    MarkerDefine(SC_MARKNUM_FOLDEREND, SC_MARK_BOXPLUSCONNECTED);
+    MarkerDefine(SC_MARKNUM_FOLDEROPENMID, SC_MARK_BOXMINUSCONNECTED);
+    MarkerDefine(SC_MARKNUM_FOLDERMIDTAIL, SC_MARK_TCORNER);
+    MarkerDefine(SC_MARKNUM_FOLDERSUB, SC_MARK_VLINE);
+    MarkerDefine(SC_MARKNUM_FOLDERTAIL, SC_MARK_LCORNER);
+    
+    // Cores dos marcadores
+    MarkerSetFore(SC_MARKNUM_FOLDER, clWhite);
+    MarkerSetBack(SC_MARKNUM_FOLDER, clGray);
+    
+    // Ativa folding
+    SetProperty('fold', '1');
+    SetProperty('fold.compact', '0');
+    SetProperty('fold.comment', '1');
+    SetProperty('fold.preprocessor', '1');
+    
+    // Configura tabulação
+    SetTabWidth(2);
+    SetUseTabs(False);
+    SetIndent(2);
+    
+    // Ativa brace matching
+    StyleSetFore(STYLE_BRACELIGHT, clRed);
+    StyleSetBack(STYLE_BRACELIGHT, RGB(255, 255, 224));
+    StyleSetBold(STYLE_BRACELIGHT, True);
+    
+    StyleSetFore(STYLE_BRACEBAD, clRed);
+    StyleSetBack(STYLE_BRACEBAD, clWhite);
+    
+    // Mostra linha do cursor
+    SetCaretLineVisible(True);
+    SetCaretLineBack(RGB(255, 255, 224));
+    
+    // Configura seleção
+    SetSelFore(True, clWhite);
+    SetSelBack(True, clNavy);
+    
+    // Ativa indicadores
+    IndicSetStyle(0, INDIC_SQUIGGLE);
+    IndicSetFore(0, clRed);
+  end;
+end;
+
+end.
+
+// ===== README.md =====
+# Scintilla Delphi Wrapper Generator
+
+Este projeto converte os scripts Python do Scintilla para Delphi, permitindo gerar automaticamente um wrapper Delphi completo a partir do arquivo `Scintilla.iface`.
+
+## Estrutura do Projeto
+
+- `Face.pas` - Parser do arquivo .iface (equivalente ao Face.py)
+- `FileGenerator.pas` - Utilitários para gerar/atualizar arquivos (equivalente ao FileGenerator.py)
+- `HFacer.pas` - Gerador de headers (equivalente ao HFacer.py)
+- `ScintillaAPIFacer.pas` - Gerador principal da API (equivalente ao ScintillaAPIFacer.py)
+- `ScintillaDelphiGenerator.pas` - Gerador específico para Delphi
+
+## Compilação
+
+```bash
+fpc -O3 -Mdelphi ScintillaDelphiGenerator.dpr
+```
+
+Ou use o script build.bat incluído.
+
+## Uso
+
+### Modo Simples (apenas wrapper Delphi):
+```bash
+ScintillaDelphiGenerator.exe Scintilla.iface [DScintilla.pas]
+```
+
+### Modo Completo (como os scripts Python):
+```bash
+ScintillaDelphiGenerator.exe --regenerate-all C:\scintilla
+```
+
+## Características
+
+- **Parser completo do .iface**: Lê e interpreta todas as definições
+- **Geração automática de constantes**: Todas as constantes do Scintilla
+- **Métodos tipados**: Conversão automática de tipos C++ para Delphi
+- **Properties automáticas**: Detecta pares Get/Set e gera properties
+- **Compatível com scripts Python**: Pode gerar os mesmos arquivos que os scripts originais
+
+## Exemplo de Código Gerado
+
+```pascal
+type
+  TScintilla = class(TWinControl)
+  public
+    // Basics
+    procedure AddText(length: Integer; text: PAnsiChar);
+    procedure ClearAll;
+    function GetLength: Integer;
+    function GetCharAt(pos: Integer): Integer;
+    
+  published
+    // Auto-generated properties
+    property Length: Integer read GetLength;
+    property CurrentPos: Integer read GetCurrentPos write SetCurrentPos;
+    property Anchor: Integer read GetAnchor write SetAnchor;
+  end;
+```
+
+## Tipos Mapeados
+
+| C++ Type | Delphi Type |
+|----------|-------------|
+| void | (vazio) |
+| int | Integer |
+| bool | Boolean |
+| position | Integer |
+| line | Integer |
+| colour | TColor |
+| string | PAnsiChar |
+| pointer | Pointer |
+
+## Recursos Gerados
+
+1. **Constantes**: Todas as constantes SCI_, SC_, SCE_, SCEN_
+2. **Mensagens**: Definições de todas as mensagens do Scintilla
+3. **Notificações**: Todos os eventos SCN_
+4. **Métodos**: Funções e procedimentos tipados
+5. **Properties**: Propriedades automáticas para getters/setters
+
+## Vantagens sobre Scripts Python
+
+- **Integrado**: Não precisa de Python instalado
+- **Rápido**: Compilado, executa mais rápido
+- **Customizável**: Fácil adicionar recursos específicos para Delphi
+- **Type-safe**: Validação de tipos em tempo de compilação
