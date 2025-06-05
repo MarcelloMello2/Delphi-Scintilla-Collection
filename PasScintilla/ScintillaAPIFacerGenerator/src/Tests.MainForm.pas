@@ -7,6 +7,16 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Seven.Scintilla.CustomTextEditor;
 
 type
+
+  TCustomSciTextEditor = class(Seven.Scintilla.CustomTextEditor.TCustomSciTextEditor)
+  public
+    constructor Create(AOwner: TComponent); override;
+    property ViewEOL;
+    property ViewWS;
+    property TabDrawMode;
+    property ControlCharSymbol;
+  end;
+
   TForm2 = class(TForm)
     Button1: TButton;
     procedure Button1Click(Sender: TObject);
@@ -34,6 +44,15 @@ begin
   FScintillaTextEditor.AlignWithMargins := True;
   FScintillaTextEditor.Visible := True;
   FScintillaTextEditor.Parent := Self;
+  FScintillaTextEditor.ViewEOL := True;
+  FScintillaTextEditor.ControlCharSymbol := 1;
+end;
+
+{ TCustomSciTextEditor }
+
+constructor TCustomSciTextEditor.Create(AOwner: TComponent);
+begin
+  inherited;
 end;
 
 end.

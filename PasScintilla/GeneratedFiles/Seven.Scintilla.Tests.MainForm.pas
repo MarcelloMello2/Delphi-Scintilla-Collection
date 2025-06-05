@@ -21,8 +21,6 @@ type
     procedure Button1Click(Sender: TObject);
   private
     FScintillaTextEditor: TCustomSciTextEditor;
-  public
-    { Public declarations }
   end;
 
 var
