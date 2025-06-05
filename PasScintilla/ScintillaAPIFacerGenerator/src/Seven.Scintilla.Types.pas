@@ -3,7 +3,7 @@
 {
   Wrapper Pascal para Scintilla
   Gerado automaticamente por ScintillaFacerGenerator.exe
-  Data: 05/06/2025 01:22:15
+  Data: 05/06/2025 01:49:50
 }
 
 {$IFDEF FPC}
@@ -1686,27 +1686,32 @@ const
   SCN_AUTOCSELECTIONCHANGE = 2032;
 
 type
+
   TSciPosition = IntPtr;
   TSciLine = IntPtr;
   TColorAlpha = Cardinal;
   TSciPositionCR = long;
   TSciSurfaceID = Pointer;
 
+  PSciCharacterRange = ^TSciCharacterRange;
   TSciCharacterRange = record
 	  cpMin: TSciPositionCR;
 	  cpMax: TSciPositionCR;
   end;
 
+  PSciCharacterRangeFull = ^TSciCharacterRangeFull;
   TSciCharacterRangeFull = record
 	  cpMin: TSciPosition;
 	  cpMax: TSciPosition;
   end;
 
+  PSciTextRange = ^TSciTextRange;
   TSciTextRange = record
 	  chrg: TSciCharacterRange;
 	  lpstrText: PAnsiChar;
   end;
 
+  PSciTextRangeFull = ^TSciTextRangeFull;
   TSciTextRangeFull = record
 	  chrg: TSciCharacterRangeFull;
 	  lpstrText: PAnsiChar;
@@ -1742,8 +1747,6 @@ type
 	  chrgText: TSciCharacterRangeFull;
   end;
 
-
-  (* This structure is used in printing. Not needed by most client code. *)
 
   PSciRangeToFormat = ^TSciRangeToFormat;
   TSciRangeToFormat = record
@@ -2702,7 +2705,9 @@ type
     ImeResult = 2
   );
 
+  (* This structure is used in printing. Not needed by most client code. *)
 
+  PSciNotificationData = ^TSciNotificationData;
   TSciNotificationData = record
 	  nmhdr: TSciNotifyHeader;
 	  position: TSciPosition;

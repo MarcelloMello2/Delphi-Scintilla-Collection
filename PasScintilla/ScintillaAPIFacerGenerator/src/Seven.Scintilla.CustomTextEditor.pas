@@ -3,7 +3,7 @@
 {
   Wrapper Pascal para Scintilla
   Gerado automaticamente por ScintillaFacerGenerator.exe
-  Data: 05/06/2025 01:22:15
+  Data: 05/06/2025 01:49:50
 }
 
 {$IFDEF FPC}
@@ -47,10 +47,10 @@ type
     /// <param name="ALength">
     /// Position in the document
     /// </param>
-    /// <param name="C">
-    /// The C parameter
+    /// <param name="c">
+    /// The c parameter
     /// </param>
-    procedure AddStyledText(ALength: TSciPosition; C: PAnsiChar);
+    procedure AddStyledText(ALength: TSciPosition; c: PAnsiChar);
     /// <summary>
     /// Insert string at a position.
     /// </summary>
@@ -273,30 +273,30 @@ type
     /// <summary>
     /// Find the position from a point within the window.
     /// </summary>
-    /// <param name="X">
+    /// <param name="x">
     /// Integer value
     /// </param>
-    /// <param name="Y">
+    /// <param name="y">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function PositionFromPoint(X: Integer; Y: Integer): TSciPosition;
+    function PositionFromPoint(x: Integer; y: Integer): TSciPosition;
     /// <summary>
     /// Find the position from a point within the window but return
     /// INVALID_POSITION if not close to text.
     /// </summary>
-    /// <param name="X">
+    /// <param name="x">
     /// Integer value
     /// </param>
-    /// <param name="Y">
+    /// <param name="y">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function PositionFromPointClose(X: Integer; Y: Integer): TSciPosition;
+    function PositionFromPointClose(x: Integer; y: Integer): TSciPosition;
     /// <summary>
     /// Set caret to start of a line and ensure it is visible.
     /// </summary>
@@ -440,23 +440,23 @@ type
     /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="X">
+    /// <param name="x">
     /// Integer value
     /// </param>
-    procedure AddTabStop(ALine: TSciLine; X: Integer);
+    procedure AddTabStop(ALine: TSciLine; x: Integer);
     /// <summary>
     /// Find the next explicit tab stop position on a line after a position.
     /// </summary>
     /// <param name="ALine">
     /// Line number
     /// </param>
-    /// <param name="X">
+    /// <param name="x">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function GetNextTabStop(ALine: TSciLine; X: Integer): Integer;
+    function GetNextTabStop(ALine: TSciLine; x: Integer): Integer;
     /// <summary>
     /// Set the code page used to interpret the bytes of the document as characters.
     /// The SC_CP_UTF8 value can be used to enter Unicode mode.
@@ -2341,7 +2341,7 @@ type
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function FormatRange(ADraw: Boolean; AFr: PSciFormatRange): TSciPosition;
+    function FormatRange(ADraw: Boolean; AFr: PSciRangeToFormat): TSciPosition;
     /// <summary>
     /// Draw the document into a display context such as a printer.
     /// </summary>
@@ -2354,7 +2354,7 @@ type
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function FormatRangeFull(ADraw: Boolean; AFr: PSciFormatRangeFull): TSciPosition;
+    function FormatRangeFull(ADraw: Boolean; AFr: PSciRangeToFormatFull): TSciPosition;
     /// <summary>
     /// Enable or disable change history.
     /// </summary>
@@ -4733,13 +4733,13 @@ type
     /// Returns the target converted to UTF8.
     /// Return the length in bytes.
     /// </summary>
-    /// <param name="S">
+    /// <param name="s">
     /// Buffer to receive the result
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function TargetAsUTF8(S: PAnsiChar): TSciPosition;
+    function TargetAsUTF8(s: PAnsiChar): TSciPosition;
     /// <summary>
     /// Set the length of the utf8 argument for calling EncodedFromUTF8.
     /// Set to -1 and the string will be measured to the first nul.
@@ -5343,30 +5343,30 @@ type
     /// <summary>
     /// Find the position of a character from a point within the window.
     /// </summary>
-    /// <param name="X">
+    /// <param name="x">
     /// Integer value
     /// </param>
-    /// <param name="Y">
+    /// <param name="y">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function CharPositionFromPoint(X: Integer; Y: Integer): TSciPosition;
+    function CharPositionFromPoint(x: Integer; y: Integer): TSciPosition;
     /// <summary>
     /// Find the position of a character from a point within the window.
     /// Return INVALID_POSITION if not close to text.
     /// </summary>
-    /// <param name="X">
+    /// <param name="x">
     /// Integer value
     /// </param>
-    /// <param name="Y">
+    /// <param name="y">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the position in the document
     /// </returns>
-    function CharPositionFromPointClose(X: Integer; Y: Integer): TSciPosition;
+    function CharPositionFromPointClose(x: Integer; y: Integer): TSciPosition;
     /// <summary>
     /// Set whether switching to rectangular mode while selecting with the mouse is allowed.
     /// </summary>
@@ -5478,16 +5478,16 @@ type
     /// <summary>
     /// Find the selection index for a point. -1 when not at a selection.
     /// </summary>
-    /// <param name="X">
+    /// <param name="x">
     /// Integer value
     /// </param>
-    /// <param name="Y">
+    /// <param name="y">
     /// Integer value
     /// </param>
     /// <returns>
     /// Returns the requested value
     /// </returns>
-    function SelectionFromPoint(X: Integer; Y: Integer): Integer;
+    function SelectionFromPoint(x: Integer; y: Integer): Integer;
     /// <summary>
     /// Drop one selection
     /// </summary>
@@ -6725,7 +6725,7 @@ type
     /// <summary>
     /// Get the fore colour for active hotspots.
     /// </summary>
-    property HotspotActiveFore: TColor read GetHotspotActiveFore write SetHotspotActiveFore;
+    property HotspotActiveFore: TColor read GetHotspotActiveFore;// write SetHotspotActiveFore;
     /// <summary>
     /// Retrieve the edge highlight mode.
     /// </summary>
@@ -6965,7 +6965,7 @@ type
     /// <summary>
     /// Get the back colour for active hotspots.
     /// </summary>
-    property HotspotActiveBack: TColor read GetHotspotActiveBack write SetHotspotActiveBack;
+    property HotspotActiveBack: TColor read GetHotspotActiveBack;// write SetHotspotActiveBack;
     /// <summary>
     /// Retrieve the number of characters in the document.
     /// </summary>
@@ -7121,4062 +7121,4062 @@ implementation
 
 procedure TCustomSciTextEditor.AddText(ALength: TSciPosition; AText: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_ADDTEXT, ALength, LPARAM(AText));
+  SendScintillaEditorMessage(SCI_ADDTEXT, WPARAM(ALength), LPARAM(AText));
 end;
 
-procedure TCustomSciTextEditor.AddStyledText(ALength: TSciPosition; C: PAnsiChar);
+procedure TCustomSciTextEditor.AddStyledText(ALength: TSciPosition; c: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_ADDSTYLEDTEXT, ALength, C);
+  SendScintillaEditorMessage(SCI_ADDSTYLEDTEXT, WPARAM(ALength), LPARAM(c));
 end;
 
 procedure TCustomSciTextEditor.InsertText(APos: TSciPosition; AText: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_INSERTTEXT, APos, LPARAM(AText));
+  SendScintillaEditorMessage(SCI_INSERTTEXT, WPARAM(APos), LPARAM(AText));
 end;
 
 procedure TCustomSciTextEditor.ChangeInsertion(ALength: TSciPosition; AText: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_CHANGEINSERTION, ALength, LPARAM(AText));
+  SendScintillaEditorMessage(SCI_CHANGEINSERTION, WPARAM(ALength), LPARAM(AText));
 end;
 
 procedure TCustomSciTextEditor.ClearAll();
 begin
-  SendScintillaEditorMessage(SCI_CLEARALL, 0, 0);
+  SendScintillaEditorMessage(SCI_CLEARALL, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.DeleteRange(AStart: TSciPosition; ALengthDelete: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_DELETERANGE, AStart, ALengthDelete);
+  SendScintillaEditorMessage(SCI_DELETERANGE, WPARAM(AStart), LPARAM(ALengthDelete));
 end;
 
 procedure TCustomSciTextEditor.ClearDocumentStyle();
 begin
-  SendScintillaEditorMessage(SCI_CLEARDOCUMENTSTYLE, 0, 0);
+  SendScintillaEditorMessage(SCI_CLEARDOCUMENTSTYLE, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetLength(): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETLENGTH, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLENGTH, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetCharAt(APos: TSciPosition): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETCHARAT, APos, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCHARAT, WPARAM(APos), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetCurrentPos(): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETCURRENTPOS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCURRENTPOS, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetAnchor(): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETANCHOR, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETANCHOR, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetStyleAt(APos: TSciPosition): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSTYLEAT, APos, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSTYLEAT, WPARAM(APos), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetStyleIndexAt(APos: TSciPosition): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSTYLEINDEXAT, APos, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSTYLEINDEXAT, WPARAM(APos), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.Redo();
 begin
-  SendScintillaEditorMessage(SCI_REDO, 0, 0);
+  SendScintillaEditorMessage(SCI_REDO, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetUndoCollection(ACollectUndo: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETUNDOCOLLECTION, ACollectUndo, 0);
+  SendScintillaEditorMessage(SCI_SETUNDOCOLLECTION, WPARAM(ACollectUndo), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SelectAll();
 begin
-  SendScintillaEditorMessage(SCI_SELECTALL, 0, 0);
+  SendScintillaEditorMessage(SCI_SELECTALL, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetSavePoint();
 begin
-  SendScintillaEditorMessage(SCI_SETSAVEPOINT, 0, 0);
+  SendScintillaEditorMessage(SCI_SETSAVEPOINT, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetStyledText(ATr: PSciTextRange): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSTYLEDTEXT, 0, ATr);
+  Result := SendScintillaEditorMessage(SCI_GETSTYLEDTEXT, WPARAM(0), LPARAM(ATr));
 end;
 
 function TCustomSciTextEditor.GetStyledTextFull(ATr: PSciTextRangeFull): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSTYLEDTEXTFULL, 0, ATr);
+  Result := SendScintillaEditorMessage(SCI_GETSTYLEDTEXTFULL, WPARAM(0), LPARAM(ATr));
 end;
 
 function TCustomSciTextEditor.CanRedo(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_CANREDO, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_CANREDO, WPARAM(0), LPARAM(0)));
 end;
 
 function TCustomSciTextEditor.MarkerLineFromHandle(AMarkerHandle: Integer): TSciLine;
 begin
-  Result := SendScintillaEditorMessage(SCI_MARKERLINEFROMHANDLE, AMarkerHandle, 0);
+  Result := SendScintillaEditorMessage(SCI_MARKERLINEFROMHANDLE, WPARAM(AMarkerHandle), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.MarkerDeleteHandle(AMarkerHandle: Integer);
 begin
-  SendScintillaEditorMessage(SCI_MARKERDELETEHANDLE, AMarkerHandle, 0);
+  SendScintillaEditorMessage(SCI_MARKERDELETEHANDLE, WPARAM(AMarkerHandle), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.MarkerHandleFromLine(ALine: TSciLine; AWhich: Integer): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_MARKERHANDLEFROMLINE, ALine, AWhich);
+  Result := SendScintillaEditorMessage(SCI_MARKERHANDLEFROMLINE, WPARAM(ALine), LPARAM(AWhich));
 end;
 
 function TCustomSciTextEditor.MarkerNumberFromLine(ALine: TSciLine; AWhich: Integer): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_MARKERNUMBERFROMLINE, ALine, AWhich);
+  Result := SendScintillaEditorMessage(SCI_MARKERNUMBERFROMLINE, WPARAM(ALine), LPARAM(AWhich));
 end;
 
 function TCustomSciTextEditor.GetUndoCollection(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETUNDOCOLLECTION, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETUNDOCOLLECTION, WPARAM(0), LPARAM(0)));
 end;
 
 function TCustomSciTextEditor.GetViewWS(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETVIEWWS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETVIEWWS, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetViewWS(AViewWS: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETVIEWWS, AViewWS, 0);
+  SendScintillaEditorMessage(SCI_SETVIEWWS, WPARAM(AViewWS), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetTabDrawMode(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETTABDRAWMODE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETTABDRAWMODE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetTabDrawMode(ATabDrawMode: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETTABDRAWMODE, ATabDrawMode, 0);
+  SendScintillaEditorMessage(SCI_SETTABDRAWMODE, WPARAM(ATabDrawMode), LPARAM(0));
 end;
 
-function TCustomSciTextEditor.PositionFromPoint(X: Integer; Y: Integer): TSciPosition;
+function TCustomSciTextEditor.PositionFromPoint(x: Integer; y: Integer): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_POSITIONFROMPOINT, X, Y);
+  Result := SendScintillaEditorMessage(SCI_POSITIONFROMPOINT, WPARAM(x), LPARAM(y));
 end;
 
-function TCustomSciTextEditor.PositionFromPointClose(X: Integer; Y: Integer): TSciPosition;
+function TCustomSciTextEditor.PositionFromPointClose(x: Integer; y: Integer): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_POSITIONFROMPOINTCLOSE, X, Y);
+  Result := SendScintillaEditorMessage(SCI_POSITIONFROMPOINTCLOSE, WPARAM(x), LPARAM(y));
 end;
 
 procedure TCustomSciTextEditor.GotoLine(ALine: TSciLine);
 begin
-  SendScintillaEditorMessage(SCI_GOTOLINE, ALine, 0);
+  SendScintillaEditorMessage(SCI_GOTOLINE, WPARAM(ALine), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.GotoPos(ACaret: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_GOTOPOS, ACaret, 0);
+  SendScintillaEditorMessage(SCI_GOTOPOS, WPARAM(ACaret), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetAnchor(AAnchor: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_SETANCHOR, AAnchor, 0);
+  SendScintillaEditorMessage(SCI_SETANCHOR, WPARAM(AAnchor), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetCurLine(ALength: TSciPosition; AText: PAnsiChar): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETCURLINE, ALength, LPARAM(AText));
+  Result := SendScintillaEditorMessage(SCI_GETCURLINE, WPARAM(ALength), LPARAM(AText));
 end;
 
 function TCustomSciTextEditor.GetEndStyled(): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETENDSTYLED, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETENDSTYLED, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.ConvertEOLs(AEolMode: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_CONVERTEOLS, AEolMode, 0);
+  SendScintillaEditorMessage(SCI_CONVERTEOLS, WPARAM(AEolMode), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetEOLMode(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETEOLMODE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETEOLMODE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetEOLMode(AEolMode: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETEOLMODE, AEolMode, 0);
+  SendScintillaEditorMessage(SCI_SETEOLMODE, WPARAM(AEolMode), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.StartStyling(AStart: TSciPosition; AUnused: Integer);
 begin
-  SendScintillaEditorMessage(SCI_STARTSTYLING, AStart, AUnused);
+  SendScintillaEditorMessage(SCI_STARTSTYLING, WPARAM(AStart), LPARAM(AUnused));
 end;
 
 procedure TCustomSciTextEditor.SetStyling(ALength: TSciPosition; AStyle: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETSTYLING, ALength, AStyle);
+  SendScintillaEditorMessage(SCI_SETSTYLING, WPARAM(ALength), LPARAM(AStyle));
 end;
 
 function TCustomSciTextEditor.GetBufferedDraw(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETBUFFEREDDRAW, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETBUFFEREDDRAW, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.SetBufferedDraw(ABuffered: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETBUFFEREDDRAW, ABuffered, 0);
+  SendScintillaEditorMessage(SCI_SETBUFFEREDDRAW, WPARAM(ABuffered), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetTabWidth(ATabWidth: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETTABWIDTH, ATabWidth, 0);
+  SendScintillaEditorMessage(SCI_SETTABWIDTH, WPARAM(ATabWidth), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetTabWidth(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETTABWIDTH, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETTABWIDTH, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetTabMinimumWidth(APixels: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETTABMINIMUMWIDTH, APixels, 0);
+  SendScintillaEditorMessage(SCI_SETTABMINIMUMWIDTH, WPARAM(APixels), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetTabMinimumWidth(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETTABMINIMUMWIDTH, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETTABMINIMUMWIDTH, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.ClearTabStops(ALine: TSciLine);
 begin
-  SendScintillaEditorMessage(SCI_CLEARTABSTOPS, ALine, 0);
+  SendScintillaEditorMessage(SCI_CLEARTABSTOPS, WPARAM(ALine), LPARAM(0));
 end;
 
-procedure TCustomSciTextEditor.AddTabStop(ALine: TSciLine; X: Integer);
+procedure TCustomSciTextEditor.AddTabStop(ALine: TSciLine; x: Integer);
 begin
-  SendScintillaEditorMessage(SCI_ADDTABSTOP, ALine, X);
+  SendScintillaEditorMessage(SCI_ADDTABSTOP, WPARAM(ALine), LPARAM(x));
 end;
 
-function TCustomSciTextEditor.GetNextTabStop(ALine: TSciLine; X: Integer): Integer;
+function TCustomSciTextEditor.GetNextTabStop(ALine: TSciLine; x: Integer): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETNEXTTABSTOP, ALine, X);
+  Result := SendScintillaEditorMessage(SCI_GETNEXTTABSTOP, WPARAM(ALine), LPARAM(x));
 end;
 
 procedure TCustomSciTextEditor.SetCodePage(ACodePage: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETCODEPAGE, ACodePage, 0);
+  SendScintillaEditorMessage(SCI_SETCODEPAGE, WPARAM(ACodePage), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetFontLocale(ALocaleName: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_SETFONTLOCALE, 0, LPARAM(ALocaleName));
+  SendScintillaEditorMessage(SCI_SETFONTLOCALE, WPARAM(0), LPARAM(ALocaleName));
 end;
 
 function TCustomSciTextEditor.GetFontLocale(ALocaleName: PAnsiChar): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETFONTLOCALE, 0, LPARAM(ALocaleName));
+  Result := SendScintillaEditorMessage(SCI_GETFONTLOCALE, WPARAM(0), LPARAM(ALocaleName));
 end;
 
 function TCustomSciTextEditor.GetIMEInteraction(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETIMEINTERACTION, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETIMEINTERACTION, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetIMEInteraction(AImeInteraction: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETIMEINTERACTION, AImeInteraction, 0);
+  SendScintillaEditorMessage(SCI_SETIMEINTERACTION, WPARAM(AImeInteraction), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.MarkerDefine(AMarkerNumber: Integer; AMarkerSymbol: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_MARKERDEFINE, AMarkerNumber, AMarkerSymbol);
+  SendScintillaEditorMessage(SCI_MARKERDEFINE, WPARAM(AMarkerNumber), LPARAM(AMarkerSymbol));
 end;
 
 procedure TCustomSciTextEditor.MarkerSetFore(AMarkerNumber: Integer; AFore: TColor);
 begin
-  SendScintillaEditorMessage(SCI_MARKERSETFORE, AMarkerNumber, AFore);
+  SendScintillaEditorMessage(SCI_MARKERSETFORE, WPARAM(AMarkerNumber), LPARAM(AFore));
 end;
 
 procedure TCustomSciTextEditor.MarkerSetBack(AMarkerNumber: Integer; ABack: TColor);
 begin
-  SendScintillaEditorMessage(SCI_MARKERSETBACK, AMarkerNumber, ABack);
+  SendScintillaEditorMessage(SCI_MARKERSETBACK, WPARAM(AMarkerNumber), LPARAM(ABack));
 end;
 
 procedure TCustomSciTextEditor.MarkerSetBackSelected(AMarkerNumber: Integer; ABack: TColor);
 begin
-  SendScintillaEditorMessage(SCI_MARKERSETBACKSELECTED, AMarkerNumber, ABack);
+  SendScintillaEditorMessage(SCI_MARKERSETBACKSELECTED, WPARAM(AMarkerNumber), LPARAM(ABack));
 end;
 
 procedure TCustomSciTextEditor.MarkerSetForeTranslucent(AMarkerNumber: Integer; AFore: TColorAlpha);
 begin
-  SendScintillaEditorMessage(SCI_MARKERSETFORETRANSLUCENT, AMarkerNumber, AFore);
+  SendScintillaEditorMessage(SCI_MARKERSETFORETRANSLUCENT, WPARAM(AMarkerNumber), LPARAM(AFore));
 end;
 
 procedure TCustomSciTextEditor.MarkerSetBackTranslucent(AMarkerNumber: Integer; ABack: TColorAlpha);
 begin
-  SendScintillaEditorMessage(SCI_MARKERSETBACKTRANSLUCENT, AMarkerNumber, ABack);
+  SendScintillaEditorMessage(SCI_MARKERSETBACKTRANSLUCENT, WPARAM(AMarkerNumber), LPARAM(ABack));
 end;
 
 procedure TCustomSciTextEditor.MarkerSetBackSelectedTranslucent(AMarkerNumber: Integer; ABack: TColorAlpha);
 begin
-  SendScintillaEditorMessage(SCI_MARKERSETBACKSELECTEDTRANSLUCENT, AMarkerNumber, ABack);
+  SendScintillaEditorMessage(SCI_MARKERSETBACKSELECTEDTRANSLUCENT, WPARAM(AMarkerNumber), LPARAM(ABack));
 end;
 
 procedure TCustomSciTextEditor.MarkerSetStrokeWidth(AMarkerNumber: Integer; AHundredths: Integer);
 begin
-  SendScintillaEditorMessage(SCI_MARKERSETSTROKEWIDTH, AMarkerNumber, AHundredths);
+  SendScintillaEditorMessage(SCI_MARKERSETSTROKEWIDTH, WPARAM(AMarkerNumber), LPARAM(AHundredths));
 end;
 
 procedure TCustomSciTextEditor.MarkerEnableHighlight(AEnabled: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_MARKERENABLEHIGHLIGHT, AEnabled, 0);
+  SendScintillaEditorMessage(SCI_MARKERENABLEHIGHLIGHT, WPARAM(AEnabled), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.MarkerAdd(ALine: TSciLine; AMarkerNumber: Integer): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_MARKERADD, ALine, AMarkerNumber);
+  Result := SendScintillaEditorMessage(SCI_MARKERADD, WPARAM(ALine), LPARAM(AMarkerNumber));
 end;
 
 procedure TCustomSciTextEditor.MarkerDelete(ALine: TSciLine; AMarkerNumber: Integer);
 begin
-  SendScintillaEditorMessage(SCI_MARKERDELETE, ALine, AMarkerNumber);
+  SendScintillaEditorMessage(SCI_MARKERDELETE, WPARAM(ALine), LPARAM(AMarkerNumber));
 end;
 
 procedure TCustomSciTextEditor.MarkerDeleteAll(AMarkerNumber: Integer);
 begin
-  SendScintillaEditorMessage(SCI_MARKERDELETEALL, AMarkerNumber, 0);
+  SendScintillaEditorMessage(SCI_MARKERDELETEALL, WPARAM(AMarkerNumber), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.MarkerGet(ALine: TSciLine): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_MARKERGET, ALine, 0);
+  Result := SendScintillaEditorMessage(SCI_MARKERGET, WPARAM(ALine), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.MarkerNext(ALineStart: TSciLine; AMarkerMask: Integer): TSciLine;
 begin
-  Result := SendScintillaEditorMessage(SCI_MARKERNEXT, ALineStart, AMarkerMask);
+  Result := SendScintillaEditorMessage(SCI_MARKERNEXT, WPARAM(ALineStart), LPARAM(AMarkerMask));
 end;
 
 function TCustomSciTextEditor.MarkerPrevious(ALineStart: TSciLine; AMarkerMask: Integer): TSciLine;
 begin
-  Result := SendScintillaEditorMessage(SCI_MARKERPREVIOUS, ALineStart, AMarkerMask);
+  Result := SendScintillaEditorMessage(SCI_MARKERPREVIOUS, WPARAM(ALineStart), LPARAM(AMarkerMask));
 end;
 
 procedure TCustomSciTextEditor.MarkerDefinePixmap(AMarkerNumber: Integer; APixmap: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_MARKERDEFINEPIXMAP, AMarkerNumber, LPARAM(APixmap));
+  SendScintillaEditorMessage(SCI_MARKERDEFINEPIXMAP, WPARAM(AMarkerNumber), LPARAM(APixmap));
 end;
 
 procedure TCustomSciTextEditor.MarkerAddSet(ALine: TSciLine; AMarkerSet: Integer);
 begin
-  SendScintillaEditorMessage(SCI_MARKERADDSET, ALine, AMarkerSet);
+  SendScintillaEditorMessage(SCI_MARKERADDSET, WPARAM(ALine), LPARAM(AMarkerSet));
 end;
 
 procedure TCustomSciTextEditor.MarkerSetAlpha(AMarkerNumber: Integer; AAlpha: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_MARKERSETALPHA, AMarkerNumber, AAlpha);
+  SendScintillaEditorMessage(SCI_MARKERSETALPHA, WPARAM(AMarkerNumber), LPARAM(AAlpha));
 end;
 
 function TCustomSciTextEditor.MarkerGetLayer(AMarkerNumber: Integer): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_MARKERGETLAYER, AMarkerNumber, 0);
+  Result := SendScintillaEditorMessage(SCI_MARKERGETLAYER, WPARAM(AMarkerNumber), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.MarkerSetLayer(AMarkerNumber: Integer; ALayer: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_MARKERSETLAYER, AMarkerNumber, ALayer);
+  SendScintillaEditorMessage(SCI_MARKERSETLAYER, WPARAM(AMarkerNumber), LPARAM(ALayer));
 end;
 
 procedure TCustomSciTextEditor.SetMarginTypeN(AMargin: Integer; AMarginType: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETMARGINTYPEN, AMargin, AMarginType);
+  SendScintillaEditorMessage(SCI_SETMARGINTYPEN, WPARAM(AMargin), LPARAM(AMarginType));
 end;
 
 function TCustomSciTextEditor.GetMarginTypeN(AMargin: Integer): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETMARGINTYPEN, AMargin, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMARGINTYPEN, WPARAM(AMargin), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetMarginWidthN(AMargin: Integer; APixelWidth: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETMARGINWIDTHN, AMargin, APixelWidth);
+  SendScintillaEditorMessage(SCI_SETMARGINWIDTHN, WPARAM(AMargin), LPARAM(APixelWidth));
 end;
 
 function TCustomSciTextEditor.GetMarginWidthN(AMargin: Integer): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETMARGINWIDTHN, AMargin, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMARGINWIDTHN, WPARAM(AMargin), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetMarginMaskN(AMargin: Integer; AMask: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETMARGINMASKN, AMargin, AMask);
+  SendScintillaEditorMessage(SCI_SETMARGINMASKN, WPARAM(AMargin), LPARAM(AMask));
 end;
 
 function TCustomSciTextEditor.GetMarginMaskN(AMargin: Integer): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETMARGINMASKN, AMargin, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMARGINMASKN, WPARAM(AMargin), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetMarginSensitiveN(AMargin: Integer; ASensitive: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETMARGINSENSITIVEN, AMargin, ASensitive);
+  SendScintillaEditorMessage(SCI_SETMARGINSENSITIVEN, WPARAM(AMargin), LPARAM(ASensitive));
 end;
 
 function TCustomSciTextEditor.GetMarginSensitiveN(AMargin: Integer): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETMARGINSENSITIVEN, AMargin, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETMARGINSENSITIVEN, WPARAM(AMargin), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.SetMarginCursorN(AMargin: Integer; ACursor: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETMARGINCURSORN, AMargin, ACursor);
+  SendScintillaEditorMessage(SCI_SETMARGINCURSORN, WPARAM(AMargin), LPARAM(ACursor));
 end;
 
 function TCustomSciTextEditor.GetMarginCursorN(AMargin: Integer): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETMARGINCURSORN, AMargin, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMARGINCURSORN, WPARAM(AMargin), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetMarginBackN(AMargin: Integer; ABack: TColor);
 begin
-  SendScintillaEditorMessage(SCI_SETMARGINBACKN, AMargin, ABack);
+  SendScintillaEditorMessage(SCI_SETMARGINBACKN, WPARAM(AMargin), LPARAM(ABack));
 end;
 
 function TCustomSciTextEditor.GetMarginBackN(AMargin: Integer): TColor;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETMARGINBACKN, AMargin, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMARGINBACKN, WPARAM(AMargin), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetMargins(AMargins: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETMARGINS, AMargins, 0);
+  SendScintillaEditorMessage(SCI_SETMARGINS, WPARAM(AMargins), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetMargins(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETMARGINS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMARGINS, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.StyleClearAll();
 begin
-  SendScintillaEditorMessage(SCI_STYLECLEARALL, 0, 0);
+  SendScintillaEditorMessage(SCI_STYLECLEARALL, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.StyleSetFore(AStyle: Integer; AFore: TColor);
 begin
-  SendScintillaEditorMessage(SCI_STYLESETFORE, AStyle, AFore);
+  SendScintillaEditorMessage(SCI_STYLESETFORE, WPARAM(AStyle), LPARAM(AFore));
 end;
 
 procedure TCustomSciTextEditor.StyleSetBack(AStyle: Integer; ABack: TColor);
 begin
-  SendScintillaEditorMessage(SCI_STYLESETBACK, AStyle, ABack);
+  SendScintillaEditorMessage(SCI_STYLESETBACK, WPARAM(AStyle), LPARAM(ABack));
 end;
 
 procedure TCustomSciTextEditor.StyleSetBold(AStyle: Integer; ABold: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_STYLESETBOLD, AStyle, ABold);
+  SendScintillaEditorMessage(SCI_STYLESETBOLD, WPARAM(AStyle), LPARAM(ABold));
 end;
 
 procedure TCustomSciTextEditor.StyleSetItalic(AStyle: Integer; AItalic: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_STYLESETITALIC, AStyle, AItalic);
+  SendScintillaEditorMessage(SCI_STYLESETITALIC, WPARAM(AStyle), LPARAM(AItalic));
 end;
 
 procedure TCustomSciTextEditor.StyleSetSize(AStyle: Integer; ASizePoints: Integer);
 begin
-  SendScintillaEditorMessage(SCI_STYLESETSIZE, AStyle, ASizePoints);
+  SendScintillaEditorMessage(SCI_STYLESETSIZE, WPARAM(AStyle), LPARAM(ASizePoints));
 end;
 
 procedure TCustomSciTextEditor.StyleSetFont(AStyle: Integer; AFontName: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_STYLESETFONT, AStyle, LPARAM(AFontName));
+  SendScintillaEditorMessage(SCI_STYLESETFONT, WPARAM(AStyle), LPARAM(AFontName));
 end;
 
 procedure TCustomSciTextEditor.StyleSetEOLFilled(AStyle: Integer; AEolFilled: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_STYLESETEOLFILLED, AStyle, AEolFilled);
+  SendScintillaEditorMessage(SCI_STYLESETEOLFILLED, WPARAM(AStyle), LPARAM(AEolFilled));
 end;
 
 procedure TCustomSciTextEditor.StyleResetDefault();
 begin
-  SendScintillaEditorMessage(SCI_STYLERESETDEFAULT, 0, 0);
+  SendScintillaEditorMessage(SCI_STYLERESETDEFAULT, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.StyleSetUnderline(AStyle: Integer; AUnderline: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_STYLESETUNDERLINE, AStyle, AUnderline);
+  SendScintillaEditorMessage(SCI_STYLESETUNDERLINE, WPARAM(AStyle), LPARAM(AUnderline));
 end;
 
 function TCustomSciTextEditor.StyleGetFore(AStyle: Integer): TColor;
 begin
-  Result := SendScintillaEditorMessage(SCI_STYLEGETFORE, AStyle, 0);
+  Result := SendScintillaEditorMessage(SCI_STYLEGETFORE, WPARAM(AStyle), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.StyleGetBack(AStyle: Integer): TColor;
 begin
-  Result := SendScintillaEditorMessage(SCI_STYLEGETBACK, AStyle, 0);
+  Result := SendScintillaEditorMessage(SCI_STYLEGETBACK, WPARAM(AStyle), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.StyleGetBold(AStyle: Integer): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_STYLEGETBOLD, AStyle, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_STYLEGETBOLD, WPARAM(AStyle), LPARAM(0)));
 end;
 
 function TCustomSciTextEditor.StyleGetItalic(AStyle: Integer): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_STYLEGETITALIC, AStyle, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_STYLEGETITALIC, WPARAM(AStyle), LPARAM(0)));
 end;
 
 function TCustomSciTextEditor.StyleGetSize(AStyle: Integer): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_STYLEGETSIZE, AStyle, 0);
+  Result := SendScintillaEditorMessage(SCI_STYLEGETSIZE, WPARAM(AStyle), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.StyleGetFont(AStyle: Integer; AFontName: PAnsiChar): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_STYLEGETFONT, AStyle, LPARAM(AFontName));
+  Result := SendScintillaEditorMessage(SCI_STYLEGETFONT, WPARAM(AStyle), LPARAM(AFontName));
 end;
 
 function TCustomSciTextEditor.StyleGetEOLFilled(AStyle: Integer): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_STYLEGETEOLFILLED, AStyle, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_STYLEGETEOLFILLED, WPARAM(AStyle), LPARAM(0)));
 end;
 
 function TCustomSciTextEditor.StyleGetUnderline(AStyle: Integer): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_STYLEGETUNDERLINE, AStyle, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_STYLEGETUNDERLINE, WPARAM(AStyle), LPARAM(0)));
 end;
 
 function TCustomSciTextEditor.StyleGetCase(AStyle: Integer): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_STYLEGETCASE, AStyle, 0);
+  Result := SendScintillaEditorMessage(SCI_STYLEGETCASE, WPARAM(AStyle), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.StyleGetCharacterSet(AStyle: Integer): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_STYLEGETCHARACTERSET, AStyle, 0);
+  Result := SendScintillaEditorMessage(SCI_STYLEGETCHARACTERSET, WPARAM(AStyle), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.StyleGetVisible(AStyle: Integer): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_STYLEGETVISIBLE, AStyle, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_STYLEGETVISIBLE, WPARAM(AStyle), LPARAM(0)));
 end;
 
 function TCustomSciTextEditor.StyleGetChangeable(AStyle: Integer): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_STYLEGETCHANGEABLE, AStyle, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_STYLEGETCHANGEABLE, WPARAM(AStyle), LPARAM(0)));
 end;
 
 function TCustomSciTextEditor.StyleGetHotSpot(AStyle: Integer): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_STYLEGETHOTSPOT, AStyle, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_STYLEGETHOTSPOT, WPARAM(AStyle), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.StyleSetCase(AStyle: Integer; ACaseVisible: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_STYLESETCASE, AStyle, ACaseVisible);
+  SendScintillaEditorMessage(SCI_STYLESETCASE, WPARAM(AStyle), LPARAM(ACaseVisible));
 end;
 
 procedure TCustomSciTextEditor.StyleSetSizeFractional(AStyle: Integer; ASizeHundredthPoints: Integer);
 begin
-  SendScintillaEditorMessage(SCI_STYLESETSIZEFRACTIONAL, AStyle, ASizeHundredthPoints);
+  SendScintillaEditorMessage(SCI_STYLESETSIZEFRACTIONAL, WPARAM(AStyle), LPARAM(ASizeHundredthPoints));
 end;
 
 function TCustomSciTextEditor.StyleGetSizeFractional(AStyle: Integer): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_STYLEGETSIZEFRACTIONAL, AStyle, 0);
+  Result := SendScintillaEditorMessage(SCI_STYLEGETSIZEFRACTIONAL, WPARAM(AStyle), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.StyleSetWeight(AStyle: Integer; AWeight: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_STYLESETWEIGHT, AStyle, AWeight);
+  SendScintillaEditorMessage(SCI_STYLESETWEIGHT, WPARAM(AStyle), LPARAM(AWeight));
 end;
 
 function TCustomSciTextEditor.StyleGetWeight(AStyle: Integer): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_STYLEGETWEIGHT, AStyle, 0);
+  Result := SendScintillaEditorMessage(SCI_STYLEGETWEIGHT, WPARAM(AStyle), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.StyleSetCharacterSet(AStyle: Integer; ACharacterSet: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_STYLESETCHARACTERSET, AStyle, ACharacterSet);
+  SendScintillaEditorMessage(SCI_STYLESETCHARACTERSET, WPARAM(AStyle), LPARAM(ACharacterSet));
 end;
 
 procedure TCustomSciTextEditor.StyleSetHotSpot(AStyle: Integer; AHotspot: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_STYLESETHOTSPOT, AStyle, AHotspot);
+  SendScintillaEditorMessage(SCI_STYLESETHOTSPOT, WPARAM(AStyle), LPARAM(AHotspot));
 end;
 
 procedure TCustomSciTextEditor.StyleSetCheckMonospaced(AStyle: Integer; ACheckMonospaced: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_STYLESETCHECKMONOSPACED, AStyle, ACheckMonospaced);
+  SendScintillaEditorMessage(SCI_STYLESETCHECKMONOSPACED, WPARAM(AStyle), LPARAM(ACheckMonospaced));
 end;
 
 function TCustomSciTextEditor.StyleGetCheckMonospaced(AStyle: Integer): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_STYLEGETCHECKMONOSPACED, AStyle, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_STYLEGETCHECKMONOSPACED, WPARAM(AStyle), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.StyleSetStretch(AStyle: Integer; AStretch: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_STYLESETSTRETCH, AStyle, AStretch);
+  SendScintillaEditorMessage(SCI_STYLESETSTRETCH, WPARAM(AStyle), LPARAM(AStretch));
 end;
 
 function TCustomSciTextEditor.StyleGetStretch(AStyle: Integer): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_STYLEGETSTRETCH, AStyle, 0);
+  Result := SendScintillaEditorMessage(SCI_STYLEGETSTRETCH, WPARAM(AStyle), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.StyleSetInvisibleRepresentation(AStyle: Integer; ARepresentation: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_STYLESETINVISIBLEREPRESENTATION, AStyle, LPARAM(ARepresentation));
+  SendScintillaEditorMessage(SCI_STYLESETINVISIBLEREPRESENTATION, WPARAM(AStyle), LPARAM(ARepresentation));
 end;
 
 function TCustomSciTextEditor.StyleGetInvisibleRepresentation(AStyle: Integer; ARepresentation: PAnsiChar): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_STYLEGETINVISIBLEREPRESENTATION, AStyle, LPARAM(ARepresentation));
+  Result := SendScintillaEditorMessage(SCI_STYLEGETINVISIBLEREPRESENTATION, WPARAM(AStyle), LPARAM(ARepresentation));
 end;
 
 procedure TCustomSciTextEditor.SetElementColour(AElement: NativeInt; AColourElement: TColorAlpha);
 begin
-  SendScintillaEditorMessage(SCI_SETELEMENTCOLOUR, AElement, AColourElement);
+  SendScintillaEditorMessage(SCI_SETELEMENTCOLOUR, WPARAM(AElement), LPARAM(AColourElement));
 end;
 
 function TCustomSciTextEditor.GetElementColour(AElement: NativeInt): TColorAlpha;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETELEMENTCOLOUR, AElement, 0);
+  Result := SendScintillaEditorMessage(SCI_GETELEMENTCOLOUR, WPARAM(AElement), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.ResetElementColour(AElement: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_RESETELEMENTCOLOUR, AElement, 0);
+  SendScintillaEditorMessage(SCI_RESETELEMENTCOLOUR, WPARAM(AElement), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetElementIsSet(AElement: NativeInt): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETELEMENTISSET, AElement, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETELEMENTISSET, WPARAM(AElement), LPARAM(0)));
 end;
 
 function TCustomSciTextEditor.GetElementAllowsTranslucent(AElement: NativeInt): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETELEMENTALLOWSTRANSLUCENT, AElement, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETELEMENTALLOWSTRANSLUCENT, WPARAM(AElement), LPARAM(0)));
 end;
 
 function TCustomSciTextEditor.GetElementBaseColour(AElement: NativeInt): TColorAlpha;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETELEMENTBASECOLOUR, AElement, 0);
+  Result := SendScintillaEditorMessage(SCI_GETELEMENTBASECOLOUR, WPARAM(AElement), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetSelFore(AUseSetting: Boolean; AFore: TColor);
 begin
-  SendScintillaEditorMessage(SCI_SETSELFORE, AUseSetting, AFore);
+  SendScintillaEditorMessage(SCI_SETSELFORE, WPARAM(AUseSetting), LPARAM(AFore));
 end;
 
 procedure TCustomSciTextEditor.SetSelBack(AUseSetting: Boolean; ABack: TColor);
 begin
-  SendScintillaEditorMessage(SCI_SETSELBACK, AUseSetting, ABack);
+  SendScintillaEditorMessage(SCI_SETSELBACK, WPARAM(AUseSetting), LPARAM(ABack));
 end;
 
 function TCustomSciTextEditor.GetSelAlpha(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSELALPHA, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELALPHA, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetSelAlpha(AAlpha: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETSELALPHA, AAlpha, 0);
+  SendScintillaEditorMessage(SCI_SETSELALPHA, WPARAM(AAlpha), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetSelEOLFilled(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSELEOLFILLED, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETSELEOLFILLED, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.SetSelEOLFilled(AFilled: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETSELEOLFILLED, AFilled, 0);
+  SendScintillaEditorMessage(SCI_SETSELEOLFILLED, WPARAM(AFilled), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetSelectionLayer(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSELECTIONLAYER, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELECTIONLAYER, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetSelectionLayer(ALayer: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETSELECTIONLAYER, ALayer, 0);
+  SendScintillaEditorMessage(SCI_SETSELECTIONLAYER, WPARAM(ALayer), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetCaretLineLayer(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETCARETLINELAYER, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCARETLINELAYER, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetCaretLineLayer(ALayer: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETCARETLINELAYER, ALayer, 0);
+  SendScintillaEditorMessage(SCI_SETCARETLINELAYER, WPARAM(ALayer), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetCaretLineHighlightSubLine(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETCARETLINEHIGHLIGHTSUBLINE, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETCARETLINEHIGHLIGHTSUBLINE, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.SetCaretLineHighlightSubLine(ASubLine: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETCARETLINEHIGHLIGHTSUBLINE, ASubLine, 0);
+  SendScintillaEditorMessage(SCI_SETCARETLINEHIGHLIGHTSUBLINE, WPARAM(ASubLine), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetCaretFore(AFore: TColor);
 begin
-  SendScintillaEditorMessage(SCI_SETCARETFORE, AFore, 0);
+  SendScintillaEditorMessage(SCI_SETCARETFORE, WPARAM(AFore), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.AssignCmdKey(AKeyDefinition: TSciKeyModifies; ASciCommand: Integer);
 begin
-  SendScintillaEditorMessage(SCI_ASSIGNCMDKEY, AKeyDefinition, ASciCommand);
+  SendScintillaEditorMessage(SCI_ASSIGNCMDKEY, WPARAM(AKeyDefinition), LPARAM(ASciCommand));
 end;
 
 procedure TCustomSciTextEditor.ClearCmdKey(AKeyDefinition: TSciKeyModifies);
 begin
-  SendScintillaEditorMessage(SCI_CLEARCMDKEY, AKeyDefinition, 0);
+  SendScintillaEditorMessage(SCI_CLEARCMDKEY, WPARAM(AKeyDefinition), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.ClearAllCmdKeys();
 begin
-  SendScintillaEditorMessage(SCI_CLEARALLCMDKEYS, 0, 0);
+  SendScintillaEditorMessage(SCI_CLEARALLCMDKEYS, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetStylingEx(ALength: TSciPosition; AStyles: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_SETSTYLINGEX, ALength, LPARAM(AStyles));
+  SendScintillaEditorMessage(SCI_SETSTYLINGEX, WPARAM(ALength), LPARAM(AStyles));
 end;
 
 procedure TCustomSciTextEditor.StyleSetVisible(AStyle: Integer; AVisible: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_STYLESETVISIBLE, AStyle, AVisible);
+  SendScintillaEditorMessage(SCI_STYLESETVISIBLE, WPARAM(AStyle), LPARAM(AVisible));
 end;
 
 function TCustomSciTextEditor.GetCaretPeriod(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETCARETPERIOD, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCARETPERIOD, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetCaretPeriod(APeriodMilliseconds: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETCARETPERIOD, APeriodMilliseconds, 0);
+  SendScintillaEditorMessage(SCI_SETCARETPERIOD, WPARAM(APeriodMilliseconds), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetWordChars(ACharacters: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_SETWORDCHARS, 0, LPARAM(ACharacters));
+  SendScintillaEditorMessage(SCI_SETWORDCHARS, WPARAM(0), LPARAM(ACharacters));
 end;
 
 function TCustomSciTextEditor.GetWordChars(ACharacters: PAnsiChar): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETWORDCHARS, 0, LPARAM(ACharacters));
+  Result := SendScintillaEditorMessage(SCI_GETWORDCHARS, WPARAM(0), LPARAM(ACharacters));
 end;
 
 procedure TCustomSciTextEditor.SetCharacterCategoryOptimization(ACountCharacters: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETCHARACTERCATEGORYOPTIMIZATION, ACountCharacters, 0);
+  SendScintillaEditorMessage(SCI_SETCHARACTERCATEGORYOPTIMIZATION, WPARAM(ACountCharacters), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetCharacterCategoryOptimization(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETCHARACTERCATEGORYOPTIMIZATION, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCHARACTERCATEGORYOPTIMIZATION, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.BeginUndoAction();
 begin
-  SendScintillaEditorMessage(SCI_BEGINUNDOACTION, 0, 0);
+  SendScintillaEditorMessage(SCI_BEGINUNDOACTION, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.EndUndoAction();
 begin
-  SendScintillaEditorMessage(SCI_ENDUNDOACTION, 0, 0);
+  SendScintillaEditorMessage(SCI_ENDUNDOACTION, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetUndoSequence(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETUNDOSEQUENCE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETUNDOSEQUENCE, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetUndoActions(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETUNDOACTIONS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETUNDOACTIONS, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetUndoSavePoint(AAction: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETUNDOSAVEPOINT, AAction, 0);
+  SendScintillaEditorMessage(SCI_SETUNDOSAVEPOINT, WPARAM(AAction), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetUndoSavePoint(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETUNDOSAVEPOINT, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETUNDOSAVEPOINT, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetUndoDetach(AAction: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETUNDODETACH, AAction, 0);
+  SendScintillaEditorMessage(SCI_SETUNDODETACH, WPARAM(AAction), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetUndoDetach(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETUNDODETACH, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETUNDODETACH, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetUndoTentative(AAction: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETUNDOTENTATIVE, AAction, 0);
+  SendScintillaEditorMessage(SCI_SETUNDOTENTATIVE, WPARAM(AAction), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetUndoTentative(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETUNDOTENTATIVE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETUNDOTENTATIVE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetUndoCurrent(AAction: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETUNDOCURRENT, AAction, 0);
+  SendScintillaEditorMessage(SCI_SETUNDOCURRENT, WPARAM(AAction), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetUndoCurrent(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETUNDOCURRENT, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETUNDOCURRENT, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.PushUndoActionType(AType: Integer; APos: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_PUSHUNDOACTIONTYPE, AType, APos);
+  SendScintillaEditorMessage(SCI_PUSHUNDOACTIONTYPE, WPARAM(AType), LPARAM(APos));
 end;
 
 procedure TCustomSciTextEditor.ChangeLastUndoActionText(ALength: TSciPosition; AText: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_CHANGELASTUNDOACTIONTEXT, ALength, LPARAM(AText));
+  SendScintillaEditorMessage(SCI_CHANGELASTUNDOACTIONTEXT, WPARAM(ALength), LPARAM(AText));
 end;
 
 function TCustomSciTextEditor.GetUndoActionType(AAction: Integer): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETUNDOACTIONTYPE, AAction, 0);
+  Result := SendScintillaEditorMessage(SCI_GETUNDOACTIONTYPE, WPARAM(AAction), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetUndoActionPosition(AAction: Integer): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETUNDOACTIONPOSITION, AAction, 0);
+  Result := SendScintillaEditorMessage(SCI_GETUNDOACTIONPOSITION, WPARAM(AAction), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetUndoActionText(AAction: Integer; AText: PAnsiChar): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETUNDOACTIONTEXT, AAction, LPARAM(AText));
+  Result := SendScintillaEditorMessage(SCI_GETUNDOACTIONTEXT, WPARAM(AAction), LPARAM(AText));
 end;
 
 procedure TCustomSciTextEditor.IndicSetStyle(AIndicator: Integer; AIndicatorStyle: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_INDICSETSTYLE, AIndicator, AIndicatorStyle);
+  SendScintillaEditorMessage(SCI_INDICSETSTYLE, WPARAM(AIndicator), LPARAM(AIndicatorStyle));
 end;
 
 function TCustomSciTextEditor.IndicGetStyle(AIndicator: Integer): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_INDICGETSTYLE, AIndicator, 0);
+  Result := SendScintillaEditorMessage(SCI_INDICGETSTYLE, WPARAM(AIndicator), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.IndicSetFore(AIndicator: Integer; AFore: TColor);
 begin
-  SendScintillaEditorMessage(SCI_INDICSETFORE, AIndicator, AFore);
+  SendScintillaEditorMessage(SCI_INDICSETFORE, WPARAM(AIndicator), LPARAM(AFore));
 end;
 
 function TCustomSciTextEditor.IndicGetFore(AIndicator: Integer): TColor;
 begin
-  Result := SendScintillaEditorMessage(SCI_INDICGETFORE, AIndicator, 0);
+  Result := SendScintillaEditorMessage(SCI_INDICGETFORE, WPARAM(AIndicator), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.IndicSetUnder(AIndicator: Integer; AUnder: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_INDICSETUNDER, AIndicator, AUnder);
+  SendScintillaEditorMessage(SCI_INDICSETUNDER, WPARAM(AIndicator), LPARAM(AUnder));
 end;
 
 function TCustomSciTextEditor.IndicGetUnder(AIndicator: Integer): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_INDICGETUNDER, AIndicator, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_INDICGETUNDER, WPARAM(AIndicator), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.IndicSetHoverStyle(AIndicator: Integer; AIndicatorStyle: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_INDICSETHOVERSTYLE, AIndicator, AIndicatorStyle);
+  SendScintillaEditorMessage(SCI_INDICSETHOVERSTYLE, WPARAM(AIndicator), LPARAM(AIndicatorStyle));
 end;
 
 function TCustomSciTextEditor.IndicGetHoverStyle(AIndicator: Integer): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_INDICGETHOVERSTYLE, AIndicator, 0);
+  Result := SendScintillaEditorMessage(SCI_INDICGETHOVERSTYLE, WPARAM(AIndicator), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.IndicSetHoverFore(AIndicator: Integer; AFore: TColor);
 begin
-  SendScintillaEditorMessage(SCI_INDICSETHOVERFORE, AIndicator, AFore);
+  SendScintillaEditorMessage(SCI_INDICSETHOVERFORE, WPARAM(AIndicator), LPARAM(AFore));
 end;
 
 function TCustomSciTextEditor.IndicGetHoverFore(AIndicator: Integer): TColor;
 begin
-  Result := SendScintillaEditorMessage(SCI_INDICGETHOVERFORE, AIndicator, 0);
+  Result := SendScintillaEditorMessage(SCI_INDICGETHOVERFORE, WPARAM(AIndicator), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.IndicSetFlags(AIndicator: Integer; AFlags: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_INDICSETFLAGS, AIndicator, AFlags);
+  SendScintillaEditorMessage(SCI_INDICSETFLAGS, WPARAM(AIndicator), LPARAM(AFlags));
 end;
 
 function TCustomSciTextEditor.IndicGetFlags(AIndicator: Integer): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_INDICGETFLAGS, AIndicator, 0);
+  Result := SendScintillaEditorMessage(SCI_INDICGETFLAGS, WPARAM(AIndicator), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.IndicSetStrokeWidth(AIndicator: Integer; AHundredths: Integer);
 begin
-  SendScintillaEditorMessage(SCI_INDICSETSTROKEWIDTH, AIndicator, AHundredths);
+  SendScintillaEditorMessage(SCI_INDICSETSTROKEWIDTH, WPARAM(AIndicator), LPARAM(AHundredths));
 end;
 
 function TCustomSciTextEditor.IndicGetStrokeWidth(AIndicator: Integer): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_INDICGETSTROKEWIDTH, AIndicator, 0);
+  Result := SendScintillaEditorMessage(SCI_INDICGETSTROKEWIDTH, WPARAM(AIndicator), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetWhitespaceFore(AUseSetting: Boolean; AFore: TColor);
 begin
-  SendScintillaEditorMessage(SCI_SETWHITESPACEFORE, AUseSetting, AFore);
+  SendScintillaEditorMessage(SCI_SETWHITESPACEFORE, WPARAM(AUseSetting), LPARAM(AFore));
 end;
 
 procedure TCustomSciTextEditor.SetWhitespaceBack(AUseSetting: Boolean; ABack: TColor);
 begin
-  SendScintillaEditorMessage(SCI_SETWHITESPACEBACK, AUseSetting, ABack);
+  SendScintillaEditorMessage(SCI_SETWHITESPACEBACK, WPARAM(AUseSetting), LPARAM(ABack));
 end;
 
 procedure TCustomSciTextEditor.SetWhitespaceSize(ASize: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETWHITESPACESIZE, ASize, 0);
+  SendScintillaEditorMessage(SCI_SETWHITESPACESIZE, WPARAM(ASize), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetWhitespaceSize(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETWHITESPACESIZE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETWHITESPACESIZE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetLineState(ALine: TSciLine; AState: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETLINESTATE, ALine, AState);
+  SendScintillaEditorMessage(SCI_SETLINESTATE, WPARAM(ALine), LPARAM(AState));
 end;
 
 function TCustomSciTextEditor.GetLineState(ALine: TSciLine): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETLINESTATE, ALine, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLINESTATE, WPARAM(ALine), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetMaxLineState(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETMAXLINESTATE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMAXLINESTATE, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetCaretLineVisible(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETCARETLINEVISIBLE, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETCARETLINEVISIBLE, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.SetCaretLineVisible(AShow: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETCARETLINEVISIBLE, AShow, 0);
+  SendScintillaEditorMessage(SCI_SETCARETLINEVISIBLE, WPARAM(AShow), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetCaretLineBack(): TColor;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETCARETLINEBACK, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCARETLINEBACK, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetCaretLineBack(ABack: TColor);
 begin
-  SendScintillaEditorMessage(SCI_SETCARETLINEBACK, ABack, 0);
+  SendScintillaEditorMessage(SCI_SETCARETLINEBACK, WPARAM(ABack), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetCaretLineFrame(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETCARETLINEFRAME, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCARETLINEFRAME, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetCaretLineFrame(AWidth: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETCARETLINEFRAME, AWidth, 0);
+  SendScintillaEditorMessage(SCI_SETCARETLINEFRAME, WPARAM(AWidth), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.StyleSetChangeable(AStyle: Integer; AChangeable: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_STYLESETCHANGEABLE, AStyle, AChangeable);
+  SendScintillaEditorMessage(SCI_STYLESETCHANGEABLE, WPARAM(AStyle), LPARAM(AChangeable));
 end;
 
 procedure TCustomSciTextEditor.AutoCShow(ALengthEntered: TSciPosition; AItemList: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_AUTOCSHOW, ALengthEntered, LPARAM(AItemList));
+  SendScintillaEditorMessage(SCI_AUTOCSHOW, WPARAM(ALengthEntered), LPARAM(AItemList));
 end;
 
 procedure TCustomSciTextEditor.AutoCCancel();
 begin
-  SendScintillaEditorMessage(SCI_AUTOCCANCEL, 0, 0);
+  SendScintillaEditorMessage(SCI_AUTOCCANCEL, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.AutoCActive(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_AUTOCACTIVE, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_AUTOCACTIVE, WPARAM(0), LPARAM(0)));
 end;
 
 function TCustomSciTextEditor.AutoCPosStart(): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_AUTOCPOSSTART, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_AUTOCPOSSTART, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.AutoCComplete();
 begin
-  SendScintillaEditorMessage(SCI_AUTOCCOMPLETE, 0, 0);
+  SendScintillaEditorMessage(SCI_AUTOCCOMPLETE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.AutoCStops(ACharacterSet: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_AUTOCSTOPS, 0, LPARAM(ACharacterSet));
+  SendScintillaEditorMessage(SCI_AUTOCSTOPS, WPARAM(0), LPARAM(ACharacterSet));
 end;
 
 procedure TCustomSciTextEditor.AutoCSetSeparator(ASeparatorCharacter: Integer);
 begin
-  SendScintillaEditorMessage(SCI_AUTOCSETSEPARATOR, ASeparatorCharacter, 0);
+  SendScintillaEditorMessage(SCI_AUTOCSETSEPARATOR, WPARAM(ASeparatorCharacter), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.AutoCGetSeparator(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_AUTOCGETSEPARATOR, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_AUTOCGETSEPARATOR, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.AutoCSelect(ASelect: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_AUTOCSELECT, 0, LPARAM(ASelect));
+  SendScintillaEditorMessage(SCI_AUTOCSELECT, WPARAM(0), LPARAM(ASelect));
 end;
 
 procedure TCustomSciTextEditor.AutoCSetCancelAtStart(ACancel: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_AUTOCSETCANCELATSTART, ACancel, 0);
+  SendScintillaEditorMessage(SCI_AUTOCSETCANCELATSTART, WPARAM(ACancel), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.AutoCGetCancelAtStart(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_AUTOCGETCANCELATSTART, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_AUTOCGETCANCELATSTART, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.AutoCSetFillUps(ACharacterSet: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_AUTOCSETFILLUPS, 0, LPARAM(ACharacterSet));
+  SendScintillaEditorMessage(SCI_AUTOCSETFILLUPS, WPARAM(0), LPARAM(ACharacterSet));
 end;
 
 procedure TCustomSciTextEditor.AutoCSetChooseSingle(AChooseSingle: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_AUTOCSETCHOOSESINGLE, AChooseSingle, 0);
+  SendScintillaEditorMessage(SCI_AUTOCSETCHOOSESINGLE, WPARAM(AChooseSingle), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.AutoCGetChooseSingle(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_AUTOCGETCHOOSESINGLE, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_AUTOCGETCHOOSESINGLE, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.AutoCSetIgnoreCase(AIgnoreCase: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_AUTOCSETIGNORECASE, AIgnoreCase, 0);
+  SendScintillaEditorMessage(SCI_AUTOCSETIGNORECASE, WPARAM(AIgnoreCase), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.AutoCGetIgnoreCase(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_AUTOCGETIGNORECASE, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_AUTOCGETIGNORECASE, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.UserListShow(AListType: Integer; AItemList: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_USERLISTSHOW, AListType, LPARAM(AItemList));
+  SendScintillaEditorMessage(SCI_USERLISTSHOW, WPARAM(AListType), LPARAM(AItemList));
 end;
 
 procedure TCustomSciTextEditor.AutoCSetAutoHide(AAutoHide: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_AUTOCSETAUTOHIDE, AAutoHide, 0);
+  SendScintillaEditorMessage(SCI_AUTOCSETAUTOHIDE, WPARAM(AAutoHide), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.AutoCGetAutoHide(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_AUTOCGETAUTOHIDE, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_AUTOCGETAUTOHIDE, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.AutoCSetOptions(AOptions: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_AUTOCSETOPTIONS, AOptions, 0);
+  SendScintillaEditorMessage(SCI_AUTOCSETOPTIONS, WPARAM(AOptions), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.AutoCGetOptions(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_AUTOCGETOPTIONS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_AUTOCGETOPTIONS, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.AutoCSetDropRestOfWord(ADropRestOfWord: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_AUTOCSETDROPRESTOFWORD, ADropRestOfWord, 0);
+  SendScintillaEditorMessage(SCI_AUTOCSETDROPRESTOFWORD, WPARAM(ADropRestOfWord), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.AutoCGetDropRestOfWord(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_AUTOCGETDROPRESTOFWORD, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_AUTOCGETDROPRESTOFWORD, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.RegisterImage(AType: Integer; AXpmData: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_REGISTERIMAGE, AType, LPARAM(AXpmData));
+  SendScintillaEditorMessage(SCI_REGISTERIMAGE, WPARAM(AType), LPARAM(AXpmData));
 end;
 
 procedure TCustomSciTextEditor.ClearRegisteredImages();
 begin
-  SendScintillaEditorMessage(SCI_CLEARREGISTEREDIMAGES, 0, 0);
+  SendScintillaEditorMessage(SCI_CLEARREGISTEREDIMAGES, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.AutoCGetTypeSeparator(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_AUTOCGETTYPESEPARATOR, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_AUTOCGETTYPESEPARATOR, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.AutoCSetTypeSeparator(ASeparatorCharacter: Integer);
 begin
-  SendScintillaEditorMessage(SCI_AUTOCSETTYPESEPARATOR, ASeparatorCharacter, 0);
+  SendScintillaEditorMessage(SCI_AUTOCSETTYPESEPARATOR, WPARAM(ASeparatorCharacter), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.AutoCSetMaxWidth(ACharacterCount: Integer);
 begin
-  SendScintillaEditorMessage(SCI_AUTOCSETMAXWIDTH, ACharacterCount, 0);
+  SendScintillaEditorMessage(SCI_AUTOCSETMAXWIDTH, WPARAM(ACharacterCount), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.AutoCGetMaxWidth(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_AUTOCGETMAXWIDTH, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_AUTOCGETMAXWIDTH, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.AutoCSetMaxHeight(ARowCount: Integer);
 begin
-  SendScintillaEditorMessage(SCI_AUTOCSETMAXHEIGHT, ARowCount, 0);
+  SendScintillaEditorMessage(SCI_AUTOCSETMAXHEIGHT, WPARAM(ARowCount), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.AutoCGetMaxHeight(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_AUTOCGETMAXHEIGHT, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_AUTOCGETMAXHEIGHT, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.AutoCSetStyle(AStyle: Integer);
 begin
-  SendScintillaEditorMessage(SCI_AUTOCSETSTYLE, AStyle, 0);
+  SendScintillaEditorMessage(SCI_AUTOCSETSTYLE, WPARAM(AStyle), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.AutoCGetStyle(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_AUTOCGETSTYLE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_AUTOCGETSTYLE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetIndent(AIndentSize: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETINDENT, AIndentSize, 0);
+  SendScintillaEditorMessage(SCI_SETINDENT, WPARAM(AIndentSize), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetIndent(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETINDENT, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETINDENT, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetUseTabs(AUseTabs: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETUSETABS, AUseTabs, 0);
+  SendScintillaEditorMessage(SCI_SETUSETABS, WPARAM(AUseTabs), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetUseTabs(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETUSETABS, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETUSETABS, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.SetLineIndentation(ALine: TSciLine; AIndentation: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETLINEINDENTATION, ALine, AIndentation);
+  SendScintillaEditorMessage(SCI_SETLINEINDENTATION, WPARAM(ALine), LPARAM(AIndentation));
 end;
 
 function TCustomSciTextEditor.GetLineIndentation(ALine: TSciLine): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETLINEINDENTATION, ALine, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLINEINDENTATION, WPARAM(ALine), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetLineIndentPosition(ALine: TSciLine): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETLINEINDENTPOSITION, ALine, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLINEINDENTPOSITION, WPARAM(ALine), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetColumn(APos: TSciPosition): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETCOLUMN, APos, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCOLUMN, WPARAM(APos), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.CountCharacters(AStart: TSciPosition; AEnd: TSciPosition): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_COUNTCHARACTERS, AStart, AEnd);
+  Result := SendScintillaEditorMessage(SCI_COUNTCHARACTERS, WPARAM(AStart), LPARAM(AEnd));
 end;
 
 function TCustomSciTextEditor.CountCodeUnits(AStart: TSciPosition; AEnd: TSciPosition): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_COUNTCODEUNITS, AStart, AEnd);
+  Result := SendScintillaEditorMessage(SCI_COUNTCODEUNITS, WPARAM(AStart), LPARAM(AEnd));
 end;
 
 procedure TCustomSciTextEditor.SetHScrollBar(AVisible: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETHSCROLLBAR, AVisible, 0);
+  SendScintillaEditorMessage(SCI_SETHSCROLLBAR, WPARAM(AVisible), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetHScrollBar(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETHSCROLLBAR, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETHSCROLLBAR, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.SetIndentationGuides(AIndentView: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETINDENTATIONGUIDES, AIndentView, 0);
+  SendScintillaEditorMessage(SCI_SETINDENTATIONGUIDES, WPARAM(AIndentView), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetIndentationGuides(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETINDENTATIONGUIDES, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETINDENTATIONGUIDES, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetHighlightGuide(AColumn: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_SETHIGHLIGHTGUIDE, AColumn, 0);
+  SendScintillaEditorMessage(SCI_SETHIGHLIGHTGUIDE, WPARAM(AColumn), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetHighlightGuide(): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETHIGHLIGHTGUIDE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETHIGHLIGHTGUIDE, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetLineEndPosition(ALine: TSciLine): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETLINEENDPOSITION, ALine, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLINEENDPOSITION, WPARAM(ALine), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetCodePage(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETCODEPAGE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCODEPAGE, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetCaretFore(): TColor;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETCARETFORE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCARETFORE, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetReadOnly(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETREADONLY, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETREADONLY, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.SetCurrentPos(ACaret: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_SETCURRENTPOS, ACaret, 0);
+  SendScintillaEditorMessage(SCI_SETCURRENTPOS, WPARAM(ACaret), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetSelectionStart(AAnchor: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_SETSELECTIONSTART, AAnchor, 0);
+  SendScintillaEditorMessage(SCI_SETSELECTIONSTART, WPARAM(AAnchor), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetSelectionStart(): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSELECTIONSTART, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELECTIONSTART, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetSelectionEnd(ACaret: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_SETSELECTIONEND, ACaret, 0);
+  SendScintillaEditorMessage(SCI_SETSELECTIONEND, WPARAM(ACaret), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetSelectionEnd(): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSELECTIONEND, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELECTIONEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetEmptySelection(ACaret: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_SETEMPTYSELECTION, ACaret, 0);
+  SendScintillaEditorMessage(SCI_SETEMPTYSELECTION, WPARAM(ACaret), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetPrintMagnification(AMagnification: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETPRINTMAGNIFICATION, AMagnification, 0);
+  SendScintillaEditorMessage(SCI_SETPRINTMAGNIFICATION, WPARAM(AMagnification), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetPrintMagnification(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETPRINTMAGNIFICATION, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETPRINTMAGNIFICATION, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetPrintColourMode(AMode: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETPRINTCOLOURMODE, AMode, 0);
+  SendScintillaEditorMessage(SCI_SETPRINTCOLOURMODE, WPARAM(AMode), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetPrintColourMode(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETPRINTCOLOURMODE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETPRINTCOLOURMODE, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.FindText(ASearchFlags: NativeInt; AFt: PSciFindText): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_FINDTEXT, ASearchFlags, AFt);
+  Result := SendScintillaEditorMessage(SCI_FINDTEXT, WPARAM(ASearchFlags), LPARAM(AFt));
 end;
 
 function TCustomSciTextEditor.FindTextFull(ASearchFlags: NativeInt; AFt: PSciFindTextFull): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_FINDTEXTFULL, ASearchFlags, AFt);
+  Result := SendScintillaEditorMessage(SCI_FINDTEXTFULL, WPARAM(ASearchFlags), LPARAM(AFt));
 end;
 
-function TCustomSciTextEditor.FormatRange(ADraw: Boolean; AFr: PSciFormatRange): TSciPosition;
+function TCustomSciTextEditor.FormatRange(ADraw: Boolean; AFr: PSciRangeToFormat): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_FORMATRANGE, ADraw, AFr);
+  Result := SendScintillaEditorMessage(SCI_FORMATRANGE, WPARAM(ADraw), LPARAM(AFr));
 end;
 
-function TCustomSciTextEditor.FormatRangeFull(ADraw: Boolean; AFr: PSciFormatRangeFull): TSciPosition;
+function TCustomSciTextEditor.FormatRangeFull(ADraw: Boolean; AFr: PSciRangeToFormatFull): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_FORMATRANGEFULL, ADraw, AFr);
+  Result := SendScintillaEditorMessage(SCI_FORMATRANGEFULL, WPARAM(ADraw), LPARAM(AFr));
 end;
 
 procedure TCustomSciTextEditor.SetChangeHistory(AChangeHistory: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETCHANGEHISTORY, AChangeHistory, 0);
+  SendScintillaEditorMessage(SCI_SETCHANGEHISTORY, WPARAM(AChangeHistory), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetChangeHistory(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETCHANGEHISTORY, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCHANGEHISTORY, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetUndoSelectionHistory(AUndoSelectionHistory: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETUNDOSELECTIONHISTORY, AUndoSelectionHistory, 0);
+  SendScintillaEditorMessage(SCI_SETUNDOSELECTIONHISTORY, WPARAM(AUndoSelectionHistory), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetUndoSelectionHistory(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETUNDOSELECTIONHISTORY, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETUNDOSELECTIONHISTORY, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetSelectionSerialized(ASelectionString: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_SETSELECTIONSERIALIZED, 0, LPARAM(ASelectionString));
+  SendScintillaEditorMessage(SCI_SETSELECTIONSERIALIZED, WPARAM(0), LPARAM(ASelectionString));
 end;
 
 function TCustomSciTextEditor.GetSelectionSerialized(ASelectionString: PAnsiChar): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSELECTIONSERIALIZED, 0, LPARAM(ASelectionString));
+  Result := SendScintillaEditorMessage(SCI_GETSELECTIONSERIALIZED, WPARAM(0), LPARAM(ASelectionString));
 end;
 
 function TCustomSciTextEditor.GetFirstVisibleLine(): TSciLine;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETFIRSTVISIBLELINE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETFIRSTVISIBLELINE, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetLine(ALine: TSciLine; AText: PAnsiChar): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETLINE, ALine, LPARAM(AText));
+  Result := SendScintillaEditorMessage(SCI_GETLINE, WPARAM(ALine), LPARAM(AText));
 end;
 
 function TCustomSciTextEditor.GetLineCount(): TSciLine;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETLINECOUNT, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLINECOUNT, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.AllocateLines(ALines: TSciLine);
 begin
-  SendScintillaEditorMessage(SCI_ALLOCATELINES, ALines, 0);
+  SendScintillaEditorMessage(SCI_ALLOCATELINES, WPARAM(ALines), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetMarginLeft(APixelWidth: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETMARGINLEFT, 0, APixelWidth);
+  SendScintillaEditorMessage(SCI_SETMARGINLEFT, WPARAM(0), LPARAM(APixelWidth));
 end;
 
 function TCustomSciTextEditor.GetMarginLeft(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETMARGINLEFT, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMARGINLEFT, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetMarginRight(APixelWidth: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETMARGINRIGHT, 0, APixelWidth);
+  SendScintillaEditorMessage(SCI_SETMARGINRIGHT, WPARAM(0), LPARAM(APixelWidth));
 end;
 
 function TCustomSciTextEditor.GetMarginRight(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETMARGINRIGHT, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMARGINRIGHT, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetModify(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETMODIFY, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETMODIFY, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.SetSel(AAnchor: TSciPosition; ACaret: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_SETSEL, AAnchor, ACaret);
+  SendScintillaEditorMessage(SCI_SETSEL, WPARAM(AAnchor), LPARAM(ACaret));
 end;
 
 function TCustomSciTextEditor.GetSelText(AText: PAnsiChar): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSELTEXT, 0, LPARAM(AText));
+  Result := SendScintillaEditorMessage(SCI_GETSELTEXT, WPARAM(0), LPARAM(AText));
 end;
 
 function TCustomSciTextEditor.GetTextRange(ATr: PSciTextRange): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETTEXTRANGE, 0, ATr);
+  Result := SendScintillaEditorMessage(SCI_GETTEXTRANGE, WPARAM(0), LPARAM(ATr));
 end;
 
 function TCustomSciTextEditor.GetTextRangeFull(ATr: PSciTextRangeFull): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETTEXTRANGEFULL, 0, ATr);
+  Result := SendScintillaEditorMessage(SCI_GETTEXTRANGEFULL, WPARAM(0), LPARAM(ATr));
 end;
 
 procedure TCustomSciTextEditor.HideSelection(AHide: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_HIDESELECTION, AHide, 0);
+  SendScintillaEditorMessage(SCI_HIDESELECTION, WPARAM(AHide), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetSelectionHidden(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSELECTIONHIDDEN, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETSELECTIONHIDDEN, WPARAM(0), LPARAM(0)));
 end;
 
 function TCustomSciTextEditor.PointXFromPosition(APos: TSciPosition): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_POINTXFROMPOSITION, 0, APos);
+  Result := SendScintillaEditorMessage(SCI_POINTXFROMPOSITION, WPARAM(0), LPARAM(APos));
 end;
 
 function TCustomSciTextEditor.PointYFromPosition(APos: TSciPosition): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_POINTYFROMPOSITION, 0, APos);
+  Result := SendScintillaEditorMessage(SCI_POINTYFROMPOSITION, WPARAM(0), LPARAM(APos));
 end;
 
 function TCustomSciTextEditor.LineFromPosition(APos: TSciPosition): TSciLine;
 begin
-  Result := SendScintillaEditorMessage(SCI_LINEFROMPOSITION, APos, 0);
+  Result := SendScintillaEditorMessage(SCI_LINEFROMPOSITION, WPARAM(APos), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.PositionFromLine(ALine: TSciLine): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_POSITIONFROMLINE, ALine, 0);
+  Result := SendScintillaEditorMessage(SCI_POSITIONFROMLINE, WPARAM(ALine), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.LineScroll(AColumns: TSciPosition; ALines: TSciLine);
 begin
-  SendScintillaEditorMessage(SCI_LINESCROLL, AColumns, ALines);
+  SendScintillaEditorMessage(SCI_LINESCROLL, WPARAM(AColumns), LPARAM(ALines));
 end;
 
 procedure TCustomSciTextEditor.ScrollCaret();
 begin
-  SendScintillaEditorMessage(SCI_SCROLLCARET, 0, 0);
+  SendScintillaEditorMessage(SCI_SCROLLCARET, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.ScrollRange(ASecondary: TSciPosition; APrimary: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_SCROLLRANGE, ASecondary, APrimary);
+  SendScintillaEditorMessage(SCI_SCROLLRANGE, WPARAM(ASecondary), LPARAM(APrimary));
 end;
 
 procedure TCustomSciTextEditor.ReplaceSel(AText: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_REPLACESEL, 0, LPARAM(AText));
+  SendScintillaEditorMessage(SCI_REPLACESEL, WPARAM(0), LPARAM(AText));
 end;
 
 procedure TCustomSciTextEditor.SetReadOnly(AReadOnly: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETREADONLY, AReadOnly, 0);
+  SendScintillaEditorMessage(SCI_SETREADONLY, WPARAM(AReadOnly), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.Null();
 begin
-  SendScintillaEditorMessage(SCI_NULL, 0, 0);
+  SendScintillaEditorMessage(SCI_NULL, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.CanPaste(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_CANPASTE, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_CANPASTE, WPARAM(0), LPARAM(0)));
 end;
 
 function TCustomSciTextEditor.CanUndo(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_CANUNDO, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_CANUNDO, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.EmptyUndoBuffer();
 begin
-  SendScintillaEditorMessage(SCI_EMPTYUNDOBUFFER, 0, 0);
+  SendScintillaEditorMessage(SCI_EMPTYUNDOBUFFER, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.Undo();
 begin
-  SendScintillaEditorMessage(SCI_UNDO, 0, 0);
+  SendScintillaEditorMessage(SCI_UNDO, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.Cut();
 begin
-  SendScintillaEditorMessage(SCI_CUT, 0, 0);
+  SendScintillaEditorMessage(SCI_CUT, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.Copy();
 begin
-  SendScintillaEditorMessage(SCI_COPY, 0, 0);
+  SendScintillaEditorMessage(SCI_COPY, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.Paste();
 begin
-  SendScintillaEditorMessage(SCI_PASTE, 0, 0);
+  SendScintillaEditorMessage(SCI_PASTE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.Clear();
 begin
-  SendScintillaEditorMessage(SCI_CLEAR, 0, 0);
+  SendScintillaEditorMessage(SCI_CLEAR, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetText(AText: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_SETTEXT, 0, LPARAM(AText));
+  SendScintillaEditorMessage(SCI_SETTEXT, WPARAM(0), LPARAM(AText));
 end;
 
 function TCustomSciTextEditor.GetText(ALength: TSciPosition; AText: PAnsiChar): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETTEXT, ALength, LPARAM(AText));
+  Result := SendScintillaEditorMessage(SCI_GETTEXT, WPARAM(ALength), LPARAM(AText));
 end;
 
 function TCustomSciTextEditor.GetTextLength(): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETTEXTLENGTH, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETTEXTLENGTH, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetDirectFunction(): Pointer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETDIRECTFUNCTION, 0, 0);
+  Result := Pointer(SendScintillaEditorMessage(SCI_GETDIRECTFUNCTION, WPARAM(0), LPARAM(0)));
 end;
 
 function TCustomSciTextEditor.GetDirectStatusFunction(): Pointer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETDIRECTSTATUSFUNCTION, 0, 0);
+  Result := Pointer(SendScintillaEditorMessage(SCI_GETDIRECTSTATUSFUNCTION, WPARAM(0), LPARAM(0)));
 end;
 
 function TCustomSciTextEditor.GetDirectPointer(): Pointer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETDIRECTPOINTER, 0, 0);
+  Result := Pointer(SendScintillaEditorMessage(SCI_GETDIRECTPOINTER, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.SetOvertype(AOverType: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETOVERTYPE, AOverType, 0);
+  SendScintillaEditorMessage(SCI_SETOVERTYPE, WPARAM(AOverType), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetOvertype(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETOVERTYPE, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETOVERTYPE, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.SetCaretWidth(APixelWidth: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETCARETWIDTH, APixelWidth, 0);
+  SendScintillaEditorMessage(SCI_SETCARETWIDTH, WPARAM(APixelWidth), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetCaretWidth(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETCARETWIDTH, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCARETWIDTH, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetTargetStart(AStart: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_SETTARGETSTART, AStart, 0);
+  SendScintillaEditorMessage(SCI_SETTARGETSTART, WPARAM(AStart), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetTargetStart(): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETTARGETSTART, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETTARGETSTART, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetTargetStartVirtualSpace(ASpace: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_SETTARGETSTARTVIRTUALSPACE, ASpace, 0);
+  SendScintillaEditorMessage(SCI_SETTARGETSTARTVIRTUALSPACE, WPARAM(ASpace), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetTargetStartVirtualSpace(): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETTARGETSTARTVIRTUALSPACE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETTARGETSTARTVIRTUALSPACE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetTargetEnd(AEnd: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_SETTARGETEND, AEnd, 0);
+  SendScintillaEditorMessage(SCI_SETTARGETEND, WPARAM(AEnd), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetTargetEnd(): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETTARGETEND, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETTARGETEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetTargetEndVirtualSpace(ASpace: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_SETTARGETENDVIRTUALSPACE, ASpace, 0);
+  SendScintillaEditorMessage(SCI_SETTARGETENDVIRTUALSPACE, WPARAM(ASpace), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetTargetEndVirtualSpace(): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETTARGETENDVIRTUALSPACE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETTARGETENDVIRTUALSPACE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetTargetRange(AStart: TSciPosition; AEnd: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_SETTARGETRANGE, AStart, AEnd);
+  SendScintillaEditorMessage(SCI_SETTARGETRANGE, WPARAM(AStart), LPARAM(AEnd));
 end;
 
 function TCustomSciTextEditor.GetTargetText(AText: PAnsiChar): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETTARGETTEXT, 0, LPARAM(AText));
+  Result := SendScintillaEditorMessage(SCI_GETTARGETTEXT, WPARAM(0), LPARAM(AText));
 end;
 
 procedure TCustomSciTextEditor.TargetFromSelection();
 begin
-  SendScintillaEditorMessage(SCI_TARGETFROMSELECTION, 0, 0);
+  SendScintillaEditorMessage(SCI_TARGETFROMSELECTION, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.TargetWholeDocument();
 begin
-  SendScintillaEditorMessage(SCI_TARGETWHOLEDOCUMENT, 0, 0);
+  SendScintillaEditorMessage(SCI_TARGETWHOLEDOCUMENT, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.ReplaceTarget(ALength: TSciPosition; AText: PAnsiChar): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_REPLACETARGET, ALength, LPARAM(AText));
+  Result := SendScintillaEditorMessage(SCI_REPLACETARGET, WPARAM(ALength), LPARAM(AText));
 end;
 
 function TCustomSciTextEditor.ReplaceTargetRE(ALength: TSciPosition; AText: PAnsiChar): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_REPLACETARGETRE, ALength, LPARAM(AText));
+  Result := SendScintillaEditorMessage(SCI_REPLACETARGETRE, WPARAM(ALength), LPARAM(AText));
 end;
 
 function TCustomSciTextEditor.ReplaceTargetMinimal(ALength: TSciPosition; AText: PAnsiChar): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_REPLACETARGETMINIMAL, ALength, LPARAM(AText));
+  Result := SendScintillaEditorMessage(SCI_REPLACETARGETMINIMAL, WPARAM(ALength), LPARAM(AText));
 end;
 
 function TCustomSciTextEditor.SearchInTarget(ALength: TSciPosition; AText: PAnsiChar): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_SEARCHINTARGET, ALength, LPARAM(AText));
+  Result := SendScintillaEditorMessage(SCI_SEARCHINTARGET, WPARAM(ALength), LPARAM(AText));
 end;
 
 procedure TCustomSciTextEditor.SetSearchFlags(ASearchFlags: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETSEARCHFLAGS, ASearchFlags, 0);
+  SendScintillaEditorMessage(SCI_SETSEARCHFLAGS, WPARAM(ASearchFlags), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetSearchFlags(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSEARCHFLAGS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSEARCHFLAGS, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.CallTipShow(APos: TSciPosition; ADefinition: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_CALLTIPSHOW, APos, LPARAM(ADefinition));
+  SendScintillaEditorMessage(SCI_CALLTIPSHOW, WPARAM(APos), LPARAM(ADefinition));
 end;
 
 procedure TCustomSciTextEditor.CallTipCancel();
 begin
-  SendScintillaEditorMessage(SCI_CALLTIPCANCEL, 0, 0);
+  SendScintillaEditorMessage(SCI_CALLTIPCANCEL, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.CallTipActive(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_CALLTIPACTIVE, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_CALLTIPACTIVE, WPARAM(0), LPARAM(0)));
 end;
 
 function TCustomSciTextEditor.CallTipPosStart(): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_CALLTIPPOSSTART, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_CALLTIPPOSSTART, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.CallTipSetPosStart(APosStart: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_CALLTIPSETPOSSTART, APosStart, 0);
+  SendScintillaEditorMessage(SCI_CALLTIPSETPOSSTART, WPARAM(APosStart), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.CallTipSetHlt(AHighlightStart: TSciPosition; AHighlightEnd: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_CALLTIPSETHLT, AHighlightStart, AHighlightEnd);
+  SendScintillaEditorMessage(SCI_CALLTIPSETHLT, WPARAM(AHighlightStart), LPARAM(AHighlightEnd));
 end;
 
 procedure TCustomSciTextEditor.CallTipSetBack(ABack: TColor);
 begin
-  SendScintillaEditorMessage(SCI_CALLTIPSETBACK, ABack, 0);
+  SendScintillaEditorMessage(SCI_CALLTIPSETBACK, WPARAM(ABack), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.CallTipSetFore(AFore: TColor);
 begin
-  SendScintillaEditorMessage(SCI_CALLTIPSETFORE, AFore, 0);
+  SendScintillaEditorMessage(SCI_CALLTIPSETFORE, WPARAM(AFore), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.CallTipSetForeHlt(AFore: TColor);
 begin
-  SendScintillaEditorMessage(SCI_CALLTIPSETFOREHLT, AFore, 0);
+  SendScintillaEditorMessage(SCI_CALLTIPSETFOREHLT, WPARAM(AFore), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.CallTipUseStyle(ATabSize: Integer);
 begin
-  SendScintillaEditorMessage(SCI_CALLTIPUSESTYLE, ATabSize, 0);
+  SendScintillaEditorMessage(SCI_CALLTIPUSESTYLE, WPARAM(ATabSize), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.CallTipSetPosition(AAbove: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_CALLTIPSETPOSITION, AAbove, 0);
+  SendScintillaEditorMessage(SCI_CALLTIPSETPOSITION, WPARAM(AAbove), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.VisibleFromDocLine(ADocLine: TSciLine): TSciLine;
 begin
-  Result := SendScintillaEditorMessage(SCI_VISIBLEFROMDOCLINE, ADocLine, 0);
+  Result := SendScintillaEditorMessage(SCI_VISIBLEFROMDOCLINE, WPARAM(ADocLine), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.DocLineFromVisible(ADisplayLine: TSciLine): TSciLine;
 begin
-  Result := SendScintillaEditorMessage(SCI_DOCLINEFROMVISIBLE, ADisplayLine, 0);
+  Result := SendScintillaEditorMessage(SCI_DOCLINEFROMVISIBLE, WPARAM(ADisplayLine), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.WrapCount(ADocLine: TSciLine): TSciLine;
 begin
-  Result := SendScintillaEditorMessage(SCI_WRAPCOUNT, ADocLine, 0);
+  Result := SendScintillaEditorMessage(SCI_WRAPCOUNT, WPARAM(ADocLine), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetFoldLevel(ALine: TSciLine; ALevel: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETFOLDLEVEL, ALine, ALevel);
+  SendScintillaEditorMessage(SCI_SETFOLDLEVEL, WPARAM(ALine), LPARAM(ALevel));
 end;
 
 function TCustomSciTextEditor.GetFoldLevel(ALine: TSciLine): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETFOLDLEVEL, ALine, 0);
+  Result := SendScintillaEditorMessage(SCI_GETFOLDLEVEL, WPARAM(ALine), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetLastChild(ALine: TSciLine; ALevel: NativeInt): TSciLine;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETLASTCHILD, ALine, ALevel);
+  Result := SendScintillaEditorMessage(SCI_GETLASTCHILD, WPARAM(ALine), LPARAM(ALevel));
 end;
 
 function TCustomSciTextEditor.GetFoldParent(ALine: TSciLine): TSciLine;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETFOLDPARENT, ALine, 0);
+  Result := SendScintillaEditorMessage(SCI_GETFOLDPARENT, WPARAM(ALine), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.ShowLines(ALineStart: TSciLine; ALineEnd: TSciLine);
 begin
-  SendScintillaEditorMessage(SCI_SHOWLINES, ALineStart, ALineEnd);
+  SendScintillaEditorMessage(SCI_SHOWLINES, WPARAM(ALineStart), LPARAM(ALineEnd));
 end;
 
 procedure TCustomSciTextEditor.HideLines(ALineStart: TSciLine; ALineEnd: TSciLine);
 begin
-  SendScintillaEditorMessage(SCI_HIDELINES, ALineStart, ALineEnd);
+  SendScintillaEditorMessage(SCI_HIDELINES, WPARAM(ALineStart), LPARAM(ALineEnd));
 end;
 
 function TCustomSciTextEditor.GetLineVisible(ALine: TSciLine): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETLINEVISIBLE, ALine, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETLINEVISIBLE, WPARAM(ALine), LPARAM(0)));
 end;
 
 function TCustomSciTextEditor.GetAllLinesVisible(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETALLLINESVISIBLE, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETALLLINESVISIBLE, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.SetFoldExpanded(ALine: TSciLine; AExpanded: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETFOLDEXPANDED, ALine, AExpanded);
+  SendScintillaEditorMessage(SCI_SETFOLDEXPANDED, WPARAM(ALine), LPARAM(AExpanded));
 end;
 
 function TCustomSciTextEditor.GetFoldExpanded(ALine: TSciLine): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETFOLDEXPANDED, ALine, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETFOLDEXPANDED, WPARAM(ALine), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.ToggleFold(ALine: TSciLine);
 begin
-  SendScintillaEditorMessage(SCI_TOGGLEFOLD, ALine, 0);
+  SendScintillaEditorMessage(SCI_TOGGLEFOLD, WPARAM(ALine), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.ToggleFoldShowText(ALine: TSciLine; AText: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_TOGGLEFOLDSHOWTEXT, ALine, LPARAM(AText));
+  SendScintillaEditorMessage(SCI_TOGGLEFOLDSHOWTEXT, WPARAM(ALine), LPARAM(AText));
 end;
 
 procedure TCustomSciTextEditor.FoldDisplayTextSetStyle(AStyle: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_FOLDDISPLAYTEXTSETSTYLE, AStyle, 0);
+  SendScintillaEditorMessage(SCI_FOLDDISPLAYTEXTSETSTYLE, WPARAM(AStyle), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.FoldDisplayTextGetStyle(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_FOLDDISPLAYTEXTGETSTYLE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_FOLDDISPLAYTEXTGETSTYLE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetDefaultFoldDisplayText(AText: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_SETDEFAULTFOLDDISPLAYTEXT, 0, LPARAM(AText));
+  SendScintillaEditorMessage(SCI_SETDEFAULTFOLDDISPLAYTEXT, WPARAM(0), LPARAM(AText));
 end;
 
 function TCustomSciTextEditor.GetDefaultFoldDisplayText(AText: PAnsiChar): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETDEFAULTFOLDDISPLAYTEXT, 0, LPARAM(AText));
+  Result := SendScintillaEditorMessage(SCI_GETDEFAULTFOLDDISPLAYTEXT, WPARAM(0), LPARAM(AText));
 end;
 
 procedure TCustomSciTextEditor.FoldLine(ALine: TSciLine; AAction: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_FOLDLINE, ALine, AAction);
+  SendScintillaEditorMessage(SCI_FOLDLINE, WPARAM(ALine), LPARAM(AAction));
 end;
 
 procedure TCustomSciTextEditor.FoldChildren(ALine: TSciLine; AAction: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_FOLDCHILDREN, ALine, AAction);
+  SendScintillaEditorMessage(SCI_FOLDCHILDREN, WPARAM(ALine), LPARAM(AAction));
 end;
 
 procedure TCustomSciTextEditor.ExpandChildren(ALine: TSciLine; ALevel: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_EXPANDCHILDREN, ALine, ALevel);
+  SendScintillaEditorMessage(SCI_EXPANDCHILDREN, WPARAM(ALine), LPARAM(ALevel));
 end;
 
 procedure TCustomSciTextEditor.FoldAll(AAction: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_FOLDALL, AAction, 0);
+  SendScintillaEditorMessage(SCI_FOLDALL, WPARAM(AAction), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.EnsureVisible(ALine: TSciLine);
 begin
-  SendScintillaEditorMessage(SCI_ENSUREVISIBLE, ALine, 0);
+  SendScintillaEditorMessage(SCI_ENSUREVISIBLE, WPARAM(ALine), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetAutomaticFold(AAutomaticFold: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETAUTOMATICFOLD, AAutomaticFold, 0);
+  SendScintillaEditorMessage(SCI_SETAUTOMATICFOLD, WPARAM(AAutomaticFold), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetAutomaticFold(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETAUTOMATICFOLD, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETAUTOMATICFOLD, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetFoldFlags(AFlags: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETFOLDFLAGS, AFlags, 0);
+  SendScintillaEditorMessage(SCI_SETFOLDFLAGS, WPARAM(AFlags), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.EnsureVisibleEnforcePolicy(ALine: TSciLine);
 begin
-  SendScintillaEditorMessage(SCI_ENSUREVISIBLEENFORCEPOLICY, ALine, 0);
+  SendScintillaEditorMessage(SCI_ENSUREVISIBLEENFORCEPOLICY, WPARAM(ALine), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetTabIndents(ATabIndents: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETTABINDENTS, ATabIndents, 0);
+  SendScintillaEditorMessage(SCI_SETTABINDENTS, WPARAM(ATabIndents), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetTabIndents(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETTABINDENTS, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETTABINDENTS, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.SetBackSpaceUnIndents(ABsUnIndents: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETBACKSPACEUNINDENTS, ABsUnIndents, 0);
+  SendScintillaEditorMessage(SCI_SETBACKSPACEUNINDENTS, WPARAM(ABsUnIndents), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetBackSpaceUnIndents(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETBACKSPACEUNINDENTS, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETBACKSPACEUNINDENTS, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.SetMouseDwellTime(APeriodMilliseconds: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETMOUSEDWELLTIME, APeriodMilliseconds, 0);
+  SendScintillaEditorMessage(SCI_SETMOUSEDWELLTIME, WPARAM(APeriodMilliseconds), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetMouseDwellTime(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETMOUSEDWELLTIME, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMOUSEDWELLTIME, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.WordStartPosition(APos: TSciPosition; AOnlyWordCharacters: Boolean): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_WORDSTARTPOSITION, APos, AOnlyWordCharacters);
+  Result := SendScintillaEditorMessage(SCI_WORDSTARTPOSITION, WPARAM(APos), LPARAM(AOnlyWordCharacters));
 end;
 
 function TCustomSciTextEditor.WordEndPosition(APos: TSciPosition; AOnlyWordCharacters: Boolean): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_WORDENDPOSITION, APos, AOnlyWordCharacters);
+  Result := SendScintillaEditorMessage(SCI_WORDENDPOSITION, WPARAM(APos), LPARAM(AOnlyWordCharacters));
 end;
 
 function TCustomSciTextEditor.IsRangeWord(AStart: TSciPosition; AEnd: TSciPosition): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_ISRANGEWORD, AStart, AEnd);
+  Result := Boolean(SendScintillaEditorMessage(SCI_ISRANGEWORD, WPARAM(AStart), LPARAM(AEnd)));
 end;
 
 procedure TCustomSciTextEditor.SetIdleStyling(AIdleStyling: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETIDLESTYLING, AIdleStyling, 0);
+  SendScintillaEditorMessage(SCI_SETIDLESTYLING, WPARAM(AIdleStyling), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetIdleStyling(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETIDLESTYLING, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETIDLESTYLING, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetWrapMode(AWrapMode: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETWRAPMODE, AWrapMode, 0);
+  SendScintillaEditorMessage(SCI_SETWRAPMODE, WPARAM(AWrapMode), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetWrapMode(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETWRAPMODE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETWRAPMODE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetWrapVisualFlags(AWrapVisualFlags: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETWRAPVISUALFLAGS, AWrapVisualFlags, 0);
+  SendScintillaEditorMessage(SCI_SETWRAPVISUALFLAGS, WPARAM(AWrapVisualFlags), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetWrapVisualFlags(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETWRAPVISUALFLAGS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETWRAPVISUALFLAGS, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetWrapVisualFlagsLocation(AWrapVisualFlagsLocation: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETWRAPVISUALFLAGSLOCATION, AWrapVisualFlagsLocation, 0);
+  SendScintillaEditorMessage(SCI_SETWRAPVISUALFLAGSLOCATION, WPARAM(AWrapVisualFlagsLocation), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetWrapVisualFlagsLocation(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETWRAPVISUALFLAGSLOCATION, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETWRAPVISUALFLAGSLOCATION, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetWrapStartIndent(AIndent: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETWRAPSTARTINDENT, AIndent, 0);
+  SendScintillaEditorMessage(SCI_SETWRAPSTARTINDENT, WPARAM(AIndent), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetWrapStartIndent(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETWRAPSTARTINDENT, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETWRAPSTARTINDENT, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetWrapIndentMode(AWrapIndentMode: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETWRAPINDENTMODE, AWrapIndentMode, 0);
+  SendScintillaEditorMessage(SCI_SETWRAPINDENTMODE, WPARAM(AWrapIndentMode), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetWrapIndentMode(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETWRAPINDENTMODE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETWRAPINDENTMODE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetLayoutCache(ACacheMode: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETLAYOUTCACHE, ACacheMode, 0);
+  SendScintillaEditorMessage(SCI_SETLAYOUTCACHE, WPARAM(ACacheMode), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetLayoutCache(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETLAYOUTCACHE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLAYOUTCACHE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetScrollWidth(APixelWidth: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETSCROLLWIDTH, APixelWidth, 0);
+  SendScintillaEditorMessage(SCI_SETSCROLLWIDTH, WPARAM(APixelWidth), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetScrollWidth(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSCROLLWIDTH, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSCROLLWIDTH, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetScrollWidthTracking(ATracking: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETSCROLLWIDTHTRACKING, ATracking, 0);
+  SendScintillaEditorMessage(SCI_SETSCROLLWIDTHTRACKING, WPARAM(ATracking), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetScrollWidthTracking(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSCROLLWIDTHTRACKING, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETSCROLLWIDTHTRACKING, WPARAM(0), LPARAM(0)));
 end;
 
 function TCustomSciTextEditor.TextWidth(AStyle: Integer; AText: PAnsiChar): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_TEXTWIDTH, AStyle, LPARAM(AText));
+  Result := SendScintillaEditorMessage(SCI_TEXTWIDTH, WPARAM(AStyle), LPARAM(AText));
 end;
 
 procedure TCustomSciTextEditor.SetEndAtLastLine(AEndAtLastLine: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETENDATLASTLINE, AEndAtLastLine, 0);
+  SendScintillaEditorMessage(SCI_SETENDATLASTLINE, WPARAM(AEndAtLastLine), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetEndAtLastLine(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETENDATLASTLINE, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETENDATLASTLINE, WPARAM(0), LPARAM(0)));
 end;
 
 function TCustomSciTextEditor.TextHeight(ALine: TSciLine): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_TEXTHEIGHT, ALine, 0);
+  Result := SendScintillaEditorMessage(SCI_TEXTHEIGHT, WPARAM(ALine), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetVScrollBar(AVisible: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETVSCROLLBAR, AVisible, 0);
+  SendScintillaEditorMessage(SCI_SETVSCROLLBAR, WPARAM(AVisible), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetVScrollBar(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETVSCROLLBAR, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETVSCROLLBAR, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.AppendText(ALength: TSciPosition; AText: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_APPENDTEXT, ALength, LPARAM(AText));
+  SendScintillaEditorMessage(SCI_APPENDTEXT, WPARAM(ALength), LPARAM(AText));
 end;
 
 function TCustomSciTextEditor.GetPhasesDraw(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETPHASESDRAW, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETPHASESDRAW, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetPhasesDraw(APhases: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETPHASESDRAW, APhases, 0);
+  SendScintillaEditorMessage(SCI_SETPHASESDRAW, WPARAM(APhases), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetFontQuality(AFontQuality: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETFONTQUALITY, AFontQuality, 0);
+  SendScintillaEditorMessage(SCI_SETFONTQUALITY, WPARAM(AFontQuality), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetFontQuality(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETFONTQUALITY, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETFONTQUALITY, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetFirstVisibleLine(ADisplayLine: TSciLine);
 begin
-  SendScintillaEditorMessage(SCI_SETFIRSTVISIBLELINE, ADisplayLine, 0);
+  SendScintillaEditorMessage(SCI_SETFIRSTVISIBLELINE, WPARAM(ADisplayLine), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetMultiPaste(AMultiPaste: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETMULTIPASTE, AMultiPaste, 0);
+  SendScintillaEditorMessage(SCI_SETMULTIPASTE, WPARAM(AMultiPaste), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetMultiPaste(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETMULTIPASTE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMULTIPASTE, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetTag(ATagNumber: Integer; ATagValue: PAnsiChar): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETTAG, ATagNumber, LPARAM(ATagValue));
+  Result := SendScintillaEditorMessage(SCI_GETTAG, WPARAM(ATagNumber), LPARAM(ATagValue));
 end;
 
 procedure TCustomSciTextEditor.LinesJoin();
 begin
-  SendScintillaEditorMessage(SCI_LINESJOIN, 0, 0);
+  SendScintillaEditorMessage(SCI_LINESJOIN, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.LinesSplit(APixelWidth: Integer);
 begin
-  SendScintillaEditorMessage(SCI_LINESSPLIT, APixelWidth, 0);
+  SendScintillaEditorMessage(SCI_LINESSPLIT, WPARAM(APixelWidth), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetFoldMarginColour(AUseSetting: Boolean; ABack: TColor);
 begin
-  SendScintillaEditorMessage(SCI_SETFOLDMARGINCOLOUR, AUseSetting, ABack);
+  SendScintillaEditorMessage(SCI_SETFOLDMARGINCOLOUR, WPARAM(AUseSetting), LPARAM(ABack));
 end;
 
 procedure TCustomSciTextEditor.SetFoldMarginHiColour(AUseSetting: Boolean; AFore: TColor);
 begin
-  SendScintillaEditorMessage(SCI_SETFOLDMARGINHICOLOUR, AUseSetting, AFore);
+  SendScintillaEditorMessage(SCI_SETFOLDMARGINHICOLOUR, WPARAM(AUseSetting), LPARAM(AFore));
 end;
 
 procedure TCustomSciTextEditor.SetAccessibility(AAccessibility: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETACCESSIBILITY, AAccessibility, 0);
+  SendScintillaEditorMessage(SCI_SETACCESSIBILITY, WPARAM(AAccessibility), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetAccessibility(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETACCESSIBILITY, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETACCESSIBILITY, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.LineDown();
 begin
-  SendScintillaEditorMessage(SCI_LINEDOWN, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEDOWN, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.LineDownExtend();
 begin
-  SendScintillaEditorMessage(SCI_LINEDOWNEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEDOWNEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.LineUp();
 begin
-  SendScintillaEditorMessage(SCI_LINEUP, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEUP, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.LineUpExtend();
 begin
-  SendScintillaEditorMessage(SCI_LINEUPEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEUPEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.CharLeft();
 begin
-  SendScintillaEditorMessage(SCI_CHARLEFT, 0, 0);
+  SendScintillaEditorMessage(SCI_CHARLEFT, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.CharLeftExtend();
 begin
-  SendScintillaEditorMessage(SCI_CHARLEFTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_CHARLEFTEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.CharRight();
 begin
-  SendScintillaEditorMessage(SCI_CHARRIGHT, 0, 0);
+  SendScintillaEditorMessage(SCI_CHARRIGHT, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.CharRightExtend();
 begin
-  SendScintillaEditorMessage(SCI_CHARRIGHTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_CHARRIGHTEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.WordLeft();
 begin
-  SendScintillaEditorMessage(SCI_WORDLEFT, 0, 0);
+  SendScintillaEditorMessage(SCI_WORDLEFT, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.WordLeftExtend();
 begin
-  SendScintillaEditorMessage(SCI_WORDLEFTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_WORDLEFTEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.WordRight();
 begin
-  SendScintillaEditorMessage(SCI_WORDRIGHT, 0, 0);
+  SendScintillaEditorMessage(SCI_WORDRIGHT, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.WordRightExtend();
 begin
-  SendScintillaEditorMessage(SCI_WORDRIGHTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_WORDRIGHTEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.Home();
 begin
-  SendScintillaEditorMessage(SCI_HOME, 0, 0);
+  SendScintillaEditorMessage(SCI_HOME, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.HomeExtend();
 begin
-  SendScintillaEditorMessage(SCI_HOMEEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_HOMEEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.LineEnd();
 begin
-  SendScintillaEditorMessage(SCI_LINEEND, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.LineEndExtend();
 begin
-  SendScintillaEditorMessage(SCI_LINEENDEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEENDEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.DocumentStart();
 begin
-  SendScintillaEditorMessage(SCI_DOCUMENTSTART, 0, 0);
+  SendScintillaEditorMessage(SCI_DOCUMENTSTART, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.DocumentStartExtend();
 begin
-  SendScintillaEditorMessage(SCI_DOCUMENTSTARTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_DOCUMENTSTARTEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.DocumentEnd();
 begin
-  SendScintillaEditorMessage(SCI_DOCUMENTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_DOCUMENTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.DocumentEndExtend();
 begin
-  SendScintillaEditorMessage(SCI_DOCUMENTENDEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_DOCUMENTENDEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.PageUp();
 begin
-  SendScintillaEditorMessage(SCI_PAGEUP, 0, 0);
+  SendScintillaEditorMessage(SCI_PAGEUP, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.PageUpExtend();
 begin
-  SendScintillaEditorMessage(SCI_PAGEUPEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_PAGEUPEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.PageDown();
 begin
-  SendScintillaEditorMessage(SCI_PAGEDOWN, 0, 0);
+  SendScintillaEditorMessage(SCI_PAGEDOWN, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.PageDownExtend();
 begin
-  SendScintillaEditorMessage(SCI_PAGEDOWNEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_PAGEDOWNEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.EditToggleOvertype();
 begin
-  SendScintillaEditorMessage(SCI_EDITTOGGLEOVERTYPE, 0, 0);
+  SendScintillaEditorMessage(SCI_EDITTOGGLEOVERTYPE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.Cancel();
 begin
-  SendScintillaEditorMessage(SCI_CANCEL, 0, 0);
+  SendScintillaEditorMessage(SCI_CANCEL, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.DeleteBack();
 begin
-  SendScintillaEditorMessage(SCI_DELETEBACK, 0, 0);
+  SendScintillaEditorMessage(SCI_DELETEBACK, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.Tab();
 begin
-  SendScintillaEditorMessage(SCI_TAB, 0, 0);
+  SendScintillaEditorMessage(SCI_TAB, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.LineIndent();
 begin
-  SendScintillaEditorMessage(SCI_LINEINDENT, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEINDENT, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.BackTab();
 begin
-  SendScintillaEditorMessage(SCI_BACKTAB, 0, 0);
+  SendScintillaEditorMessage(SCI_BACKTAB, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.LineDedent();
 begin
-  SendScintillaEditorMessage(SCI_LINEDEDENT, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEDEDENT, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.NewLine();
 begin
-  SendScintillaEditorMessage(SCI_NEWLINE, 0, 0);
+  SendScintillaEditorMessage(SCI_NEWLINE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.FormFeed();
 begin
-  SendScintillaEditorMessage(SCI_FORMFEED, 0, 0);
+  SendScintillaEditorMessage(SCI_FORMFEED, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.VCHome();
 begin
-  SendScintillaEditorMessage(SCI_VCHOME, 0, 0);
+  SendScintillaEditorMessage(SCI_VCHOME, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.VCHomeExtend();
 begin
-  SendScintillaEditorMessage(SCI_VCHOMEEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_VCHOMEEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.ZoomIn();
 begin
-  SendScintillaEditorMessage(SCI_ZOOMIN, 0, 0);
+  SendScintillaEditorMessage(SCI_ZOOMIN, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.ZoomOut();
 begin
-  SendScintillaEditorMessage(SCI_ZOOMOUT, 0, 0);
+  SendScintillaEditorMessage(SCI_ZOOMOUT, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.DelWordLeft();
 begin
-  SendScintillaEditorMessage(SCI_DELWORDLEFT, 0, 0);
+  SendScintillaEditorMessage(SCI_DELWORDLEFT, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.DelWordRight();
 begin
-  SendScintillaEditorMessage(SCI_DELWORDRIGHT, 0, 0);
+  SendScintillaEditorMessage(SCI_DELWORDRIGHT, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.DelWordRightEnd();
 begin
-  SendScintillaEditorMessage(SCI_DELWORDRIGHTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_DELWORDRIGHTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.LineCut();
 begin
-  SendScintillaEditorMessage(SCI_LINECUT, 0, 0);
+  SendScintillaEditorMessage(SCI_LINECUT, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.LineDelete();
 begin
-  SendScintillaEditorMessage(SCI_LINEDELETE, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEDELETE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.LineTranspose();
 begin
-  SendScintillaEditorMessage(SCI_LINETRANSPOSE, 0, 0);
+  SendScintillaEditorMessage(SCI_LINETRANSPOSE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.LineReverse();
 begin
-  SendScintillaEditorMessage(SCI_LINEREVERSE, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEREVERSE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.LineDuplicate();
 begin
-  SendScintillaEditorMessage(SCI_LINEDUPLICATE, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEDUPLICATE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.LowerCase();
 begin
-  SendScintillaEditorMessage(SCI_LOWERCASE, 0, 0);
+  SendScintillaEditorMessage(SCI_LOWERCASE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.UpperCase();
 begin
-  SendScintillaEditorMessage(SCI_UPPERCASE, 0, 0);
+  SendScintillaEditorMessage(SCI_UPPERCASE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.LineScrollDown();
 begin
-  SendScintillaEditorMessage(SCI_LINESCROLLDOWN, 0, 0);
+  SendScintillaEditorMessage(SCI_LINESCROLLDOWN, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.LineScrollUp();
 begin
-  SendScintillaEditorMessage(SCI_LINESCROLLUP, 0, 0);
+  SendScintillaEditorMessage(SCI_LINESCROLLUP, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.DeleteBackNotLine();
 begin
-  SendScintillaEditorMessage(SCI_DELETEBACKNOTLINE, 0, 0);
+  SendScintillaEditorMessage(SCI_DELETEBACKNOTLINE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.HomeDisplay();
 begin
-  SendScintillaEditorMessage(SCI_HOMEDISPLAY, 0, 0);
+  SendScintillaEditorMessage(SCI_HOMEDISPLAY, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.HomeDisplayExtend();
 begin
-  SendScintillaEditorMessage(SCI_HOMEDISPLAYEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_HOMEDISPLAYEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.LineEndDisplay();
 begin
-  SendScintillaEditorMessage(SCI_LINEENDDISPLAY, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEENDDISPLAY, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.LineEndDisplayExtend();
 begin
-  SendScintillaEditorMessage(SCI_LINEENDDISPLAYEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEENDDISPLAYEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.HomeWrap();
 begin
-  SendScintillaEditorMessage(SCI_HOMEWRAP, 0, 0);
+  SendScintillaEditorMessage(SCI_HOMEWRAP, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.HomeWrapExtend();
 begin
-  SendScintillaEditorMessage(SCI_HOMEWRAPEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_HOMEWRAPEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.LineEndWrap();
 begin
-  SendScintillaEditorMessage(SCI_LINEENDWRAP, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEENDWRAP, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.LineEndWrapExtend();
 begin
-  SendScintillaEditorMessage(SCI_LINEENDWRAPEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEENDWRAPEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.VCHomeWrap();
 begin
-  SendScintillaEditorMessage(SCI_VCHOMEWRAP, 0, 0);
+  SendScintillaEditorMessage(SCI_VCHOMEWRAP, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.VCHomeWrapExtend();
 begin
-  SendScintillaEditorMessage(SCI_VCHOMEWRAPEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_VCHOMEWRAPEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.LineCopy();
 begin
-  SendScintillaEditorMessage(SCI_LINECOPY, 0, 0);
+  SendScintillaEditorMessage(SCI_LINECOPY, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.MoveCaretInsideView();
 begin
-  SendScintillaEditorMessage(SCI_MOVECARETINSIDEVIEW, 0, 0);
+  SendScintillaEditorMessage(SCI_MOVECARETINSIDEVIEW, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.LineLength(ALine: TSciLine): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_LINELENGTH, ALine, 0);
+  Result := SendScintillaEditorMessage(SCI_LINELENGTH, WPARAM(ALine), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.BraceHighlight(APosA: TSciPosition; APosB: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_BRACEHIGHLIGHT, APosA, APosB);
+  SendScintillaEditorMessage(SCI_BRACEHIGHLIGHT, WPARAM(APosA), LPARAM(APosB));
 end;
 
 procedure TCustomSciTextEditor.BraceHighlightIndicator(AUseSetting: Boolean; AIndicator: Integer);
 begin
-  SendScintillaEditorMessage(SCI_BRACEHIGHLIGHTINDICATOR, AUseSetting, AIndicator);
+  SendScintillaEditorMessage(SCI_BRACEHIGHLIGHTINDICATOR, WPARAM(AUseSetting), LPARAM(AIndicator));
 end;
 
 procedure TCustomSciTextEditor.BraceBadLight(APos: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_BRACEBADLIGHT, APos, 0);
+  SendScintillaEditorMessage(SCI_BRACEBADLIGHT, WPARAM(APos), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.BraceBadLightIndicator(AUseSetting: Boolean; AIndicator: Integer);
 begin
-  SendScintillaEditorMessage(SCI_BRACEBADLIGHTINDICATOR, AUseSetting, AIndicator);
+  SendScintillaEditorMessage(SCI_BRACEBADLIGHTINDICATOR, WPARAM(AUseSetting), LPARAM(AIndicator));
 end;
 
 function TCustomSciTextEditor.BraceMatch(APos: TSciPosition; AMaxReStyle: Integer): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_BRACEMATCH, APos, AMaxReStyle);
+  Result := SendScintillaEditorMessage(SCI_BRACEMATCH, WPARAM(APos), LPARAM(AMaxReStyle));
 end;
 
 function TCustomSciTextEditor.BraceMatchNext(APos: TSciPosition; AStartPos: TSciPosition): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_BRACEMATCHNEXT, APos, AStartPos);
+  Result := SendScintillaEditorMessage(SCI_BRACEMATCHNEXT, WPARAM(APos), LPARAM(AStartPos));
 end;
 
 function TCustomSciTextEditor.GetViewEOL(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETVIEWEOL, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETVIEWEOL, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.SetViewEOL(AVisible: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETVIEWEOL, AVisible, 0);
+  SendScintillaEditorMessage(SCI_SETVIEWEOL, WPARAM(AVisible), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetDocPointer(): Pointer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETDOCPOINTER, 0, 0);
+  Result := Pointer(SendScintillaEditorMessage(SCI_GETDOCPOINTER, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.SetDocPointer(ADoc: Pointer);
 begin
-  SendScintillaEditorMessage(SCI_SETDOCPOINTER, 0, LPARAM(ADoc));
+  SendScintillaEditorMessage(SCI_SETDOCPOINTER, WPARAM(0), LPARAM(ADoc));
 end;
 
 procedure TCustomSciTextEditor.SetModEventMask(AEventMask: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETMODEVENTMASK, AEventMask, 0);
+  SendScintillaEditorMessage(SCI_SETMODEVENTMASK, WPARAM(AEventMask), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetEdgeColumn(): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETEDGECOLUMN, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETEDGECOLUMN, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetEdgeColumn(AColumn: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_SETEDGECOLUMN, AColumn, 0);
+  SendScintillaEditorMessage(SCI_SETEDGECOLUMN, WPARAM(AColumn), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetEdgeMode(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETEDGEMODE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETEDGEMODE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetEdgeMode(AEdgeMode: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETEDGEMODE, AEdgeMode, 0);
+  SendScintillaEditorMessage(SCI_SETEDGEMODE, WPARAM(AEdgeMode), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetEdgeColour(): TColor;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETEDGECOLOUR, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETEDGECOLOUR, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetEdgeColour(AEdgeColour: TColor);
 begin
-  SendScintillaEditorMessage(SCI_SETEDGECOLOUR, AEdgeColour, 0);
+  SendScintillaEditorMessage(SCI_SETEDGECOLOUR, WPARAM(AEdgeColour), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.MultiEdgeAddLine(AColumn: TSciPosition; AEdgeColour: TColor);
 begin
-  SendScintillaEditorMessage(SCI_MULTIEDGEADDLINE, AColumn, AEdgeColour);
+  SendScintillaEditorMessage(SCI_MULTIEDGEADDLINE, WPARAM(AColumn), LPARAM(AEdgeColour));
 end;
 
 procedure TCustomSciTextEditor.MultiEdgeClearAll();
 begin
-  SendScintillaEditorMessage(SCI_MULTIEDGECLEARALL, 0, 0);
+  SendScintillaEditorMessage(SCI_MULTIEDGECLEARALL, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetMultiEdgeColumn(AWhich: Integer): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETMULTIEDGECOLUMN, AWhich, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMULTIEDGECOLUMN, WPARAM(AWhich), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SearchAnchor();
 begin
-  SendScintillaEditorMessage(SCI_SEARCHANCHOR, 0, 0);
+  SendScintillaEditorMessage(SCI_SEARCHANCHOR, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.SearchNext(ASearchFlags: NativeInt; AText: PAnsiChar): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_SEARCHNEXT, ASearchFlags, LPARAM(AText));
+  Result := SendScintillaEditorMessage(SCI_SEARCHNEXT, WPARAM(ASearchFlags), LPARAM(AText));
 end;
 
 function TCustomSciTextEditor.SearchPrev(ASearchFlags: NativeInt; AText: PAnsiChar): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_SEARCHPREV, ASearchFlags, LPARAM(AText));
+  Result := SendScintillaEditorMessage(SCI_SEARCHPREV, WPARAM(ASearchFlags), LPARAM(AText));
 end;
 
 function TCustomSciTextEditor.LinesOnScreen(): TSciLine;
 begin
-  Result := SendScintillaEditorMessage(SCI_LINESONSCREEN, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_LINESONSCREEN, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.UsePopUp(APopUpMode: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_USEPOPUP, APopUpMode, 0);
+  SendScintillaEditorMessage(SCI_USEPOPUP, WPARAM(APopUpMode), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.SelectionIsRectangle(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_SELECTIONISRECTANGLE, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_SELECTIONISRECTANGLE, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.SetZoom(AZoomInPoints: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETZOOM, AZoomInPoints, 0);
+  SendScintillaEditorMessage(SCI_SETZOOM, WPARAM(AZoomInPoints), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetZoom(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETZOOM, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETZOOM, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.CreateDocument(ABytes: TSciPosition; ADocumentOptions: NativeInt): Pointer;
 begin
-  Result := SendScintillaEditorMessage(SCI_CREATEDOCUMENT, ABytes, ADocumentOptions);
+  Result := Pointer(SendScintillaEditorMessage(SCI_CREATEDOCUMENT, WPARAM(ABytes), LPARAM(ADocumentOptions)));
 end;
 
 procedure TCustomSciTextEditor.AddRefDocument(ADoc: Pointer);
 begin
-  SendScintillaEditorMessage(SCI_ADDREFDOCUMENT, 0, LPARAM(ADoc));
+  SendScintillaEditorMessage(SCI_ADDREFDOCUMENT, WPARAM(0), LPARAM(ADoc));
 end;
 
 procedure TCustomSciTextEditor.ReleaseDocument(ADoc: Pointer);
 begin
-  SendScintillaEditorMessage(SCI_RELEASEDOCUMENT, 0, LPARAM(ADoc));
+  SendScintillaEditorMessage(SCI_RELEASEDOCUMENT, WPARAM(0), LPARAM(ADoc));
 end;
 
 function TCustomSciTextEditor.GetDocumentOptions(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETDOCUMENTOPTIONS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETDOCUMENTOPTIONS, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetModEventMask(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETMODEVENTMASK, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMODEVENTMASK, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetCommandEvents(ACommandEvents: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETCOMMANDEVENTS, ACommandEvents, 0);
+  SendScintillaEditorMessage(SCI_SETCOMMANDEVENTS, WPARAM(ACommandEvents), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetCommandEvents(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETCOMMANDEVENTS, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETCOMMANDEVENTS, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.SetFocus(AFocus: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETFOCUS, AFocus, 0);
+  SendScintillaEditorMessage(SCI_SETFOCUS, WPARAM(AFocus), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetFocus(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETFOCUS, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETFOCUS, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.SetStatus(AStatus: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETSTATUS, AStatus, 0);
+  SendScintillaEditorMessage(SCI_SETSTATUS, WPARAM(AStatus), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetStatus(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSTATUS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSTATUS, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetMouseDownCaptures(ACaptures: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETMOUSEDOWNCAPTURES, ACaptures, 0);
+  SendScintillaEditorMessage(SCI_SETMOUSEDOWNCAPTURES, WPARAM(ACaptures), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetMouseDownCaptures(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETMOUSEDOWNCAPTURES, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETMOUSEDOWNCAPTURES, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.SetMouseWheelCaptures(ACaptures: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETMOUSEWHEELCAPTURES, ACaptures, 0);
+  SendScintillaEditorMessage(SCI_SETMOUSEWHEELCAPTURES, WPARAM(ACaptures), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetMouseWheelCaptures(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETMOUSEWHEELCAPTURES, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETMOUSEWHEELCAPTURES, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.SetCursor(ACursorType: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETCURSOR, ACursorType, 0);
+  SendScintillaEditorMessage(SCI_SETCURSOR, WPARAM(ACursorType), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetCursor(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETCURSOR, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCURSOR, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetControlCharSymbol(ASymbol: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETCONTROLCHARSYMBOL, ASymbol, 0);
+  SendScintillaEditorMessage(SCI_SETCONTROLCHARSYMBOL, WPARAM(ASymbol), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetControlCharSymbol(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETCONTROLCHARSYMBOL, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCONTROLCHARSYMBOL, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.WordPartLeft();
 begin
-  SendScintillaEditorMessage(SCI_WORDPARTLEFT, 0, 0);
+  SendScintillaEditorMessage(SCI_WORDPARTLEFT, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.WordPartLeftExtend();
 begin
-  SendScintillaEditorMessage(SCI_WORDPARTLEFTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_WORDPARTLEFTEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.WordPartRight();
 begin
-  SendScintillaEditorMessage(SCI_WORDPARTRIGHT, 0, 0);
+  SendScintillaEditorMessage(SCI_WORDPARTRIGHT, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.WordPartRightExtend();
 begin
-  SendScintillaEditorMessage(SCI_WORDPARTRIGHTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_WORDPARTRIGHTEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetVisiblePolicy(AVisiblePolicy: NativeInt; AVisibleSlop: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETVISIBLEPOLICY, AVisiblePolicy, AVisibleSlop);
+  SendScintillaEditorMessage(SCI_SETVISIBLEPOLICY, WPARAM(AVisiblePolicy), LPARAM(AVisibleSlop));
 end;
 
 procedure TCustomSciTextEditor.DelLineLeft();
 begin
-  SendScintillaEditorMessage(SCI_DELLINELEFT, 0, 0);
+  SendScintillaEditorMessage(SCI_DELLINELEFT, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.DelLineRight();
 begin
-  SendScintillaEditorMessage(SCI_DELLINERIGHT, 0, 0);
+  SendScintillaEditorMessage(SCI_DELLINERIGHT, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetXOffset(AXOffset: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETXOFFSET, AXOffset, 0);
+  SendScintillaEditorMessage(SCI_SETXOFFSET, WPARAM(AXOffset), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetXOffset(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETXOFFSET, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETXOFFSET, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.ChooseCaretX();
 begin
-  SendScintillaEditorMessage(SCI_CHOOSECARETX, 0, 0);
+  SendScintillaEditorMessage(SCI_CHOOSECARETX, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.GrabFocus();
 begin
-  SendScintillaEditorMessage(SCI_GRABFOCUS, 0, 0);
+  SendScintillaEditorMessage(SCI_GRABFOCUS, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetXCaretPolicy(ACaretPolicy: NativeInt; ACaretSlop: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETXCARETPOLICY, ACaretPolicy, ACaretSlop);
+  SendScintillaEditorMessage(SCI_SETXCARETPOLICY, WPARAM(ACaretPolicy), LPARAM(ACaretSlop));
 end;
 
 procedure TCustomSciTextEditor.SetYCaretPolicy(ACaretPolicy: NativeInt; ACaretSlop: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETYCARETPOLICY, ACaretPolicy, ACaretSlop);
+  SendScintillaEditorMessage(SCI_SETYCARETPOLICY, WPARAM(ACaretPolicy), LPARAM(ACaretSlop));
 end;
 
 procedure TCustomSciTextEditor.SetPrintWrapMode(AWrapMode: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETPRINTWRAPMODE, AWrapMode, 0);
+  SendScintillaEditorMessage(SCI_SETPRINTWRAPMODE, WPARAM(AWrapMode), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetPrintWrapMode(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETPRINTWRAPMODE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETPRINTWRAPMODE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetHotspotActiveFore(AUseSetting: Boolean; AFore: TColor);
 begin
-  SendScintillaEditorMessage(SCI_SETHOTSPOTACTIVEFORE, AUseSetting, AFore);
+  SendScintillaEditorMessage(SCI_SETHOTSPOTACTIVEFORE, WPARAM(AUseSetting), LPARAM(AFore));
 end;
 
 function TCustomSciTextEditor.GetHotspotActiveFore(): TColor;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETHOTSPOTACTIVEFORE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETHOTSPOTACTIVEFORE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetHotspotActiveBack(AUseSetting: Boolean; ABack: TColor);
 begin
-  SendScintillaEditorMessage(SCI_SETHOTSPOTACTIVEBACK, AUseSetting, ABack);
+  SendScintillaEditorMessage(SCI_SETHOTSPOTACTIVEBACK, WPARAM(AUseSetting), LPARAM(ABack));
 end;
 
 function TCustomSciTextEditor.GetHotspotActiveBack(): TColor;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETHOTSPOTACTIVEBACK, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETHOTSPOTACTIVEBACK, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetHotspotActiveUnderline(AUnderline: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETHOTSPOTACTIVEUNDERLINE, AUnderline, 0);
+  SendScintillaEditorMessage(SCI_SETHOTSPOTACTIVEUNDERLINE, WPARAM(AUnderline), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetHotspotActiveUnderline(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETHOTSPOTACTIVEUNDERLINE, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETHOTSPOTACTIVEUNDERLINE, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.SetHotspotSingleLine(ASingleLine: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETHOTSPOTSINGLELINE, ASingleLine, 0);
+  SendScintillaEditorMessage(SCI_SETHOTSPOTSINGLELINE, WPARAM(ASingleLine), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetHotspotSingleLine(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETHOTSPOTSINGLELINE, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETHOTSPOTSINGLELINE, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.ParaDown();
 begin
-  SendScintillaEditorMessage(SCI_PARADOWN, 0, 0);
+  SendScintillaEditorMessage(SCI_PARADOWN, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.ParaDownExtend();
 begin
-  SendScintillaEditorMessage(SCI_PARADOWNEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_PARADOWNEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.ParaUp();
 begin
-  SendScintillaEditorMessage(SCI_PARAUP, 0, 0);
+  SendScintillaEditorMessage(SCI_PARAUP, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.ParaUpExtend();
 begin
-  SendScintillaEditorMessage(SCI_PARAUPEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_PARAUPEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.PositionBefore(APos: TSciPosition): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_POSITIONBEFORE, APos, 0);
+  Result := SendScintillaEditorMessage(SCI_POSITIONBEFORE, WPARAM(APos), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.PositionAfter(APos: TSciPosition): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_POSITIONAFTER, APos, 0);
+  Result := SendScintillaEditorMessage(SCI_POSITIONAFTER, WPARAM(APos), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.PositionRelative(APos: TSciPosition; ARelative: TSciPosition): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_POSITIONRELATIVE, APos, ARelative);
+  Result := SendScintillaEditorMessage(SCI_POSITIONRELATIVE, WPARAM(APos), LPARAM(ARelative));
 end;
 
 function TCustomSciTextEditor.PositionRelativeCodeUnits(APos: TSciPosition; ARelative: TSciPosition): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_POSITIONRELATIVECODEUNITS, APos, ARelative);
+  Result := SendScintillaEditorMessage(SCI_POSITIONRELATIVECODEUNITS, WPARAM(APos), LPARAM(ARelative));
 end;
 
 procedure TCustomSciTextEditor.CopyRange(AStart: TSciPosition; AEnd: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_COPYRANGE, AStart, AEnd);
+  SendScintillaEditorMessage(SCI_COPYRANGE, WPARAM(AStart), LPARAM(AEnd));
 end;
 
 procedure TCustomSciTextEditor.CopyText(ALength: TSciPosition; AText: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_COPYTEXT, ALength, LPARAM(AText));
+  SendScintillaEditorMessage(SCI_COPYTEXT, WPARAM(ALength), LPARAM(AText));
 end;
 
 procedure TCustomSciTextEditor.SetSelectionMode(ASelectionMode: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETSELECTIONMODE, ASelectionMode, 0);
+  SendScintillaEditorMessage(SCI_SETSELECTIONMODE, WPARAM(ASelectionMode), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.ChangeSelectionMode(ASelectionMode: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_CHANGESELECTIONMODE, ASelectionMode, 0);
+  SendScintillaEditorMessage(SCI_CHANGESELECTIONMODE, WPARAM(ASelectionMode), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetSelectionMode(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSELECTIONMODE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELECTIONMODE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetMoveExtendsSelection(AMoveExtendsSelection: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETMOVEEXTENDSSELECTION, AMoveExtendsSelection, 0);
+  SendScintillaEditorMessage(SCI_SETMOVEEXTENDSSELECTION, WPARAM(AMoveExtendsSelection), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetMoveExtendsSelection(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETMOVEEXTENDSSELECTION, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETMOVEEXTENDSSELECTION, WPARAM(0), LPARAM(0)));
 end;
 
 function TCustomSciTextEditor.GetLineSelStartPosition(ALine: TSciLine): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETLINESELSTARTPOSITION, ALine, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLINESELSTARTPOSITION, WPARAM(ALine), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetLineSelEndPosition(ALine: TSciLine): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETLINESELENDPOSITION, ALine, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLINESELENDPOSITION, WPARAM(ALine), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.LineDownRectExtend();
 begin
-  SendScintillaEditorMessage(SCI_LINEDOWNRECTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEDOWNRECTEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.LineUpRectExtend();
 begin
-  SendScintillaEditorMessage(SCI_LINEUPRECTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEUPRECTEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.CharLeftRectExtend();
 begin
-  SendScintillaEditorMessage(SCI_CHARLEFTRECTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_CHARLEFTRECTEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.CharRightRectExtend();
 begin
-  SendScintillaEditorMessage(SCI_CHARRIGHTRECTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_CHARRIGHTRECTEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.HomeRectExtend();
 begin
-  SendScintillaEditorMessage(SCI_HOMERECTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_HOMERECTEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.VCHomeRectExtend();
 begin
-  SendScintillaEditorMessage(SCI_VCHOMERECTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_VCHOMERECTEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.LineEndRectExtend();
 begin
-  SendScintillaEditorMessage(SCI_LINEENDRECTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_LINEENDRECTEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.PageUpRectExtend();
 begin
-  SendScintillaEditorMessage(SCI_PAGEUPRECTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_PAGEUPRECTEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.PageDownRectExtend();
 begin
-  SendScintillaEditorMessage(SCI_PAGEDOWNRECTEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_PAGEDOWNRECTEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.StutteredPageUp();
 begin
-  SendScintillaEditorMessage(SCI_STUTTEREDPAGEUP, 0, 0);
+  SendScintillaEditorMessage(SCI_STUTTEREDPAGEUP, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.StutteredPageUpExtend();
 begin
-  SendScintillaEditorMessage(SCI_STUTTEREDPAGEUPEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_STUTTEREDPAGEUPEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.StutteredPageDown();
 begin
-  SendScintillaEditorMessage(SCI_STUTTEREDPAGEDOWN, 0, 0);
+  SendScintillaEditorMessage(SCI_STUTTEREDPAGEDOWN, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.StutteredPageDownExtend();
 begin
-  SendScintillaEditorMessage(SCI_STUTTEREDPAGEDOWNEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_STUTTEREDPAGEDOWNEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.WordLeftEnd();
 begin
-  SendScintillaEditorMessage(SCI_WORDLEFTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_WORDLEFTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.WordLeftEndExtend();
 begin
-  SendScintillaEditorMessage(SCI_WORDLEFTENDEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_WORDLEFTENDEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.WordRightEnd();
 begin
-  SendScintillaEditorMessage(SCI_WORDRIGHTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_WORDRIGHTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.WordRightEndExtend();
 begin
-  SendScintillaEditorMessage(SCI_WORDRIGHTENDEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_WORDRIGHTENDEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetWhitespaceChars(ACharacters: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_SETWHITESPACECHARS, 0, LPARAM(ACharacters));
+  SendScintillaEditorMessage(SCI_SETWHITESPACECHARS, WPARAM(0), LPARAM(ACharacters));
 end;
 
 function TCustomSciTextEditor.GetWhitespaceChars(ACharacters: PAnsiChar): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETWHITESPACECHARS, 0, LPARAM(ACharacters));
+  Result := SendScintillaEditorMessage(SCI_GETWHITESPACECHARS, WPARAM(0), LPARAM(ACharacters));
 end;
 
 procedure TCustomSciTextEditor.SetPunctuationChars(ACharacters: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_SETPUNCTUATIONCHARS, 0, LPARAM(ACharacters));
+  SendScintillaEditorMessage(SCI_SETPUNCTUATIONCHARS, WPARAM(0), LPARAM(ACharacters));
 end;
 
 function TCustomSciTextEditor.GetPunctuationChars(ACharacters: PAnsiChar): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETPUNCTUATIONCHARS, 0, LPARAM(ACharacters));
+  Result := SendScintillaEditorMessage(SCI_GETPUNCTUATIONCHARS, WPARAM(0), LPARAM(ACharacters));
 end;
 
 procedure TCustomSciTextEditor.SetCharsDefault();
 begin
-  SendScintillaEditorMessage(SCI_SETCHARSDEFAULT, 0, 0);
+  SendScintillaEditorMessage(SCI_SETCHARSDEFAULT, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.AutoCGetCurrent(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_AUTOCGETCURRENT, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_AUTOCGETCURRENT, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.AutoCGetCurrentText(AText: PAnsiChar): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_AUTOCGETCURRENTTEXT, 0, LPARAM(AText));
+  Result := SendScintillaEditorMessage(SCI_AUTOCGETCURRENTTEXT, WPARAM(0), LPARAM(AText));
 end;
 
 procedure TCustomSciTextEditor.AutoCSetCaseInsensitiveBehaviour(ABehaviour: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_AUTOCSETCASEINSENSITIVEBEHAVIOUR, ABehaviour, 0);
+  SendScintillaEditorMessage(SCI_AUTOCSETCASEINSENSITIVEBEHAVIOUR, WPARAM(ABehaviour), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.AutoCGetCaseInsensitiveBehaviour(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_AUTOCGETCASEINSENSITIVEBEHAVIOUR, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_AUTOCGETCASEINSENSITIVEBEHAVIOUR, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.AutoCSetMulti(AMulti: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_AUTOCSETMULTI, AMulti, 0);
+  SendScintillaEditorMessage(SCI_AUTOCSETMULTI, WPARAM(AMulti), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.AutoCGetMulti(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_AUTOCGETMULTI, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_AUTOCGETMULTI, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.AutoCSetOrder(AOrder: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_AUTOCSETORDER, AOrder, 0);
+  SendScintillaEditorMessage(SCI_AUTOCSETORDER, WPARAM(AOrder), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.AutoCGetOrder(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_AUTOCGETORDER, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_AUTOCGETORDER, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.Allocate(ABytes: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_ALLOCATE, ABytes, 0);
+  SendScintillaEditorMessage(SCI_ALLOCATE, WPARAM(ABytes), LPARAM(0));
 end;
 
-function TCustomSciTextEditor.TargetAsUTF8(S: PAnsiChar): TSciPosition;
+function TCustomSciTextEditor.TargetAsUTF8(s: PAnsiChar): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_TARGETASUTF8, 0, LPARAM(S));
+  Result := SendScintillaEditorMessage(SCI_TARGETASUTF8, WPARAM(0), LPARAM(s));
 end;
 
 procedure TCustomSciTextEditor.SetLengthForEncode(ABytes: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_SETLENGTHFORENCODE, ABytes, 0);
+  SendScintillaEditorMessage(SCI_SETLENGTHFORENCODE, WPARAM(ABytes), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.EncodedFromUTF8(AUtf8: PAnsiChar; AEncoded: PAnsiChar): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_ENCODEDFROMUTF8, AUtf8, LPARAM(AEncoded));
+  Result := SendScintillaEditorMessage(SCI_ENCODEDFROMUTF8, WPARAM(AUtf8), LPARAM(AEncoded));
 end;
 
 function TCustomSciTextEditor.FindColumn(ALine: TSciLine; AColumn: TSciPosition): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_FINDCOLUMN, ALine, AColumn);
+  Result := SendScintillaEditorMessage(SCI_FINDCOLUMN, WPARAM(ALine), LPARAM(AColumn));
 end;
 
 function TCustomSciTextEditor.GetCaretSticky(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETCARETSTICKY, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCARETSTICKY, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetCaretSticky(AUseCaretStickyBehaviour: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETCARETSTICKY, AUseCaretStickyBehaviour, 0);
+  SendScintillaEditorMessage(SCI_SETCARETSTICKY, WPARAM(AUseCaretStickyBehaviour), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.ToggleCaretSticky();
 begin
-  SendScintillaEditorMessage(SCI_TOGGLECARETSTICKY, 0, 0);
+  SendScintillaEditorMessage(SCI_TOGGLECARETSTICKY, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetPasteConvertEndings(AConvert: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETPASTECONVERTENDINGS, AConvert, 0);
+  SendScintillaEditorMessage(SCI_SETPASTECONVERTENDINGS, WPARAM(AConvert), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetPasteConvertEndings(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETPASTECONVERTENDINGS, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETPASTECONVERTENDINGS, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.ReplaceRectangular(ALength: TSciPosition; AText: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_REPLACERECTANGULAR, ALength, LPARAM(AText));
+  SendScintillaEditorMessage(SCI_REPLACERECTANGULAR, WPARAM(ALength), LPARAM(AText));
 end;
 
 procedure TCustomSciTextEditor.SelectionDuplicate();
 begin
-  SendScintillaEditorMessage(SCI_SELECTIONDUPLICATE, 0, 0);
+  SendScintillaEditorMessage(SCI_SELECTIONDUPLICATE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetCaretLineBackAlpha(AAlpha: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETCARETLINEBACKALPHA, AAlpha, 0);
+  SendScintillaEditorMessage(SCI_SETCARETLINEBACKALPHA, WPARAM(AAlpha), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetCaretLineBackAlpha(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETCARETLINEBACKALPHA, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCARETLINEBACKALPHA, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetCaretStyle(ACaretStyle: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETCARETSTYLE, ACaretStyle, 0);
+  SendScintillaEditorMessage(SCI_SETCARETSTYLE, WPARAM(ACaretStyle), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetCaretStyle(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETCARETSTYLE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETCARETSTYLE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetIndicatorCurrent(AIndicator: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETINDICATORCURRENT, AIndicator, 0);
+  SendScintillaEditorMessage(SCI_SETINDICATORCURRENT, WPARAM(AIndicator), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetIndicatorCurrent(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETINDICATORCURRENT, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETINDICATORCURRENT, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetIndicatorValue(AValue: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETINDICATORVALUE, AValue, 0);
+  SendScintillaEditorMessage(SCI_SETINDICATORVALUE, WPARAM(AValue), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetIndicatorValue(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETINDICATORVALUE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETINDICATORVALUE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.IndicatorFillRange(AStart: TSciPosition; ALengthFill: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_INDICATORFILLRANGE, AStart, ALengthFill);
+  SendScintillaEditorMessage(SCI_INDICATORFILLRANGE, WPARAM(AStart), LPARAM(ALengthFill));
 end;
 
 procedure TCustomSciTextEditor.IndicatorClearRange(AStart: TSciPosition; ALengthClear: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_INDICATORCLEARRANGE, AStart, ALengthClear);
+  SendScintillaEditorMessage(SCI_INDICATORCLEARRANGE, WPARAM(AStart), LPARAM(ALengthClear));
 end;
 
 function TCustomSciTextEditor.IndicatorAllOnFor(APos: TSciPosition): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_INDICATORALLONFOR, APos, 0);
+  Result := SendScintillaEditorMessage(SCI_INDICATORALLONFOR, WPARAM(APos), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.IndicatorValueAt(AIndicator: Integer; APos: TSciPosition): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_INDICATORVALUEAT, AIndicator, APos);
+  Result := SendScintillaEditorMessage(SCI_INDICATORVALUEAT, WPARAM(AIndicator), LPARAM(APos));
 end;
 
 function TCustomSciTextEditor.IndicatorStart(AIndicator: Integer; APos: TSciPosition): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_INDICATORSTART, AIndicator, APos);
+  Result := SendScintillaEditorMessage(SCI_INDICATORSTART, WPARAM(AIndicator), LPARAM(APos));
 end;
 
 function TCustomSciTextEditor.IndicatorEnd(AIndicator: Integer; APos: TSciPosition): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_INDICATOREND, AIndicator, APos);
+  Result := SendScintillaEditorMessage(SCI_INDICATOREND, WPARAM(AIndicator), LPARAM(APos));
 end;
 
 procedure TCustomSciTextEditor.SetPositionCache(ASize: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETPOSITIONCACHE, ASize, 0);
+  SendScintillaEditorMessage(SCI_SETPOSITIONCACHE, WPARAM(ASize), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetPositionCache(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETPOSITIONCACHE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETPOSITIONCACHE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetLayoutThreads(AThreads: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETLAYOUTTHREADS, AThreads, 0);
+  SendScintillaEditorMessage(SCI_SETLAYOUTTHREADS, WPARAM(AThreads), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetLayoutThreads(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETLAYOUTTHREADS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLAYOUTTHREADS, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.CopyAllowLine();
 begin
-  SendScintillaEditorMessage(SCI_COPYALLOWLINE, 0, 0);
+  SendScintillaEditorMessage(SCI_COPYALLOWLINE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.CutAllowLine();
 begin
-  SendScintillaEditorMessage(SCI_CUTALLOWLINE, 0, 0);
+  SendScintillaEditorMessage(SCI_CUTALLOWLINE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetCopySeparator(ASeparator: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_SETCOPYSEPARATOR, 0, LPARAM(ASeparator));
+  SendScintillaEditorMessage(SCI_SETCOPYSEPARATOR, WPARAM(0), LPARAM(ASeparator));
 end;
 
 function TCustomSciTextEditor.GetCopySeparator(ASeparator: PAnsiChar): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETCOPYSEPARATOR, 0, LPARAM(ASeparator));
+  Result := SendScintillaEditorMessage(SCI_GETCOPYSEPARATOR, WPARAM(0), LPARAM(ASeparator));
 end;
 
 function TCustomSciTextEditor.GetCharacterPointer(): Pointer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETCHARACTERPOINTER, 0, 0);
+  Result := Pointer(SendScintillaEditorMessage(SCI_GETCHARACTERPOINTER, WPARAM(0), LPARAM(0)));
 end;
 
 function TCustomSciTextEditor.GetRangePointer(AStart: TSciPosition; ALengthRange: TSciPosition): Pointer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETRANGEPOINTER, AStart, ALengthRange);
+  Result := Pointer(SendScintillaEditorMessage(SCI_GETRANGEPOINTER, WPARAM(AStart), LPARAM(ALengthRange)));
 end;
 
 function TCustomSciTextEditor.GetGapPosition(): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETGAPPOSITION, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETGAPPOSITION, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.IndicSetAlpha(AIndicator: Integer; AAlpha: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_INDICSETALPHA, AIndicator, AAlpha);
+  SendScintillaEditorMessage(SCI_INDICSETALPHA, WPARAM(AIndicator), LPARAM(AAlpha));
 end;
 
 function TCustomSciTextEditor.IndicGetAlpha(AIndicator: Integer): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_INDICGETALPHA, AIndicator, 0);
+  Result := SendScintillaEditorMessage(SCI_INDICGETALPHA, WPARAM(AIndicator), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.IndicSetOutlineAlpha(AIndicator: Integer; AAlpha: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_INDICSETOUTLINEALPHA, AIndicator, AAlpha);
+  SendScintillaEditorMessage(SCI_INDICSETOUTLINEALPHA, WPARAM(AIndicator), LPARAM(AAlpha));
 end;
 
 function TCustomSciTextEditor.IndicGetOutlineAlpha(AIndicator: Integer): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_INDICGETOUTLINEALPHA, AIndicator, 0);
+  Result := SendScintillaEditorMessage(SCI_INDICGETOUTLINEALPHA, WPARAM(AIndicator), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetExtraAscent(AExtraAscent: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETEXTRAASCENT, AExtraAscent, 0);
+  SendScintillaEditorMessage(SCI_SETEXTRAASCENT, WPARAM(AExtraAscent), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetExtraAscent(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETEXTRAASCENT, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETEXTRAASCENT, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetExtraDescent(AExtraDescent: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETEXTRADESCENT, AExtraDescent, 0);
+  SendScintillaEditorMessage(SCI_SETEXTRADESCENT, WPARAM(AExtraDescent), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetExtraDescent(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETEXTRADESCENT, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETEXTRADESCENT, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.MarkerSymbolDefined(AMarkerNumber: Integer): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_MARKERSYMBOLDEFINED, AMarkerNumber, 0);
+  Result := SendScintillaEditorMessage(SCI_MARKERSYMBOLDEFINED, WPARAM(AMarkerNumber), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.MarginSetText(ALine: TSciLine; AText: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_MARGINSETTEXT, ALine, LPARAM(AText));
+  SendScintillaEditorMessage(SCI_MARGINSETTEXT, WPARAM(ALine), LPARAM(AText));
 end;
 
 function TCustomSciTextEditor.MarginGetText(ALine: TSciLine; AText: PAnsiChar): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_MARGINGETTEXT, ALine, LPARAM(AText));
+  Result := SendScintillaEditorMessage(SCI_MARGINGETTEXT, WPARAM(ALine), LPARAM(AText));
 end;
 
 procedure TCustomSciTextEditor.MarginSetStyle(ALine: TSciLine; AStyle: Integer);
 begin
-  SendScintillaEditorMessage(SCI_MARGINSETSTYLE, ALine, AStyle);
+  SendScintillaEditorMessage(SCI_MARGINSETSTYLE, WPARAM(ALine), LPARAM(AStyle));
 end;
 
 function TCustomSciTextEditor.MarginGetStyle(ALine: TSciLine): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_MARGINGETSTYLE, ALine, 0);
+  Result := SendScintillaEditorMessage(SCI_MARGINGETSTYLE, WPARAM(ALine), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.MarginSetStyles(ALine: TSciLine; AStyles: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_MARGINSETSTYLES, ALine, LPARAM(AStyles));
+  SendScintillaEditorMessage(SCI_MARGINSETSTYLES, WPARAM(ALine), LPARAM(AStyles));
 end;
 
 function TCustomSciTextEditor.MarginGetStyles(ALine: TSciLine; AStyles: PAnsiChar): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_MARGINGETSTYLES, ALine, LPARAM(AStyles));
+  Result := SendScintillaEditorMessage(SCI_MARGINGETSTYLES, WPARAM(ALine), LPARAM(AStyles));
 end;
 
 procedure TCustomSciTextEditor.MarginTextClearAll();
 begin
-  SendScintillaEditorMessage(SCI_MARGINTEXTCLEARALL, 0, 0);
+  SendScintillaEditorMessage(SCI_MARGINTEXTCLEARALL, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.MarginSetStyleOffset(AStyle: Integer);
 begin
-  SendScintillaEditorMessage(SCI_MARGINSETSTYLEOFFSET, AStyle, 0);
+  SendScintillaEditorMessage(SCI_MARGINSETSTYLEOFFSET, WPARAM(AStyle), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.MarginGetStyleOffset(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_MARGINGETSTYLEOFFSET, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_MARGINGETSTYLEOFFSET, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetMarginOptions(AMarginOptions: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETMARGINOPTIONS, AMarginOptions, 0);
+  SendScintillaEditorMessage(SCI_SETMARGINOPTIONS, WPARAM(AMarginOptions), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetMarginOptions(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETMARGINOPTIONS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMARGINOPTIONS, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.AnnotationSetText(ALine: TSciLine; AText: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_ANNOTATIONSETTEXT, ALine, LPARAM(AText));
+  SendScintillaEditorMessage(SCI_ANNOTATIONSETTEXT, WPARAM(ALine), LPARAM(AText));
 end;
 
 function TCustomSciTextEditor.AnnotationGetText(ALine: TSciLine; AText: PAnsiChar): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_ANNOTATIONGETTEXT, ALine, LPARAM(AText));
+  Result := SendScintillaEditorMessage(SCI_ANNOTATIONGETTEXT, WPARAM(ALine), LPARAM(AText));
 end;
 
 procedure TCustomSciTextEditor.AnnotationSetStyle(ALine: TSciLine; AStyle: Integer);
 begin
-  SendScintillaEditorMessage(SCI_ANNOTATIONSETSTYLE, ALine, AStyle);
+  SendScintillaEditorMessage(SCI_ANNOTATIONSETSTYLE, WPARAM(ALine), LPARAM(AStyle));
 end;
 
 function TCustomSciTextEditor.AnnotationGetStyle(ALine: TSciLine): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_ANNOTATIONGETSTYLE, ALine, 0);
+  Result := SendScintillaEditorMessage(SCI_ANNOTATIONGETSTYLE, WPARAM(ALine), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.AnnotationSetStyles(ALine: TSciLine; AStyles: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_ANNOTATIONSETSTYLES, ALine, LPARAM(AStyles));
+  SendScintillaEditorMessage(SCI_ANNOTATIONSETSTYLES, WPARAM(ALine), LPARAM(AStyles));
 end;
 
 function TCustomSciTextEditor.AnnotationGetStyles(ALine: TSciLine; AStyles: PAnsiChar): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_ANNOTATIONGETSTYLES, ALine, LPARAM(AStyles));
+  Result := SendScintillaEditorMessage(SCI_ANNOTATIONGETSTYLES, WPARAM(ALine), LPARAM(AStyles));
 end;
 
 function TCustomSciTextEditor.AnnotationGetLines(ALine: TSciLine): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_ANNOTATIONGETLINES, ALine, 0);
+  Result := SendScintillaEditorMessage(SCI_ANNOTATIONGETLINES, WPARAM(ALine), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.AnnotationClearAll();
 begin
-  SendScintillaEditorMessage(SCI_ANNOTATIONCLEARALL, 0, 0);
+  SendScintillaEditorMessage(SCI_ANNOTATIONCLEARALL, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.AnnotationSetVisible(AVisible: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_ANNOTATIONSETVISIBLE, AVisible, 0);
+  SendScintillaEditorMessage(SCI_ANNOTATIONSETVISIBLE, WPARAM(AVisible), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.AnnotationGetVisible(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_ANNOTATIONGETVISIBLE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_ANNOTATIONGETVISIBLE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.AnnotationSetStyleOffset(AStyle: Integer);
 begin
-  SendScintillaEditorMessage(SCI_ANNOTATIONSETSTYLEOFFSET, AStyle, 0);
+  SendScintillaEditorMessage(SCI_ANNOTATIONSETSTYLEOFFSET, WPARAM(AStyle), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.AnnotationGetStyleOffset(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_ANNOTATIONGETSTYLEOFFSET, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_ANNOTATIONGETSTYLEOFFSET, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.ReleaseAllExtendedStyles();
 begin
-  SendScintillaEditorMessage(SCI_RELEASEALLEXTENDEDSTYLES, 0, 0);
+  SendScintillaEditorMessage(SCI_RELEASEALLEXTENDEDSTYLES, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.AllocateExtendedStyles(ANumberStyles: Integer): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_ALLOCATEEXTENDEDSTYLES, ANumberStyles, 0);
+  Result := SendScintillaEditorMessage(SCI_ALLOCATEEXTENDEDSTYLES, WPARAM(ANumberStyles), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.AddUndoAction(AToken: Integer; AFlags: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_ADDUNDOACTION, AToken, AFlags);
+  SendScintillaEditorMessage(SCI_ADDUNDOACTION, WPARAM(AToken), LPARAM(AFlags));
 end;
 
-function TCustomSciTextEditor.CharPositionFromPoint(X: Integer; Y: Integer): TSciPosition;
+function TCustomSciTextEditor.CharPositionFromPoint(x: Integer; y: Integer): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_CHARPOSITIONFROMPOINT, X, Y);
+  Result := SendScintillaEditorMessage(SCI_CHARPOSITIONFROMPOINT, WPARAM(x), LPARAM(y));
 end;
 
-function TCustomSciTextEditor.CharPositionFromPointClose(X: Integer; Y: Integer): TSciPosition;
+function TCustomSciTextEditor.CharPositionFromPointClose(x: Integer; y: Integer): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_CHARPOSITIONFROMPOINTCLOSE, X, Y);
+  Result := SendScintillaEditorMessage(SCI_CHARPOSITIONFROMPOINTCLOSE, WPARAM(x), LPARAM(y));
 end;
 
 procedure TCustomSciTextEditor.SetMouseSelectionRectangularSwitch(AMouseSelectionRectangularSwitch: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETMOUSESELECTIONRECTANGULARSWITCH, AMouseSelectionRectangularSwitch, 0);
+  SendScintillaEditorMessage(SCI_SETMOUSESELECTIONRECTANGULARSWITCH, WPARAM(AMouseSelectionRectangularSwitch), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetMouseSelectionRectangularSwitch(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETMOUSESELECTIONRECTANGULARSWITCH, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETMOUSESELECTIONRECTANGULARSWITCH, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.SetMultipleSelection(AMultipleSelection: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETMULTIPLESELECTION, AMultipleSelection, 0);
+  SendScintillaEditorMessage(SCI_SETMULTIPLESELECTION, WPARAM(AMultipleSelection), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetMultipleSelection(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETMULTIPLESELECTION, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETMULTIPLESELECTION, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.SetAdditionalSelectionTyping(AAdditionalSelectionTyping: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETADDITIONALSELECTIONTYPING, AAdditionalSelectionTyping, 0);
+  SendScintillaEditorMessage(SCI_SETADDITIONALSELECTIONTYPING, WPARAM(AAdditionalSelectionTyping), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetAdditionalSelectionTyping(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETADDITIONALSELECTIONTYPING, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETADDITIONALSELECTIONTYPING, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.SetAdditionalCaretsBlink(AAdditionalCaretsBlink: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETADDITIONALCARETSBLINK, AAdditionalCaretsBlink, 0);
+  SendScintillaEditorMessage(SCI_SETADDITIONALCARETSBLINK, WPARAM(AAdditionalCaretsBlink), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetAdditionalCaretsBlink(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETADDITIONALCARETSBLINK, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETADDITIONALCARETSBLINK, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.SetAdditionalCaretsVisible(AAdditionalCaretsVisible: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETADDITIONALCARETSVISIBLE, AAdditionalCaretsVisible, 0);
+  SendScintillaEditorMessage(SCI_SETADDITIONALCARETSVISIBLE, WPARAM(AAdditionalCaretsVisible), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetAdditionalCaretsVisible(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETADDITIONALCARETSVISIBLE, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETADDITIONALCARETSVISIBLE, WPARAM(0), LPARAM(0)));
 end;
 
 function TCustomSciTextEditor.GetSelections(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSELECTIONS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELECTIONS, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetSelectionEmpty(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSELECTIONEMPTY, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETSELECTIONEMPTY, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.ClearSelections();
 begin
-  SendScintillaEditorMessage(SCI_CLEARSELECTIONS, 0, 0);
+  SendScintillaEditorMessage(SCI_CLEARSELECTIONS, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetSelection(ACaret: TSciPosition; AAnchor: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_SETSELECTION, ACaret, AAnchor);
+  SendScintillaEditorMessage(SCI_SETSELECTION, WPARAM(ACaret), LPARAM(AAnchor));
 end;
 
 procedure TCustomSciTextEditor.AddSelection(ACaret: TSciPosition; AAnchor: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_ADDSELECTION, ACaret, AAnchor);
+  SendScintillaEditorMessage(SCI_ADDSELECTION, WPARAM(ACaret), LPARAM(AAnchor));
 end;
 
-function TCustomSciTextEditor.SelectionFromPoint(X: Integer; Y: Integer): Integer;
+function TCustomSciTextEditor.SelectionFromPoint(x: Integer; y: Integer): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_SELECTIONFROMPOINT, X, Y);
+  Result := SendScintillaEditorMessage(SCI_SELECTIONFROMPOINT, WPARAM(x), LPARAM(y));
 end;
 
 procedure TCustomSciTextEditor.DropSelectionN(ASelection: Integer);
 begin
-  SendScintillaEditorMessage(SCI_DROPSELECTIONN, ASelection, 0);
+  SendScintillaEditorMessage(SCI_DROPSELECTIONN, WPARAM(ASelection), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetMainSelection(ASelection: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETMAINSELECTION, ASelection, 0);
+  SendScintillaEditorMessage(SCI_SETMAINSELECTION, WPARAM(ASelection), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetMainSelection(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETMAINSELECTION, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETMAINSELECTION, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetSelectionNCaret(ASelection: Integer; ACaret: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_SETSELECTIONNCARET, ASelection, ACaret);
+  SendScintillaEditorMessage(SCI_SETSELECTIONNCARET, WPARAM(ASelection), LPARAM(ACaret));
 end;
 
 function TCustomSciTextEditor.GetSelectionNCaret(ASelection: Integer): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSELECTIONNCARET, ASelection, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELECTIONNCARET, WPARAM(ASelection), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetSelectionNAnchor(ASelection: Integer; AAnchor: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_SETSELECTIONNANCHOR, ASelection, AAnchor);
+  SendScintillaEditorMessage(SCI_SETSELECTIONNANCHOR, WPARAM(ASelection), LPARAM(AAnchor));
 end;
 
 function TCustomSciTextEditor.GetSelectionNAnchor(ASelection: Integer): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSELECTIONNANCHOR, ASelection, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELECTIONNANCHOR, WPARAM(ASelection), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetSelectionNCaretVirtualSpace(ASelection: Integer; ASpace: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_SETSELECTIONNCARETVIRTUALSPACE, ASelection, ASpace);
+  SendScintillaEditorMessage(SCI_SETSELECTIONNCARETVIRTUALSPACE, WPARAM(ASelection), LPARAM(ASpace));
 end;
 
 function TCustomSciTextEditor.GetSelectionNCaretVirtualSpace(ASelection: Integer): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSELECTIONNCARETVIRTUALSPACE, ASelection, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELECTIONNCARETVIRTUALSPACE, WPARAM(ASelection), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetSelectionNAnchorVirtualSpace(ASelection: Integer; ASpace: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_SETSELECTIONNANCHORVIRTUALSPACE, ASelection, ASpace);
+  SendScintillaEditorMessage(SCI_SETSELECTIONNANCHORVIRTUALSPACE, WPARAM(ASelection), LPARAM(ASpace));
 end;
 
 function TCustomSciTextEditor.GetSelectionNAnchorVirtualSpace(ASelection: Integer): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSELECTIONNANCHORVIRTUALSPACE, ASelection, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELECTIONNANCHORVIRTUALSPACE, WPARAM(ASelection), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetSelectionNStart(ASelection: Integer; AAnchor: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_SETSELECTIONNSTART, ASelection, AAnchor);
+  SendScintillaEditorMessage(SCI_SETSELECTIONNSTART, WPARAM(ASelection), LPARAM(AAnchor));
 end;
 
 function TCustomSciTextEditor.GetSelectionNStart(ASelection: Integer): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSELECTIONNSTART, ASelection, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELECTIONNSTART, WPARAM(ASelection), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetSelectionNStartVirtualSpace(ASelection: Integer): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSELECTIONNSTARTVIRTUALSPACE, ASelection, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELECTIONNSTARTVIRTUALSPACE, WPARAM(ASelection), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetSelectionNEnd(ASelection: Integer; ACaret: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_SETSELECTIONNEND, ASelection, ACaret);
+  SendScintillaEditorMessage(SCI_SETSELECTIONNEND, WPARAM(ASelection), LPARAM(ACaret));
 end;
 
 function TCustomSciTextEditor.GetSelectionNEndVirtualSpace(ASelection: Integer): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSELECTIONNENDVIRTUALSPACE, ASelection, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELECTIONNENDVIRTUALSPACE, WPARAM(ASelection), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetSelectionNEnd(ASelection: Integer): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSELECTIONNEND, ASelection, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSELECTIONNEND, WPARAM(ASelection), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetRectangularSelectionCaret(ACaret: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_SETRECTANGULARSELECTIONCARET, ACaret, 0);
+  SendScintillaEditorMessage(SCI_SETRECTANGULARSELECTIONCARET, WPARAM(ACaret), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetRectangularSelectionCaret(): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETRECTANGULARSELECTIONCARET, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETRECTANGULARSELECTIONCARET, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetRectangularSelectionAnchor(AAnchor: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_SETRECTANGULARSELECTIONANCHOR, AAnchor, 0);
+  SendScintillaEditorMessage(SCI_SETRECTANGULARSELECTIONANCHOR, WPARAM(AAnchor), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetRectangularSelectionAnchor(): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETRECTANGULARSELECTIONANCHOR, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETRECTANGULARSELECTIONANCHOR, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetRectangularSelectionCaretVirtualSpace(ASpace: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_SETRECTANGULARSELECTIONCARETVIRTUALSPACE, ASpace, 0);
+  SendScintillaEditorMessage(SCI_SETRECTANGULARSELECTIONCARETVIRTUALSPACE, WPARAM(ASpace), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetRectangularSelectionCaretVirtualSpace(): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETRECTANGULARSELECTIONCARETVIRTUALSPACE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETRECTANGULARSELECTIONCARETVIRTUALSPACE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetRectangularSelectionAnchorVirtualSpace(ASpace: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_SETRECTANGULARSELECTIONANCHORVIRTUALSPACE, ASpace, 0);
+  SendScintillaEditorMessage(SCI_SETRECTANGULARSELECTIONANCHORVIRTUALSPACE, WPARAM(ASpace), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetRectangularSelectionAnchorVirtualSpace(): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETRECTANGULARSELECTIONANCHORVIRTUALSPACE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETRECTANGULARSELECTIONANCHORVIRTUALSPACE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetVirtualSpaceOptions(AVirtualSpaceOptions: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETVIRTUALSPACEOPTIONS, AVirtualSpaceOptions, 0);
+  SendScintillaEditorMessage(SCI_SETVIRTUALSPACEOPTIONS, WPARAM(AVirtualSpaceOptions), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetVirtualSpaceOptions(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETVIRTUALSPACEOPTIONS, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETVIRTUALSPACEOPTIONS, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetRectangularSelectionModifier(AModifier: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETRECTANGULARSELECTIONMODIFIER, AModifier, 0);
+  SendScintillaEditorMessage(SCI_SETRECTANGULARSELECTIONMODIFIER, WPARAM(AModifier), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetRectangularSelectionModifier(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETRECTANGULARSELECTIONMODIFIER, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETRECTANGULARSELECTIONMODIFIER, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetAdditionalSelFore(AFore: TColor);
 begin
-  SendScintillaEditorMessage(SCI_SETADDITIONALSELFORE, AFore, 0);
+  SendScintillaEditorMessage(SCI_SETADDITIONALSELFORE, WPARAM(AFore), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetAdditionalSelBack(ABack: TColor);
 begin
-  SendScintillaEditorMessage(SCI_SETADDITIONALSELBACK, ABack, 0);
+  SendScintillaEditorMessage(SCI_SETADDITIONALSELBACK, WPARAM(ABack), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetAdditionalSelAlpha(AAlpha: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETADDITIONALSELALPHA, AAlpha, 0);
+  SendScintillaEditorMessage(SCI_SETADDITIONALSELALPHA, WPARAM(AAlpha), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetAdditionalSelAlpha(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETADDITIONALSELALPHA, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETADDITIONALSELALPHA, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetAdditionalCaretFore(AFore: TColor);
 begin
-  SendScintillaEditorMessage(SCI_SETADDITIONALCARETFORE, AFore, 0);
+  SendScintillaEditorMessage(SCI_SETADDITIONALCARETFORE, WPARAM(AFore), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetAdditionalCaretFore(): TColor;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETADDITIONALCARETFORE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETADDITIONALCARETFORE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.RotateSelection();
 begin
-  SendScintillaEditorMessage(SCI_ROTATESELECTION, 0, 0);
+  SendScintillaEditorMessage(SCI_ROTATESELECTION, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SwapMainAnchorCaret();
 begin
-  SendScintillaEditorMessage(SCI_SWAPMAINANCHORCARET, 0, 0);
+  SendScintillaEditorMessage(SCI_SWAPMAINANCHORCARET, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.MultipleSelectAddNext();
 begin
-  SendScintillaEditorMessage(SCI_MULTIPLESELECTADDNEXT, 0, 0);
+  SendScintillaEditorMessage(SCI_MULTIPLESELECTADDNEXT, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.MultipleSelectAddEach();
 begin
-  SendScintillaEditorMessage(SCI_MULTIPLESELECTADDEACH, 0, 0);
+  SendScintillaEditorMessage(SCI_MULTIPLESELECTADDEACH, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.ChangeLexerState(AStart: TSciPosition; AEnd: TSciPosition): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_CHANGELEXERSTATE, AStart, AEnd);
+  Result := SendScintillaEditorMessage(SCI_CHANGELEXERSTATE, WPARAM(AStart), LPARAM(AEnd));
 end;
 
 function TCustomSciTextEditor.ContractedFoldNext(ALineStart: TSciLine): TSciLine;
 begin
-  Result := SendScintillaEditorMessage(SCI_CONTRACTEDFOLDNEXT, ALineStart, 0);
+  Result := SendScintillaEditorMessage(SCI_CONTRACTEDFOLDNEXT, WPARAM(ALineStart), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.VerticalCentreCaret();
 begin
-  SendScintillaEditorMessage(SCI_VERTICALCENTRECARET, 0, 0);
+  SendScintillaEditorMessage(SCI_VERTICALCENTRECARET, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.MoveSelectedLinesUp();
 begin
-  SendScintillaEditorMessage(SCI_MOVESELECTEDLINESUP, 0, 0);
+  SendScintillaEditorMessage(SCI_MOVESELECTEDLINESUP, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.MoveSelectedLinesDown();
 begin
-  SendScintillaEditorMessage(SCI_MOVESELECTEDLINESDOWN, 0, 0);
+  SendScintillaEditorMessage(SCI_MOVESELECTEDLINESDOWN, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetIdentifier(AIdentifier: Integer);
 begin
-  SendScintillaEditorMessage(SCI_SETIDENTIFIER, AIdentifier, 0);
+  SendScintillaEditorMessage(SCI_SETIDENTIFIER, WPARAM(AIdentifier), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetIdentifier(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETIDENTIFIER, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETIDENTIFIER, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.RGBAImageSetWidth(AWidth: Integer);
 begin
-  SendScintillaEditorMessage(SCI_RGBAIMAGESETWIDTH, AWidth, 0);
+  SendScintillaEditorMessage(SCI_RGBAIMAGESETWIDTH, WPARAM(AWidth), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.RGBAImageSetHeight(AHeight: Integer);
 begin
-  SendScintillaEditorMessage(SCI_RGBAIMAGESETHEIGHT, AHeight, 0);
+  SendScintillaEditorMessage(SCI_RGBAIMAGESETHEIGHT, WPARAM(AHeight), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.RGBAImageSetScale(AScalePercent: Integer);
 begin
-  SendScintillaEditorMessage(SCI_RGBAIMAGESETSCALE, AScalePercent, 0);
+  SendScintillaEditorMessage(SCI_RGBAIMAGESETSCALE, WPARAM(AScalePercent), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.MarkerDefineRGBAImage(AMarkerNumber: Integer; APixels: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_MARKERDEFINERGBAIMAGE, AMarkerNumber, LPARAM(APixels));
+  SendScintillaEditorMessage(SCI_MARKERDEFINERGBAIMAGE, WPARAM(AMarkerNumber), LPARAM(APixels));
 end;
 
 procedure TCustomSciTextEditor.RegisterRGBAImage(AType: Integer; APixels: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_REGISTERRGBAIMAGE, AType, LPARAM(APixels));
+  SendScintillaEditorMessage(SCI_REGISTERRGBAIMAGE, WPARAM(AType), LPARAM(APixels));
 end;
 
 procedure TCustomSciTextEditor.ScrollToStart();
 begin
-  SendScintillaEditorMessage(SCI_SCROLLTOSTART, 0, 0);
+  SendScintillaEditorMessage(SCI_SCROLLTOSTART, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.ScrollToEnd();
 begin
-  SendScintillaEditorMessage(SCI_SCROLLTOEND, 0, 0);
+  SendScintillaEditorMessage(SCI_SCROLLTOEND, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetTechnology(ATechnology: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETTECHNOLOGY, ATechnology, 0);
+  SendScintillaEditorMessage(SCI_SETTECHNOLOGY, WPARAM(ATechnology), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetTechnology(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETTECHNOLOGY, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETTECHNOLOGY, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.CreateLoader(ABytes: TSciPosition; ADocumentOptions: NativeInt): Pointer;
 begin
-  Result := SendScintillaEditorMessage(SCI_CREATELOADER, ABytes, ADocumentOptions);
+  Result := Pointer(SendScintillaEditorMessage(SCI_CREATELOADER, WPARAM(ABytes), LPARAM(ADocumentOptions)));
 end;
 
 procedure TCustomSciTextEditor.FindIndicatorShow(AStart: TSciPosition; AEnd: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_FINDINDICATORSHOW, AStart, AEnd);
+  SendScintillaEditorMessage(SCI_FINDINDICATORSHOW, WPARAM(AStart), LPARAM(AEnd));
 end;
 
 procedure TCustomSciTextEditor.FindIndicatorFlash(AStart: TSciPosition; AEnd: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_FINDINDICATORFLASH, AStart, AEnd);
+  SendScintillaEditorMessage(SCI_FINDINDICATORFLASH, WPARAM(AStart), LPARAM(AEnd));
 end;
 
 procedure TCustomSciTextEditor.FindIndicatorHide();
 begin
-  SendScintillaEditorMessage(SCI_FINDINDICATORHIDE, 0, 0);
+  SendScintillaEditorMessage(SCI_FINDINDICATORHIDE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.VCHomeDisplay();
 begin
-  SendScintillaEditorMessage(SCI_VCHOMEDISPLAY, 0, 0);
+  SendScintillaEditorMessage(SCI_VCHOMEDISPLAY, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.VCHomeDisplayExtend();
 begin
-  SendScintillaEditorMessage(SCI_VCHOMEDISPLAYEXTEND, 0, 0);
+  SendScintillaEditorMessage(SCI_VCHOMEDISPLAYEXTEND, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetCaretLineVisibleAlways(): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETCARETLINEVISIBLEALWAYS, 0, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_GETCARETLINEVISIBLEALWAYS, WPARAM(0), LPARAM(0)));
 end;
 
 procedure TCustomSciTextEditor.SetCaretLineVisibleAlways(AAlwaysVisible: Boolean);
 begin
-  SendScintillaEditorMessage(SCI_SETCARETLINEVISIBLEALWAYS, AAlwaysVisible, 0);
+  SendScintillaEditorMessage(SCI_SETCARETLINEVISIBLEALWAYS, WPARAM(AAlwaysVisible), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetLineEndTypesAllowed(ALineEndBitSet: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETLINEENDTYPESALLOWED, ALineEndBitSet, 0);
+  SendScintillaEditorMessage(SCI_SETLINEENDTYPESALLOWED, WPARAM(ALineEndBitSet), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetLineEndTypesAllowed(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETLINEENDTYPESALLOWED, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLINEENDTYPESALLOWED, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetLineEndTypesActive(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETLINEENDTYPESACTIVE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLINEENDTYPESACTIVE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetRepresentation(AEncodedCharacter: PAnsiChar; ARepresentation: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_SETREPRESENTATION, AEncodedCharacter, LPARAM(ARepresentation));
+  SendScintillaEditorMessage(SCI_SETREPRESENTATION, WPARAM(AEncodedCharacter), LPARAM(ARepresentation));
 end;
 
 function TCustomSciTextEditor.GetRepresentation(AEncodedCharacter: PAnsiChar; ARepresentation: PAnsiChar): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETREPRESENTATION, AEncodedCharacter, LPARAM(ARepresentation));
+  Result := SendScintillaEditorMessage(SCI_GETREPRESENTATION, WPARAM(AEncodedCharacter), LPARAM(ARepresentation));
 end;
 
 procedure TCustomSciTextEditor.ClearRepresentation(AEncodedCharacter: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_CLEARREPRESENTATION, AEncodedCharacter, 0);
+  SendScintillaEditorMessage(SCI_CLEARREPRESENTATION, WPARAM(AEncodedCharacter), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.ClearAllRepresentations();
 begin
-  SendScintillaEditorMessage(SCI_CLEARALLREPRESENTATIONS, 0, 0);
+  SendScintillaEditorMessage(SCI_CLEARALLREPRESENTATIONS, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetRepresentationAppearance(AEncodedCharacter: PAnsiChar; AAppearance: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETREPRESENTATIONAPPEARANCE, AEncodedCharacter, AAppearance);
+  SendScintillaEditorMessage(SCI_SETREPRESENTATIONAPPEARANCE, WPARAM(AEncodedCharacter), LPARAM(AAppearance));
 end;
 
 function TCustomSciTextEditor.GetRepresentationAppearance(AEncodedCharacter: PAnsiChar): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETREPRESENTATIONAPPEARANCE, AEncodedCharacter, 0);
+  Result := SendScintillaEditorMessage(SCI_GETREPRESENTATIONAPPEARANCE, WPARAM(AEncodedCharacter), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetRepresentationColour(AEncodedCharacter: PAnsiChar; AColour: TColorAlpha);
 begin
-  SendScintillaEditorMessage(SCI_SETREPRESENTATIONCOLOUR, AEncodedCharacter, AColour);
+  SendScintillaEditorMessage(SCI_SETREPRESENTATIONCOLOUR, WPARAM(AEncodedCharacter), LPARAM(AColour));
 end;
 
 function TCustomSciTextEditor.GetRepresentationColour(AEncodedCharacter: PAnsiChar): TColorAlpha;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETREPRESENTATIONCOLOUR, AEncodedCharacter, 0);
+  Result := SendScintillaEditorMessage(SCI_GETREPRESENTATIONCOLOUR, WPARAM(AEncodedCharacter), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.EOLAnnotationSetText(ALine: TSciLine; AText: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_EOLANNOTATIONSETTEXT, ALine, LPARAM(AText));
+  SendScintillaEditorMessage(SCI_EOLANNOTATIONSETTEXT, WPARAM(ALine), LPARAM(AText));
 end;
 
 function TCustomSciTextEditor.EOLAnnotationGetText(ALine: TSciLine; AText: PAnsiChar): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_EOLANNOTATIONGETTEXT, ALine, LPARAM(AText));
+  Result := SendScintillaEditorMessage(SCI_EOLANNOTATIONGETTEXT, WPARAM(ALine), LPARAM(AText));
 end;
 
 procedure TCustomSciTextEditor.EOLAnnotationSetStyle(ALine: TSciLine; AStyle: Integer);
 begin
-  SendScintillaEditorMessage(SCI_EOLANNOTATIONSETSTYLE, ALine, AStyle);
+  SendScintillaEditorMessage(SCI_EOLANNOTATIONSETSTYLE, WPARAM(ALine), LPARAM(AStyle));
 end;
 
 function TCustomSciTextEditor.EOLAnnotationGetStyle(ALine: TSciLine): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_EOLANNOTATIONGETSTYLE, ALine, 0);
+  Result := SendScintillaEditorMessage(SCI_EOLANNOTATIONGETSTYLE, WPARAM(ALine), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.EOLAnnotationClearAll();
 begin
-  SendScintillaEditorMessage(SCI_EOLANNOTATIONCLEARALL, 0, 0);
+  SendScintillaEditorMessage(SCI_EOLANNOTATIONCLEARALL, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.EOLAnnotationSetVisible(AVisible: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_EOLANNOTATIONSETVISIBLE, AVisible, 0);
+  SendScintillaEditorMessage(SCI_EOLANNOTATIONSETVISIBLE, WPARAM(AVisible), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.EOLAnnotationGetVisible(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_EOLANNOTATIONGETVISIBLE, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_EOLANNOTATIONGETVISIBLE, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.EOLAnnotationSetStyleOffset(AStyle: Integer);
 begin
-  SendScintillaEditorMessage(SCI_EOLANNOTATIONSETSTYLEOFFSET, AStyle, 0);
+  SendScintillaEditorMessage(SCI_EOLANNOTATIONSETSTYLEOFFSET, WPARAM(AStyle), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.EOLAnnotationGetStyleOffset(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_EOLANNOTATIONGETSTYLEOFFSET, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_EOLANNOTATIONGETSTYLEOFFSET, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.SupportsFeature(AFeature: NativeInt): Boolean;
 begin
-  Result := SendScintillaEditorMessage(SCI_SUPPORTSFEATURE, AFeature, 0);
+  Result := Boolean(SendScintillaEditorMessage(SCI_SUPPORTSFEATURE, WPARAM(AFeature), LPARAM(0)));
 end;
 
 function TCustomSciTextEditor.GetLineCharacterIndex(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETLINECHARACTERINDEX, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLINECHARACTERINDEX, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.AllocateLineCharacterIndex(ALineCharacterIndex: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_ALLOCATELINECHARACTERINDEX, ALineCharacterIndex, 0);
+  SendScintillaEditorMessage(SCI_ALLOCATELINECHARACTERINDEX, WPARAM(ALineCharacterIndex), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.ReleaseLineCharacterIndex(ALineCharacterIndex: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_RELEASELINECHARACTERINDEX, ALineCharacterIndex, 0);
+  SendScintillaEditorMessage(SCI_RELEASELINECHARACTERINDEX, WPARAM(ALineCharacterIndex), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.LineFromIndexPosition(APos: TSciPosition; ALineCharacterIndex: NativeInt): TSciLine;
 begin
-  Result := SendScintillaEditorMessage(SCI_LINEFROMINDEXPOSITION, APos, ALineCharacterIndex);
+  Result := SendScintillaEditorMessage(SCI_LINEFROMINDEXPOSITION, WPARAM(APos), LPARAM(ALineCharacterIndex));
 end;
 
 function TCustomSciTextEditor.IndexPositionFromLine(ALine: TSciLine; ALineCharacterIndex: NativeInt): TSciPosition;
 begin
-  Result := SendScintillaEditorMessage(SCI_INDEXPOSITIONFROMLINE, ALine, ALineCharacterIndex);
+  Result := SendScintillaEditorMessage(SCI_INDEXPOSITIONFROMLINE, WPARAM(ALine), LPARAM(ALineCharacterIndex));
 end;
 
 procedure TCustomSciTextEditor.StartRecord();
 begin
-  SendScintillaEditorMessage(SCI_STARTRECORD, 0, 0);
+  SendScintillaEditorMessage(SCI_STARTRECORD, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.StopRecord();
 begin
-  SendScintillaEditorMessage(SCI_STOPRECORD, 0, 0);
+  SendScintillaEditorMessage(SCI_STOPRECORD, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetLexer(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETLEXER, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLEXER, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.Colourise(AStart: TSciPosition; AEnd: TSciPosition);
 begin
-  SendScintillaEditorMessage(SCI_COLOURISE, AStart, AEnd);
+  SendScintillaEditorMessage(SCI_COLOURISE, WPARAM(AStart), LPARAM(AEnd));
 end;
 
 procedure TCustomSciTextEditor.SetProperty(AKey: PAnsiChar; AValue: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_SETPROPERTY, AKey, LPARAM(AValue));
+  SendScintillaEditorMessage(SCI_SETPROPERTY, WPARAM(AKey), LPARAM(AValue));
 end;
 
 procedure TCustomSciTextEditor.SetKeyWords(AKeyWordSet: Integer; AKeyWords: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_SETKEYWORDS, AKeyWordSet, LPARAM(AKeyWords));
+  SendScintillaEditorMessage(SCI_SETKEYWORDS, WPARAM(AKeyWordSet), LPARAM(AKeyWords));
 end;
 
 function TCustomSciTextEditor.GetProperty(AKey: PAnsiChar; AValue: PAnsiChar): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETPROPERTY, AKey, LPARAM(AValue));
+  Result := SendScintillaEditorMessage(SCI_GETPROPERTY, WPARAM(AKey), LPARAM(AValue));
 end;
 
 function TCustomSciTextEditor.GetPropertyExpanded(AKey: PAnsiChar; AValue: PAnsiChar): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETPROPERTYEXPANDED, AKey, LPARAM(AValue));
+  Result := SendScintillaEditorMessage(SCI_GETPROPERTYEXPANDED, WPARAM(AKey), LPARAM(AValue));
 end;
 
 function TCustomSciTextEditor.GetPropertyInt(AKey: PAnsiChar; ADefaultValue: Integer): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETPROPERTYINT, AKey, ADefaultValue);
+  Result := SendScintillaEditorMessage(SCI_GETPROPERTYINT, WPARAM(AKey), LPARAM(ADefaultValue));
 end;
 
 function TCustomSciTextEditor.GetLexerLanguage(ALanguage: PAnsiChar): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETLEXERLANGUAGE, 0, LPARAM(ALanguage));
+  Result := SendScintillaEditorMessage(SCI_GETLEXERLANGUAGE, WPARAM(0), LPARAM(ALanguage));
 end;
 
 function TCustomSciTextEditor.PrivateLexerCall(AOperation: Integer; APointer: Pointer): Pointer;
 begin
-  Result := SendScintillaEditorMessage(SCI_PRIVATELEXERCALL, AOperation, LPARAM(APointer));
+  Result := Pointer(SendScintillaEditorMessage(SCI_PRIVATELEXERCALL, WPARAM(AOperation), LPARAM(APointer)));
 end;
 
 function TCustomSciTextEditor.PropertyNames(ANames: PAnsiChar): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_PROPERTYNAMES, 0, LPARAM(ANames));
+  Result := SendScintillaEditorMessage(SCI_PROPERTYNAMES, WPARAM(0), LPARAM(ANames));
 end;
 
 function TCustomSciTextEditor.PropertyType(AName: PAnsiChar): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_PROPERTYTYPE, AName, 0);
+  Result := SendScintillaEditorMessage(SCI_PROPERTYTYPE, WPARAM(AName), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.DescribeProperty(AName: PAnsiChar; ADescription: PAnsiChar): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_DESCRIBEPROPERTY, AName, LPARAM(ADescription));
+  Result := SendScintillaEditorMessage(SCI_DESCRIBEPROPERTY, WPARAM(AName), LPARAM(ADescription));
 end;
 
 function TCustomSciTextEditor.DescribeKeyWordSets(ADescriptions: PAnsiChar): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_DESCRIBEKEYWORDSETS, 0, LPARAM(ADescriptions));
+  Result := SendScintillaEditorMessage(SCI_DESCRIBEKEYWORDSETS, WPARAM(0), LPARAM(ADescriptions));
 end;
 
 function TCustomSciTextEditor.GetLineEndTypesSupported(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETLINEENDTYPESSUPPORTED, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETLINEENDTYPESSUPPORTED, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.AllocateSubStyles(AStyleBase: Integer; ANumberStyles: Integer): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_ALLOCATESUBSTYLES, AStyleBase, ANumberStyles);
+  Result := SendScintillaEditorMessage(SCI_ALLOCATESUBSTYLES, WPARAM(AStyleBase), LPARAM(ANumberStyles));
 end;
 
 function TCustomSciTextEditor.GetSubStylesStart(AStyleBase: Integer): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSUBSTYLESSTART, AStyleBase, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSUBSTYLESSTART, WPARAM(AStyleBase), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetSubStylesLength(AStyleBase: Integer): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSUBSTYLESLENGTH, AStyleBase, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSUBSTYLESLENGTH, WPARAM(AStyleBase), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetStyleFromSubStyle(ASubStyle: Integer): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSTYLEFROMSUBSTYLE, ASubStyle, 0);
+  Result := SendScintillaEditorMessage(SCI_GETSTYLEFROMSUBSTYLE, WPARAM(ASubStyle), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetPrimaryStyleFromStyle(AStyle: Integer): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETPRIMARYSTYLEFROMSTYLE, AStyle, 0);
+  Result := SendScintillaEditorMessage(SCI_GETPRIMARYSTYLEFROMSTYLE, WPARAM(AStyle), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.FreeSubStyles();
 begin
-  SendScintillaEditorMessage(SCI_FREESUBSTYLES, 0, 0);
+  SendScintillaEditorMessage(SCI_FREESUBSTYLES, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetIdentifiers(AStyle: Integer; AIdentifiers: PAnsiChar);
 begin
-  SendScintillaEditorMessage(SCI_SETIDENTIFIERS, AStyle, LPARAM(AIdentifiers));
+  SendScintillaEditorMessage(SCI_SETIDENTIFIERS, WPARAM(AStyle), LPARAM(AIdentifiers));
 end;
 
 function TCustomSciTextEditor.DistanceToSecondaryStyles(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_DISTANCETOSECONDARYSTYLES, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_DISTANCETOSECONDARYSTYLES, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.GetSubStyleBases(AStyles: PAnsiChar): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETSUBSTYLEBASES, 0, LPARAM(AStyles));
+  Result := SendScintillaEditorMessage(SCI_GETSUBSTYLEBASES, WPARAM(0), LPARAM(AStyles));
 end;
 
 function TCustomSciTextEditor.GetNamedStyles(): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETNAMEDSTYLES, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETNAMEDSTYLES, WPARAM(0), LPARAM(0));
 end;
 
 function TCustomSciTextEditor.NameOfStyle(AStyle: Integer; AName: PAnsiChar): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_NAMEOFSTYLE, AStyle, LPARAM(AName));
+  Result := SendScintillaEditorMessage(SCI_NAMEOFSTYLE, WPARAM(AStyle), LPARAM(AName));
 end;
 
 function TCustomSciTextEditor.TagsOfStyle(AStyle: Integer; ATags: PAnsiChar): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_TAGSOFSTYLE, AStyle, LPARAM(ATags));
+  Result := SendScintillaEditorMessage(SCI_TAGSOFSTYLE, WPARAM(AStyle), LPARAM(ATags));
 end;
 
 function TCustomSciTextEditor.DescriptionOfStyle(AStyle: Integer; ADescription: PAnsiChar): Integer;
 begin
-  Result := SendScintillaEditorMessage(SCI_DESCRIPTIONOFSTYLE, AStyle, LPARAM(ADescription));
+  Result := SendScintillaEditorMessage(SCI_DESCRIPTIONOFSTYLE, WPARAM(AStyle), LPARAM(ADescription));
 end;
 
 procedure TCustomSciTextEditor.SetILexer(AIlexer: Pointer);
 begin
-  SendScintillaEditorMessage(SCI_SETILEXER, 0, LPARAM(AIlexer));
+  SendScintillaEditorMessage(SCI_SETILEXER, WPARAM(0), LPARAM(AIlexer));
 end;
 
 function TCustomSciTextEditor.GetBidirectional(): NativeInt;
 begin
-  Result := SendScintillaEditorMessage(SCI_GETBIDIRECTIONAL, 0, 0);
+  Result := SendScintillaEditorMessage(SCI_GETBIDIRECTIONAL, WPARAM(0), LPARAM(0));
 end;
 
 procedure TCustomSciTextEditor.SetBidirectional(ABidirectional: NativeInt);
 begin
-  SendScintillaEditorMessage(SCI_SETBIDIRECTIONAL, ABidirectional, 0);
+  SendScintillaEditorMessage(SCI_SETBIDIRECTIONAL, WPARAM(ABidirectional), LPARAM(0));
 end;
 
 end.

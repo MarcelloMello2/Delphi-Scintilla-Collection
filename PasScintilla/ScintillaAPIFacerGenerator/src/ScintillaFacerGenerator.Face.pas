@@ -178,13 +178,14 @@ begin
   begin
     SpacePos := Pos(' ', TrimmedP);
     Param.ParamType := Copy(TrimmedP, 1, SpacePos - 1);
-    TypeAndName := Copy(TrimmedP, SpacePos + 1, Length(TrimmedP));
-
-    TypeAndName[1] := TypeAndName[1].ToUpper();
+    TypeAndName := Trim(Copy(TrimmedP, SpacePos + 1, Length(TrimmedP)));
 
     if Length(TypeAndName) > 1 then
+    begin
+      TypeAndName[1] := TypeAndName[1].ToUpper();
       TypeAndName := 'A' + TypeAndName;
-    
+    end;
+
     EqualPos := Pos('=', TypeAndName);
     if EqualPos > 0 then
     begin

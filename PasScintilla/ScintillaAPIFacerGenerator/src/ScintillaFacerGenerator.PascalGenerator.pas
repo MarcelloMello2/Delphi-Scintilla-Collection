@@ -99,8 +99,8 @@ begin
   else if CppType = 'findtext' then Result := 'PSciFindText'
   else if CppType = 'findtextfull' then Result := 'PSciFindTextFull'
   else if CppType = 'keymod' then Result := 'TSciKeyModifies'
-  else if CppType = 'formatrange' then Result := 'PSciFormatRange'
-  else if CppType = 'formatrangefull' then Result := 'PSciFormatRangeFull'
+  else if CppType = 'formatrange' then Result := 'PSciRangeToFormat'
+  else if CppType = 'formatrangefull' then Result := 'PSciRangeToFormatFull'
   else Result := 'NativeInt';
 end;
 
@@ -201,27 +201,32 @@ begin
   FTypes.Add('type');
   FTypes.Add(
 '''
+
   TSciPosition = IntPtr;
   TSciLine = IntPtr;
   TColorAlpha = Cardinal;
   TSciPositionCR = long;
   TSciSurfaceID = Pointer;
 
+  PSciCharacterRange = ^TSciCharacterRange;
   TSciCharacterRange = record
 	  cpMin: TSciPositionCR;
 	  cpMax: TSciPositionCR;
   end;
 
+  PSciCharacterRangeFull = ^TSciCharacterRangeFull;
   TSciCharacterRangeFull = record
 	  cpMin: TSciPosition;
 	  cpMax: TSciPosition;
   end;
 
+  PSciTextRange = ^TSciTextRange;
   TSciTextRange = record
 	  chrg: TSciCharacterRange;
 	  lpstrText: PAnsiChar;
   end;
 
+  PSciTextRangeFull = ^TSciTextRangeFull;
   TSciTextRangeFull = record
 	  chrg: TSciCharacterRangeFull;
 	  lpstrText: PAnsiChar;
@@ -257,8 +262,6 @@ begin
 	  chrgText: TSciCharacterRangeFull;
   end;
 
-
-  (* This structure is used in printing. Not needed by most client code. *)
 
   PSciRangeToFormat = ^TSciRangeToFormat;
   TSciRangeToFormat = record
@@ -1217,7 +1220,9 @@ begin
     ImeResult = 2
   );
 
+  (* This structure is used in printing. Not needed by most client code. *)
 
+  PSciNotificationData = ^TSciNotificationData;
   TSciNotificationData = record
 	  nmhdr: TSciNotifyHeader;
 	  position: TSciPosition;
@@ -1305,25 +1310,43 @@ end;
 function TPascalGenerator.GenerateWParam(const Feature: TFeature): string;
 begin
   if Feature.Param1.Name <> '' then
-    Result := Feature.Param1.Name
+  begin
+//    if Feature.Param1.ParamType = 'bool' then
+//      Result := 'WPARAM(' + Feature.Param1.Name + ')'
+//    else
+      Result := Feature.Param1.Name
+  end
   else
     Result := '0';
+
+  Result := 'WPARAM(' + Result + ')';
 end;
 
 function TPascalGenerator.GenerateLParam(const Feature: TFeature): string;
 begin
   if Feature.Param2.Name <> '' then
   begin
-    if (Feature.Param2.ParamType = 'string') or
-       (Feature.Param2.ParamType = 'stringresult') then
-      Result := 'LPARAM(' + Feature.Param2.Name + ')'
-    else if Feature.Param2.ParamType = 'pointer' then
-      Result := 'LPARAM(' + Feature.Param2.Name + ')'
-    else
+//    if Feature.Param2.Name = 'c' then
+//      WriteLn('breakpoint aqui');
+
+//    if (Feature.Param2.ParamType = 'string') or
+//       (Feature.Param2.ParamType = 'stringresult') then
+//      Result := 'LPARAM(' + Feature.Param2.Name + ')'
+//    else if Feature.Param2.ParamType = 'pointer' then
+//      Result := 'LPARAM(' + Feature.Param2.Name + ')'
+//    else if Feature.Param2.ParamType = 'cells' then
+//      Result := 'LPARAM(' + Feature.Param2.Name + ')'
+//    else if Feature.Param2.ParamType = 'bool' then
+//      Result := 'LPARAM(' + Feature.Param2.Name + ')'
+//    else if Feature.Param2.ParamType[1] = 'P' then // Ponteiro
+//      Result := 'LPARAM(' + Feature.Param2.Name + ')'
+//    else
       Result := Feature.Param2.Name;
   end
   else
     Result := '0';
+
+  Result := 'LPARAM(' + Result + ')';
 end;
 
 function TPascalGenerator.GetParamDescription(const Param: TParam; const Comments: TStringList): string;
@@ -1521,8 +1544,21 @@ begin
         begin
           FImplementations.Add('function TCustomSciTextEditor.' + Name + '(' + ParamStr + '): ' + PascalRetType + ';');
           FImplementations.Add('begin');
-          FImplementations.Add('  Result := SendScintillaEditorMessage(SCI_' + UpperCase(Name) + ', ' +
-            GenerateWParam(Feature) + ', ' + GenerateLParam(Feature) + ');');
+          if SameText(PascalRetType, 'Boolean') then
+          begin
+            FImplementations.Add('  Result := Boolean(SendScintillaEditorMessage(SCI_' + UpperCase(Name) + ', ' +
+              GenerateWParam(Feature) + ', ' + GenerateLParam(Feature) + '));');
+          end
+          else if SameText(PascalRetType, 'Pointer') then
+          begin
+            FImplementations.Add('  Result := Pointer(SendScintillaEditorMessage(SCI_' + UpperCase(Name) + ', ' +
+              GenerateWParam(Feature) + ', ' + GenerateLParam(Feature) + '));');
+          end
+          else
+          begin
+            FImplementations.Add('  Result := SendScintillaEditorMessage(SCI_' + UpperCase(Name) + ', ' +
+              GenerateWParam(Feature) + ', ' + GenerateLParam(Feature) + ');');
+          end;
           FImplementations.Add('end;');
         end
         else
