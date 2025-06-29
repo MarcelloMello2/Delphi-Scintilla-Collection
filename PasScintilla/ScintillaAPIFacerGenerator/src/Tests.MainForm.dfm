@@ -2,8 +2,8 @@ object Form2: TForm2
   Left = 0
   Top = 0
   Caption = 'Form2'
-  ClientHeight = 441
-  ClientWidth = 624
+  ClientHeight = 781
+  ClientWidth = 1037
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,12 +14,14 @@ object Form2: TForm2
   object Button1: TButton
     AlignWithMargins = True
     Left = 3
-    Top = 389
-    Width = 618
+    Top = 729
+    Width = 1031
     Height = 49
     Align = alBottom
     Caption = 'Button1'
     TabOrder = 0
     OnClick = Button1Click
+    ExplicitTop = 389
+    ExplicitWidth = 618
   end
 end

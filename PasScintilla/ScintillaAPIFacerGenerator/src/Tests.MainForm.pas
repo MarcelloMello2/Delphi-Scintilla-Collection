@@ -17,6 +17,7 @@ type
     property ControlCharSymbol;
     property PrintWrapMode;
     property WrapMode;
+    property Zoom;
   end;
 
   TForm2 = class(TForm)
@@ -46,10 +47,12 @@ begin
   FScintillaTextEditor.AlignWithMargins := True;
   FScintillaTextEditor.Visible := True;
   FScintillaTextEditor.Parent := Self;
-  FScintillaTextEditor.ViewEOL := True;
-  FScintillaTextEditor.ViewWS := 1;
-  FScintillaTextEditor.PrintWrapMode := 1;
-  FScintillaTextEditor.WrapMode := 1;
+  FScintillaTextEditor.Zoom := 5;
+  FScintillaTextEditor.SetILexer()
+//  FScintillaTextEditor.ViewEOL := True;
+//  FScintillaTextEditor.ViewWS := 1;
+//  FScintillaTextEditor.PrintWrapMode := 1;
+//  FScintillaTextEditor.WrapMode := 1;
 end;
 
 { TCustomSciTextEditor }

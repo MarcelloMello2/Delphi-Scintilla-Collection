@@ -27,8 +27,7 @@ uses
 
 type
   TCustomSciTextEditor = class(TBaseSciTextEditor)
-  strict private
-  strict protected
+  protected
 
     // Basics
     /// <summary>
@@ -6504,13 +6503,6 @@ type
     /// Returns the requested value
     /// </returns>
     function DescriptionOfStyle(AStyle: Integer; ADescription: PAnsiChar): Integer;
-    /// <summary>
-    /// Set the lexer from an ILexer*.
-    /// </summary>
-    /// <param name="AIlexer">
-    /// The AIlexer parameter
-    /// </param>
-    procedure SetILexer(AIlexer: Pointer);
 
     // Provisional
     /// <summary>
@@ -6528,7 +6520,15 @@ type
     /// </param>
     procedure SetBidirectional(ABidirectional: NativeInt);
 
-  strict protected
+  protected
+    /// <summary>
+    /// Set the lexer from an ILexer*.
+    /// </summary>
+    /// <param name="AIlexer">
+    /// The AIlexer parameter
+    /// </param>
+    procedure SetILexer(AIlexer: Pointer);
+
     // Auto-generated properties
     /// <summary>
     /// Retrieve the current tab draw mode.
